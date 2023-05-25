@@ -7,6 +7,6 @@
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
 
-@Component
+@Component({})
 export default class HomeView extends Vue { }
 </script>

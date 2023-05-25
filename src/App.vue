@@ -6,6 +6,6 @@
 import { RouterView } from "vue-router";
 import { Vue, Component } from "vue-facing-decorator";
 
-@Component
+@Component({})
 export default class App extends Vue { }
 </script>
