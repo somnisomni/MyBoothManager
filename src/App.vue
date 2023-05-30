@@ -1,9 +1,10 @@
 <template>
-  <RouterView />
+  <VApp>
+    <RouterView />
+  </VApp>
 </template>
 
 <script lang="ts">
-import { RouterView } from "vue-router";
 import { Vue, Component } from "vue-facing-decorator";
 
 @Component({})
