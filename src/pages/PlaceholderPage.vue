@@ -1,12 +1,13 @@
 <template>
-  <main style="padding: 1em">
+  <main class="pa-4">
     <div>Placeholder Page</div>
     <div>current route: {{ $route.path }}, route name: {{ $route.name }}</div>
     <br />
     <div>Jump to route:</div>
     <VBtn v-for="route in allRoutes"
           :key="route.name"
-          @click="$router.push(route.path)">
+          @click="$router.push(route.path)"
+          class="ma-2">
       {{ route.name }} ( {{ route.path }} )
     </VBtn>
   </main>
