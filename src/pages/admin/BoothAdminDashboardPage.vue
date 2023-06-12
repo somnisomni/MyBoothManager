@@ -1,10 +1,15 @@
 <template>
-  <VAppBar>
-    <VAppBarTitle>Booth Administration</VAppBarTitle>
-  </VAppBar>
+  <VLayout class="pa-4 d-flex flex-column">
+    <VCard class="mb-4">
+      <VCardTitle>Booth Status</VCardTitle>
 
-  <VMain class="px-4 mt-4">
-    <VCard>
+      <VCardText>
+        <h1>{{ openStatusString }}</h1>
+        <h3 v-if="boothData.openStatusDesc">{{ boothData.openStatusDesc }}</h3>
+      </VCardText>
+    </VCard>
+
+    <VCard class="my-4">
       <VCardTitle>Quick Actions</VCardTitle>
 
       <!-- Booth open status setter -->
@@ -12,7 +17,7 @@
         <span>Mark the booth as: </span>
 
         <VFadeTransition>
-          <VLayout v-if="!updatingStatus.openStatus">
+          <VLayout v-show="!updatingStatus.openStatus">
             <VBtn color="blue"
                   class="ml-2"
                   :variant="boothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
@@ -32,15 +37,15 @@
             </VBtn>
           </VLayout>
 
-          <VProgressCircular v-if="updatingStatus.openStatus"
-                             class="ml-2"
-                             indeterminate />
+          <VProgressCircular v-show="updatingStatus.openStatus"
+                            class="ml-2"
+                            indeterminate />
         </VFadeTransition>
       </VLayout>
 
       <!-- -->
     </VCard>
-  </VMain>
+  </VLayout>
 </template>
 
 <script lang="ts">
@@ -48,7 +53,7 @@ import { Component, Vue } from "vue-facing-decorator";
 import { BoothOpenStatus, type BoothData } from "@/types/booth";
 
 @Component({})
-export default class BoothAdminPage extends Vue {
+export default class BoothAdminDashboardPage extends Vue {
   BoothOpenStatus = BoothOpenStatus;
 
   boothData: BoothData = {
@@ -60,12 +65,25 @@ export default class BoothAdminPage extends Vue {
     openStatus: false,
   };
 
+  get openStatusString(): string {
+    if(this.boothData.openStatus === BoothOpenStatus.OPEN) {
+      return "Opened";
+    } else if(this.boothData.openStatus === BoothOpenStatus.CLOSE) {
+      return "Closed";
+    } else {
+      return "Unknown";
+    }
+  }
+
   setBoothStatus(newStatus: BoothOpenStatus): void {
     // TODO
     this.updatingStatus.openStatus = true;
     console.log("Set booth status:", newStatus);
-    this.boothData.openStatus = newStatus;
-    this.updatingStatus.openStatus = false;
+
+    setTimeout(() => { // simulated
+      this.boothData.openStatus = newStatus;
+      this.updatingStatus.openStatus = false;
+    }, 500);
   }
 }
 </script>

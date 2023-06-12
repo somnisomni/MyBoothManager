@@ -6,4 +6,5 @@ export enum BoothOpenStatus {
 
 export interface BoothData {
   openStatus: BoothOpenStatus;
+  openStatusDesc?: string;
 }
