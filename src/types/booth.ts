@@ -5,6 +5,8 @@ export enum BoothOpenStatus {
 }
 
 export interface BoothData {
+  id: number,
+  name: string,
   openStatus: BoothOpenStatus;
   openStatusDesc?: string;
 }

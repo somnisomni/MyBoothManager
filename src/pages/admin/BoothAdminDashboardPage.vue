@@ -5,7 +5,7 @@
 
       <VCardText>
         <h1>{{ openStatusString }}</h1>
-        <h3 v-if="boothData.openStatusDesc" class="mt-2">Reason: {{ boothData.openStatusDesc }}</h3>
+        <h3 v-if="currentBoothData.openStatusDesc" class="mt-2">Reason: {{ currentBoothData.openStatusDesc }}</h3>
       </VCardText>
     </VCard>
 
@@ -20,8 +20,8 @@
           <VLayout v-if="!updatingStatus.openStatus">
             <VBtn color="blue"
                   class="ml-2"
-                  :variant="boothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
-                  :disabled="boothData.openStatus === BoothOpenStatus.OPEN"
+                  :variant="currentBoothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
+                  :disabled="currentBoothData.openStatus === BoothOpenStatus.OPEN"
                   @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.OPEN)">
               <VIcon>mdi-store-check</VIcon>
               <span class="ml-2">Opened</span>
@@ -29,8 +29,8 @@
 
             <VBtn color="red"
                   class="ml-2"
-                  :variant="boothData.openStatus === BoothOpenStatus.CLOSE ? 'flat' : 'outlined'"
-                  :disabled="boothData.openStatus === BoothOpenStatus.CLOSE"
+                  :variant="currentBoothData.openStatus === BoothOpenStatus.CLOSE ? 'flat' : 'outlined'"
+                  :disabled="currentBoothData.openStatus === BoothOpenStatus.CLOSE"
                   @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.CLOSE)">
               <VIcon>mdi-store-off</VIcon>
               <span class="ml-2">Closed</span>
@@ -54,6 +54,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { BoothOpenStatus, type BoothData } from "@/types/booth";
+import { useAdminStore } from "@/stores/admin";
 import BoothStatusUpdateDialog from "@/components/admin/BoothStatusUpdateDialog.vue";
 
 @Component({
@@ -67,17 +68,16 @@ export default class BoothAdminDashboardPage extends Vue {
   statusUpdateDialogOpen = false;
   statusUpdateDialogTargetStatus: BoothOpenStatus = BoothOpenStatus.OPEN;
 
-  boothData: BoothData = {
-    /* TEMP DATA */
-    openStatus: BoothOpenStatus.OPEN,
-  };
-
   updatingStatus: Record<string, boolean> = {
     openStatus: false,
   };
 
+  get currentBoothData(): BoothData {
+    return useAdminStore().boothList[useAdminStore().currentBoothId];
+  }
+
   get openStatusString(): string {
-    switch(this.boothData.openStatus) {
+    switch(this.currentBoothData.openStatus) {
       case BoothOpenStatus.OPEN:
         return "Opened";
       case BoothOpenStatus.CLOSE:
@@ -102,8 +102,8 @@ export default class BoothAdminDashboardPage extends Vue {
     // TODO: API call here
 
     setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
-      this.boothData.openStatus = statusData.targetStatus;
-      this.boothData.openStatusDesc = statusData.reason;
+      this.currentBoothData.openStatus = statusData.targetStatus;
+      this.currentBoothData.openStatusDesc = statusData.reason;
       this.updatingStatus.openStatus = false;
     }, 500);
   }

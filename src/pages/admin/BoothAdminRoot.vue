@@ -6,7 +6,13 @@
 
       <VAppBarTitle class="ml-0">Booth Administration</VAppBarTitle>
 
-      <VSelect class="ml-4" density="compact" hide-details />
+      <VSelect v-model="selectedBooth"
+               class="ml-4"
+               density="compact"
+               hide-details
+               :items="boothList"
+               item-title="name"
+               item-value="id" />
     </VAppBar>
 
     <VNavigationDrawer v-model="navOpen"
@@ -33,6 +39,8 @@
 import { unref } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
+import { useAdminStore } from "@/stores/admin";
+import type { BoothData } from "@/types/booth";
 
 @Component({})
 export default class BoothAdminRoot extends Vue {
@@ -46,6 +54,18 @@ export default class BoothAdminRoot extends Vue {
 
   get navPersistent() {
     return unref(useDisplay().mdAndUp);
+  }
+
+  get selectedBooth(): number {
+    return useAdminStore().currentBoothId;
+  }
+
+  set selectedBooth(value: number) {
+    useAdminStore().currentBoothId = value;
+  }
+
+  get boothList(): BoothData[] {
+    return Object.values(useAdminStore().boothList);
   }
 }
 </script>
