@@ -5,7 +5,7 @@
 
       <VCardText>
         <h1>{{ openStatusString }}</h1>
-        <h3 v-if="boothData.openStatusDesc">{{ boothData.openStatusDesc }}</h3>
+        <h3 v-if="boothData.openStatusDesc" class="mt-2">Reason: {{ boothData.openStatusDesc }}</h3>
       </VCardText>
     </VCard>
 
@@ -17,12 +17,12 @@
         <span>Mark the booth as: </span>
 
         <VFadeTransition>
-          <VLayout v-show="!updatingStatus.openStatus">
+          <VLayout v-if="!updatingStatus.openStatus">
             <VBtn color="blue"
                   class="ml-2"
                   :variant="boothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
                   :disabled="boothData.openStatus === BoothOpenStatus.OPEN"
-                  @click="setBoothStatus(BoothOpenStatus.OPEN)">
+                  @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.OPEN)">
               <VIcon>mdi-store-check</VIcon>
               <span class="ml-2">Opened</span>
             </VBtn>
@@ -31,30 +31,41 @@
                   class="ml-2"
                   :variant="boothData.openStatus === BoothOpenStatus.CLOSE ? 'flat' : 'outlined'"
                   :disabled="boothData.openStatus === BoothOpenStatus.CLOSE"
-                  @click="setBoothStatus(BoothOpenStatus.CLOSE)">
+                  @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.CLOSE)">
               <VIcon>mdi-store-off</VIcon>
               <span class="ml-2">Closed</span>
             </VBtn>
           </VLayout>
 
-          <VProgressCircular v-show="updatingStatus.openStatus"
-                            class="ml-2"
-                            indeterminate />
+          <VProgressCircular v-if="updatingStatus.openStatus"
+                             class="ml-2"
+                             indeterminate />
         </VFadeTransition>
       </VLayout>
-
-      <!-- -->
     </VCard>
   </VLayout>
+
+  <BoothStatusUpdateDialog v-if="statusUpdateDialogOpen"
+                           v-model="statusUpdateDialogOpen"
+                           :targetStatus="statusUpdateDialogTargetStatus"
+                           @confirm="onBoothStatusUpdateDialogConfirm" />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { BoothOpenStatus, type BoothData } from "@/types/booth";
+import BoothStatusUpdateDialog from "@/components/admin/BoothStatusUpdateDialog.vue";
 
-@Component({})
+@Component({
+  components: {
+    BoothStatusUpdateDialog,
+  },
+})
 export default class BoothAdminDashboardPage extends Vue {
   BoothOpenStatus = BoothOpenStatus;
+
+  statusUpdateDialogOpen = false;
+  statusUpdateDialogTargetStatus: BoothOpenStatus = BoothOpenStatus.OPEN;
 
   boothData: BoothData = {
     /* TEMP DATA */
@@ -66,22 +77,33 @@ export default class BoothAdminDashboardPage extends Vue {
   };
 
   get openStatusString(): string {
-    if(this.boothData.openStatus === BoothOpenStatus.OPEN) {
-      return "Opened";
-    } else if(this.boothData.openStatus === BoothOpenStatus.CLOSE) {
-      return "Closed";
-    } else {
-      return "Unknown";
+    switch(this.boothData.openStatus) {
+      case BoothOpenStatus.OPEN:
+        return "Opened";
+      case BoothOpenStatus.CLOSE:
+        return "Closed";
+      default:
+        return "Unknown";
     }
   }
 
-  setBoothStatus(newStatus: BoothOpenStatus): void {
-    // TODO
-    this.updatingStatus.openStatus = true;
-    console.log("Set booth status:", newStatus);
+  onBoothStatusUpdateButtonClick(newStatus: BoothOpenStatus): void {
+    this.statusUpdateDialogOpen = true;
+    this.statusUpdateDialogTargetStatus = newStatus;
+  }
 
-    setTimeout(() => { // simulated
-      this.boothData.openStatus = newStatus;
+  onBoothStatusUpdateDialogConfirm(statusData: { targetStatus: BoothOpenStatus, reason?: string }): void {
+    this.setBoothStatus(statusData);
+  }
+
+  setBoothStatus(statusData: { targetStatus: BoothOpenStatus, reason?: string }): void {
+    this.updatingStatus.openStatus = true;
+
+    // TODO: API call here
+
+    setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
+      this.boothData.openStatus = statusData.targetStatus;
+      this.boothData.openStatusDesc = statusData.reason;
       this.updatingStatus.openStatus = false;
     }, 500);
   }

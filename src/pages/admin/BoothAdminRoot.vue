@@ -6,7 +6,7 @@
 
       <VAppBarTitle class="ml-0">Booth Administration</VAppBarTitle>
 
-      <VSelect density="compact" hide-details />
+      <VSelect class="ml-4" density="compact" hide-details />
     </VAppBar>
 
     <VNavigationDrawer v-model="navOpen"
