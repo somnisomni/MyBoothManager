@@ -1,12 +1,16 @@
 <template>
   <VApp>
-    <VAppBar class="px-6">
+    <VAppBar class="pr-6"
+             :class="{ 'pl-6': navPersistent }">
+      <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" />
+
       <VAppBarTitle class="ml-0">Booth Administration</VAppBarTitle>
 
       <VSelect density="compact" hide-details />
     </VAppBar>
 
-    <VNavigationDrawer permanent>
+    <VNavigationDrawer v-model="navOpen"
+                       :permanent="navPersistent">
       <VList nav>
         <VListItem prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"
                   :to="{ name: 'admin' }" exact />
@@ -26,8 +30,22 @@
 </template>
 
 <script lang="ts">
+import { unref } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
+import { useDisplay } from "vuetify";
 
 @Component({})
-export default class BoothAdminRoot extends Vue { }
+export default class BoothAdminRoot extends Vue {
+  _navOpen = false;
+
+  set navOpen(value: boolean) { this._navOpen = value; }
+  get navOpen() {
+    if(this.navPersistent) return true;
+    return this._navOpen;
+  }
+
+  get navPersistent() {
+    return unref(useDisplay().mdAndUp);
+  }
+}
 </script>
