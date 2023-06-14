@@ -4,8 +4,8 @@
       <VCardTitle>Booth Status</VCardTitle>
 
       <VCardText>
-        <h1>{{ openStatusString }}</h1>
-        <h3 v-if="currentBoothData.openStatusDesc" class="mt-2">Reason: {{ currentBoothData.openStatusDesc }}</h3>
+        <h1 class="my-2">{{ openStatusString }}</h1>
+        <h3 v-if="currentBoothData.openStatus === BoothOpenStatus.PAUSE && currentBoothData.pauseReason" class="mt-4">Reason: {{ currentBoothData.pauseReason }}</h3>
       </VCardText>
     </VCard>
 
@@ -16,31 +16,34 @@
       <VLayout class="pa-4 flex-row align-center">
         <span>Mark the booth as: </span>
 
-        <VFadeTransition>
-          <VLayout v-if="!updatingStatus.openStatus">
-            <VBtn color="blue"
-                  class="ml-2"
-                  :variant="currentBoothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
-                  :disabled="currentBoothData.openStatus === BoothOpenStatus.OPEN"
-                  @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.OPEN)">
-              <VIcon>mdi-store-check</VIcon>
-              <span class="ml-2">Opened</span>
-            </VBtn>
+        <VLayout>
+          <VBtn color="blue"
+                class="ml-2"
+                :variant="currentBoothData.openStatus === BoothOpenStatus.OPEN ? 'flat' : 'outlined'"
+                :disabled="currentBoothData.openStatus === BoothOpenStatus.OPEN"
+                @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.OPEN)">
+            <VIcon>mdi-store-check</VIcon>
+            <span class="ml-2">Opened</span>
+          </VBtn>
 
-            <VBtn color="red"
-                  class="ml-2"
-                  :variant="currentBoothData.openStatus === BoothOpenStatus.CLOSE ? 'flat' : 'outlined'"
-                  :disabled="currentBoothData.openStatus === BoothOpenStatus.CLOSE"
-                  @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.CLOSE)">
-              <VIcon>mdi-store-off</VIcon>
-              <span class="ml-2">Closed</span>
-            </VBtn>
-          </VLayout>
+          <VBtn color="orange-darken-1"
+                class="ml-2"
+                :variant="currentBoothData.openStatus === BoothOpenStatus.PAUSE ? 'flat' : 'outlined'"
+                :disabled="currentBoothData.openStatus === BoothOpenStatus.PAUSE"
+                @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.PAUSE)">
+            <VIcon>mdi-store-clock</VIcon>
+            <span class="ml-2">Paused</span>
+          </VBtn>
 
-          <VProgressCircular v-if="updatingStatus.openStatus"
-                             class="ml-2"
-                             indeterminate />
-        </VFadeTransition>
+          <VBtn color="red-darken-1"
+                class="ml-2"
+                :variant="currentBoothData.openStatus === BoothOpenStatus.CLOSE ? 'flat' : 'outlined'"
+                :disabled="currentBoothData.openStatus === BoothOpenStatus.CLOSE"
+                @click="onBoothStatusUpdateButtonClick(BoothOpenStatus.CLOSE)">
+            <VIcon>mdi-store-off</VIcon>
+            <span class="ml-2">Closed</span>
+          </VBtn>
+        </VLayout>
       </VLayout>
     </VCard>
   </VLayout>
@@ -48,7 +51,7 @@
   <BoothStatusUpdateDialog v-if="statusUpdateDialogOpen"
                            v-model="statusUpdateDialogOpen"
                            :targetStatus="statusUpdateDialogTargetStatus"
-                           @confirm="onBoothStatusUpdateDialogConfirm" />
+                           @updateSuccess="onBoothStatusUpdateDialogSuccess" />
 </template>
 
 <script lang="ts">
@@ -68,10 +71,6 @@ export default class BoothAdminDashboardPage extends Vue {
   statusUpdateDialogOpen = false;
   statusUpdateDialogTargetStatus: BoothOpenStatus = BoothOpenStatus.OPEN;
 
-  updatingStatus: Record<string, boolean> = {
-    openStatus: false,
-  };
-
   get currentBoothData(): BoothData {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
   }
@@ -80,6 +79,8 @@ export default class BoothAdminDashboardPage extends Vue {
     switch(this.currentBoothData.openStatus) {
       case BoothOpenStatus.OPEN:
         return "Opened";
+      case BoothOpenStatus.PAUSE:
+        return "Paused";
       case BoothOpenStatus.CLOSE:
         return "Closed";
       default:
@@ -88,24 +89,13 @@ export default class BoothAdminDashboardPage extends Vue {
   }
 
   onBoothStatusUpdateButtonClick(newStatus: BoothOpenStatus): void {
-    this.statusUpdateDialogOpen = true;
     this.statusUpdateDialogTargetStatus = newStatus;
+    this.statusUpdateDialogOpen = true;
   }
 
-  onBoothStatusUpdateDialogConfirm(statusData: { targetStatus: BoothOpenStatus, reason?: string }): void {
-    this.setBoothStatus(statusData);
-  }
-
-  setBoothStatus(statusData: { targetStatus: BoothOpenStatus, reason?: string }): void {
-    this.updatingStatus.openStatus = true;
-
-    // TODO: API call here
-
-    setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
-      this.currentBoothData.openStatus = statusData.targetStatus;
-      this.currentBoothData.openStatusDesc = statusData.reason;
-      this.updatingStatus.openStatus = false;
-    }, 500);
+  onBoothStatusUpdateDialogSuccess(): void {
+    console.log("success");
+    // TODO?
   }
 }
 </script>
