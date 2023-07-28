@@ -1,6 +1,7 @@
 <template>
   <VDialog v-model="open"
-           :persistent="updateInProgress">
+           :persistent="updateInProgress"
+           class="w-auto">
     <VCard :loading="updateInProgress">
       <template v-slot:loader="{ isActive }">
         <VProgressLinear :active="isActive"
