@@ -48,8 +48,7 @@
     </VCard>
   </VLayout>
 
-  <BoothStatusUpdateDialog v-if="statusUpdateDialogOpen"
-                           v-model="statusUpdateDialogOpen"
+  <BoothStatusUpdateDialog v-model="statusUpdateDialogOpen"
                            :targetStatus="statusUpdateDialogTargetStatus"
                            @updateSuccess="onBoothStatusUpdateDialogSuccess" />
 </template>
