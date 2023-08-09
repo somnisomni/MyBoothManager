@@ -1,6 +1,5 @@
 <template>
-  <DashboardPanel title="Booth Status"
-                  maxWidth="350">
+  <DashboardPanel title="Booth Status">
     <div class="status-text">{{ openStatusString }}</div>
     <div v-if="currentBoothStatus.status === BoothOpenStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
       <div class="text-grey-darken-2 reason-title">Reason</div>
@@ -15,6 +14,7 @@
             :variant="currentBoothStatus.status === item.status ? 'flat' : 'outlined'"
             :disabled="currentBoothStatus.status === item.status"
             class="my-1"
+            height="42"
             @click="onBoothStatusUpdateButtonClick(item.status)">
         <VIcon>{{ item.icon }}</VIcon>
         <span class="ml-2">{{ item.text }}</span>

@@ -1,6 +1,6 @@
 <template>
   <VSheet class="panel"
-          :max-width="maxWidth"
+          :min-width="minWidth"
           :elevation="elevation"
           rounded="lg">
     <div class="title"><span>{{ title }}</span></div>
@@ -16,7 +16,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class DashboardPanel extends Vue {
-  @Prop({ default: 400, required: false }) maxWidth!: number;
+  @Prop({ default: "auto", required: false }) minWidth!: string | number;
   @Prop({ default: 6, required: false }) elevation!: number;
   @Prop({ default: "Panel", required: true }) title!: string;
 }
@@ -32,6 +32,7 @@ export default class DashboardPanel extends Vue {
     font-size: 2em;
     font-weight: 800;
     padding-left: 0.66em;
+    padding-right: 1em;
     text-transform: uppercase;
 
     & > span {
