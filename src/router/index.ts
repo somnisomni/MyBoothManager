@@ -1,28 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
-import PlaceholderPage from "@/pages/PlaceholderPage.vue";
-import BoothViewPage from "@/pages/user/BoothViewPage.vue";
-import BoothAdminRoot from "@/pages/admin/BoothAdminRoot.vue";
-import BoothAdminDashboardPage from "@/pages/admin/BoothAdminDashboardPage.vue";
+import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
+import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
+import BoothAdminDashboardPage from "@/pages/BoothAdminDashboardPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    /* Falloff route */
     {
-      path: "/",
-      name: "home",
+      path: "*",
+      name: "placeholder",
       component: PlaceholderPage,
-    },
-
-    /* User Routes */
-    {
-      path: "/booth/:id",
-      name: "booth-indiv-view",
-      component: BoothViewPage,
     },
 
     /* Admin Routes */
     {
-      path: "/admin",
+      path: "/",
       name: "admin-root",
       component: BoothAdminRoot,
       children: [
