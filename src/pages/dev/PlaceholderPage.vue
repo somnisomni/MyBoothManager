@@ -1,6 +1,6 @@
 <template>
   <main class="pa-4">
-    <h1>{{ }}</h1>
+    <h1>Not found or not yet implemented route</h1>
     <div>Placeholder Page</div>
     <div>current route: {{ $route.path }}, route name: {{ $route.name }}</div>
     <br />

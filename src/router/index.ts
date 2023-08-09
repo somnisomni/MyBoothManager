@@ -8,7 +8,7 @@ const router = createRouter({
   routes: [
     /* Falloff route */
     {
-      path: "*",
+      path: "/:pathMatch(.*)*",
       name: "placeholder",
       component: PlaceholderPage,
     },
