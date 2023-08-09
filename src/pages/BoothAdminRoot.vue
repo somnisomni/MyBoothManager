@@ -4,7 +4,7 @@
              :class="{ 'pl-6': navPersistent }">
       <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" />
 
-      <VAppBarTitle class="ml-0">Booth Administration</VAppBarTitle>
+      <VAppBarTitle class="ml-0"><strong>MyBoothManager</strong> | Booth Administration</VAppBarTitle>
 
       <VSelect v-model="selectedBooth"
                class="ml-4"
@@ -20,10 +20,10 @@
       <VList nav>
         <VListItem prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"
                   :to="{ name: 'admin' }" exact />
-        <VListItem prepend-icon="mdi-chart-bar" title="Analytics" value="analytics"
-                  :to="{ name: 'admin-analytics' }" exact />
         <VListItem prepend-icon="mdi-store" title="Goods" value="goods"
                   :to="{ name: 'admin-goods' }" exact />
+        <VListItem prepend-icon="mdi-chart-bar" title="Analytics" value="analytics"
+                  :to="{ name: 'admin-analytics' }" exact />
         <VSpacer />
         <VListItem prepend-icon="mdi-arrow-left" title="Go to booth view page" value="booth_view_page" />
       </VList>
