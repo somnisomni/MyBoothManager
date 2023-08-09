@@ -7,13 +7,17 @@ export const useAdminStore = defineStore("admin", () => {
     123456: {
       id: 123456,
       name: "Test Booth",
-      openStatus: BoothOpenStatus.OPEN,
+      status: {
+        status: BoothOpenStatus.OPEN,
+      },
     },
     712854: {
       id: 712854,
       name: "Test booth #2",
-      openStatus: BoothOpenStatus.PAUSE,
-      pauseReason: "Lunch time ;)",
+      status: {
+        status: BoothOpenStatus.PAUSE,
+        reason: "Lunch time ;)",
+      },
     },
   };
 

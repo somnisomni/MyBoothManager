@@ -8,6 +8,8 @@ export enum BoothOpenStatus {
 export interface BoothData {
   id: number,
   name: string,
-  openStatus: BoothOpenStatus;
-  pauseReason?: string;
+  status: {
+    status: BoothOpenStatus,
+    reason? :string,
+  },
 }

@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="open"
            :persistent="updateInProgress"
-           width="auto">
+           width="75%">
     <VCard :loading="updateInProgress">
       <template v-slot:loader="{ isActive }">
         <VProgressLinear :active="isActive"
@@ -79,8 +79,8 @@ export default class BoothStatusUpdateDialog extends Vue {
     // TODO: API call here
 
     setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
-      this.currentBoothData.openStatus = this.targetStatus;
-      this.currentBoothData.pauseReason = this.pausingReason;
+      this.currentBoothData.status.status = this.targetStatus;
+      this.currentBoothData.status.reason = this.pausingReason;
 
       this.updateInProgress = false;
       this.open = false;
