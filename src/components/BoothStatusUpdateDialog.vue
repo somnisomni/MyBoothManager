@@ -3,7 +3,7 @@
            :persistent="updateInProgress"
            width="700"
            max-width="100%">
-    <VCard :loading="updateInProgress">
+    <VCard :loading="updateInProgress" class="ma-0 ma-sm-4">
       <template v-slot:loader="{ isActive }">
         <VProgressLinear :active="isActive"
                          indeterminate

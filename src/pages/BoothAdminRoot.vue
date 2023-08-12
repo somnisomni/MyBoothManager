@@ -2,17 +2,11 @@
   <VApp>
     <VAppBar class="pr-6"
              :class="{ 'pl-6': navPersistent }">
-      <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" />
+      <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="Toggle navigation menu" />
 
       <VAppBarTitle class="ml-0"><strong>MyBoothManager</strong> | Booth Administration</VAppBarTitle>
 
-      <VSelect v-model="selectedBooth"
-               class="ml-4"
-               density="compact"
-               hide-details
-               :items="boothList"
-               item-title="name"
-               item-value="id" />
+      <BoothSelectionArea />
     </VAppBar>
 
     <VNavigationDrawer v-model="navOpen"
@@ -41,8 +35,13 @@ import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import type { BoothData } from "@/types/booth";
+import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
 
-@Component({})
+@Component({
+  components: {
+    BoothSelectionArea,
+  },
+})
 export default class BoothAdminRoot extends Vue {
   _navOpen = false;
 
