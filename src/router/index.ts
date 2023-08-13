@@ -34,6 +34,11 @@ const router = createRouter({
           name: "admin-goods",
           component: PlaceholderPage,
         },
+        {
+          path: "utility/price-calculator",
+          name: "admin-utility-price-calculator",
+          component: PlaceholderPage,
+        },
       ],
     },
   ],

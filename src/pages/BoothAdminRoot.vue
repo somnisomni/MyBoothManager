@@ -13,12 +13,19 @@
                        :permanent="navPersistent"
                        class="main-navdrawer">
       <VList nav>
+        <VListSubheader>Management</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"
                   :to="{ name: 'admin' }" exact />
         <VListItem prepend-icon="mdi-store" title="Goods" value="goods"
                   :to="{ name: 'admin-goods' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="Analytics" value="analytics"
                   :to="{ name: 'admin-analytics' }" exact />
+
+        <VDivider />
+
+        <VListSubheader>Utility</VListSubheader>
+        <VListItem prepend-icon="mdi-cash" title="Goods Price Calculator" value="price_calculator"
+                  :to="{ name: 'admin-utility-price-calculator' }" exact />
       </VList>
 
       <VSpacer />
