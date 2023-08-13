@@ -21,7 +21,7 @@
           <VLayout class="booth-item-info w-100 h-100 pa-3 d-flex flex-row align-end justify-start">
             <VLayout class="d-flex flex-column align-start justify-end">
               <div class="booth-item-name">{{ booth.name }}</div>
-              <div class="booth-item-desc">Description blahblah</div>
+              <div class="booth-item-desc">{{ booth.description }}</div>
             </VLayout>
             <div>{{ getBoothOpenStatusString(booth.status.status) }}</div>
           </VLayout>

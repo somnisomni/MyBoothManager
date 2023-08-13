@@ -23,6 +23,11 @@
                       density="compact"
                       label="부스명"
                       :rules="stringValidator(editFormData.name!)" />
+          <VTextField v-model="editFormData.description"
+                      class="my-1"
+                      density="compact"
+                      label="부스 한 줄 설명"
+                      :rules="stringValidator(editFormData.description!)" />
           <VSelect v-model="editFormData.currencySymbol"
                    class="my-1"
                    density="compact"
@@ -80,6 +85,7 @@ export default class BoothInfoEditDialog extends Vue {
 
     this.editFormData = reactive({
       name: boothData.name,
+      description: boothData.description,
       currencySymbol: boothData.currencySymbol,
     });
   }
@@ -104,6 +110,7 @@ export default class BoothInfoEditDialog extends Vue {
       Object.assign(useAdminStore().boothList[useAdminStore().currentBoothId], {
         ...this.editFormData,
         name: this.editFormData.name?.trim(),
+        description: this.editFormData.description?.trim(),
       });
 
       this.updateInProgress = false;
