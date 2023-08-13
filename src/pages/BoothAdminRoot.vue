@@ -1,5 +1,7 @@
 <template>
   <VApp>
+    <img class="bgimage" src="/bgimage_jeomo.png" />
+
     <VAppBar class="pr-6"
              :class="{ 'pl-6': navPersistent }">
       <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="내비게이션 메뉴 전환" />
@@ -86,5 +88,16 @@ export default class BoothAdminRoot extends Vue {
 .main-navdrawer .v-navigation-drawer__content {
   display: flex;
   flex-direction: column;
+}
+</style>
+
+<style lang="scss" scoped>
+.bgimage {
+  position: absolute;
+  opacity: 0.25;
+  width: 50vh;
+  z-index: -1;
+  right: -2.5%;
+  bottom: -7.5%;
 }
 </style>
