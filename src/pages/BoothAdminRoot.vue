@@ -10,7 +10,8 @@
     </VAppBar>
 
     <VNavigationDrawer v-model="navOpen"
-                       :permanent="navPersistent">
+                       :permanent="navPersistent"
+                       class="main-navdrawer">
       <VList nav>
         <VListItem prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"
                   :to="{ name: 'admin' }" exact />
@@ -18,7 +19,11 @@
                   :to="{ name: 'admin-goods' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="Analytics" value="analytics"
                   :to="{ name: 'admin-analytics' }" exact />
-        <VSpacer />
+      </VList>
+
+      <VSpacer />
+
+      <VList nav>
         <VListItem prepend-icon="mdi-arrow-left" title="Go to booth view page" value="booth_view_page" />
       </VList>
     </VNavigationDrawer>
@@ -68,3 +73,11 @@ export default class BoothAdminRoot extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+/* Workaround */
+.main-navdrawer .v-navigation-drawer__content {
+  display: flex;
+  flex-direction: column;
+}
+</style>
