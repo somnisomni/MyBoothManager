@@ -35,6 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:4.2.3"],\
             ["@vue/eslint-config-typescript", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:11.0.3"],\
             ["@vue/tsconfig", "npm:0.4.0"],\
+            ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.46.0"],\
             ["eslint-plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:9.17.0"],\
             ["npm-run-all", "npm:4.1.5"],\
@@ -1539,6 +1540,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/csstype-npm-3.1.2-cead7d99b2-e1a52e6c25.zip/node_modules/csstype/",\
           "packageDependencies": [\
             ["csstype", "npm:3.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["currency-symbol-map", [\
+        ["npm:5.1.0", {\
+          "packageLocation": "./.yarn/cache/currency-symbol-map-npm-5.1.0-226ff63fbd-7c84dd81bf.zip/node_modules/currency-symbol-map/",\
+          "packageDependencies": [\
+            ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3160,6 +3170,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:4.2.3"],\
             ["@vue/eslint-config-typescript", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:11.0.3"],\
             ["@vue/tsconfig", "npm:0.4.0"],\
+            ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.46.0"],\
             ["eslint-plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:9.17.0"],\
             ["npm-run-all", "npm:4.1.5"],\
