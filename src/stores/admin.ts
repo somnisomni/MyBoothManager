@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { type BoothData, type GoodsData, BoothOpenStatus } from "@/types/booth";
+import { type BoothData, BoothOpenStatus } from "@/types/booth";
+import { type GoodsData } from "@/types/goods";
 
 const useAdminStore = defineStore("admin", () => {
   const currentBoothId = 100000;
@@ -77,7 +78,7 @@ const useAdminStore = defineStore("admin", () => {
     2: {
       id: 2,
       boothId: 100000,
-      name: "Test Goods #2 at Main Test Booth",
+      name: "프라나 아크릴 스탠드",
       price: 15000,
       stock: {
         initial: 30,
@@ -87,7 +88,7 @@ const useAdminStore = defineStore("admin", () => {
     3: {
       id: 3,
       boothId: 100000,
-      name: "Momoi Acrylic Keyring at Main Test Booth",
+      name: "모모이 SD 아크릴 키링",
       price: 8000,
       stock: {
         initial: 20,
