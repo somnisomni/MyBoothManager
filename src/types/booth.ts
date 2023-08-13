@@ -27,6 +27,7 @@ export interface BoothStatusData {
 export interface BoothData {
   id: number,
   name: string,
+  description: string,
   currencySymbol: string,
   status: BoothStatusData,
 }
