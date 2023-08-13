@@ -2,9 +2,9 @@
   <VApp>
     <VAppBar class="pr-6"
              :class="{ 'pl-6': navPersistent }">
-      <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="Toggle navigation menu" />
+      <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="내비게이션 메뉴 전환" />
 
-      <VAppBarTitle class="ml-0"><strong>MyBoothManager</strong> | Booth Administration</VAppBarTitle>
+      <VAppBarTitle class="ml-0"><strong>MyBoothManager</strong> | 부스 관리</VAppBarTitle>
 
       <BoothSelectionArea />
     </VAppBar>
@@ -13,25 +13,25 @@
                        :permanent="navPersistent"
                        class="main-navdrawer">
       <VList nav>
-        <VListSubheader>Management</VListSubheader>
-        <VListItem prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"
+        <VListSubheader>관리</VListSubheader>
+        <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
                   :to="{ name: 'admin' }" exact />
-        <VListItem prepend-icon="mdi-store" title="Goods" value="goods"
+        <VListItem prepend-icon="mdi-store" title="굿즈" value="goods"
                   :to="{ name: 'admin-goods' }" exact />
-        <VListItem prepend-icon="mdi-chart-bar" title="Analytics" value="analytics"
+        <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
                   :to="{ name: 'admin-analytics' }" exact />
 
         <VDivider />
 
-        <VListSubheader>Utility</VListSubheader>
-        <VListItem prepend-icon="mdi-cash" title="Goods Price Calculator" value="price_calculator"
+        <VListSubheader>도구</VListSubheader>
+        <VListItem prepend-icon="mdi-cash" title="굿즈 가격 계산기" value="price_calculator"
                   :to="{ name: 'admin-utility-price-calculator' }" exact />
       </VList>
 
       <VSpacer />
 
       <VList nav>
-        <VListItem prepend-icon="mdi-arrow-left" title="Go to booth view page" value="booth_view_page" />
+        <VListItem prepend-icon="mdi-arrow-left" title="부스 페이지로 이동" value="booth_view_page" />
       </VList>
     </VNavigationDrawer>
 

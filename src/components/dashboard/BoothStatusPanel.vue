@@ -1,12 +1,12 @@
 <template>
-  <DashboardPanel title="Booth Status">
+  <DashboardPanel title="부스 운영 상태">
     <div class="status-text">{{ openStatusString }}</div>
     <div v-if="currentBoothStatus.status === BoothOpenStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
-      <div class="text-grey-darken-2 reason-title">Reason</div>
+      <div class="text-grey-darken-2 reason-title">사유</div>
       <div class="reason-text">{{ currentBoothStatus.reason }}</div>
     </div>
 
-    <div class="mt-6 text-center text-grey-darken-2">Mark the booth as: </div>
+    <div class="mt-6 text-center text-grey-darken-2">부스 상태 변경: </div>
     <VLayout class="flex-column">
       <VBtn v-for="item in STATUSES"
             :key="item.status"
@@ -50,19 +50,19 @@ export default class BoothStatusPanel extends Vue {
   readonly STATUSES = [
     {
       status: BoothOpenStatus.OPEN,
-      text: "Opened",
+      text: "운영 중",
       icon: "mdi-store-check",
       color: "blue",
     },
     {
       status: BoothOpenStatus.PAUSE,
-      text: "Paused",
+      text: "일시 중지",
       icon: "mdi-store-clock",
       color: "orange-darken-1",
     },
     {
       status: BoothOpenStatus.CLOSE,
-      text: "Closed",
+      text: "운영 종료",
       icon: "mdi-store-off",
       color: "red-darken-1",
     },
@@ -84,13 +84,13 @@ export default class BoothStatusPanel extends Vue {
   get openStatusString(): string {
     switch(this.currentBoothStatus.status) {
       case BoothOpenStatus.OPEN:
-        return "Opened";
+        return "운영 중";
       case BoothOpenStatus.PAUSE:
-        return "Paused";
+        return "일시 중지";
       case BoothOpenStatus.CLOSE:
-        return "Closed";
+        return "운영 종료";
       default:
-        return "Unknown";
+        return "알 수 없음";
     }
   }
 }

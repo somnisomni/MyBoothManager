@@ -5,7 +5,7 @@
            max-width="100%"
            class="booth-selection-dialog">
     <VCard class="ma-0 ma-sm-4">
-      <VCardTitle class="mt-2 mb-2">Select booth</VCardTitle>
+      <VCardTitle class="mt-2 mb-2">관리할 부스 선택</VCardTitle>
       <VDivider />
       <VCardText class="pa-0">
         <VSheet v-for="booth in boothList"
@@ -46,10 +46,10 @@ export default class BoothSelectionDialog extends Vue {
 
   getStatusText(status: BoothOpenStatus) {
     switch(status) {
-      case BoothOpenStatus.OPEN: return "Opened";
-      case BoothOpenStatus.CLOSE: return "Closed";
-      case BoothOpenStatus.PAUSE: return "Paused";
-      default: return "Unknown";
+      case BoothOpenStatus.OPEN: return "운영 중";
+      case BoothOpenStatus.CLOSE: return "운영 종료";
+      case BoothOpenStatus.PAUSE: return "운영 일시 중지";
+      default: return "알 수 없음";
     }
   }
 

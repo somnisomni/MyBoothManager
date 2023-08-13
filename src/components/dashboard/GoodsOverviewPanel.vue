@@ -1,28 +1,28 @@
 <template>
-  <DashboardPanel title="Goods Overview">
+  <DashboardPanel title="굿즈 현황">
     <VContainer class="flex-column">
       <VRow>
         <VCol>
-          <span>Total stocks: 00</span>
+          <span>총 재고 개수: 00</span>
         </VCol>
         <VCol>
-          <span>Available stocks: 00</span>
-        </VCol>
-      </VRow>
-      <VRow>
-        <VCol>
-          <span>Stocks sold: 00</span>
-        </VCol>
-        <VCol>
-          <span>Stocks given as gift: 00</span>
+          <span>남아있는 재고 개수: 00</span>
         </VCol>
       </VRow>
       <VRow>
         <VCol>
-          <span>Total worth: 00</span>
+          <span>판매 개수: 00</span>
         </VCol>
         <VCol>
-          <span>Sold worth: 00</span>
+          <span>무상 증정 개수: 00</span>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <span>총 재고 가치: 00</span>
+        </VCol>
+        <VCol>
+          <span>현재까지 판매된 재고 가치: 00</span>
         </VCol>
       </VRow>
     </VContainer>

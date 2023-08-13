@@ -12,30 +12,30 @@
       </template>
 
       <!-- Title -->
-      <VCardTitle v-if="targetStatusIsClosing">Closing the booth</VCardTitle>
-      <VCardTitle v-else-if="targetStatusIsPausing">Pausing the booth</VCardTitle>
-      <VCardTitle v-else>Opening the booth</VCardTitle>
+      <VCardTitle v-if="targetStatusIsClosing">부스 운영 종료</VCardTitle>
+      <VCardTitle v-else-if="targetStatusIsPausing">부스 일시 중지</VCardTitle>
+      <VCardTitle v-else>부스 운영 시작</VCardTitle>
 
       <VDivider />
 
       <!-- Description -->
       <VCardText v-if="targetStatusIsClosing">
-        <p>Closing the booth make the users can't interaction within the booth page, but still can view the page.</p>
+        <p>부스의 운영을 종료하면 <strong>일반 사용자는 부스 페이지 내에서 상호작용을 할 수 없게 되지만, 부스 페이지를 계속해서 열람할 수 있습니다.</strong></p>
       </VCardText>
       <VCardText v-else-if="targetStatusIsPausing">
-        <p>Closing the booth make the users can't interaction within the booth page temporary, but still can view the page.</p>
-        <p>Ideal status when you are stepping out the booth for a minute, or being ready for next day after finishing run the booth today.</p>
+        <p>부스의 운영을 일시 중지하면 <strong>일반 사용자는 일시적으로 부스 페이지 내에서 상호작용을 할 수 없게 되지만, 부스 페이지를 계속해서 열람할 수 있습니다.</strong></p>
+        <p>부스에서 자리를 뜨게 되어 직접적인 운영이 잠시 불가능해지거나, 사건사고 발생, 또는 당일 부스 운영을 마치고 다음 날을 위해 준비하게 될 때 설정하는 것이 적합합니다.</p>
         <br />
-        <p>You can optionally describe the reason of closing.</p>
+        <p>부스를 일시 중지하는 사유를 선택적으로 명시할 수 있습니다.</p>
       </VCardText>
       <VCardText v-else>
-        <p>Users can interact within the booth page after opening the booth.</p>
+        <p>부스를 운영하기 시작하면 <strong>일반 사용자는 부스 페이지에서 상호작용을 할 수 있게 됩니다.</strong></p>
       </VCardText>
 
       <!-- Pause: optional reason input -->
       <VTextField v-if="targetStatusIsPausing"
                   v-model="pausingReason"
-                  label="Pausing reason"
+                  label="일시 중지 사유"
                   class="mt-4 mx-8" />
 
       <VDivider />
@@ -43,8 +43,8 @@
       <!-- Dialog action -->
       <VCardActions>
         <VSpacer />
-        <VBtn :disabled="updateInProgress" text @click="onDialogCancel">Cancel</VBtn>
-        <VBtn :disabled="updateInProgress" :color="accentColor" text @click="onDialogConfirm">Confirm</VBtn>
+        <VBtn :disabled="updateInProgress" text @click="onDialogCancel">취소</VBtn>
+        <VBtn :disabled="updateInProgress" :color="accentColor" text @click="onDialogConfirm">변경하기</VBtn>
       </VCardActions>
     </VCard>
   </VDialog>
