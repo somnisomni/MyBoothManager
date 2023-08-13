@@ -3,11 +3,14 @@
           width="200"
           height="250"
           rounded="lg"
+          v-ripple
           :elevation="elevation"
           @pointerenter="elevation = ELEVATION_HOVER"
           @pointerleave="elevation = ELEVATION_NORMAL">
     <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/250'" aspect-ratio="1/1" />
     <div class="goods-image-overlay"></div>
+
+    <div class="click-to-edit-text">클릭하여 수정</div>
 
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name">{{ goodsData.name }}</div>
@@ -40,10 +43,29 @@ export default class GoodsItem extends Vue {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.25s, transform 0.25s;
+  transition: box-shadow 0.25s, transform 0.25s ease-in-out;
 
   &:hover {
     transform: translateY(-5%);
+  }
+
+  .click-to-edit-text {
+    $top-position: 16px;
+
+    position: absolute;
+    color: white;
+    width: 100%;
+    text-align: center;
+    left: 0;
+    right: 0;
+    top: $top-position;
+    font-size: 1.25em;
+    transform: translateY($top-position * -4);
+    transition: transform 0.25s ease-in-out;
+  }
+
+  &:hover .click-to-edit-text {
+    transform: translateY(0);
   }
 
   .goods-image {
