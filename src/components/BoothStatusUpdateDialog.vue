@@ -16,6 +16,8 @@
       <VCardTitle v-else-if="targetStatusIsPausing">Pausing the booth</VCardTitle>
       <VCardTitle v-else>Opening the booth</VCardTitle>
 
+      <VDivider />
+
       <!-- Description -->
       <VCardText v-if="targetStatusIsClosing">
         <p>Closing the booth make the users can't interaction within the booth page, but still can view the page.</p>
@@ -35,6 +37,8 @@
                   v-model="pausingReason"
                   label="Pausing reason"
                   class="mt-4 mx-8" />
+
+      <VDivider />
 
       <!-- Dialog action -->
       <VCardActions>
