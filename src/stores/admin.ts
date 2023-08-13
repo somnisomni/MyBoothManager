@@ -26,7 +26,7 @@ const useAdminStore = defineStore("admin", () => {
       name: "Test booth #3",
       currencySymbol: "₩",
       status: {
-        status: BoothOpenStatus.PAUSE,
+        status: BoothOpenStatus.PREPARE,
         reason: "111111",
       },
     },

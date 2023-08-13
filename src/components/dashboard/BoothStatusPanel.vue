@@ -1,11 +1,26 @@
 <template>
   <DashboardPanel title="부스 운영 상태">
-    <div class="status-text">{{ openStatusString }}</div>
+    <!-- Booth status text -->
+    <div class="status-text">{{ getBoothOpenStatusString(currentBoothStatus.status) }}</div>
+
+    <!-- When status is PAUSE: Reason text if available-->
     <div v-if="currentBoothStatus.status === BoothOpenStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
       <div class="text-grey-darken-2 reason-title">사유</div>
       <div class="reason-text">{{ currentBoothStatus.reason }}</div>
     </div>
 
+    <!-- When status is PREPARE: Content publish setting -->
+    <VLayout v-if="currentBoothStatus.status === BoothOpenStatus.PREPARE" class="mt-6 text-center flex-column">
+      <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
+      <VLayout class="flex-row justify-stretch mt-1">
+        <VBtn :variant="currentBoothStatus.contentPublish ? 'flat' : 'outlined'"
+              :disabled="currentBoothStatus.contentPublish" color="green" class="mr-1 flex-grow-1">공개</VBtn>
+        <VBtn :variant="!currentBoothStatus.contentPublish ? 'flat' : 'outlined'"
+              :disabled="!currentBoothStatus.contentPublish" color="grey" class="ml-1 flex-grow-1">비공개</VBtn>
+      </VLayout>
+    </VLayout>
+
+    <!-- Booth status changer -->
     <div class="mt-6 text-center text-grey-darken-2">부스 상태 변경: </div>
     <VLayout class="flex-column">
       <VBtn v-for="item in STATUSES"
@@ -17,7 +32,7 @@
             height="42"
             @click="onBoothStatusUpdateButtonClick(item.status)">
         <VIcon>{{ item.icon }}</VIcon>
-        <span class="ml-2">{{ item.text }}</span>
+        <span class="ml-2">{{ getBoothOpenStatusString(item.status) }}</span>
       </VBtn>
     </VLayout>
   </DashboardPanel>
@@ -28,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { BoothOpenStatus } from "@/types/booth";
+import { BoothOpenStatus, type BoothStatusData } from "@/types/booth";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 import BoothStatusUpdateDialog from "@/components/BoothStatusUpdateDialog.vue";
 import DashboardPanel from "./DashboardPanel.vue";
@@ -41,28 +56,28 @@ import DashboardPanel from "./DashboardPanel.vue";
 })
 export default class BoothStatusPanel extends Vue {
   BoothOpenStatus = BoothOpenStatus;
+  getBoothOpenStatusString = BoothOpenStatus.getBoothOpenStatusString;
 
-  @Prop({ required: true }) currentBoothStatus!: {
-    status: BoothOpenStatus,
-    reason?: string,
-  };
+  @Prop({ required: true }) currentBoothStatus!: BoothStatusData;
 
   readonly STATUSES = [
     {
+      status: BoothOpenStatus.PREPARE,
+      icon: "mdi-store-clock",
+      color: "green",
+    },
+    {
       status: BoothOpenStatus.OPEN,
-      text: "운영 중",
       icon: "mdi-store-check",
       color: "blue",
     },
     {
       status: BoothOpenStatus.PAUSE,
-      text: "일시 중지",
-      icon: "mdi-store-clock",
+      icon: "mdi-store-alert",
       color: "orange-darken-1",
     },
     {
       status: BoothOpenStatus.CLOSE,
-      text: "운영 종료",
       icon: "mdi-store-off",
       color: "red-darken-1",
     },

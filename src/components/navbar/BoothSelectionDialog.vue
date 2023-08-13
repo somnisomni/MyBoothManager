@@ -23,7 +23,7 @@
               <div class="booth-item-name">{{ booth.name }}</div>
               <div class="booth-item-desc">Description blahblah</div>
             </VLayout>
-            <div>{{ getStatusText(booth.status.status) }}</div>
+            <div>{{ getBoothOpenStatusString(booth.status.status) }}</div>
           </VLayout>
         </VSheet>
       </VCardText>
@@ -40,17 +40,10 @@ import { BoothOpenStatus } from "@/types/booth";
 export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
+  getBoothOpenStatusString = BoothOpenStatus.getBoothOpenStatusString;
+
   get boothList() {
     return Object.values(useAdminStore().boothList);
-  }
-
-  getStatusText(status: BoothOpenStatus) {
-    switch(status) {
-      case BoothOpenStatus.OPEN: return "운영 중";
-      case BoothOpenStatus.CLOSE: return "운영 종료";
-      case BoothOpenStatus.PAUSE: return "운영 일시 중지";
-      default: return "알 수 없음";
-    }
   }
 
   onBoothSelect(boothId: number) {

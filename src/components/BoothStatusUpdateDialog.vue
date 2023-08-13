@@ -12,14 +12,23 @@
       </template>
 
       <!-- Title -->
-      <VCardTitle v-if="targetStatusIsClosing">부스 운영 종료</VCardTitle>
+      <VCardTitle v-if="targetStatusIsPreparing">부스 운영 준비</VCardTitle>
+      <VCardTitle v-else-if="targetStatusIsClosing">부스 운영 종료</VCardTitle>
       <VCardTitle v-else-if="targetStatusIsPausing">부스 일시 중지</VCardTitle>
       <VCardTitle v-else>부스 운영 시작</VCardTitle>
 
       <VDivider />
 
       <!-- Description -->
-      <VCardText v-if="targetStatusIsClosing">
+      <VCardText v-if="targetStatusIsPreparing">
+        <p>부스가 운영 준비(행사 개최 대기) 상태인 경우,</p><br />
+        <ul>
+          <li>부스 정보 비공개 설정 시: 일반 사용자는 부스 페이지 열람 시 부스의 정보는 확인할 수 없고, 준비 중이라는 메시지만 표시됩니다.</li>
+          <li>부스 정보 공개 설정 시: 일반 사용자는 부스 페이지에서 부스 정보를 확인할 수 있지만, 부스의 운영이 시작되기 전까지 상호작용을 할 수 없게 됩니다.</li>
+        </ul><br/>
+        <p>부스 정보 공개 여부는 부스 운영 상태를 변경한 후 설정할 수 있습니다.</p>
+      </VCardText>
+      <VCardText v-else-if="targetStatusIsClosing">
         <p>부스의 운영을 종료하면 <strong>일반 사용자는 부스 페이지 내에서 상호작용을 할 수 없게 되지만, 부스 페이지를 계속해서 열람할 수 있습니다.</strong></p>
       </VCardText>
       <VCardText v-else-if="targetStatusIsPausing">
@@ -67,10 +76,12 @@ export default class BoothStatusUpdateDialog extends Vue {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
   }
 
+  get targetStatusIsPreparing(): boolean { return this.targetStatus === BoothOpenStatus.PREPARE; }
   get targetStatusIsClosing(): boolean { return this.targetStatus === BoothOpenStatus.CLOSE; }
   get targetStatusIsPausing(): boolean { return this.targetStatus === BoothOpenStatus.PAUSE; }
   get accentColor(): string {
     switch(this.targetStatus) {
+      case BoothOpenStatus.PREPARE: return "green";
       case BoothOpenStatus.CLOSE: return "red";
       case BoothOpenStatus.PAUSE: return "orange";
       default: return "blue";
