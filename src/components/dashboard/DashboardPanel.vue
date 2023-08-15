@@ -3,7 +3,7 @@
           :min-width="minWidth"
           :elevation="elevation"
           rounded="lg">
-    <div class="title"><span>{{ title }}</span></div>
+    <div v-if="title" class="title"><span>{{ title }}</span></div>
 
     <div class="contents">
       <slot></slot>
@@ -18,7 +18,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 export default class DashboardPanel extends Vue {
   @Prop({ default: "auto", required: false }) minWidth!: string | number;
   @Prop({ default: 6, required: false }) elevation!: number;
-  @Prop({ default: "Panel", required: true }) title!: string;
+  @Prop({ default: null }) title!: string | null;
 }
 </script>
 

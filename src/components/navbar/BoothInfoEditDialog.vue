@@ -1,6 +1,6 @@
 <template>
   <VDialog v-model="open"
-           persistent
+           :persistent="isFormEdited"
            width="700"
            max-width="100%"
            class="booth-info-edit-dialog">
@@ -45,11 +45,30 @@
       <!-- Dialog action -->
       <VCardActions>
         <VSpacer />
-        <VBtn :disabled="updateInProgress" text @click="onDialogCancel">취소</VBtn>
-        <VBtn :disabled="updateInProgress || !editFormValid" color="primary" text @click="onDialogConfirm">수정하기</VBtn>
+        <VBtn :disabled="updateInProgress" text @click="onEditDialogCancel">취소</VBtn>
+        <VBtn :disabled="updateInProgress || !editFormValid || !isFormEdited" color="primary" text @click="onEditDialogConfirm">수정하기</VBtn>
       </VCardActions>
     </VCard>
   </VDialog>
+
+  <VDialog v-model="cancelWarningDialogShown"
+           width="auto"
+           max-width="100%">
+      <VCard>
+        <VCardText>
+          <p><span class="text-red"><strong>아직 반영되지 않은 수정된 정보가 있습니다.</strong></span></p>
+          <p>변경한 내용을 취소하고 정보 수정 창을 닫으시겠습니까?</p>
+        </VCardText>
+
+        <VDivider />
+
+        <VCardActions>
+          <VSpacer />
+          <VBtn text @click="cancelWarningDialogShown = false">취소</VBtn>
+          <VBtn color="red" text @click="cancelWarningDialogShown = false; open = false">닫기</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
 </template>
 
 <script lang="ts">
@@ -64,8 +83,9 @@ export default class BoothInfoEditDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   updateInProgress = false;
-  editFormData!: Partial<BoothData>;
+  editFormData: Partial<BoothData> = reactive({});
   editFormValid = false;
+  cancelWarningDialogShown = false;
 
   get currencySymbols(): Array<Record<string, string>> {
     const symbols = [];
@@ -78,6 +98,22 @@ export default class BoothInfoEditDialog extends Vue {
     }
 
     return symbols;
+  }
+
+  get isFormEdited(): boolean {
+    const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+    let edited = false;
+
+    for(const key in this.editFormData) {
+      const k = key as keyof BoothData;
+
+      if(this.editFormData[k] !== currentBoothData[k]) {
+        edited = true;
+        break;
+      }
+    }
+
+    return edited;
   }
 
   mounted() {
@@ -98,11 +134,15 @@ export default class BoothInfoEditDialog extends Vue {
     return rules;
   }
 
-  onDialogCancel() {
-    this.open = false;
+  onEditDialogCancel() {
+    if(this.isFormEdited) {
+      this.cancelWarningDialogShown = true;
+    } else {
+      this.open = false;
+    }
   }
 
-  onDialogConfirm() {
+  onEditDialogConfirm() {
     // TODO: Replace real API call. Below is a mock.
 
     this.updateInProgress = true;
