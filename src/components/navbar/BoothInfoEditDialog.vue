@@ -46,14 +46,14 @@
       <VCardActions>
         <VSpacer />
         <VBtn :disabled="updateInProgress" text @click="onEditDialogCancel">취소</VBtn>
+        <VBtn :disabled="updateInProgress || !isFormEdited" text @click="resetForm">되돌리기</VBtn>
         <VBtn :disabled="updateInProgress || !editFormValid || !isFormEdited" color="primary" text @click="onEditDialogConfirm">수정하기</VBtn>
       </VCardActions>
     </VCard>
-  </VDialog>
 
-  <VDialog v-model="cancelWarningDialogShown"
-           width="auto"
-           max-width="100%">
+    <VDialog v-model="cancelWarningDialogShown"
+             width="auto"
+             max-width="100%">
       <VCard>
         <VCardText>
           <p><span class="text-red"><strong>아직 반영되지 않은 수정된 정보가 있습니다.</strong></span></p>
@@ -69,11 +69,12 @@
         </VCardActions>
       </VCard>
     </VDialog>
+  </VDialog>
 </template>
 
 <script lang="ts">
 import { reactive } from "vue";
-import { Vue, Component, Model } from "vue-facing-decorator";
+import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import type { BoothData } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import currencySymbolInfo from "@/data/currency-symbol";
@@ -116,7 +117,10 @@ export default class BoothInfoEditDialog extends Vue {
     return edited;
   }
 
-  mounted() {
+  mounted() { this.resetForm(); }
+  @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
+
+  resetForm() {
     const boothData = useAdminStore().boothList[useAdminStore().currentBoothId];
 
     this.editFormData = reactive({
