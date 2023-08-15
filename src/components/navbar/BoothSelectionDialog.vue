@@ -1,42 +1,41 @@
 <template>
-  <VDialog v-model="open"
-           scrollable
-           width="700"
-           max-width="100%"
-           class="booth-selection-dialog">
-    <VCard class="ma-0 ma-sm-4">
-      <VCardTitle class="mt-2 mb-2">관리할 부스 선택</VCardTitle>
-      <VDivider />
-      <VCardText class="pa-0">
-        <VSheet v-for="booth in boothList"
-                :key="booth.id"
-                class="booth-item"
-                v-ripple
-                @click.stop="onBoothSelect(booth.id)">
-          <div class="booth-item-image-container">
-            <VImg :src="'https://picsum.photos/seed/' + booth.id + '/1500/300'" cover aspect-ratio="4/1" class="booth-item-image" />
-            <div class="booth-item-image-overlay"></div>
-          </div>
+  <CommonDialog v-model="open"
+                :contentNoPadding="true"
+                :titleExtraMargin="true"
+                :closeOnCancel="false"
+                dialogTitle="관리할 부스 선택">
+    <VSheet v-for="booth in boothList"
+            :key="booth.id"
+            class="booth-item"
+            v-ripple
+            @click.stop="onBoothSelect(booth.id)">
+      <div class="booth-item-image-container">
+        <VImg :src="'https://picsum.photos/seed/' + booth.id + '/1500/300'" cover aspect-ratio="4/1" class="booth-item-image" />
+        <div class="booth-item-image-overlay"></div>
+      </div>
 
-          <VLayout class="booth-item-info w-100 h-100 pa-3 d-flex flex-row align-end justify-start">
-            <VLayout class="d-flex flex-column align-start justify-end">
-              <div class="booth-item-name">{{ booth.name }}</div>
-              <div class="booth-item-desc">{{ booth.description }}</div>
-            </VLayout>
-            <div>{{ getBoothOpenStatusString(booth.status.status) }}</div>
-          </VLayout>
-        </VSheet>
-      </VCardText>
-    </VCard>
-  </VDialog>
+      <VLayout class="booth-item-info w-100 h-100 pa-3 d-flex flex-row align-end justify-start">
+        <VLayout class="d-flex flex-column align-start justify-end">
+          <div class="booth-item-name">{{ booth.name }}</div>
+          <div class="booth-item-desc">{{ booth.description }}</div>
+        </VLayout>
+        <div>{{ getBoothOpenStatusString(booth.status.status) }}</div>
+      </VLayout>
+    </VSheet>
+  </CommonDialog>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Model } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import { BoothOpenStatus } from "@/types/booth";
+import CommonDialog from "@/components/common/CommonDialog.vue";
 
-@Component({})
+@Component({
+  components: {
+    CommonDialog,
+  },
+})
 export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
