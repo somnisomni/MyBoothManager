@@ -12,8 +12,8 @@ module.exports = {
     ecmaVersion: "latest",
   },
   rules: {
-    "quotes": ["error", "double"],
-    "comma-dangle": ["error", "always-multiline"],
-    "semi": ["error", "always"],
+    "quotes": [ "error", "double" ],
+    "comma-dangle": [ "error", "always-multiline" ],
+    "semi": [ "error", "always" ],
   },
 };
