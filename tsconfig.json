@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "tests/**/*.ts", "**/*.test.ts"],
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
