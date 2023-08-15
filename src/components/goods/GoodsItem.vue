@@ -6,7 +6,8 @@
           v-ripple
           :elevation="elevation"
           @pointerenter="elevation = ELEVATION_HOVER"
-          @pointerleave="elevation = ELEVATION_NORMAL">
+          @pointerleave="elevation = ELEVATION_NORMAL"
+          @click.stop="openEditDialog">
     <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/250'" aspect-ratio="1/1" />
     <div class="goods-image-overlay"></div>
 
@@ -24,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-facing-decorator";
+import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
 import { type GoodsData } from "@/types/goods";
 
 @Component({})
@@ -35,6 +36,9 @@ export default class GoodsItem extends Vue {
   ELEVATION_NORMAL = 2;
   ELEVATION_HOVER = 6;
   elevation = this.ELEVATION_NORMAL;
+
+  @Emit("openEditDialog")
+  openEditDialog() { return this.goodsData.id; }
 }
 </script>
 
