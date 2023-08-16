@@ -2,6 +2,7 @@
   <CommonDialog v-model="open"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
+                :hideCloseButton="true"
                 dialogCancelText="취소"
                 dialogSecondaryText="되돌리기"
                 dialogPrimaryText="업데이트"

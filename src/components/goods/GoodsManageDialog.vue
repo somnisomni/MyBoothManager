@@ -1,6 +1,7 @@
 <template>
   <CommonDialog v-model="open"
                 :progressActive="updateInProgress"
+                :hideCloseButton="true"
                 :dialogTitle="dynRes.title"
                 :dialogPrimaryText="dynRes.primaryText"
                 :onDialogPrimary="onDialogConfirm">

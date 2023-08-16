@@ -14,12 +14,15 @@
       </template>
 
       <!-- Title -->
-      <VCardTitle :class="{ 'my-2': titleExtraMargin }">{{ dialogTitle }}</VCardTitle>
+      <VRow class="pa-4" :class="{ 'py-6': titleExtraMargin }">
+        <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
+        <VBtn v-if="!hideCloseButton" icon variant="flat" class="mr-2" @click.stop="onCloseButtonClick"><VIcon>mdi-close</VIcon></VBtn>
+      </VRow>
 
       <VDivider />
 
       <!-- Content -->
-      <VCardText :class="{ 'pa-0': contentNoPadding }">
+      <VCardText class="px-6 py-4" :class="{ 'pa-0': contentNoPadding }">
         <slot></slot>
       </VCardText>
 
@@ -60,6 +63,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   @Prop({ type: String, default: "primary" }) accentColor!: string;
   @Prop({ type: String, default: 700 }) width!: string | number;
   @Prop({ type: String, default: "100%" }) maxWidth!: string | number;
+  @Prop({ type: Boolean, default: false }) hideCloseButton!: boolean;
   @Prop({ type: Boolean, default: false }) titleExtraMargin!: boolean;
   @Prop({ type: Boolean, default: false }) contentNoPadding!: boolean;
   @Prop({ type: String, default: "알림" }) dialogTitle!: string;
@@ -79,6 +83,11 @@ export default class BoothStatusUpdateDialog extends Vue {
     return (!!this.dialogPrimaryText && !!this.onDialogPrimary) ||
            (!!this.dialogSecondaryText && !!this.onDialogSecondary) ||
            (!!this.dialogCancelText && ((this.onDialogCancel && !this.closeOnCancel) || (!this.onDialogCancel && this.closeOnCancel)));
+  }
+
+  @Emit("close")
+  onCloseButtonClick() {
+    this.open = false;
   }
 
   @Emit("primary")
