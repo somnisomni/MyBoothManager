@@ -14,9 +14,11 @@
       <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
       <VLayout class="flex-row justify-stretch mt-1">
         <VBtn :variant="currentBoothStatus.contentPublish ? 'flat' : 'outlined'"
-              :disabled="currentBoothStatus.contentPublish" color="green" class="mr-1 flex-grow-1">공개</VBtn>
+              :disabled="currentBoothStatus.contentPublish" color="green" class="mr-1 flex-grow-1"
+              @click.stop="updateContentPublishStatus(true)">공개</VBtn>
         <VBtn :variant="!currentBoothStatus.contentPublish ? 'flat' : 'outlined'"
-              :disabled="!currentBoothStatus.contentPublish" color="grey" class="ml-1 flex-grow-1">비공개</VBtn>
+              :disabled="!currentBoothStatus.contentPublish" color="grey" class="ml-1 flex-grow-1"
+              @click.stop="updateContentPublishStatus(false)">비공개</VBtn>
       </VLayout>
     </VLayout>
 
@@ -47,6 +49,7 @@ import { BoothOpenStatus, type BoothStatusData } from "@/types/booth";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 import BoothStatusUpdateDialog from "@/components/BoothStatusUpdateDialog.vue";
 import DashboardPanel from "./DashboardPanel.vue";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({
   components: {
@@ -94,6 +97,11 @@ export default class BoothStatusPanel extends Vue {
   onBoothStatusUpdateDialogSuccess(): void {
     console.log("success");
     // TODO?
+  }
+
+  updateContentPublishStatus(publish: boolean) {
+    // TODO: Change with real API call
+    useAdminStore().boothList[useAdminStore().currentBoothId].status.contentPublish = publish;
   }
 
   get openStatusString(): string {
