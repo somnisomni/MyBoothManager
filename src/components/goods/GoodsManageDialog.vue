@@ -5,9 +5,29 @@
                 :dialogTitle="dynRes.title"
                 :dialogPrimaryText="dynRes.primaryText"
                 :onDialogPrimary="onDialogConfirm">
-    <p>굿즈 이름: {{ editFormData.name }}</p>
-    <p>가격: {{ currentBoothCurrencySymbol }}{{ editFormData.price?.toLocaleString() }}</p>
-    <p>재고: 현재 {{ editFormData.stock?.current }} / 전체 {{ editFormData.stock?.initial }}</p>
+    <VForm v-model="manageFormValid">
+      <VTextField v-model="manageFormData.name"
+                  density="compact"
+                  label="굿즈 이름" />
+      <VTextField v-model="manageFormData.price"
+                  density="compact"
+                  type="number"
+                  min="0"
+                  label="가격 (단가)" />
+      <VTextField v-model="manageFormData.stock!.initial"
+                  density="compact"
+                  type="number"
+                  max="10000"
+                  min="0"
+                  label="초기 재고" />
+      <VTextField v-model="manageFormData.stock!.current"
+                  density="compact"
+                  type="number"
+                  :max="manageFormData.stock!.initial"
+                  min="0"
+                  label="현재 재고"
+                  @focus="!manageFormData.stock!.current ? manageFormData.stock!.current = manageFormData.stock!.initial : undefined" />
+    </VForm>
   </CommonDialog>
 </template>
 
@@ -28,7 +48,8 @@ export default class GoodsManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
   @Prop({ type: Number, default: null, required: true }) goodsId!: number | string | null;
 
-  editFormData: Partial<GoodsData> = reactive({});
+  manageFormData: Partial<GoodsData | Record<string, any>> = reactive({});
+  manageFormValid: boolean = false;
   updateInProgress: boolean = false;
 
   get dynRes(): Record<string, any> {
@@ -49,12 +70,21 @@ export default class GoodsManageDialog extends Vue {
     if(this.goodsId) {
       const goodsData = useAdminStore().goodsList[parseInt(this.goodsId.toString())];
 
-      this.editFormData = reactive({
+      this.manageFormData = reactive({
         name: goodsData.name,
         price: goodsData.price,
         stock: {
           current: goodsData.stock.current,
           initial: goodsData.stock.initial,
+        },
+      });
+    } else {
+      this.manageFormData = reactive({
+        name: null,
+        price: null,
+        stock: {
+          current: null,
+          initial: null,
         },
       });
     }
@@ -67,9 +97,18 @@ export default class GoodsManageDialog extends Vue {
     setTimeout(() => {
       if(this.goodsId) {
         Object.assign(useAdminStore().goodsList[parseInt(this.goodsId.toString())], {
-          ...this.editFormData,
-          name: this.editFormData.name?.trim(),
+          ...this.manageFormData,
+          name: this.manageFormData.name?.trim(),
         });
+      } else {
+        const id = Date.now();
+        useAdminStore().goodsList[id] = {
+          id,
+          boothId: useAdminStore().currentBoothId,
+          name: this.manageFormData.name?.trim(),
+          categoryId: 1,
+          ...this.manageFormData,
+        } as GoodsData;
       }
 
       this.updateInProgress = false;
