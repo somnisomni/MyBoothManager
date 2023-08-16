@@ -1,6 +1,11 @@
 <template>
-  <VBtn title="Change the booth to manage" @click.stop="boothSelectionDialogOpen = !boothSelectionDialogOpen">
-    <VToolbarTitle class="text-right text-decoration-underline">{{ boothName }}</VToolbarTitle>
+  <VBtn title="관리할 부스 선택"
+        size="large"
+        @click.stop="boothSelectionDialogOpen = !boothSelectionDialogOpen">
+    <VToolbarTitle class="d-flex flex-row text-right" style="line-height: 1.1">
+      <div style="font-size: 0.66em; font-weight: 300">현재 관리 중인 부스</div>
+      <div class="text-decoration-underline">{{ boothName }}</div>
+    </VToolbarTitle>
     <VIcon class="ms-4">mdi-refresh</VIcon>
   </VBtn>
   <VBtn icon class="ms-2 me-0" title="부스 정보 수정" @click.stop="boothInfoEditDialogOpen = !boothInfoEditDialogOpen"><VIcon>mdi-storefront-edit</VIcon></VBtn>
