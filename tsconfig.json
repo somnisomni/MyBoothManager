@@ -1,11 +1,25 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "tests/**/*.ts", "**/*.test.ts"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "composite": true,
-    "module": "ESNext",
+    "module": "CommonJS",
+    "target": "ESNext",
     "baseUrl": ".",
+    "outDir": "./dist",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"]
     }
