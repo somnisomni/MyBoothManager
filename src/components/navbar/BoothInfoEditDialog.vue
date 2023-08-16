@@ -3,16 +3,16 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
+                dialogTitle="부스 정보 수정"
                 dialogCancelText="취소"
                 dialogSecondaryText="되돌리기"
                 dialogPrimaryText="업데이트"
                 :onDialogCancel="onEditDialogCancel"
                 :onDialogSecondary="resetForm"
                 :onDialogPrimary="onEditDialogConfirm"
-                :disablePrimary="!isFormEdited || !editFormValid"
                 :disableSecondary="!isFormEdited"
-                :closeOnCancel="false"
-                dialogTitle="부스 정보 수정">
+                :disablePrimary="!isFormEdited || !editFormValid"
+                :closeOnCancel="false">
     <VForm v-model="editFormValid">
       <VTextField v-model="editFormData.name"
                   class="my-1"
@@ -35,16 +35,8 @@
                 persistent-hint />
     </VForm>
 
-    <CommonDialog v-model="cancelWarningDialogShown"
-                  width="auto"
-                  dialogTitle="경고"
-                  dialogCancelText="취소"
-                  dialogPrimaryText="닫기"
-                  :onDialogPrimary="() => { cancelWarningDialogShown = false; open = false; }"
-                  accentColor="red">
-      <p><span class="text-red"><strong>아직 반영되지 않은 수정된 정보가 있습니다.</strong></span></p>
-      <p>변경한 내용을 취소하고 정보 수정 창을 닫으시겠습니까?</p>
-    </CommonDialog>
+    <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
+                               :closeCallback="() => { open = false; }" />
   </CommonDialog>
 </template>
 
@@ -55,10 +47,12 @@ import type { BoothData } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import currencySymbolInfo from "@/data/currency-symbol";
 import CommonDialog from "@/components/common/CommonDialog.vue";
+import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
 
 @Component({
   components: {
     CommonDialog,
+    FormDataLossWarningDialog,
   },
 })
 export default class BoothInfoEditDialog extends Vue {
