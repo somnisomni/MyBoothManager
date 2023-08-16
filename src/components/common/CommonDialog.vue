@@ -22,7 +22,7 @@
       <VDivider />
 
       <!-- Content -->
-      <VCardText class="px-6 py-4" :class="{ 'pa-0': contentNoPadding }">
+      <VCardText :class="{ 'pa-0': contentNoPadding, 'px-6 py-4': !contentNoPadding }">
         <slot></slot>
       </VCardText>
 
