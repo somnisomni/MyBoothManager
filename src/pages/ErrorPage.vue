@@ -2,13 +2,17 @@
   <div id="error-page" class="d-flex align-center justify-center text-center"
        @contextmenu="prevent">
     <div>
-      <img id="error-image"
+      <video id="error-image" autoplay loop muted playsinline poster="@/res/images/error_jeomo.png">
+        <source src="@/res/images/error_jeomo_anim.webm" type="video/webm" />
+        <source src="@/res/images/error_jeomo.png" type="image/png" />
+      </video>
+      <!-- <img id="error-image"
            alt="Error image (illustration by @Je_o_mo)"
-           src="/error_jeomo.png" />
+           src="@/res/images/error_jeomo.png" /> -->
 
       <div id="error-text">
         <p style="font-size: 2em"><strong>404.</strong></p>
-        <p style="font-weight: 300">페이지를 찾을 수 없습니다.</p>
+        <p style="font-weight: 300">곤란. 페이지를 찾을 수 없습니다.</p>
 
         <p id="error-text-href"><a :href="rootRouteUrl"><span>관리자 페이지로 이동</span></a></p>
       </div>
