@@ -4,11 +4,18 @@
                 :hideCloseButton="true"
                 :dialogTitle="dynRes.title"
                 :dialogPrimaryText="dynRes.primaryText"
-                :onDialogPrimary="onDialogConfirm">
+                :dialogSecondaryText="dynRes.secondaryText"
+                :onDialogPrimary="onDialogConfirm"
+                :onDialogSecondary="resetForm">
     <VForm v-model="manageFormValid">
       <VTextField v-model="manageFormData.name"
                   density="compact"
                   label="굿즈 이름" />
+      <VSelect v-model="manageFormData.categoryId"
+               :items="allCategoryData"
+               item-title="name"
+               item-value="id"
+               label="카테고리" />
       <VTextField v-model="manageFormData.price"
                   density="compact"
                   type="number"
@@ -56,11 +63,16 @@ export default class GoodsManageDialog extends Vue {
     return {
       title: this.editMode ? "굿즈 수정" : "굿즈 추가",
       primaryText: this.editMode ? "업데이트" : "추가",
+      secondaryText: this.editMode ? "되돌리기" : "초기화",
     };
   }
 
   get currentBoothCurrencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get allCategoryData() {
+    return Object.values(useAdminStore().goodsCategoryList);
   }
 
   mounted() { this.resetForm(); }
@@ -73,6 +85,7 @@ export default class GoodsManageDialog extends Vue {
       this.manageFormData = reactive({
         name: goodsData.name,
         price: goodsData.price,
+        categoryId: goodsData.categoryId,
         stock: {
           current: goodsData.stock.current,
           initial: goodsData.stock.initial,
@@ -82,6 +95,7 @@ export default class GoodsManageDialog extends Vue {
       this.manageFormData = reactive({
         name: null,
         price: null,
+        categoryId: null,
         stock: {
           current: null,
           initial: null,
