@@ -15,11 +15,13 @@
                 :closeOnCancel="false">
     <VForm v-model="manageFormValid">
       <VTextField v-model="manageFormData.name"
+                  tabindex="1"
                   density="compact"
                   label="굿즈 이름"
                   :rules="stringValidator(manageFormData.name)" />
       <VRow class="ma-0 d-flex flex-row">
         <VSelect v-model="manageFormData.categoryId"
+                 tabindex="2"
                  class="flex-grow-1"
                  :items="allCategoryData"
                  item-title="name"
@@ -31,7 +33,13 @@
           <VIcon>mdi-plus</VIcon>
         </VBtn>
       </VRow>
+      <VTextField v-model="goodsitemtype_temp"
+                  tabindex="3"
+                  density="compact"
+                  label="굿즈 종류"
+                  :rules="stringValidator(goodsitemtype_temp)" />
       <VTextField v-model="manageFormData.price"
+                  tabindex="4"
                   density="compact"
                   type="number"
                   min="0"
@@ -40,6 +48,7 @@
                   :rules="numberValidator(manageFormData.price)" />
       <VRow class="ma-0 d-flex flex-row">
         <VTextField v-model="manageFormData.stock!.current"
+                    tabindex="6"
                     density="compact"
                     type="number"
                     :max="manageFormData.stock!.initial"
@@ -50,6 +59,7 @@
                     @focus="!manageFormData.stock!.current ? manageFormData.stock!.current = manageFormData.stock!.initial : undefined" />
         <span class="mx-2 mt-1" style="font-size: 1.5em"> / </span>
         <VTextField v-model="manageFormData.stock!.initial"
+                    tabindex="5"
                     density="compact"
                     type="number"
                     max="10000"
@@ -92,6 +102,8 @@ export default class GoodsManageDialog extends Vue {
   manageFormData: Partial<GoodsData | Record<string, any>> = reactive({});
   manageFormValid: boolean = false;
   updateInProgress: boolean = false;
+
+  goodsitemtype_temp: string = "";
 
   get dynRes(): Record<string, any> {
     return {
