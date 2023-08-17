@@ -3,6 +3,7 @@ import { type BoothData, BoothOpenStatus } from "@/types/booth";
 import { type GoodsCategoryData, type GoodsData } from "@/types/goods";
 
 const useAdminStore = defineStore("admin", () => {
+  /* States */
   const currentBoothId = 100000;
   const boothList: Record<number, BoothData> = {
     100000: {

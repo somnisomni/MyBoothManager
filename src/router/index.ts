@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import ErrorPage from "@/pages/ErrorPage.vue";
 import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
 import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
 import BoothAdminDashboardPage from "@/pages/BoothAdminDashboardPage.vue";
@@ -12,6 +13,11 @@ const router = createRouter({
       path: "/:pathMatch(.*)*",
       name: "placeholder",
       component: PlaceholderPage,
+    },
+    {
+      path: "/404",  // Change this to "/:pathMatch(.*)*" later, on real production
+      name: "404",
+      component: ErrorPage,
     },
 
     /* Admin Routes */
