@@ -2,7 +2,7 @@
   <CommonDialog v-model="open"
                 width="auto"
                 dialogTitle="경고"
-                dialogCancelText="취소"
+                dialogCancelText="돌아가기"
                 dialogPrimaryText="닫기"
                 :onDialogPrimary="() => { closeCallback(); open = false; }"
                 accentColor="red">
