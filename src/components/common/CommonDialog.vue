@@ -67,7 +67,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   @Prop({ type: Boolean, default: false }) titleExtraMargin!: boolean;
   @Prop({ type: Boolean, default: false }) contentNoPadding!: boolean;
   @Prop({ type: String, default: "알림" }) dialogTitle!: string;
-  @Prop({ type: String, default: "취소" }) dialogCancelText!: string;
+  @Prop({ type: String, default: "닫기" }) dialogCancelText!: string;
   @Prop({ type: String, default: "확인" }) dialogPrimaryText!: string;
   @Prop({ type: String, default: null }) dialogSecondaryText!: string | null;
   @Prop({ type: Boolean, default: false }) disableCancel!: boolean;
