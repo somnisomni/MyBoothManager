@@ -1,9 +1,13 @@
 export enum BoothOpenStatus {
-  __RESERVED = 0,
-  OPEN,
-  PAUSE,
-  CLOSE,
-  PREPARE,
+  OPEN = "open",
+  PAUSE = "pause",
+  CLOSE = "close",
+  PREPARE = "prepare",
+
+  "open" = OPEN,
+  "pause" = PAUSE,
+  "close" = CLOSE,
+  "prepare" = PREPARE,
 }
 
 export namespace BoothOpenStatus {
@@ -21,7 +25,7 @@ export namespace BoothOpenStatus {
 export interface BoothStatusData {
   status: BoothOpenStatus,
   reason?: string,           // Reason of pausing status
-  contentPublish?: boolean,  // Whether the content of the booth is publicily available while preparing status
+  publishContent?: boolean,  // Whether the content of the booth is publicily available while preparing status
 }
 
 export interface BoothData {

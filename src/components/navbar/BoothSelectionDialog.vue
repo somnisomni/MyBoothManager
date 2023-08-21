@@ -1,5 +1,6 @@
 <template>
   <CommonDialog v-model="open"
+                :progressActive="boothListFetching"
                 :contentNoPadding="true"
                 :titleExtraMargin="true"
                 :closeOnCancel="false"
@@ -26,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model } from "vue-facing-decorator";
+import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import { BoothOpenStatus } from "@/types/booth";
 import CommonDialog from "@/components/common/CommonDialog.vue";
@@ -41,8 +42,19 @@ export default class BoothSelectionDialog extends Vue {
 
   getBoothOpenStatusString = BoothOpenStatus.getBoothOpenStatusString;
 
+  boothListFetching = false;
+
   get boothList() {
     return Object.values(useAdminStore().boothList);
+  }
+
+  @Watch("open")
+  async onDialogShown() {
+    if(!this.open) return;
+
+    this.boothListFetching = true;
+    await useAdminStore().fetchAllBooths();
+    this.boothListFetching = false;
   }
 
   onBoothSelect(boothId: number) {

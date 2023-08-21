@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
 import { type BoothData, BoothOpenStatus } from "@/types/booth";
 import { type GoodsCategoryData, type GoodsData } from "@/types/goods";
+import { adminGET } from "@/lib/api";
+import { reactive } from "vue";
 
 const useAdminStore = defineStore("admin", () => {
   /* States */
   const currentBoothId = 100000;
-  const boothList: Record<number, BoothData> = {
+  const boothList: Record<number, BoothData> = reactive({
     100000: {
       id: 100000,
       name: "Main Test Booth",
@@ -15,64 +17,8 @@ const useAdminStore = defineStore("admin", () => {
         status: BoothOpenStatus.OPEN,
       },
     },
-    100001: {
-      id: 100001,
-      name: "Test booth #2",
-      description: "Awesome Booth #2",
-      currencySymbol: "$",
-      status: {
-        status: BoothOpenStatus.PAUSE,
-        reason: "Lunch time ;)",
-      },
-    },
-    111111: {
-      id: 111111,
-      name: "Test booth #3",
-      description: "Awesome Booth #3",
-      currencySymbol: "₩",
-      status: {
-        status: BoothOpenStatus.PREPARE,
-        reason: "111111",
-      },
-    },
-    222222: {
-      id: 222222,
-      name: "Test booth #4",
-      description: "Awesome Booth #4",
-      currencySymbol: "$",
-      status: {
-        status: BoothOpenStatus.CLOSE,
-      },
-    },
-    333333: {
-      id: 333333,
-      name: "Test booth #5",
-      description: "Awesome Booth #5",
-      currencySymbol: "¥",
-      status: {
-        status: BoothOpenStatus.OPEN,
-      },
-    },
-    444444: {
-      id: 444444,
-      name: "Test booth #6",
-      description: "Awesome Booth #6",
-      currencySymbol: "¥",
-      status: {
-        status: BoothOpenStatus.PAUSE,
-      },
-    },
-    555555: {
-      id: 555555,
-      name: "Test booth #7",
-      description: "Awesome Booth #7",
-      currencySymbol: "¥",
-      status: {
-        status: BoothOpenStatus.CLOSE,
-      },
-    },
-  };
-  const goodsCategoryList: Record<number, GoodsCategoryData> = {
+  });
+  const goodsCategoryList: Record<number, GoodsCategoryData> = reactive({
     1: {
       id: 1,
       boothId: 100000,
@@ -88,8 +34,8 @@ const useAdminStore = defineStore("admin", () => {
       boothId: 100000,
       name: "기타",
     },
-  };
-  const goodsList: Record<number, GoodsData> = {
+  });
+  const goodsList: Record<number, GoodsData> = reactive({
     1: {
       id: 1,
       boothId: 100000,
@@ -134,13 +80,25 @@ const useAdminStore = defineStore("admin", () => {
         current: 3,
       },
     },
-  };
+  });
+
+  /* Actions */
+  async function fetchAllBooths() {
+    const response = (await (await adminGET("booth")).json()) as Array<BoothData>;
+
+    for(const booth of response) {
+      boothList[booth.id] = booth;
+    }
+    console.log(boothList);
+  }
 
   return {
     currentBoothId,
     boothList,
     goodsCategoryList,
     goodsList,
+
+    fetchAllBooths,
   };
 });
 
