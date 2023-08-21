@@ -1,8 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { ImATeapotException, Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return "Hello World!";
+  throwNotFoundException() {
+    throw new NotFoundException();
+  }
+
+  throwTeapotException() {
+    throw new ImATeapotException();
   }
 }

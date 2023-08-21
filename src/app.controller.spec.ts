@@ -1,22 +1,27 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { NotFoundException } from "@nestjs/common";
 
 describe("AppController", () => {
+  let testingModule: TestingModule;
   let appController: AppController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    testingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    appController = testingModule.get<AppController>(AppController);
+  });
+  afterEach(async () => { await testingModule.close(); });
+
+  it("should be defined", () => {
+    expect(appController).toBeDefined();
   });
 
-  describe("root", () => {
-    it("should return \"Hello World!\"", () => {
-      expect(appController.getHello()).toBe("Hello World!");
-    });
+  it("should throw NotFoundException", () => {
+    expect(appController.notFound).toThrowError(NotFoundException);
   });
 });
