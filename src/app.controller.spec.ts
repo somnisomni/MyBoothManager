@@ -1,27 +1,43 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { NotFoundException } from "@nestjs/common";
+import { ImATeapotException, NotFoundException } from "@nestjs/common";
 
 describe("AppController", () => {
-  let testingModule: TestingModule;
-  let appController: AppController;
+  let controller: AppController;
 
   beforeEach(async () => {
-    testingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
     }).compile();
 
-    appController = testingModule.get<AppController>(AppController);
+    controller = module.get<AppController>(AppController);
   });
-  afterEach(async () => { await testingModule.close(); });
 
   it("should be defined", () => {
-    expect(appController).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
   it("should throw NotFoundException", () => {
-    expect(appController.notFound).toThrowError(NotFoundException);
+    try {
+      controller.notFound();
+      fail("This should not be reached");
+    } catch(e) {
+      expect(e).toBeInstanceOf(NotFoundException);
+      expect(e).toHaveProperty("message");
+      expect(e).toHaveProperty("getStatus");
+    }
+  });
+
+  it("should throw TeapotException", () => {
+    try {
+      controller.teapot();
+      fail("This should not be reached");
+    } catch(e) {
+      expect(e).toBeInstanceOf(ImATeapotException);
+      expect(e).toHaveProperty("message");
+      expect(e).toHaveProperty("getStatus");
+    }
   });
 });
