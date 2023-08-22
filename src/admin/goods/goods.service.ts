@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
-import { Goods } from "./entities/goods.entity";
-import { goodsList } from "@/dev/temp-data";
+import Goods from "@/db/models/goods";
+import { OmitInternals } from "@/lib/interface-omit";
+
+type GoodsOutput = OmitInternals<Goods>;
 
 @Injectable()
 export class GoodsService {
@@ -10,14 +12,23 @@ export class GoodsService {
     throw new BadRequestException("Goods creation is not yet supported.");
   }
 
-  findAll(): Array<Goods> {
-    return Object.values(goodsList);
+  async findAll(): Promise<Array<GoodsOutput>> {
+    return (await Goods.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    })) as Array<GoodsOutput>;
   }
 
-  findOne(id: number): Goods {
-    if(!goodsList[id]) throw new BadRequestException("Goods not found.");
+  async findOne(id: number): Promise<GoodsOutput> {
+    const goods = await Goods.findByPk(id, {
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    }) as GoodsOutput;
 
-    return goodsList[id];
+    if(!goods) throw new BadRequestException("Goods not found.");
+    return goods;
   }
 
   update(id: number, updateGoodDto: UpdateGoodsDTO) {

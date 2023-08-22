@@ -13,13 +13,13 @@ export class GoodsController {
   }
 
   @Get()
-  findAll() {
-    return this.goodsService.findAll();
+  async findAll() {
+    return await this.goodsService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.goodsService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    return await this.goodsService.findOne(+id);
   }
 
   @Patch(":id")

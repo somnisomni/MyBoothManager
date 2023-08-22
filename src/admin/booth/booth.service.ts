@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import { Booth } from "./entities/booth.entity";
-import { boothList } from "@/dev/temp-data";
+import Booth, { IBooth } from "@/db/models/booth";
+import { OmitInternals } from "@/lib/interface-omit";
+
+type BoothOutput = OmitInternals<IBooth>;
 
 @Injectable()
 export class BoothService {
@@ -10,14 +12,23 @@ export class BoothService {
     throw new BadRequestException("Booth creation is not yet supported.");
   }
 
-  findAll(): Array<Booth> {
-    return Object.values(boothList);
+  async findAll(): Promise<Array<BoothOutput>> {
+    return (await Booth.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    })) as Array<BoothOutput>;
   }
 
-  findOne(id: number): Booth {
-    if(!boothList[id]) throw new BadRequestException("Booth not found.");
+  async findOne(id: number): Promise<BoothOutput> {
+    const booth = await Booth.findByPk(id, {
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    }) as BoothOutput;
 
-    return boothList[id];
+    if(!booth) throw new BadRequestException("Booth not found.");
+    return booth;
   }
 
   update(id: number, updateBoothDto: UpdateBoothDTO) {

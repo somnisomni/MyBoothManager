@@ -15,13 +15,13 @@ export class BoothController {
   }
 
   @Get()
-  findAll() {
-    return this.adminService.findAll();
+  async findAll() {
+    return await this.adminService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.adminService.findOne(+id);
+  async findOne(@Param("id") id: string) {
+    return await this.adminService.findOne(+id);
   }
 
   @Patch(":id")
