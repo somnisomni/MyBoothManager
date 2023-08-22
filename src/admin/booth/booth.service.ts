@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import Booth, { IBooth } from "@/db/models/booth";
-import { OmitInternals } from "@/lib/interface-omit";
-
-type BoothOutput = OmitInternals<IBooth>;
+import Booth from "@/db/models/booth";
+import Goods from "@/db/models/goods";
+import { GoodsOutput } from "../goods/goods.entity";
+import GoodsCategory from "@/db/models/goods-category";
+import { GoodsCategoryOutput } from "../goods/goods-category.entity";
+import { BoothOutput } from "./booth.entity";
 
 @Injectable()
 export class BoothService {
@@ -29,6 +31,24 @@ export class BoothService {
 
     if(!booth) throw new BadRequestException("Booth not found.");
     return booth;
+  }
+
+  async findAllBoothGoods(boothId: number): Promise<Array<GoodsOutput>> {
+    return (await Goods.findAll({
+      where: { boothId },
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    })) as Array<GoodsOutput>;
+  }
+
+  async findAllBoothGoodsCategory(boothId: number): Promise<Array<GoodsCategoryOutput>> {
+    return (await GoodsCategory.findAll({
+      where: { boothId },
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "deletedAt"],
+      },
+    })) as Array<GoodsCategoryOutput>;
   }
 
   update(id: number, updateBoothDto: UpdateBoothDTO) {

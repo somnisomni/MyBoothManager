@@ -1,10 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
-import GoodsCategory, { IGoodsCategory } from "@/db/models/goods-category";
-import { OmitInternals } from "@/lib/interface-omit";
-
-type GoodsCategoryOutput = OmitInternals<IGoodsCategory>;
+import GoodsCategory from "@/db/models/goods-category";
+import { GoodsCategoryOutput } from "./goods-category.entity";
 
 @Injectable()
 export class GoodsCategoryService {

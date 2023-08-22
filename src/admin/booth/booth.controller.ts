@@ -7,30 +7,40 @@ import { DelayIntercepter } from "@/dev/delay-intercepter";
 @UseInterceptors(DelayIntercepter)
 @Controller("/admin/booth")
 export class BoothController {
-  constructor(private readonly adminService: BoothService) {}
+  constructor(private readonly boothService: BoothService) {}
 
   @Post()
   create(@Body() createAdminDto: CreateBoothDTO) {
-    return this.adminService.create(createAdminDto);
+    return this.boothService.create(createAdminDto);
   }
 
   @Get()
   async findAll() {
-    return await this.adminService.findAll();
+    return await this.boothService.findAll();
   }
 
   @Get(":id")
   async findOne(@Param("id") id: string) {
-    return await this.adminService.findOne(+id);
+    return await this.boothService.findOne(+id);
   }
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateAdminDto: UpdateBoothDTO) {
-    return this.adminService.update(+id, updateAdminDto);
+    return this.boothService.update(+id, updateAdminDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.adminService.remove(+id);
+    return this.boothService.remove(+id);
+  }
+
+  @Get(":id/goods")
+  async findAllBoothGoods(@Param("id") boothId: string) {
+    return await this.boothService.findAllBoothGoods(+boothId);
+  }
+
+  @Get(":id/goods/category")
+  async findAllBoothGoodsCategory(@Param("id") boothId: string) {
+    return await this.boothService.findAllBoothGoodsCategory(+boothId);
   }
 }

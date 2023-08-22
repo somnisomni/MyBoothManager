@@ -3,7 +3,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nes
 @Injectable()
 export class DelayIntercepter implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return next.handle();
   }
 }
