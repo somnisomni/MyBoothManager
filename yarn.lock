@@ -2641,6 +2641,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"currency-symbol-map@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "currency-symbol-map@npm:5.1.0"
+  checksum: 7c84dd81bff5703179a816012650b3e11f128e1fa83b7d376acdf8f41d544e9f6036ab08a02521cf365ed9b7a5c34bae276c7f23e0239936165534cb39d52a43
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4":
   version: 4.3.4
   resolution: "debug@npm:4.3.4"
@@ -5155,6 +5162,7 @@ __metadata:
     expect-type: ^0.16.0
     fastify: ^4.21.0
     jest: ^29.6.3
+    myboothmanager-common: "somnisomni/MyBoothManager-Common#deploy"
     mysql2: ^3.6.0
     reflect-metadata: ^0.1.13
     rxjs: ^7.8.1
@@ -5167,6 +5175,15 @@ __metadata:
     typescript: ^5.1.6
   languageName: unknown
   linkType: soft
+
+"myboothmanager-common@somnisomni/MyBoothManager-Common#deploy":
+  version: 0.0.0
+  resolution: "myboothmanager-common@https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"
+  dependencies:
+    currency-symbol-map: ^5.1.0
+  checksum: 67f23045204be30180bc36a0898d25b9d80866ce09a0c8af68e04196072922fd4e5e4019de464beb0c40a111fe13345b38d12f6eea1d226e9455442afdf636b7
+  languageName: node
+  linkType: hard
 
 "mysql2@npm:^3.6.0":
   version: 3.6.0

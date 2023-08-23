@@ -46,6 +46,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-type", "npm:0.16.0"],\
             ["fastify", "npm:4.21.0"],\
             ["jest", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:29.6.3"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
             ["mysql2", "npm:3.6.0"],\
             ["reflect-metadata", "npm:0.1.13"],\
             ["rxjs", "npm:7.8.1"],\
@@ -3671,6 +3672,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["currency-symbol-map", [\
+        ["npm:5.1.0", {\
+          "packageLocation": "./.yarn/cache/currency-symbol-map-npm-5.1.0-226ff63fbd-7c84dd81bf.zip/node_modules/currency-symbol-map/",\
+          "packageDependencies": [\
+            ["currency-symbol-map", "npm:5.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["debug", [\
         ["npm:4.3.4", {\
           "packageLocation": "./.yarn/cache/debug-npm-4.3.4-4513954577-3dbad3f94e.zip/node_modules/debug/",\
@@ -6535,6 +6545,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-type", "npm:0.16.0"],\
             ["fastify", "npm:4.21.0"],\
             ["jest", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:29.6.3"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
             ["mysql2", "npm:3.6.0"],\
             ["reflect-metadata", "npm:0.1.13"],\
             ["rxjs", "npm:7.8.1"],\
@@ -6547,6 +6558,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["myboothmanager-common", [\
+        ["https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9", {\
+          "packageLocation": "./.yarn/cache/myboothmanager-common-https-12fd95d21d-67f2304520.zip/node_modules/myboothmanager-common/",\
+          "packageDependencies": [\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
+            ["currency-symbol-map", "npm:5.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["mysql2", [\

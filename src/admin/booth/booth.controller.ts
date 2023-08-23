@@ -11,7 +11,7 @@ export class BoothController {
 
   @Post()
   create(@Body() createAdminDto: CreateBoothDTO) {
-    return this.boothService.create(createAdminDto);
+    return this.boothService.create(1, createAdminDto);
   }
 
   @Get()

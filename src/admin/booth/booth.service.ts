@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import Booth from "@/db/models/booth";
@@ -7,11 +7,23 @@ import { GoodsOutput } from "../goods/goods.entity";
 import GoodsCategory from "@/db/models/goods-category";
 import { GoodsCategoryOutput } from "../goods/goods-category.entity";
 import { BoothOutput } from "./booth.entity";
+import { BaseError } from "sequelize";
 
 @Injectable()
 export class BoothService {
-  create(createBoothDto: CreateBoothDTO) {
-    throw new BadRequestException("Booth creation is not yet supported.");
+  async create(ownerId: number, createBoothDto: CreateBoothDTO): Promise<Booth> {
+    try {
+      return (await Booth.create({
+        ...createBoothDto,
+        ownerId,
+      }));
+    } catch(error) {
+      if(error instanceof BaseError) {
+        throw new InternalServerErrorException("DB error");
+      } else {
+        throw new BadRequestException();
+      }
+    }
   }
 
   async findAll(): Promise<Array<BoothOutput>> {
