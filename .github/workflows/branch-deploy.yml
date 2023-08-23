@@ -1,6 +1,7 @@
 name: Build Node.js project and deploy to branch
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
