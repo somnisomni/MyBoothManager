@@ -1,3 +1,5 @@
+import { OmitSequelizeInternals } from "src/utils/internals";
+
 enum GoodsStatus {
   ON_SALE ="on_sale",
   PAUSE = "pause",
@@ -25,4 +27,6 @@ interface IGoods {
 type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockInitial" | "stockRemaining";
 type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-export { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest };
+type IGoodsResponse = OmitSequelizeInternals<IGoods>;
+
+export { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest, IGoodsResponse };

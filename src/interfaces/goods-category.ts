@@ -1,3 +1,5 @@
+import { OmitSequelizeInternals } from "src/utils/internals";
+
 interface IGoodsCategory {
   id: number;
   boothId: number;  // Foreign key to Booth.id
@@ -12,4 +14,6 @@ interface IGoodsCategory {
 type GoodsCategoryCreateRequestKey = "boothId" | "name";
 type IGoodsCategoryCreateRequest = Pick<IGoodsCategory, GoodsCategoryCreateRequestKey>;
 
-export { IGoodsCategory, GoodsCategoryCreateRequestKey, IGoodsCategoryCreateRequest };
+type IGoodsCategoryResponse = OmitSequelizeInternals<IGoodsCategory>;
+
+export { IGoodsCategory, GoodsCategoryCreateRequestKey, IGoodsCategoryCreateRequest, IGoodsCategoryResponse };

@@ -1,3 +1,5 @@
+import { OmitSequelizeInternals } from "src/utils/internals";
+
 enum BoothStatus {
   OPEN = "open",
   PAUSE = "pause",
@@ -25,4 +27,6 @@ interface IBooth {
 type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol";
 type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
 
-export { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest };
+type IBoothResponse = OmitSequelizeInternals<IBooth>;
+
+export { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest, IBoothResponse };
