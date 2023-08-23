@@ -7,6 +7,7 @@ enum GoodsStatus {
 interface IGoods {
   id: number;
   boothId: number;  // Foreign key to Booth.id
+  categoryId?: number;  // Foreign key to GoodsCategory.id
   name: string;
   description?: string;
   status: GoodsStatus;
