@@ -5,7 +5,7 @@
   "packageManager": "yarn@3.6.2",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "yarn clean && tsc && copyfiles \"./package.json\" \"./dist\"",
     "clean": "rimraf ./dist",
     "lint": "eslint ."
   },
@@ -13,6 +13,7 @@
     "@tsconfig/node18": "^18.2.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
+    "copyfiles": "^2.4.1",
     "eslint": "latest",
     "rimraf": "^5.0.1",
     "typescript": "^5.1.6"
