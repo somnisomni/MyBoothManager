@@ -2,8 +2,9 @@ import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { boothModelName } from "./booth";
 import { goodsCategoryModelName } from "./goods-category";
 import { GoodsStatus, IGoods } from "myboothmanager-common/interfaces";
+import { InternalKeysWithId } from "@/lib/interface-omit";
 
-type GoodsCreationAttributes = Omit<IGoods, "id" | "description" | "status" | "statusReason">
+type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">
                                & Partial<Pick<IGoods, "description" | "status" | "statusReason">>;
 export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
   declare id: number;

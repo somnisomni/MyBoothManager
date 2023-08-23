@@ -1,7 +1,8 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
 import { IAccount } from "myboothmanager-common/interfaces";
+import { InternalKeysWithId } from "@/lib/interface-omit";
 
-type AccountCreationAttributes = Omit<IAccount, "id" | "loginCount" | "lastLoginAt">;
+type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
 export default class Account extends Model<IAccount, AccountCreationAttributes> implements IAccount {
   declare id: number;
   declare name: string;

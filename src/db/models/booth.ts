@@ -1,8 +1,9 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
 import { accountModelName } from "./account";
 import { BoothStatus, IBooth } from "myboothmanager-common/interfaces";
+import { InternalKeysWithId } from "@/lib/interface-omit";
 
-type BoothCreationAttributes = Omit<IBooth, "id" | "description" | "status" | "statusReason" | "statusPublishContent">
+type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent">
                                & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent">>;
 export default class Booth extends Model<IBooth, BoothCreationAttributes> implements IBooth {
   declare id: number;

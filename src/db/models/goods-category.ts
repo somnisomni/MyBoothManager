@@ -1,8 +1,9 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { goodsModelName } from "./goods";
 import { IGoodsCategory } from "myboothmanager-common/interfaces";
+import { InternalKeysWithId } from "@/lib/interface-omit";
 
-type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, "id">;
+type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
 export default class GoodsCategory extends Model<IGoodsCategory, GoodsCategoryCreationAttributes> implements IGoodsCategory {
   declare id: number;
   declare boothId: number;
