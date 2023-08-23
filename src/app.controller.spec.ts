@@ -27,6 +27,10 @@ describe("AppController", () => {
       expect(e).toBeInstanceOf(NotFoundException);
       expect(e).toHaveProperty("message");
       expect(e).toHaveProperty("getStatus");
+
+      if(e instanceof NotFoundException) {
+        expect(e.getStatus()).toBe(404);
+      }
     }
   });
 
@@ -38,6 +42,10 @@ describe("AppController", () => {
       expect(e).toBeInstanceOf(ImATeapotException);
       expect(e).toHaveProperty("message");
       expect(e).toHaveProperty("getStatus");
+
+      if(e instanceof ImATeapotException) {
+        expect(e.getStatus()).toBe(418);
+      }
     }
   });
 });
