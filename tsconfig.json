@@ -1,11 +1,14 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
+  "include": ["src/**/*"],
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
     "declaration": true,
     "baseUrl": ".",
     "outDir": "./dist",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
