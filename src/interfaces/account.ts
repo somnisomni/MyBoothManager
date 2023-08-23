@@ -12,5 +12,7 @@ interface IAccount {
   deletedAt?: Date;
 }
 
+type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
+type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;
 
-export { IAccount };
+export { IAccount, AccountCreateRequestKey, IAccountCreateRequest };

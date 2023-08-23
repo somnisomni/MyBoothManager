@@ -11,4 +11,7 @@ interface IGoodsSaleHistory {
   deletedAt?: Date;
 }
 
-export { IGoodsSaleHistory };
+type GoodsSaleHistoryCreateRequestKey = "goodsId" | "price" | "stockChanges" | "timestamp";
+type IGoodsSaleHistoryCreateRequest = Pick<IGoodsSaleHistory, GoodsSaleHistoryCreateRequestKey>;
+
+export { IGoodsSaleHistory, GoodsSaleHistoryCreateRequestKey, IGoodsSaleHistoryCreateRequest };

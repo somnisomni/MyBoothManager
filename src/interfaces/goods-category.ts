@@ -9,4 +9,7 @@ interface IGoodsCategory {
   deletedAt?: Date;
 }
 
-export { IGoodsCategory };
+type GoodsCategoryCreateRequestKey = "boothId" | "name";
+type IGoodsCategoryCreateRequest = Pick<IGoodsCategory, GoodsCategoryCreateRequestKey>;
+
+export { IGoodsCategory, GoodsCategoryCreateRequestKey, IGoodsCategoryCreateRequest };

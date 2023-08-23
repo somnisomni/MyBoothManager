@@ -22,4 +22,7 @@ interface IBooth {
   deletedAt?: Date;
 }
 
-export { IBooth, BoothStatus };
+type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol";
+type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
+
+export { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest };

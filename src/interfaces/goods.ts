@@ -22,5 +22,7 @@ interface IGoods {
   deletedAt?: Date;
 }
 
+type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockInitial" | "stockRemaining";
+type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-export { IGoods, GoodsStatus };
+export { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest };
