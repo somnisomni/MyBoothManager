@@ -31,6 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node18", "npm:18.2.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:0dd53ae5cd65830d2d072001b7a24b4e8d4aeec048c6260741a51b143442e5d8f9918a32a66b7b815f5733759ff424b0a95e5a9175f924a0339040ebb0e15aa4#npm:6.4.0"],\
             ["@typescript-eslint/parser", "virtual:0dd53ae5cd65830d2d072001b7a24b4e8d4aeec048c6260741a51b143442e5d8f9918a32a66b7b815f5733759ff424b0a95e5a9175f924a0339040ebb0e15aa4#npm:6.4.0"],\
+            ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.47.0"],\
             ["rimraf", "npm:5.0.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
@@ -627,6 +628,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["path-key", "npm:3.1.1"],\
             ["shebang-command", "npm:2.0.0"],\
             ["which", "npm:2.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["currency-symbol-map", [\
+        ["npm:5.1.0", {\
+          "packageLocation": "./.yarn/cache/currency-symbol-map-npm-5.1.0-226ff63fbd-7c84dd81bf.zip/node_modules/currency-symbol-map/",\
+          "packageDependencies": [\
+            ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1297,6 +1307,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node18", "npm:18.2.0"],\
             ["@typescript-eslint/eslint-plugin", "virtual:0dd53ae5cd65830d2d072001b7a24b4e8d4aeec048c6260741a51b143442e5d8f9918a32a66b7b815f5733759ff424b0a95e5a9175f924a0339040ebb0e15aa4#npm:6.4.0"],\
             ["@typescript-eslint/parser", "virtual:0dd53ae5cd65830d2d072001b7a24b4e8d4aeec048c6260741a51b143442e5d8f9918a32a66b7b815f5733759ff424b0a95e5a9175f924a0339040ebb0e15aa4#npm:6.4.0"],\
+            ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.47.0"],\
             ["rimraf", "npm:5.0.1"],\
             ["typescript", "patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"]\
