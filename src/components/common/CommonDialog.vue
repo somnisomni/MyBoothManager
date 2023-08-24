@@ -16,7 +16,14 @@
       <!-- Title -->
       <VRow class="pa-4" :class="{ 'py-6': titleExtraMargin }">
         <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
-        <VBtn v-if="!hideCloseButton" icon variant="flat" class="mr-2" @click.stop="onCloseButtonClick"><VIcon>mdi-close</VIcon></VBtn>
+        <VBtn v-if="!hideCloseButton"
+              :disabled="progressActive || persistent"
+              icon
+              variant="flat"
+              class="mr-2"
+              @click.stop="onCloseButtonClick">
+          <VIcon>mdi-close</VIcon>
+        </VBtn>
       </VRow>
 
       <VDivider />
