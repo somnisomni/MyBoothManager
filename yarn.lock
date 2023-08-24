@@ -2630,6 +2630,7 @@ __metadata:
     currency-symbol-map: ^5.1.0
     eslint: ^8.46.0
     eslint-plugin-vue: ^9.17.0
+    myboothmanager-common: "somnisomni/MyBoothManager-Common#deploy"
     npm-run-all: ^4.1.5
     pinia: ^2.1.6
     sass: ^1.64.2
@@ -2643,6 +2644,15 @@ __metadata:
     vuetify: ^3.3.12
   languageName: unknown
   linkType: soft
+
+"myboothmanager-common@somnisomni/MyBoothManager-Common#deploy":
+  version: 0.0.0
+  resolution: "myboothmanager-common@https://github.com/somnisomni/MyBoothManager-Common.git#commit=fd6051b757cb2fd678495026db5d974b30872193"
+  dependencies:
+    currency-symbol-map: ^5.1.0
+  checksum: aaa0df6bec1e1511e4399e2cf931d8716a2303618ed962e3d8e815da2add2426f998fb538c5467a096f338fb1f267d9d1d6a24d62dbf141b434464aa1231c67c
+  languageName: node
+  linkType: hard
 
 "nanoid@npm:^3.3.6":
   version: 3.3.6

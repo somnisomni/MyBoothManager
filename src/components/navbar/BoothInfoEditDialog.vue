@@ -43,11 +43,11 @@
 <script lang="ts">
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import type { BoothData } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import currencySymbolInfo from "@/data/currency-symbol";
 import CommonDialog from "@/components/common/CommonDialog.vue";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
+import type { IBooth } from "myboothmanager-common/interfaces";
 
 @Component({
   components: {
@@ -59,7 +59,7 @@ export default class BoothInfoEditDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   updateInProgress = false;
-  editFormData: Partial<BoothData> = reactive({});
+  editFormData: Partial<IBooth> = reactive({});
   editFormValid = false;
   cancelWarningDialogShown = false;
 
@@ -81,7 +81,7 @@ export default class BoothInfoEditDialog extends Vue {
     let edited = false;
 
     for(const key in this.editFormData) {
-      const k = key as keyof BoothData;
+      const k = key as keyof IBooth;
 
       if(this.editFormData[k] !== currentBoothData[k]) {
         edited = true;

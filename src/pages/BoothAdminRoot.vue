@@ -48,8 +48,8 @@ import { unref } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
-import type { BoothData } from "@/types/booth";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
+import type { IBooth } from "myboothmanager-common/interfaces";
 
 @Component({
   components: {
@@ -77,7 +77,7 @@ export default class BoothAdminRoot extends Vue {
     useAdminStore().currentBoothId = value;
   }
 
-  get boothList(): BoothData[] {
+  get boothList(): IBooth[] {
     return Object.values(useAdminStore().boothList);
   }
 }

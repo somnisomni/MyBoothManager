@@ -84,6 +84,7 @@ import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
 import type { GoodsData } from "@/types/goods";
 import { reactive } from "vue";
 import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
+import AdminAPI from "@/lib/api-admin";
 
 @Component({
   components: {
@@ -204,30 +205,38 @@ export default class GoodsManageDialog extends Vue {
     }
   }
 
-  onDialogConfirm() {
-    // TODO: Replace real API call. Below is a mock.
+  async onDialogConfirm() {
+    let success = false;
 
     this.updateInProgress = true;
-    setTimeout(() => {
-      if(this.goodsId) {
-        Object.assign(useAdminStore().goodsList[parseInt(this.goodsId.toString())], {
-          ...this.manageFormData,
-          name: this.manageFormData.name?.trim(),
-        });
-      } else {
-        const id = Date.now();
-        useAdminStore().goodsList[id] = {
-          id,
-          boothId: useAdminStore().currentBoothId,
-          name: this.manageFormData.name?.trim(),
-          categoryId: 1,
-          ...this.manageFormData,
-        } as GoodsData;
-      }
 
-      this.updateInProgress = false;
+    if(this.editMode) {
+      // TODO: Update
+      alert("NOT SUPPORTED YET");
+    } else {
+      // Creation
+      const response = await AdminAPI.createGoods({
+        boothId: useAdminStore().currentBoothId,
+        name: this.manageFormData.name?.trim(),
+        categoryId: this.manageFormData.categoryId,
+        price: this.manageFormData.price,
+        stockInitial: this.manageFormData.stock!.initial,
+        stockRemaining: this.manageFormData.stock!.current,
+      });
+
+      if(response) {
+        useAdminStore().goodsList[response.id] = { ...response };
+        success = true;
+      }
+    }
+
+    this.updateInProgress = false;
+
+    if(success) {
       this.open = false;
-    }, 1000);
+    } else {
+      // TODO: CREATION NOT SUCCESS HANDLING
+    }
   }
 }
 </script>

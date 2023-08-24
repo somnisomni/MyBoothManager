@@ -38,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.46.0"],\
             ["eslint-plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:9.17.0"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=fd6051b757cb2fd678495026db5d974b30872193"],\
             ["npm-run-all", "npm:4.1.5"],\
             ["pinia", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:2.1.6"],\
             ["sass", "npm:1.64.2"],\
@@ -3173,6 +3174,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.46.0"],\
             ["eslint-plugin-vue", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:9.17.0"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=fd6051b757cb2fd678495026db5d974b30872193"],\
             ["npm-run-all", "npm:4.1.5"],\
             ["pinia", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:2.1.6"],\
             ["sass", "npm:1.64.2"],\
@@ -3186,6 +3188,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["vuetify", "virtual:34bc150e1854f9a64aa193826e3edcbec9a1d152bdc0ac0e20d9f4c6a00c7d8bb69178ec2d6841f4d15ed4aa749903baae4108212da8f90248de997ad1cf19e1#npm:3.3.12"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["myboothmanager-common", [\
+        ["https://github.com/somnisomni/MyBoothManager-Common.git#commit=fd6051b757cb2fd678495026db5d974b30872193", {\
+          "packageLocation": "./.yarn/cache/myboothmanager-common-https-537662202f-aaa0df6bec.zip/node_modules/myboothmanager-common/",\
+          "packageDependencies": [\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=fd6051b757cb2fd678495026db5d974b30872193"],\
+            ["currency-symbol-map", "npm:5.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["nanoid", [\

@@ -39,9 +39,9 @@
 
 <script lang="ts">
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
-import { BoothOpenStatus, type BoothData } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import CommonDialog from "@/components/common/CommonDialog.vue";
+import { BoothStatus, type IBooth } from "myboothmanager-common/interfaces";
 
 @Component({
   components: {
@@ -50,33 +50,33 @@ import CommonDialog from "@/components/common/CommonDialog.vue";
 })
 export default class BoothStatusUpdateDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ required: true }) targetStatus!: BoothOpenStatus;
+  @Prop({ required: true }) targetStatus!: BoothStatus;
 
   updateInProgress = false;
   pausingReason = "";
 
-  get currentBoothData(): BoothData {
+  get currentBoothData(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
   }
 
   get dialogTitle(): string {
     switch(this.targetStatus) {
-      case BoothOpenStatus.PREPARE: return "부스 운영 준비";
-      case BoothOpenStatus.CLOSE: return "부스 운영 종료";
-      case BoothOpenStatus.PAUSE: return "부스 일시 중지";
-      case BoothOpenStatus.OPEN: return "부스 운영 시작";
+      case BoothStatus.PREPARE: return "부스 운영 준비";
+      case BoothStatus.CLOSE: return "부스 운영 종료";
+      case BoothStatus.PAUSE: return "부스 일시 중지";
+      case BoothStatus.OPEN: return "부스 운영 시작";
       default: return "<알 수 없는 상태로 변경>";
     }
   }
 
-  get targetStatusIsPreparing(): boolean { return this.targetStatus === BoothOpenStatus.PREPARE; }
-  get targetStatusIsClosing(): boolean { return this.targetStatus === BoothOpenStatus.CLOSE; }
-  get targetStatusIsPausing(): boolean { return this.targetStatus === BoothOpenStatus.PAUSE; }
+  get targetStatusIsPreparing(): boolean { return this.targetStatus === BoothStatus.PREPARE; }
+  get targetStatusIsClosing(): boolean { return this.targetStatus === BoothStatus.CLOSE; }
+  get targetStatusIsPausing(): boolean { return this.targetStatus === BoothStatus.PAUSE; }
   get accentColor(): string {
     switch(this.targetStatus) {
-      case BoothOpenStatus.PREPARE: return "green";
-      case BoothOpenStatus.CLOSE: return "red";
-      case BoothOpenStatus.PAUSE: return "orange";
+      case BoothStatus.PREPARE: return "green";
+      case BoothStatus.CLOSE: return "red";
+      case BoothStatus.PAUSE: return "orange";
       default: return "blue";
     }
   }
@@ -88,8 +88,8 @@ export default class BoothStatusUpdateDialog extends Vue {
     // TODO: API call here
 
     setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
-      this.currentBoothData.status.status = this.targetStatus;
-      this.currentBoothData.status.reason = this.pausingReason;
+      this.currentBoothData.status = this.targetStatus;
+      this.currentBoothData.statusReason = this.pausingReason;
 
       this.updateInProgress = false;
       this.open = false;
