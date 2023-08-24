@@ -1,13 +1,13 @@
 import { OmitSequelizeInternals } from "src/utils/internals";
 
-enum BoothStatus {
+export enum BoothStatus {
   OPEN = "open",
   PAUSE = "pause",
   CLOSE = "close",
   PREPARE = "prepare",
 }
 
-interface IBooth {
+export interface IBooth {
   id: number;
   ownerId: number;  // Foreign key to Account.id
   name: string;
@@ -24,9 +24,7 @@ interface IBooth {
   deletedAt?: Date;
 }
 
-type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol";
-type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
+export type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol";
+export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
 
-type IBoothResponse = OmitSequelizeInternals<IBooth>;
-
-export { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest, IBoothResponse };
+export type IBoothResponse = OmitSequelizeInternals<IBooth>;

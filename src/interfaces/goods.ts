@@ -1,12 +1,12 @@
 import { OmitSequelizeInternals } from "src/utils/internals";
 
-enum GoodsStatus {
+export enum GoodsStatus {
   ON_SALE ="on_sale",
   PAUSE = "pause",
   SOLD_OUT = "sold_out",
 }
 
-interface IGoods {
+export interface IGoods {
   id: number;
   boothId: number;  // Foreign key to Booth.id
   categoryId?: number;  // Foreign key to GoodsCategory.id
@@ -24,9 +24,7 @@ interface IGoods {
   deletedAt?: Date;
 }
 
-type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockInitial" | "stockRemaining";
-type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
+export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockInitial" | "stockRemaining";
+export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-type IGoodsResponse = OmitSequelizeInternals<IGoods>;
-
-export { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest, IGoodsResponse };
+export type IGoodsResponse = OmitSequelizeInternals<IGoods>;

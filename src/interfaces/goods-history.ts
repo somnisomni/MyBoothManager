@@ -1,6 +1,6 @@
 import { OmitSequelizeInternals } from "src/utils/internals";
 
-interface IGoodsSaleHistory {
+export interface IGoodsSaleHistory {
   id: number;
   goodsId: number;  // Foreign key to Goods.id
   price: number;
@@ -13,9 +13,7 @@ interface IGoodsSaleHistory {
   deletedAt?: Date;
 }
 
-type GoodsSaleHistoryCreateRequestKey = "goodsId" | "price" | "stockChanges" | "timestamp";
-type IGoodsSaleHistoryCreateRequest = Pick<IGoodsSaleHistory, GoodsSaleHistoryCreateRequestKey>;
+export type GoodsSaleHistoryCreateRequestKey = "goodsId" | "price" | "stockChanges" | "timestamp";
+export type IGoodsSaleHistoryCreateRequest = Pick<IGoodsSaleHistory, GoodsSaleHistoryCreateRequestKey>;
 
-type IGoodsSaleHistoryResponse = OmitSequelizeInternals<IGoodsSaleHistory>;
-
-export { IGoodsSaleHistory, GoodsSaleHistoryCreateRequestKey, IGoodsSaleHistoryCreateRequest, IGoodsSaleHistoryResponse };
+export type IGoodsSaleHistoryResponse = OmitSequelizeInternals<IGoodsSaleHistory>;

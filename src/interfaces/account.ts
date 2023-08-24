@@ -1,6 +1,6 @@
 import { OmitSequelizeInternals } from "src/utils/internals";
 
-interface IAccount {
+export interface IAccount {
   id: number;
   name: string;
   loginId: string;
@@ -14,9 +14,7 @@ interface IAccount {
   deletedAt?: Date;
 }
 
-type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
-type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;
+export type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
+export type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;
 
-type IAccountResponse = OmitSequelizeInternals<IAccount>;
-
-export { IAccount, AccountCreateRequestKey, IAccountCreateRequest, IAccountResponse };
+export type IAccountResponse = OmitSequelizeInternals<IAccount>;
