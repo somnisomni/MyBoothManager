@@ -4,6 +4,6 @@
 export type SequelizeInternalKeys = "createdAt" | "updatedAt" | "deletedAt";
 
 /**
- * Helper type to omit Sequelize internal keys from an data model interface.
+ * Helper type to include Sequelize internal keys to a data model interface.
  */
-export type OmitSequelizeInternals<T> = Omit<T, SequelizeInternalKeys>;
+export type WithSequelizeInternals<T> = T & Record<SequelizeInternalKeys, Date>;
