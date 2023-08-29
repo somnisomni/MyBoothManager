@@ -1,6 +1,5 @@
 import { BoothStatus, IBooth } from "../../interfaces";
-import { WithSequelizeInternals } from "..";
-import { deleteSequelizeInternalKeys } from "../internals";
+import { deleteSequelizeInternalKeys, WithSequelizeInternals } from "../internals";
 
 const testBooth: IBooth = {
   id: 1234,
@@ -27,6 +26,8 @@ describe("src/utils/internals.ts", () => {
 
     expect(result).not.toHaveProperty("createdAt");
     expect(result).not.toHaveProperty("updatedAt");
+
+    expect(result).toStrictEqual(testBooth);
   });
 
   it("should same after call deleteSequelizeInternalKeys for original data model object", () => {
