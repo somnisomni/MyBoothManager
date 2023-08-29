@@ -1,5 +1,5 @@
 import currencySymbolInfo from "./currency-symbol";
-import { SequelizeInternalKeys, SEQUELIZE_INTERNAL_KEYS, WithSequelizeInternals } from "./internals";
+import { SequelizeInternalKeys, SEQUELIZE_INTERNAL_KEYS, WithSequelizeInternals, deleteSequelizeInternalKeys } from "./internals";
 
 export {
   /* currency-symbol.ts */
@@ -9,4 +9,5 @@ export {
   SequelizeInternalKeys,
   SEQUELIZE_INTERNAL_KEYS,
   WithSequelizeInternals,
+  deleteSequelizeInternalKeys,
 };
