@@ -1,4 +1,4 @@
-import { BoothStatus, IBooth } from "../../interfaces";
+import { BoothStatus, IBooth } from "../../interfaces/booth";
 import { deleteSequelizeInternalKeys, WithSequelizeInternals } from "../internals";
 
 const testBooth: IBooth = {

@@ -1,4 +1,5 @@
 /dist
+/coverage
 
 .yarn/*
 !.yarn/patches
