@@ -1,4 +1,6 @@
-export interface IAccount {
+import { IDataModelBase } from "./base";
+
+export interface IAccount extends IDataModelBase {
   id: number;
   name: string;
   loginId: string;

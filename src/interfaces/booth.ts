@@ -1,3 +1,5 @@
+import { IDataModelBase } from "./base";
+
 export enum BoothStatus {
   OPEN = "open",
   PAUSE = "pause",
@@ -5,7 +7,7 @@ export enum BoothStatus {
   PREPARE = "prepare",
 }
 
-export interface IBooth {
+export interface IBooth extends IDataModelBase {
   id: number;
   ownerId: number;  // Foreign key to Account.id
   name: string;

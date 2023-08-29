@@ -1,10 +1,12 @@
+import { IDataModelBase } from "./base";
+
 export enum GoodsStatus {
   ON_SALE ="on_sale",
   PAUSE = "pause",
   SOLD_OUT = "sold_out",
 }
 
-export interface IGoods {
+export interface IGoods extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
   categoryId?: number;  // Foreign key to GoodsCategory.id

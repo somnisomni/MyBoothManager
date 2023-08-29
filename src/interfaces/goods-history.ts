@@ -1,4 +1,6 @@
-export interface IGoodsSaleHistory {
+import { IDataModelBase } from "./base";
+
+export interface IGoodsSaleHistory extends IDataModelBase {
   id: number;
   goodsId: number;  // Foreign key to Goods.id
   price: number;

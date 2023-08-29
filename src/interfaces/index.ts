@@ -1,3 +1,4 @@
+import { IDataModelBase } from "./base";
 import { AccountCreateRequestKey, IAccount, IAccountCreateRequest, IAccountResponse } from "./account";
 import { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest, IBoothResponse } from "./booth";
 import { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest, IGoodsResponse } from "./goods";
@@ -5,6 +6,9 @@ import { GoodsCategoryCreateRequestKey, IGoodsCategory, IGoodsCategoryCreateRequ
 import { GoodsSaleHistoryCreateRequestKey, IGoodsSaleHistory, IGoodsSaleHistoryCreateRequest, IGoodsSaleHistoryResponse } from "./goods-history";
 
 export {
+  /* base.ts */
+  IDataModelBase,
+
   /* account.ts */
   IAccount,
   AccountCreateRequestKey,
