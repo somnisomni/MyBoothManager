@@ -1,7 +1,7 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { boothModelName } from "./booth";
 import { goodsCategoryModelName } from "./goods-category";
-import { GoodsStatus, IGoods } from "myboothmanager-common/interfaces";
+import { GoodsStatus, IGoods } from "@myboothmanager/common";
 import { InternalKeysWithId } from "@/lib/interface-omit";
 
 type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">

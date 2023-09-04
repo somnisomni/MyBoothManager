@@ -1,4 +1,4 @@
-import { IBooth } from "myboothmanager-common/interfaces";
+import { IBooth } from "@myboothmanager/common";
 
 export class CreateBoothDTO implements Partial<IBooth> {
   name!: string;

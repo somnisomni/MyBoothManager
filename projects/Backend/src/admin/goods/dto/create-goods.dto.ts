@@ -1,4 +1,4 @@
-import { IGoodsCreateRequest } from "myboothmanager-common/interfaces";
+import { IGoodsCreateRequest } from "@myboothmanager/common";
 
 export class CreateGoodsDTO implements IGoodsCreateRequest {
   boothId!: number;

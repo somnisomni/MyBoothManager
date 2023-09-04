@@ -41,7 +41,7 @@
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import CommonDialog from "@/components/common/CommonDialog.vue";
-import { BoothStatus, type IBooth } from "myboothmanager-common/interfaces";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

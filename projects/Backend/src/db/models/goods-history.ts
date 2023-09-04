@@ -1,6 +1,6 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { goodsModelName } from "./goods";
-import { IGoodsSaleHistory } from "myboothmanager-common/interfaces";
+import { IGoodsSaleHistory } from "@myboothmanager/common";
 import { InternalKeysWithId } from "@/lib/interface-omit";
 
 type GoodsSaleHistoryCreationAttributes = Omit<IGoodsSaleHistory, InternalKeysWithId>;

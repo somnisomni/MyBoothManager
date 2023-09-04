@@ -2,7 +2,7 @@ import Account from "@/db/models/account";
 import Booth, { BoothCreationAttributes } from "@/db/models/booth";
 import Goods, { GoodsCreationAttributes } from "@/db/models/goods";
 import GoodsCategory, { GoodsCategoryCreationAttributes } from "@/db/models/goods-category";
-import { BoothStatus } from "myboothmanager-common/interfaces";
+import { BoothStatus } from "@myboothmanager/common";
 
 export async function insertTempDataIntoDB(): Promise<void> {
   if(await Account.findOne({ where: { loginId: "test" } })) return;

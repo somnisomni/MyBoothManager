@@ -17,7 +17,7 @@ import { BoothOpenStatus } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import BoothStatusPanel from "@/components/dashboard/BoothStatusPanel.vue";
 import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
-import type { IBooth } from "myboothmanager-common/interfaces";
+import type { IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

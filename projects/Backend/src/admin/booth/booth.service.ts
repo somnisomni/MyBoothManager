@@ -7,7 +7,7 @@ import GoodsCategory from "@/db/models/goods-category";
 import { GoodsCategoryOutput } from "../goods/goods-category.entity";
 import { BoothOutput } from "./booth.entity";
 import { BaseError } from "sequelize";
-import { IGoodsResponse } from "myboothmanager-common/interfaces";
+import { IGoodsResponse } from "@myboothmanager/common";
 
 @Injectable()
 export class BoothService {

@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { type GoodsCategoryData, type GoodsData } from "@/types/goods";
 import AdminAPI from "@/lib/api-admin";
 import { reactive } from "vue";
-import { BoothStatus, type IBooth } from "myboothmanager-common/interfaces";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 
 const useAdminStore = defineStore("admin", () => {
   /* States */

@@ -49,7 +49,7 @@ import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
-import type { IBooth } from "myboothmanager-common/interfaces";
+import type { IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

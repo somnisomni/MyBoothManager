@@ -1,6 +1,3 @@
-import { APP_NAME } from "./strings";
-
-export {
-  /* common strings */
-  APP_NAME,
-};
+export * from "./strings";
+export * from "./interfaces";
+export * from "./utils";

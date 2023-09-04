@@ -47,7 +47,7 @@ import { useAdminStore } from "@/stores/admin";
 import currencySymbolInfo from "@/data/currency-symbol";
 import CommonDialog from "@/components/common/CommonDialog.vue";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
-import type { IBooth } from "myboothmanager-common/interfaces";
+import type { IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

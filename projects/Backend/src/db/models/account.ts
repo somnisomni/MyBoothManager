@@ -1,5 +1,5 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
-import { IAccount } from "myboothmanager-common/interfaces";
+import { IAccount } from "@myboothmanager/common";
 import { InternalKeysWithId } from "@/lib/interface-omit";
 
 type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;

@@ -3,7 +3,7 @@ import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import Goods from "@/db/models/goods";
 import { BaseError } from "sequelize";
-import { IGoodsResponse } from "myboothmanager-common/interfaces";
+import { IGoodsResponse } from "@myboothmanager/common";
 
 @Injectable()
 export class GoodsService {

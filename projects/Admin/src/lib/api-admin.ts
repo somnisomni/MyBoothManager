@@ -1,4 +1,4 @@
-import { type IBoothResponse, type IGoodsCreateRequest, type IGoodsResponse } from "myboothmanager-common/interfaces";
+import { type IBoothResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
 
