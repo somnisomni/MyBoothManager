@@ -1,6 +1,7 @@
 {
-  "name": "myboothmanager-admin",
+  "name": "@myboothmanager/admin",
   "version": "0.0.0",
+  "author": "somni <me@somni.one>",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -8,13 +9,12 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "up:mbm": "yarn up -i myboothmanager-common"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@myboothmanager/common": "../../packages/Common",
     "currency-symbol-map": "^5.1.0",
-    "myboothmanager-common": "somnisomni/MyBoothManager-Common#deploy",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",

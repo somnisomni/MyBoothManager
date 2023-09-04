@@ -3,6 +3,11 @@
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "yarn@3.6.3",
+  "scripts": {
+    "common": "yarn workspace @myboothmanager/common",
+    "admin": "yarn workspace @myboothmanager/admin",
+    "backend": "yarn workspace @myboothmanager/backend"
+  },
   "workspaces": [
     "projects/*",
     "packages/*"

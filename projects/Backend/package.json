@@ -1,5 +1,5 @@
 {
-  "name": "myboothmanager-backend",
+  "name": "@myboothmanager/backend",
   "version": "0.0.0",
   "author": "somni <me@somni.one>",
   "private": true,
@@ -14,18 +14,17 @@
     "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "up:mbm": "yarn up -i myboothmanager-common"
+    "test:cov": "jest --coverage"
   },
   "dependencies": {
     "@fastify/helmet": "^11.0.0",
+    "@myboothmanager/common": "../../packages/Common",
     "@nestjs/common": "^10.2.1",
     "@nestjs/core": "^10.2.1",
     "@nestjs/mapped-types": "^2.0.2",
     "@nestjs/platform-fastify": "^10.2.1",
     "dotenv": "^16.3.1",
     "fastify": "^4.21.0",
-    "myboothmanager-common": "somnisomni/MyBoothManager-Common#deploy",
     "mysql2": "^3.6.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",

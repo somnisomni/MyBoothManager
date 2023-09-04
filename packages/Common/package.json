@@ -1,9 +1,10 @@
 {
-  "name": "myboothmanager-common",
+  "name": "@myboothmanager/common",
   "version": "0.0.0",
   "author": "somni <me@somni.one>",
   "packageManager": "yarn@3.6.2",
   "private": true,
+  "main": "src/index.ts",
   "scripts": {
     "build": "yarn clean && tsc -p \"./tsconfig.build.json\" && copyfiles \"./package.json\" \"./dist\"",
     "clean": "rimraf ./dist",
