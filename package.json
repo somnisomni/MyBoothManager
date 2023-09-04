@@ -14,9 +14,11 @@
     "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "up:mbm": "yarn up -i myboothmanager-common"
   },
   "dependencies": {
+    "@fastify/helmet": "^11.0.0",
     "@nestjs/common": "^10.2.1",
     "@nestjs/core": "^10.2.1",
     "@nestjs/mapped-types": "^2.0.2",

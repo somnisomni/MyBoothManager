@@ -9,7 +9,7 @@ type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" |
 export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
   declare id: number;
   declare boothId: number;
-  declare categoryId: number;
+  declare categoryId?: number;
   declare name: string;
   declare description?: string;
   declare status: GoodsStatus;

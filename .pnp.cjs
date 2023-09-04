@@ -28,6 +28,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@fastify/helmet", "npm:11.0.0"],\
             ["@nestjs/cli", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.1.12"],\
             ["@nestjs/common", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.2.1"],\
             ["@nestjs/core", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.2.1"],\
@@ -46,7 +47,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-type", "npm:0.16.0"],\
             ["fastify", "npm:4.21.0"],\
             ["jest", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:29.6.3"],\
-            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=e7ed9d346a196b1a67da87a4c4e999a4f7257395"],\
             ["mysql2", "npm:3.6.0"],\
             ["reflect-metadata", "npm:0.1.13"],\
             ["rxjs", "npm:7.8.1"],\
@@ -1098,6 +1099,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fastify/formbody", "npm:7.4.0"],\
             ["fast-querystring", "npm:1.1.2"],\
             ["fastify-plugin", "npm:4.5.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fastify/helmet", [\
+        ["npm:11.0.0", {\
+          "packageLocation": "./.yarn/cache/@fastify-helmet-npm-11.0.0-45fbb8d93e-36a5d1eb38.zip/node_modules/@fastify/helmet/",\
+          "packageDependencies": [\
+            ["@fastify/helmet", "npm:11.0.0"],\
+            ["fastify-plugin", "npm:4.5.1"],\
+            ["helmet", "npm:7.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4848,6 +4860,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["helmet", [\
+        ["npm:7.0.0", {\
+          "packageLocation": "./.yarn/cache/helmet-npm-7.0.0-13c1e96edf-3622b8b68b.zip/node_modules/helmet/",\
+          "packageDependencies": [\
+            ["helmet", "npm:7.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["html-escaper", [\
         ["npm:2.0.2", {\
           "packageLocation": "./.yarn/cache/html-escaper-npm-2.0.2-38e51ef294-d2df2da3ad.zip/node_modules/html-escaper/",\
@@ -6527,6 +6548,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["myboothmanager-backend", "workspace:."],\
+            ["@fastify/helmet", "npm:11.0.0"],\
             ["@nestjs/cli", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.1.12"],\
             ["@nestjs/common", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.2.1"],\
             ["@nestjs/core", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:10.2.1"],\
@@ -6545,7 +6567,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-type", "npm:0.16.0"],\
             ["fastify", "npm:4.21.0"],\
             ["jest", "virtual:256e848f1d59b7c27b539478c75b4b8c0184ee60e85409d5a055d6dc1921d6ca4f29e6fe733059189705967fc8da639f48ec2699a171d4bc54790786cf762429#npm:29.6.3"],\
-            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=e7ed9d346a196b1a67da87a4c4e999a4f7257395"],\
             ["mysql2", "npm:3.6.0"],\
             ["reflect-metadata", "npm:0.1.13"],\
             ["rxjs", "npm:7.8.1"],\
@@ -6561,10 +6583,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["myboothmanager-common", [\
-        ["https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9", {\
-          "packageLocation": "./.yarn/cache/myboothmanager-common-https-12fd95d21d-67f2304520.zip/node_modules/myboothmanager-common/",\
+        ["https://github.com/somnisomni/MyBoothManager-Common.git#commit=e7ed9d346a196b1a67da87a4c4e999a4f7257395", {\
+          "packageLocation": "./.yarn/cache/myboothmanager-common-https-55a4ce706f-38f3bc7cb7.zip/node_modules/myboothmanager-common/",\
           "packageDependencies": [\
-            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"],\
+            ["myboothmanager-common", "https://github.com/somnisomni/MyBoothManager-Common.git#commit=e7ed9d346a196b1a67da87a4c4e999a4f7257395"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\

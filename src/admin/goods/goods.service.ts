@@ -1,29 +1,44 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import Goods from "@/db/models/goods";
-import { GoodsOutput } from "./goods.entity";
+import { BaseError } from "sequelize";
+import { IGoodsResponse } from "myboothmanager-common/interfaces";
 
 @Injectable()
 export class GoodsService {
-  create(createGoodDto: CreateGoodsDTO) {
-    throw new BadRequestException("Goods creation is not yet supported.");
+  async create(createGoodsDto: CreateGoodsDTO): Promise<IGoodsResponse> {
+    if(createGoodsDto.stockRemaining === undefined) {
+      createGoodsDto.stockRemaining = createGoodsDto.stockInitial;
+    }
+
+    try {
+      const response = (await Goods.create(createGoodsDto)) as IGoodsResponse;
+
+      return response;
+    } catch(error) {
+      if(error instanceof BaseError) {
+        throw new InternalServerErrorException("DB error");
+      } else {
+        throw new BadRequestException();
+      }
+    }
   }
 
-  async findAll(): Promise<Array<GoodsOutput>> {
+  async findAll(): Promise<Array<IGoodsResponse>> {
     return (await Goods.findAll({
       attributes: {
         exclude: ["createdAt", "updatedAt", "deletedAt"],
       },
-    })) as Array<GoodsOutput>;
+    })) as Array<IGoodsResponse>;
   }
 
-  async findOne(id: number): Promise<GoodsOutput> {
+  async findOne(id: number): Promise<IGoodsResponse> {
     const goods = await Goods.findByPk(id, {
       attributes: {
         exclude: ["createdAt", "updatedAt", "deletedAt"],
       },
-    }) as GoodsOutput;
+    }) as IGoodsResponse;
 
     if(!goods) throw new BadRequestException("Goods not found.");
     return goods;

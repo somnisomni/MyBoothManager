@@ -1,8 +1,11 @@
-export class CreateGoodsDTO {
+import { IGoodsCreateRequest } from "myboothmanager-common/interfaces";
+
+export class CreateGoodsDTO implements IGoodsCreateRequest {
   boothId!: number;
-  categoryId: number | null = null;
+  categoryId?: number;
   name!: string;
-  price: number = 0;
-  stockInitial: number = 0;
-  stockCurrent: number = 0;
+  description?: string;
+  price!: number;
+  stockInitial!: number;
+  stockRemaining: number = -1;
 }

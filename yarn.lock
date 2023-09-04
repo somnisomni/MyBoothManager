@@ -605,6 +605,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/helmet@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@fastify/helmet@npm:11.0.0"
+  dependencies:
+    fastify-plugin: ^4.2.1
+    helmet: ^7.0.0
+  checksum: 36a5d1eb3893ba32f9e421680263f18d9ebea76016a340161ff45b87b9a5a5d74b71626eb8a8da8dfac034ce31197b4af8d0434d8d5593711290493d33797719
+  languageName: node
+  linkType: hard
+
 "@fastify/middie@npm:8.3.0":
   version: 8.3.0
   resolution: "@fastify/middie@npm:8.3.0"
@@ -3223,7 +3233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-plugin@npm:^4.0.0":
+"fastify-plugin@npm:^4.0.0, fastify-plugin@npm:^4.2.1":
   version: 4.5.1
   resolution: "fastify-plugin@npm:4.5.1"
   checksum: ddd1b2d470c3acd9397c2617b5842dcf71a6f9a32f05d02be1c12e8d37b8fc03af656900cec38e2afef5e9a3dfe5f994317810f4c5e9960b127b1ca179b56f73
@@ -3662,6 +3672,13 @@ __metadata:
   dependencies:
     function-bind: ^1.1.1
   checksum: b9ad53d53be4af90ce5d1c38331e712522417d017d5ef1ebd0507e07c2fbad8686fffb8e12ddecd4c39ca9b9b47431afbb975b8abf7f3c3b82c98e9aad052792
+  languageName: node
+  linkType: hard
+
+"helmet@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "helmet@npm:7.0.0"
+  checksum: 3622b8b68b7ac4736369fe7717adb5b87ddcdcda7c11c13277d79fb5670acab032e8c971835565b1d2144d234f3e0dbcd327a44249b9e61f0f64c0c753faf1bc
   languageName: node
   linkType: hard
 
@@ -5144,6 +5161,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "myboothmanager-backend@workspace:."
   dependencies:
+    "@fastify/helmet": ^11.0.0
     "@nestjs/cli": ^10.1.12
     "@nestjs/common": ^10.2.1
     "@nestjs/core": ^10.2.1
@@ -5178,10 +5196,10 @@ __metadata:
 
 "myboothmanager-common@somnisomni/MyBoothManager-Common#deploy":
   version: 0.0.0
-  resolution: "myboothmanager-common@https://github.com/somnisomni/MyBoothManager-Common.git#commit=139f72a81d7192510ded521e5e9954b7497f80d9"
+  resolution: "myboothmanager-common@https://github.com/somnisomni/MyBoothManager-Common.git#commit=e7ed9d346a196b1a67da87a4c4e999a4f7257395"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 67f23045204be30180bc36a0898d25b9d80866ce09a0c8af68e04196072922fd4e5e4019de464beb0c40a111fe13345b38d12f6eea1d226e9455442afdf636b7
+  checksum: 38f3bc7cb7ec16264a36fc6649695e98abd2f19a493906f7aa4039734e2474a5ed81c9ed841ebafcaed6eb767b83b1f8cffd728043ca180c3163f370d52e1a21
   languageName: node
   linkType: hard
 
