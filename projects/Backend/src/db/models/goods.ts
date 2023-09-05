@@ -1,8 +1,8 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { boothModelName } from "./booth";
 import { goodsCategoryModelName } from "./goods-category";
-import { GoodsStatus, IGoods } from "@myboothmanager/common";
-import { InternalKeysWithId } from "@/lib/interface-omit";
+import { GoodsStatus, type IGoods } from "@myboothmanager/common";
+import { type InternalKeysWithId } from "@/lib/interface-omit";
 
 type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">
                                & Partial<Pick<IGoods, "description" | "status" | "statusReason">>;

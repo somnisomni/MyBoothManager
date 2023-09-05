@@ -1,6 +1,6 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
-import { IAccount } from "@myboothmanager/common";
-import { InternalKeysWithId } from "@/lib/interface-omit";
+import { type IAccount } from "@myboothmanager/common";
+import { type InternalKeysWithId } from "@/lib/interface-omit";
 
 type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
 export default class Account extends Model<IAccount, AccountCreationAttributes> implements IAccount {

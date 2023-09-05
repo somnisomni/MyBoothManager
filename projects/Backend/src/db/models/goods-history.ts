@@ -1,7 +1,7 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
 import { goodsModelName } from "./goods";
-import { IGoodsSaleHistory } from "@myboothmanager/common";
-import { InternalKeysWithId } from "@/lib/interface-omit";
+import { type IGoodsSaleHistory } from "@myboothmanager/common";
+import { type InternalKeysWithId } from "@/lib/interface-omit";
 
 type GoodsSaleHistoryCreationAttributes = Omit<IGoodsSaleHistory, InternalKeysWithId>;
 export default class GoodsSaleHistory extends Model<IGoodsSaleHistory, GoodsSaleHistoryCreationAttributes> implements IGoodsSaleHistory {
