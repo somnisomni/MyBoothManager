@@ -6,13 +6,18 @@
   "scripts": {
     "common": "yarn workspace @myboothmanager/common",
     "admin": "yarn workspace @myboothmanager/admin",
-    "backend": "yarn workspace @myboothmanager/backend"
+    "backend": "yarn workspace @myboothmanager/backend",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "workspaces": [
     "projects/*",
     "packages/*"
   ],
   "devDependencies": {
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   }
 }

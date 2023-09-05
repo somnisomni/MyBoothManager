@@ -2,20 +2,18 @@
 const { pathsToModuleNameMapper } = require("ts-jest");
 const { compilerOptions } = require("./tsconfig.json");
 
-/** @type {import("jest").Config} */
+/** @type {import("ts-jest").JestConfigWithTsJest} */
 const config = {
+  preset: "ts-jest/presets/default-esm",
   moduleFileExtensions: ["js", "json", "ts"],
   rootDir: ".",
-  testRegex: ".*\\.spec\\.ts$",
-  transform: {
-    "^.+\\.(t|j)s$": "ts-jest",
-  },
-  collectCoverageFrom: ["**/*.(t|j)s"],
   roots: ["<rootDir>"],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
-  coverageDirectory: "../coverage",
-  testEnvironment: "node",
+  testRegex: ".*\\.spec\\.ts$",
+  collectCoverageFrom: ["**/*.(t|j)s"],
+  coverageDirectory: "./coverage",
+  testEnvironment: "node"
 };
 
 module.exports = config;

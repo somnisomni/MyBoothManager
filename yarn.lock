@@ -1214,19 +1214,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d8fc3b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=e559db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 14b0ce7e56907fd08cec02073c3478a62802ea2834fbc8f6dc89d3c760b99c02bac44e2d9619863577f9f1e6b5b9afa3d7d9e158bf3c86ac91761fed3dc6129e
+  checksum: 37c112077df06a16d10537e84a94dcd54cd54d625678c48a4089d624e7e1a7cacbab027f34590d235ee61510143cd774d27648d4874b3f0cca6732486e19dd5b
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d8fc3b&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=e559db&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 14b0ce7e56907fd08cec02073c3478a62802ea2834fbc8f6dc89d3c760b99c02bac44e2d9619863577f9f1e6b5b9afa3d7d9e158bf3c86ac91761fed3dc6129e
+  checksum: 37c112077df06a16d10537e84a94dcd54cd54d625678c48a4089d624e7e1a7cacbab027f34590d235ee61510143cd774d27648d4874b3f0cca6732486e19dd5b
   languageName: node
   linkType: hard
 
@@ -6390,6 +6390,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "myboothmanager@workspace:."
   dependencies:
+    jest: ^29.6.4
+    ts-jest: ^29.1.1
     typescript: ^5.2.2
   languageName: unknown
   linkType: soft

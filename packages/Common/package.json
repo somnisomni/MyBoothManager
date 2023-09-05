@@ -9,8 +9,7 @@
     "build": "yarn clean && tsc -p \"./tsconfig.build.json\" && copyfiles \"./package.json\" \"./dist\"",
     "clean": "rimraf ./dist",
     "lint": "eslint .",
-    "test": "jest",
-    "gha:deploy": "node ./scripts/ghaction-deploy-to-branch.js"
+    "test": "jest"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.0",
