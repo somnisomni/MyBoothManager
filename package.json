@@ -8,7 +8,7 @@
     "eslintconfig": "yarn workspace @myboothmanager/eslintconfig",
     "admin": "yarn workspace @myboothmanager/admin",
     "backend": "yarn workspace @myboothmanager/backend",
-    "test": "jest",
+    "test": "yarn node --experimental-vm-modules \"$(yarn bin jest)\"",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
   },

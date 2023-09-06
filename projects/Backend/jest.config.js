@@ -11,9 +11,13 @@ const config = {
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
   testRegex: ".*\\.spec\\.ts$",
-  collectCoverageFrom: ["**/*.(t|j)s"],
   coverageDirectory: "./coverage",
-  testEnvironment: "node"
+  testEnvironment: "node",
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
 };
 
 module.exports = config;
