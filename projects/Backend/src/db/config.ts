@@ -17,7 +17,7 @@ export default function generateConfig(): Options {
     password: process.env.MYSQL_PASSWORD || "",
     database: process.env.MYSQL_DATABASE || "myboothmanager",
     timezone: process.env.SEQUELIZE_TIMEZONE || "+09:00",
-    logging: (...msg) => { console.debug("[DB]", msg[0]); },
+    logging: (...msg) => console.debug("[DB]", msg[0]),
     define: {
       paranoid: true,
       freezeTableName: true,

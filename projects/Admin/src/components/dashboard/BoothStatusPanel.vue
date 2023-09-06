@@ -106,14 +106,14 @@ export default class BoothStatusPanel extends Vue {
 
   get openStatusString(): string {
     switch(this.currentBoothStatus.status) {
-      case BoothOpenStatus.OPEN:
-        return "운영 중";
-      case BoothOpenStatus.PAUSE:
-        return "일시 중지";
-      case BoothOpenStatus.CLOSE:
-        return "운영 종료";
-      default:
-        return "알 수 없음";
+    case BoothOpenStatus.OPEN:
+      return "운영 중";
+    case BoothOpenStatus.PAUSE:
+      return "일시 중지";
+    case BoothOpenStatus.CLOSE:
+      return "운영 종료";
+    default:
+      return "알 수 없음";
     }
   }
 }

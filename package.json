@@ -5,6 +5,7 @@
   "packageManager": "yarn@3.6.3",
   "scripts": {
     "common": "yarn workspace @myboothmanager/common",
+    "eslintconfig": "yarn workspace @myboothmanager/eslintconfig",
     "admin": "yarn workspace @myboothmanager/admin",
     "backend": "yarn workspace @myboothmanager/backend",
     "test": "jest",

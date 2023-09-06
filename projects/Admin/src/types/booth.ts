@@ -13,11 +13,11 @@ export enum BoothOpenStatus {
 export namespace BoothOpenStatus {
   export function getBoothOpenStatusString(status: BoothOpenStatus): string {
     switch(status) {
-      case BoothOpenStatus.OPEN: return "운영 중";
-      case BoothOpenStatus.PAUSE: return "일시 중지";
-      case BoothOpenStatus.CLOSE: return "운영 종료";
-      case BoothOpenStatus.PREPARE: return "운영 준비";
-      default: return "알 수 없음";
+    case BoothOpenStatus.OPEN: return "운영 중";
+    case BoothOpenStatus.PAUSE: return "일시 중지";
+    case BoothOpenStatus.CLOSE: return "운영 종료";
+    case BoothOpenStatus.PREPARE: return "운영 준비";
+    default: return "알 수 없음";
     }
   }
 }

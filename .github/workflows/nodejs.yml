@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         node-version: [ "18.x", "lts/*", "*" ]
-        target-workspace: [ "common", "backend" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -25,4 +24,4 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Do test
-        run: yarn ${{ matrix.target-workspace }} test
+        run: yarn test
