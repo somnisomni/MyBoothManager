@@ -4,6 +4,7 @@
   "author": "somni <me@somni.one>",
   "packageManager": "yarn@3.6.2",
   "private": true,
+  "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "build": "yarn clean && tsc -p \"./tsconfig.build.json\" && copyfiles \"./package.json\" \"./dist\"",

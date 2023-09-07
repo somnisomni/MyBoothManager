@@ -5,10 +5,10 @@
   "packageManager": "yarn@3.6.3",
   "scripts": {
     "common": "yarn workspace @myboothmanager/common",
-    "eslintconfig": "yarn workspace @myboothmanager/eslintconfig",
+    "common:build": "yarn common build && yarn install",
     "admin": "yarn workspace @myboothmanager/admin",
     "backend": "yarn workspace @myboothmanager/backend",
-    "dev": "concurrently -n \"ADMIN,BACKEND\" -c \"bgRed.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin dev\" \"yarn workspace @myboothmanager/backend start\"",
+    "dev": "concurrently -n \"ADMIN,BACKEND\" -c \"bgRed.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin dev\" \"yarn workspace @myboothmanager/backend start:dev\"",
     "test": "yarn node --experimental-vm-modules \"$(yarn bin jest)\"",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"

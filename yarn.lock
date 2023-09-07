@@ -1180,7 +1180,7 @@ __metadata:
     vue-facing-decorator: ^3.0.1
     vue-router: ^4.2.4
     vue-tsc: ^1.8.8
-    vuetify: ^3.3.12
+    vuetify: ^3.3.15
   languageName: unknown
   linkType: soft
 
@@ -1223,19 +1223,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c04024&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 3bce9cf9bf7e9557ead39883d1d4088a2f82ddd07ceb37ac455c1853b9176b024ec835844103bf85846e26504f5f18fda67f94df4b56efbb926613358b7698ca
+  checksum: 7c69f63b9e0bb6c384f19602f206b6b4d219d2ae87dd3832f9d16154e088159f941e800b6ebdc0354533ee74ce5b706e9486de56021397c0d0ec9508167af2f6
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c04024&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 3bce9cf9bf7e9557ead39883d1d4088a2f82ddd07ceb37ac455c1853b9176b024ec835844103bf85846e26504f5f18fda67f94df4b56efbb926613358b7698ca
+  checksum: 7c69f63b9e0bb6c384f19602f206b6b4d219d2ae87dd3832f9d16154e088159f941e800b6ebdc0354533ee74ce5b706e9486de56021397c0d0ec9508167af2f6
   languageName: node
   linkType: hard
 
@@ -8867,7 +8867,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuetify@npm:^3.3.12":
+"vuetify@npm:^3.3.15":
   version: 3.3.15
   resolution: "vuetify@npm:3.3.15"
   peerDependencies:

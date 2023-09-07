@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { pathsToModuleNameMapper } = require("ts-jest");
+const { JestConfigWithTsJest, pathsToModuleNameMapper } = require("ts-jest");
 const { compilerOptions } = require("./tsconfig.json");
 
-/** @type {import("ts-jest").JestConfigWithTsJest} */
+/** @type {JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest/presets/default-esm",
-  testEnvironment: "node",
+  moduleFileExtensions: ["js", "json", "ts"],
   rootDir: ".",
   roots: ["<rootDir>"],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
+  testRegex: ".*\\.spec\\.ts$",
   coverageDirectory: "./coverage",
+  testEnvironment: "node",
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
 };

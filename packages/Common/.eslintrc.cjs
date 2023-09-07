@@ -18,6 +18,7 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: ["dist/**/*"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
