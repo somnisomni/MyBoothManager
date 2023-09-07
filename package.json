@@ -1,5 +1,4 @@
 {
-  "name": "myboothmanager",
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "yarn@3.6.3",

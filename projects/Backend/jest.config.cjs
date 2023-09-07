@@ -4,18 +4,12 @@ const { compilerOptions } = require("./tsconfig.json");
 
 /** @type {JestConfigWithTsJest} */
 module.exports = {
-  preset: "ts-jest/presets/default-esm",
-  moduleFileExtensions: ["js", "json", "ts"],
+  preset: "ts-jest",
+  testEnvironment: "node",
   rootDir: ".",
   roots: ["<rootDir>"],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
-  testRegex: ".*\\.spec\\.ts$",
   coverageDirectory: "./coverage",
-  testEnvironment: "node",
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
-  },
+  testRegex: ".*\\.spec\\.ts$",
 };
