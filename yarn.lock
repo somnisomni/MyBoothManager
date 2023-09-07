@@ -1223,19 +1223,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: f32dea927fe57b56a07a92d7ef3a8077596783a632714913ea2d3bffb54feb7f23dc2ab8c4fae0f11b6936cbb502ded73a1d991c70f5e7431cf6b24af133d23b
+  checksum: 3bce9cf9bf7e9557ead39883d1d4088a2f82ddd07ceb37ac455c1853b9176b024ec835844103bf85846e26504f5f18fda67f94df4b56efbb926613358b7698ca
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: f32dea927fe57b56a07a92d7ef3a8077596783a632714913ea2d3bffb54feb7f23dc2ab8c4fae0f11b6936cbb502ded73a1d991c70f5e7431cf6b24af133d23b
+  checksum: 3bce9cf9bf7e9557ead39883d1d4088a2f82ddd07ceb37ac455c1853b9176b024ec835844103bf85846e26504f5f18fda67f94df4b56efbb926613358b7698ca
   languageName: node
   linkType: hard
 
@@ -1255,6 +1255,12 @@ __metadata:
     rimraf: ^5.0.1
     ts-jest: ^29.1.1
     typescript: ^5.2.2
+  languageName: unknown
+  linkType: soft
+
+"@myboothmanager/i18n@workspace:packages/I18n":
+  version: 0.0.0-use.local
+  resolution: "@myboothmanager/i18n@workspace:packages/I18n"
   languageName: unknown
   linkType: soft
 

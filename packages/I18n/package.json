@@ -1,0 +1,7 @@
+{
+  "name": "@myboothmanager/i18n",
+  "version": "0.0.0",
+  "author": "somni <me@somni.one>",
+  "packageManager": "yarn@3.6.2",
+  "private": true
+}

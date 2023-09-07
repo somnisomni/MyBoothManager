@@ -20,6 +20,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/Common"\
       },\
       {\
+        "name": "@myboothmanager/i18n",\
+        "reference": "workspace:packages/I18n"\
+      },\
+      {\
         "name": "@myboothmanager/admin",\
         "reference": "workspace:projects/Admin"\
       },\
@@ -34,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@myboothmanager/admin", ["workspace:projects/Admin"]],\
       ["@myboothmanager/backend", ["workspace:projects/Backend"]],\
       ["@myboothmanager/common", ["workspace:packages/Common"]],\
+      ["@myboothmanager/i18n", ["workspace:packages/I18n"]],\
       ["myboothmanager", ["workspace:."]]\
     ],\
     "fallbackPool": [\
@@ -1755,7 +1760,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/admin", "workspace:projects/Admin"],\
             ["@mdi/font", "npm:7.2.96"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["@rushstack/eslint-patch", "npm:1.3.3"],\
             ["@tsconfig/node18", "npm:18.2.1"],\
             ["@types/node", "npm:18.17.14"],\
@@ -1786,7 +1791,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/backend", "workspace:projects/Backend"],\
             ["@fastify/helmet", "npm:11.0.0"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["@nestjs/cli", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.1.17"],\
             ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.4"],\
             ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.4"],\
@@ -1820,18 +1825,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@myboothmanager/common", [\
-        ["file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-08ef3f7b7c-f32dea927f.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-7be990fbd9-3bce9cf9bf.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
         }],\
-        ["file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-84c194905b-f32dea927f.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-a93a15678d-3bce9cf9bf.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=eb9076&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
@@ -1852,6 +1857,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:5.0.1"],\
             ["ts-jest", "virtual:aabdadd0858a4fc8ec6db926a5a83ad28517ab289164965f094df5ea9054afe3875d8210058507b6d927da45ac6e29e3efba37d4d99f52e617fa05c94069c609#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@myboothmanager/i18n", [\
+        ["workspace:packages/I18n", {\
+          "packageLocation": "./packages/I18n/",\
+          "packageDependencies": [\
+            ["@myboothmanager/i18n", "workspace:packages/I18n"]\
           ],\
           "linkType": "SOFT"\
         }]\
