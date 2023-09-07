@@ -43,6 +43,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["concurrently", "npm:8.2.1"],\
             ["jest", "virtual:2e2813804317b1fc7475b530cecdadc3d82d063ef299adc74d44f439b6d038a8a5cfefe1be65e259a3819f5b253ab46f528667e55093c9547faa17d3332db135#npm:29.6.4"],\
             ["ts-jest", "virtual:2e2813804317b1fc7475b530cecdadc3d82d063ef299adc74d44f439b6d038a8a5cfefe1be65e259a3819f5b253ab46f528667e55093c9547faa17d3332db135#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -899,6 +900,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@babel/runtime", [\
+        ["npm:7.22.15", {\
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.22.15-b21c55a700-793296df1e.zip/node_modules/@babel/runtime/",\
+          "packageDependencies": [\
+            ["@babel/runtime", "npm:7.22.15"],\
+            ["regenerator-runtime", "npm:0.14.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@babel/template", [\
         ["npm:7.22.5", {\
           "packageLocation": "./.yarn/cache/@babel-template-npm-7.22.5-358c44dc9d-c574641016.zip/node_modules/@babel/template/",\
@@ -1744,7 +1755,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/admin", "workspace:projects/Admin"],\
             ["@mdi/font", "npm:7.2.96"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["@rushstack/eslint-patch", "npm:1.3.3"],\
             ["@tsconfig/node18", "npm:18.2.1"],\
             ["@types/node", "npm:18.17.14"],\
@@ -1775,7 +1786,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/backend", "workspace:projects/Backend"],\
             ["@fastify/helmet", "npm:11.0.0"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["@nestjs/cli", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.1.17"],\
             ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.4"],\
             ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.4"],\
@@ -1809,18 +1820,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@myboothmanager/common", [\
-        ["file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-ea4c2ae8a0-800cdc4434.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-9fff0ebcbb-7105982200.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
         }],\
-        ["file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-fa078c4f35-800cdc4434.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-fca248595b-7105982200.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=719e68&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
@@ -4496,6 +4507,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["concurrently", [\
+        ["npm:8.2.1", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-8.2.1-2922c29e4d-216cb16d5b.zip/node_modules/concurrently/",\
+          "packageDependencies": [\
+            ["concurrently", "npm:8.2.1"],\
+            ["chalk", "npm:4.1.2"],\
+            ["date-fns", "npm:2.30.0"],\
+            ["lodash", "npm:4.17.21"],\
+            ["rxjs", "npm:7.8.1"],\
+            ["shell-quote", "npm:1.8.1"],\
+            ["spawn-command", "npm:0.0.2"],\
+            ["supports-color", "npm:8.1.1"],\
+            ["tree-kill", "npm:1.2.2"],\
+            ["yargs", "npm:17.7.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["consola", [\
         ["npm:2.15.3", {\
           "packageLocation": "./.yarn/cache/consola-npm-2.15.3-7b4cf44fed-8ef7a09b70.zip/node_modules/consola/",\
@@ -4634,6 +4663,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/currency-symbol-map-npm-5.1.0-226ff63fbd-7c84dd81bf.zip/node_modules/currency-symbol-map/",\
           "packageDependencies": [\
             ["currency-symbol-map", "npm:5.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["date-fns", [\
+        ["npm:2.30.0", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.30.0-895c790e0f-f7be015232.zip/node_modules/date-fns/",\
+          "packageDependencies": [\
+            ["date-fns", "npm:2.30.0"],\
+            ["@babel/runtime", "npm:7.22.15"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8048,6 +8087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["myboothmanager", "workspace:."],\
+            ["concurrently", "npm:8.2.1"],\
             ["jest", "virtual:2e2813804317b1fc7475b530cecdadc3d82d063ef299adc74d44f439b6d038a8a5cfefe1be65e259a3819f5b253ab46f528667e55093c9547faa17d3332db135#npm:29.6.4"],\
             ["ts-jest", "virtual:2e2813804317b1fc7475b530cecdadc3d82d063ef299adc74d44f439b6d038a8a5cfefe1be65e259a3819f5b253ab46f528667e55093c9547faa17d3332db135#npm:29.1.1"],\
             ["typescript", "patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"]\
@@ -9043,6 +9083,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["regenerator-runtime", [\
+        ["npm:0.14.0", {\
+          "packageLocation": "./.yarn/cache/regenerator-runtime-npm-0.14.0-e060897cf7-1c977ad82a.zip/node_modules/regenerator-runtime/",\
+          "packageDependencies": [\
+            ["regenerator-runtime", "npm:0.14.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["regexp.prototype.flags", [\
         ["npm:1.5.0", {\
           "packageLocation": "./.yarn/cache/regexp.prototype.flags-npm-1.5.0-5623b9e07f-c541687cdb.zip/node_modules/regexp.prototype.flags/",\
@@ -9676,6 +9725,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-support", "npm:0.5.21"],\
             ["buffer-from", "npm:1.1.2"],\
             ["source-map", "npm:0.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["spawn-command", [\
+        ["npm:0.0.2", {\
+          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-014d4d5d9f-e35c5d2817.zip/node_modules/spawn-command/",\
+          "packageDependencies": [\
+            ["spawn-command", "npm:0.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\

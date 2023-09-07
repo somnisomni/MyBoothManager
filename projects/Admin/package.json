@@ -37,6 +37,5 @@
     "vue-facing-decorator": "^3.0.1",
     "vue-tsc": "^1.8.8"
   },
-  "packageManager": "yarn@3.6.1",
-  "repository": "https://github.com/somnisomni/MyBoothManager"
+  "packageManager": "yarn@3.6.1"
 }

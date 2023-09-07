@@ -8,6 +8,7 @@
     "eslintconfig": "yarn workspace @myboothmanager/eslintconfig",
     "admin": "yarn workspace @myboothmanager/admin",
     "backend": "yarn workspace @myboothmanager/backend",
+    "dev": "concurrently -n \"ADMIN,BACKEND\" -c \"bgRed.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin dev\" \"yarn workspace @myboothmanager/backend start\"",
     "test": "yarn node --experimental-vm-modules \"$(yarn bin jest)\"",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
@@ -17,6 +18,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "concurrently": "^8.2.1",
     "jest": "^29.6.4",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
