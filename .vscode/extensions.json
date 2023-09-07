@@ -3,6 +3,6 @@
     "arcanis.vscode-zipfs",
     "dbaeumer.vscode-eslint",
     "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin",
+    "Vue.vscode-typescript-vue-plugin"
   ]
 }
