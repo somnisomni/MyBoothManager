@@ -1162,13 +1162,13 @@ __metadata:
     "@mdi/font": ^7.2.96
     "@myboothmanager/common": ../../packages/Common
     "@rushstack/eslint-patch": ^1.3.3
-    "@tsconfig/node18": ^18.2.0
+    "@tsconfig/node18": ^18.2.1
     "@types/node": ^18.17.4
     "@vitejs/plugin-vue": ^4.2.3
     "@vue/eslint-config-typescript": ^11.0.3
     "@vue/tsconfig": ^0.4.0
     currency-symbol-map: ^5.1.0
-    eslint: ^8.46.0
+    eslint: ^8.47.0
     eslint-plugin-vue: ^9.17.0
     npm-run-all: ^4.1.5
     pinia: ^2.1.6
@@ -1198,7 +1198,7 @@ __metadata:
     "@nestjs/schematics": ^10.0.2
     "@nestjs/testing": ^10.2.1
     "@tsconfig/node18": ^18.2.1
-    "@types/jest": ^29.5.3
+    "@types/jest": ^29.5.4
     "@types/node": ^20.5.2
     "@types/sequelize": ^4.28.15
     "@typescript-eslint/eslint-plugin": ^6.4.1
@@ -1207,7 +1207,7 @@ __metadata:
     eslint: ^8.47.0
     expect-type: ^0.16.0
     fastify: ^4.21.0
-    jest: ^29.6.3
+    jest: ^29.6.4
     mysql2: ^3.6.0
     reflect-metadata: ^0.1.13
     rxjs: ^7.8.1
@@ -1223,19 +1223,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 71059822000090391ec8741c25193689f88ff1a31662608cb2c2c0a8922b86b8898741e6ebe063abe9c19f74245bc5b9406c0766b21bfb5a9a28b4fba2fd24da
+  checksum: f32dea927fe57b56a07a92d7ef3a8077596783a632714913ea2d3bffb54feb7f23dc2ab8c4fae0f11b6936cbb502ded73a1d991c70f5e7431cf6b24af133d23b
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=79f5c2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=bcb8be&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 71059822000090391ec8741c25193689f88ff1a31662608cb2c2c0a8922b86b8898741e6ebe063abe9c19f74245bc5b9406c0766b21bfb5a9a28b4fba2fd24da
+  checksum: f32dea927fe57b56a07a92d7ef3a8077596783a632714913ea2d3bffb54feb7f23dc2ab8c4fae0f11b6936cbb502ded73a1d991c70f5e7431cf6b24af133d23b
   languageName: node
   linkType: hard
 
@@ -1243,13 +1243,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common@workspace:packages/Common"
   dependencies:
-    "@tsconfig/node18": ^18.2.0
+    "@tsconfig/node18": ^18.2.1
     "@types/jest": ^29.5.4
-    "@typescript-eslint/eslint-plugin": latest
-    "@typescript-eslint/parser": latest
+    "@typescript-eslint/eslint-plugin": ^6.4.1
+    "@typescript-eslint/parser": ^6.4.1
     copyfiles: ^2.4.1
     currency-symbol-map: ^5.1.0
-    eslint: latest
+    eslint: ^8.47.0
     execa: ^8.0.1
     jest: ^29.6.4
     rimraf: ^5.0.1
@@ -1546,7 +1546,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node18@npm:^18.2.0, @tsconfig/node18@npm:^18.2.1":
+"@tsconfig/node18@npm:^18.2.1":
   version: 18.2.1
   resolution: "@tsconfig/node18@npm:18.2.1"
   checksum: 9d969456125f37c4d14baa7fe028cfcd448fde4bec7072f7518acf83919bd1e5b25695897954e1bad6fabd54658583c44a56d140a8dc87039ad9d96fd4c5a1ed
@@ -1680,7 +1680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.5.3, @types/jest@npm:^29.5.4":
+"@types/jest@npm:^29.5.4":
   version: 29.5.4
   resolution: "@types/jest@npm:29.5.4"
   dependencies:
@@ -1805,7 +1805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^6.4.1, @typescript-eslint/eslint-plugin@npm:latest":
+"@typescript-eslint/eslint-plugin@npm:^6.4.1":
   version: 6.5.0
   resolution: "@typescript-eslint/eslint-plugin@npm:6.5.0"
   dependencies:
@@ -1847,7 +1847,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^6.4.1, @typescript-eslint/parser@npm:latest":
+"@typescript-eslint/parser@npm:^6.4.1":
   version: 6.5.0
   resolution: "@typescript-eslint/parser@npm:6.5.0"
   dependencies:
@@ -3836,7 +3836,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.46.0, eslint@npm:^8.47.0, eslint@npm:latest":
+"eslint@npm:^8.47.0":
   version: 8.48.0
   resolution: "eslint@npm:8.48.0"
   dependencies:
@@ -5782,7 +5782,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.6.3, jest@npm:^29.6.4":
+"jest@npm:^29.6.4":
   version: 29.6.4
   resolution: "jest@npm:29.6.4"
   dependencies:

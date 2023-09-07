@@ -12,12 +12,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.0",
+    "@tsconfig/node18": "^18.2.1",
     "@types/jest": "^29.5.4",
-    "@typescript-eslint/eslint-plugin": "latest",
-    "@typescript-eslint/parser": "latest",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "copyfiles": "^2.4.1",
-    "eslint": "latest",
+    "eslint": "^8.47.0",
     "execa": "^8.0.1",
     "jest": "^29.6.4",
     "rimraf": "^5.0.1",
