@@ -6,7 +6,7 @@
              :class="{ 'pl-6': navPersistent }">
       <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="내비게이션 메뉴 전환" />
 
-      <VAppBarTitle class="ml-0"><strong>MyBoothManager</strong> | 부스 관리</VAppBarTitle>
+      <VAppBarTitle class="ml-1"><strong>MyBoothManager</strong> | 부스 관리</VAppBarTitle>
 
       <BoothSelectionArea />
     </VAppBar>
