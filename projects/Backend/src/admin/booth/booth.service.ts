@@ -7,7 +7,7 @@ import GoodsCategory from "@/db/models/goods-category";
 import { GoodsCategoryOutput } from "../goods/goods-category.entity";
 import { BoothOutput } from "./booth.entity";
 import { BaseError } from "sequelize";
-import { IGoodsResponse } from "@myboothmanager/common";
+import { IGoodsResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 
 @Injectable()
 export class BoothService {
@@ -29,7 +29,7 @@ export class BoothService {
   async findAll(): Promise<Array<BoothOutput>> {
     return (await Booth.findAll({
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     })) as Array<BoothOutput>;
   }
@@ -37,7 +37,7 @@ export class BoothService {
   async findOne(id: number): Promise<BoothOutput> {
     const booth = await Booth.findByPk(id, {
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     }) as BoothOutput;
 
@@ -49,7 +49,7 @@ export class BoothService {
     return (await Goods.findAll({
       where: { boothId },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     })) as Array<IGoodsResponse>;
   }
@@ -58,7 +58,7 @@ export class BoothService {
     return (await GoodsCategory.findAll({
       where: { boothId },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     })) as Array<GoodsCategoryOutput>;
   }

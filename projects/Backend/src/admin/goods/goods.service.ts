@@ -3,7 +3,7 @@ import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import Goods from "@/db/models/goods";
 import { BaseError } from "sequelize";
-import { IGoodsResponse } from "@myboothmanager/common";
+import { IGoodsResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 
 @Injectable()
 export class GoodsService {
@@ -28,7 +28,7 @@ export class GoodsService {
   async findAll(): Promise<Array<IGoodsResponse>> {
     return (await Goods.findAll({
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     })) as Array<IGoodsResponse>;
   }
@@ -36,7 +36,7 @@ export class GoodsService {
   async findOne(id: number): Promise<IGoodsResponse> {
     const goods = await Goods.findByPk(id, {
       attributes: {
-        exclude: ["createdAt", "updatedAt", "deletedAt"],
+        exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     }) as IGoodsResponse;
 
