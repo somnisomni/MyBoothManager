@@ -48,6 +48,11 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/storemode",
+      name: "admin-storemode",
+      component: PlaceholderPage,
+    }
   ],
 });
 
