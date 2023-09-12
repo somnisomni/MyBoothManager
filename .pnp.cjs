@@ -1775,7 +1775,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vitejs/plugin-vue", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.3.4"],\
             ["@vue/eslint-config-typescript", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:11.0.3"],\
             ["@vue/tsconfig", "npm:0.4.0"],\
-            ["currency-symbol-map", "npm:5.1.0"],\
             ["eslint", "npm:8.48.0"],\
             ["eslint-plugin-vue", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:9.17.0"],\
             ["npm-run-all", "npm:4.1.5"],\
