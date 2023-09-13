@@ -3,6 +3,7 @@ import Booth, { BoothCreationAttributes } from "@/db/models/booth";
 import Goods, { GoodsCreationAttributes } from "@/db/models/goods";
 import GoodsCategory, { GoodsCategoryCreationAttributes } from "@/db/models/goods-category";
 import { BoothStatus } from "@myboothmanager/common";
+import * as argon2 from "argon2";
 
 export async function insertTempDataIntoDB(): Promise<void> {
   if(await Account.findOne({ where: { loginId: "test" } })) return;
@@ -10,7 +11,7 @@ export async function insertTempDataIntoDB(): Promise<void> {
   await Account.create({
     name: "TEST",
     loginId: "test",
-    loginPassHash: "test",
+    loginPassHash: await argon2.hash("test"),
   }, {
     ignoreDuplicates: true,
   });

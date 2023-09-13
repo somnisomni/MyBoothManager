@@ -10,5 +10,10 @@ export interface IAccount extends IDataModelBase {
 }
 export type IAccountResponse = IAccount;
 
+export interface IAccountLoginResponse {
+  loginId: string;
+  token: string;
+}
+
 export type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
 export type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;

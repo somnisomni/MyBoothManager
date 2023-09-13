@@ -1,12 +1,6 @@
+import { IBackendErrorResponse } from "@myboothmanager/common";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, ImATeapotException, NotFoundException } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
-
-interface ExceptionResponse {
-  message: string;
-  timestamp: string;
-  path: string;
-  statusCode: number;
-}
 
 const SCREAM = [
   "FIND YOUR RIGHT WAY",
@@ -35,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
-    } as ExceptionResponse);
+    } as IBackendErrorResponse);
   }
 }
 
@@ -52,7 +46,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
-    } as ExceptionResponse);
+    } as IBackendErrorResponse);
   }
 }
 
@@ -69,7 +63,7 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
-    } as ExceptionResponse);
+    } as IBackendErrorResponse);
   }
 }
 
@@ -86,6 +80,6 @@ export class TeapotExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
-    } as ExceptionResponse);
+    } as IBackendErrorResponse);
   }
 }

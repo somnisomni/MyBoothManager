@@ -1,5 +1,5 @@
-import { IDataModelBase } from "./base";
-import { AccountCreateRequestKey, IAccount, IAccountCreateRequest, IAccountResponse } from "./account";
+import { IDataModelBase, IBackendErrorResponse } from "./base";
+import { AccountCreateRequestKey, IAccount, IAccountCreateRequest, IAccountResponse, IAccountLoginResponse } from "./account";
 import { IBooth, BoothStatus, BoothCreateRequestKey, IBoothCreateRequest, IBoothResponse } from "./booth";
 import { IGoods, GoodsStatus, GoodsCreateRequestKey, IGoodsCreateRequest, IGoodsResponse } from "./goods";
 import { GoodsCategoryCreateRequestKey, IGoodsCategory, IGoodsCategoryCreateRequest, IGoodsCategoryResponse } from "./goods-category";
@@ -8,12 +8,14 @@ import { GoodsSaleHistoryCreateRequestKey, IGoodsSaleHistory, IGoodsSaleHistoryC
 export {
   /* base.ts */
   IDataModelBase,
+  IBackendErrorResponse,
 
   /* account.ts */
   IAccount,
   AccountCreateRequestKey,
   IAccountCreateRequest,
   IAccountResponse,
+  IAccountLoginResponse,
 
   /* booth.ts */
   IBooth,

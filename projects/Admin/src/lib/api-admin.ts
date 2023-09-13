@@ -1,4 +1,4 @@
-import { type IBoothResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
+import { type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -11,18 +11,14 @@ export default class AdminAPI {
   };
 
   /* Basic fetch functions */
-  private static async adminAPICall(method: HTTPMethodString, path: string, payload?: Record<string, any>): Promise<Record<string, any> | null> {
+  private static async adminAPICall(method: HTTPMethodString, path: string, payload?: Record<string, any>): Promise<Record<string, any>> {
     const response = await fetch(`${this.API_URL}/admin/${path}`, {
       ...this.FETCH_COMMON_OPTIONS,
       method,
       body: payload ? JSON.stringify(payload) : undefined,
     });
 
-    if(response && response.ok) {
-      return await response.json();
-    } else {
-      return null;
-    }
+    return await response.json();
   }
 
   static GET = async (path: string) => await this.adminAPICall("GET", path);
@@ -38,17 +34,24 @@ export default class AdminAPI {
     else return false;
   }
 
-  static async fetchAllBooths(): Promise<Array<IBoothResponse> | null> {
-    const response = await this.GET("booth");
+  static async login(payload: { loginId: string, loginPass: string }): Promise<IAccountLoginResponse | string> {
+    const response = await this.POST("account/login", payload);
 
-    if(response) return response as Array<IBoothResponse>;
-    else return null;
+    if(response.token) return response as IAccountLoginResponse;
+    else return (response as IBackendErrorResponse).message;
   }
 
-  static async createGoods(payload: IGoodsCreateRequest): Promise<IGoodsResponse | null> {
+  static async fetchAllBooths(): Promise<Array<IBoothResponse> | string> {
+    const response = await this.GET("booth");
+
+    if(response instanceof Array) return response as Array<IBoothResponse>;
+    else return (response as IBackendErrorResponse).message;
+  }
+
+  static async createGoods(payload: IGoodsCreateRequest): Promise<IGoodsResponse | string> {
     const response = await this.POST("goods", payload);
 
-    if(response) return response as IGoodsResponse;
-    else return null;
+    if(response.id) return response as IGoodsResponse;
+    else return (response as IBackendErrorResponse).message;
   }
 }
