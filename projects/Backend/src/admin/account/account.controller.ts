@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
@@ -34,6 +34,7 @@ export class AccountController {
   }
 
   @Post("login")
+  @HttpCode(200)
   async login(@Body() loginDto: LoginDTO) {
     return await this.accountService.login(loginDto);
   }

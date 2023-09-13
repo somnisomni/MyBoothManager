@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
 import { type GoodsCategoryData, type GoodsData } from "@/types/goods";
 import AdminAPI from "@/lib/api-admin";
-import { reactive } from "vue";
+import { inject, reactive } from "vue";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
+import { type VueCookies } from "vue-cookies";
 
 const useAdminStore = defineStore("admin", () => {
+  /* Dependencies (NOT TO BE EXPORTED) */
+  const $cookies = inject<VueCookies>("$cookies")!;
+
   /* States */
   const currentBoothId = 1;
   const boothList: Record<number, IBooth> = reactive({
@@ -83,10 +87,22 @@ const useAdminStore = defineStore("admin", () => {
   });
 
   /* Actions */
+  async function adminLogin(loginId: string, loginPass: string): Promise<boolean | string> {
+    const response = await AdminAPI.login({ loginId, loginPass });
+
+    if(response && response instanceof Object) {
+      $cookies.set("accessToken", response.token, response.tokenExpiresIn);
+      $cookies.set("refreshToken", response.refreshToken, response.refreshTokenExpiresIn);
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function fetchAllBooths() {
     const response = await AdminAPI.fetchAllBooths();
 
-    if(response) {
+    if(response && response instanceof Array) {
       for(const booth of response) {
         boothList[booth.id] = booth;
       }
@@ -99,6 +115,7 @@ const useAdminStore = defineStore("admin", () => {
     goodsCategoryList,
     goodsList,
 
+    adminLogin,
     fetchAllBooths,
   };
 });

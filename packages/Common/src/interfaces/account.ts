@@ -13,6 +13,9 @@ export type IAccountResponse = IAccount;
 export interface IAccountLoginResponse {
   loginId: string;
   token: string;
+  tokenExpiresIn: string;
+  refreshToken: string;
+  refreshTokenExpiresIn: string;
 }
 
 export type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";

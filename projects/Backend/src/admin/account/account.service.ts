@@ -1,10 +1,11 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
 import { LoginDTO } from "./dto/login.dto";
 import Account from "@/db/models/account";
 import * as argon2 from "argon2";
 import { IAccountLoginResponse } from "@myboothmanager/common";
+import { JWTVerifyResult, generateLoginToken, verifyLoginToken } from "./jwt";
 
 @Injectable()
 export class AccountService {
@@ -37,9 +38,18 @@ export class AccountService {
 
     if(account) {
       if(await argon2.verify(account.loginPassHash, loginDto.loginPass)) {
+        const generatedToken = generateLoginToken(account);
+
+        if(verifyLoginToken(generatedToken.token) !== JWTVerifyResult.OK) {
+          throw new InternalServerErrorException("Could not generate login token");
+        }
+
         return {
           loginId: account.loginId,
-          token: "TEST TOKEN",  // TODO: Generate a real token
+          token: generatedToken.token,
+          tokenExpiresIn: generatedToken.tokenExpiresIn,
+          refreshToken: generatedToken.refreshToken,
+          refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
         };
       }
     }
