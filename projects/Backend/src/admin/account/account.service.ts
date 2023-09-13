@@ -5,7 +5,7 @@ import { LoginDTO } from "./dto/login.dto";
 import Account from "@/db/models/account";
 import * as argon2 from "argon2";
 import { IAccountLoginResponse } from "@myboothmanager/common";
-import { JWTVerifyResult, generateLoginToken, verifyLoginToken } from "./jwt";
+import { JWTVerifyResult, generateLoginToken, generateLoginTokenSA, verifyLoginToken } from "./jwt";
 
 @Injectable()
 export class AccountService {
@@ -55,5 +55,18 @@ export class AccountService {
     }
 
     throw new ForbiddenException("Account not found or password is incorrect");
+  }
+
+  async loginSA(): Promise<IAccountLoginResponse & { superadmin: boolean }> {
+    const generatedToken = generateLoginTokenSA();
+
+    return {
+      loginId: process.env.SUPERADMIN_ID!,
+      token: generatedToken.token,
+      tokenExpiresIn: generatedToken.tokenExpiresIn,
+      refreshToken: generatedToken.refreshToken,
+      refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
+      superadmin: true,
+    }
   }
 }

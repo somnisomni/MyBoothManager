@@ -27,6 +27,7 @@
                   color="primary"
                   size="large"
                   :loading="loginProgress"
+                  :disabled="loginProgress"
                   @click.prevent="doLogin">로그인</VBtn>
           </VLayout>
         </VForm>

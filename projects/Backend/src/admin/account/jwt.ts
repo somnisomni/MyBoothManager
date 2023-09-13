@@ -1,4 +1,4 @@
-import Account from "@/db/models/account";
+import { IAccount } from "@myboothmanager/common";
 import * as jwt from "jsonwebtoken";
 import * as uuid from "uuid";
 
@@ -14,7 +14,7 @@ export enum JWTVerifyResult {
   Unknown,
 }
 
-export function generateLoginToken(account: Account): { token: string; tokenExpiresIn: string, refreshToken: string, refreshTokenExpiresIn: string } {
+export function generateLoginToken(account: IAccount): { token: string; tokenExpiresIn: string, refreshToken: string, refreshTokenExpiresIn: string } {
   const payload = {
     id: account.id,
     loginId: account.loginId,
@@ -30,6 +30,17 @@ export function generateLoginToken(account: Account): { token: string; tokenExpi
     refreshToken: uuid.v4(),
     refreshTokenExpiresIn,
   };
+}
+
+export function generateLoginTokenSA(): { token: string; tokenExpiresIn: string, refreshToken: string, refreshTokenExpiresIn: string } {
+  return generateLoginToken({
+    id: 0,
+    loginId: process.env.SUPERADMIN_ID!,
+    name: "SUPER ADMIN",
+    lastLoginAt: new Date(),
+    loginCount: -1,
+    loginPassHash: process.env.SUPERADMIN_PASS!,
+  });
 }
 
 export function verifyLoginToken(token: string): JWTVerifyResult {

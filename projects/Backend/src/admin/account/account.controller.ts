@@ -36,6 +36,13 @@ export class AccountController {
   @Post("login")
   @HttpCode(200)
   async login(@Body() loginDto: LoginDTO) {
+    // SuperAdmin login
+    if(loginDto.loginId === process.env.SUPERADMIN_ID
+       && loginDto.loginPass === process.env.SUPERADMIN_PASS) {
+        return await this.accountService.loginSA();
+    }
+
+    // Normal login
     return await this.accountService.login(loginDto);
   }
 }
