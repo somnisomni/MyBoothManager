@@ -21,16 +21,14 @@
 </template>
 
 <script lang="ts">
+import router from "@/router";
 import { Vue, Component } from "vue-facing-decorator";
-import { useRouter } from "vue-router";
 
 @Component({})
 export default class ErrorPage extends Vue {
-  rootRouteUrl: string = "/";
+  rootRouteUrl: string = router.resolve({ name: "admin-root" })?.path ?? "/";
 
   public mounted() {
-    this.rootRouteUrl = useRouter().getRoutes().find((route) => route.name === "admin-root")?.path ?? "/";
-
     document.addEventListener("contextmenu", this.prevent);
     document.addEventListener("copy", this.prevent);
     document.addEventListener("cut", this.prevent);

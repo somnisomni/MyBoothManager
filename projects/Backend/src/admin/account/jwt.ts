@@ -34,7 +34,7 @@ export function generateLoginToken(account: IAccount): { token: string; tokenExp
 
 export function generateLoginTokenSA(): { token: string; tokenExpiresIn: string, refreshToken: string, refreshTokenExpiresIn: string } {
   return generateLoginToken({
-    id: 0,
+    id: -1,
     loginId: process.env.SUPERADMIN_ID!,
     name: "SUPER ADMIN",
     lastLoginAt: new Date(),

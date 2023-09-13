@@ -6,6 +6,7 @@ import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
+import LogoutPage from "@/pages/LogoutPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,11 +23,16 @@ const router = createRouter({
       component: ErrorPage,
     },
 
-    /* Login */
+    /* Login / Logout */
     {
       path: "/login",
       name: "login",
       component: LoginPage,
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: LogoutPage,
     },
 
     /* Admin Routes */

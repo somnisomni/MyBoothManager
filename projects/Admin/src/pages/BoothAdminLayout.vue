@@ -19,17 +19,23 @@
                    :to="{ name: 'admin-storemode' }" exact />
         <VListSubheader>관리</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
-                  :to="{ name: 'admin' }" exact />
+                   :to="{ name: 'admin' }" exact />
         <VListItem prepend-icon="mdi-store" title="굿즈" value="goods"
-                  :to="{ name: 'admin-goods' }" exact />
+                   :to="{ name: 'admin-goods' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
-                  :to="{ name: 'admin-analytics' }" exact />
+                   :to="{ name: 'admin-analytics' }" exact />
 
         <VDivider />
 
         <VListSubheader>도구</VListSubheader>
         <VListItem prepend-icon="mdi-cash" title="굿즈 가격 계산기" value="price_calculator"
-                  :to="{ name: 'admin-utility-price-calculator' }" exact />
+                   :to="{ name: 'admin-utility-price-calculator' }" exact />
+
+        <VDivider />
+
+        <VListSubheader>계정</VListSubheader>
+        <VListItem prepend-icon="mdi-logout" title="로그아웃" value="logout"
+                   :href="logoutPageHref" />
       </VList>
 
       <VSpacer />
@@ -52,6 +58,7 @@ import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
 import type { IBooth } from "@myboothmanager/common";
+import router from "@/router";
 
 @Component({
   components: {
@@ -60,6 +67,7 @@ import type { IBooth } from "@myboothmanager/common";
 })
 export default class BoothAdminLayout extends Vue {
   _navOpen = false;
+  logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
 
   set navOpen(value: boolean) { this._navOpen = value; }
   get navOpen() {

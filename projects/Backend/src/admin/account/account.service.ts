@@ -45,7 +45,10 @@ export class AccountService {
         }
 
         return {
+          id: account.id,
+          name: account.name,
           loginId: account.loginId,
+
           token: generatedToken.token,
           tokenExpiresIn: generatedToken.tokenExpiresIn,
           refreshToken: generatedToken.refreshToken,
@@ -61,7 +64,10 @@ export class AccountService {
     const generatedToken = generateLoginTokenSA();
 
     return {
+      id: -1,
+      name: "SUPER ADMIN",
       loginId: process.env.SUPERADMIN_ID!,
+
       token: generatedToken.token,
       tokenExpiresIn: generatedToken.tokenExpiresIn,
       refreshToken: generatedToken.refreshToken,

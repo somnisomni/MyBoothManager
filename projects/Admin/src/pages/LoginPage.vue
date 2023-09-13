@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import { VExpandTransition, VSlideXReverseTransition } from "vuetify/components";
+import router from "@/router";
 
 @Component({})
 export default class LoginPage extends Vue {
@@ -57,7 +57,7 @@ export default class LoginPage extends Vue {
     const result = await useAdminStore().adminLogin(this.loginData.loginId, this.loginData.loginPass);
 
     if(result === true) {
-      alert("success!");
+      router.replace({ name: "admin" });
     } else if(typeof result === "string") {
       this.errorMessage = result;
     }

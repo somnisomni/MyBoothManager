@@ -11,9 +11,10 @@ import { Component, Vue } from "vue-facing-decorator";
 @Component({})
 export default class FirstLoad extends Vue {
   mounted() {
+    // TODO: implement
     setTimeout(() => {
       this.$emit("complete");
-    }, 3000);
+    }, 1000);
   }
 }
 </script>
