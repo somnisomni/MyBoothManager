@@ -16,6 +16,14 @@
       <!-- Title -->
       <VRow class="pa-4" :class="{ 'py-6': titleExtraMargin }">
         <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
+
+        <VBtn v-for="btn in titleExtraButtons"
+              v-key="btn.icon"
+              :disabled="progressActive || btn.disabled"
+              icon
+              variant="flat"
+              class="mr-2"
+              @click="() => { btn.onClick(); }"><VIcon>{{ btn.icon }}</VIcon></VBtn>
         <VBtn v-if="!hideCloseButton"
               :disabled="progressActive || persistent"
               icon
@@ -62,8 +70,14 @@
 <script lang="ts">
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 
+export interface DialogButtonParams {
+  icon: string;
+  disabled?: boolean;
+  onClick: () => void;
+}
+
 @Component({})
-export default class BoothStatusUpdateDialog extends Vue {
+export default class CommonDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
   @Prop({ type: Boolean, default: true }) scrollable!: boolean;
@@ -71,6 +85,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   @Prop({ type: String, default: 700 }) width!: string | number;
   @Prop({ type: String, default: "100%" }) maxWidth!: string | number;
   @Prop({ type: Boolean, default: false }) hideCloseButton!: boolean;
+  @Prop({ type: Object }) titleExtraButtons!: DialogButtonParams[];
   @Prop({ type: Boolean, default: false }) titleExtraMargin!: boolean;
   @Prop({ type: Boolean, default: false }) contentNoPadding!: boolean;
   @Prop({ type: String, default: "알림" }) dialogTitle!: string;
