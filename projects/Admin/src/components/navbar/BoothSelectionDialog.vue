@@ -2,6 +2,7 @@
   <CommonDialog v-model="open"
                 :progressActive="boothListFetching"
                 :contentNoPadding="true"
+                :titleExtraButtons="titleButtons"
                 :titleExtraMargin="true"
                 :closeOnCancel="false"
                 dialogTitle="관리할 부스 선택">
@@ -20,41 +21,67 @@
           <div class="booth-item-name">{{ booth.name }}</div>
           <div class="booth-item-desc">{{ booth.description }}</div>
         </VLayout>
-        <div>{{ getBoothOpenStatusString(booth.status.status) }}</div>
+        <div>{{ getBoothOpenStatusString(booth.status) }}</div>
       </VLayout>
     </VSheet>
+
+    <BoothAddDialog v-model="showBoothAddDialog" />
   </CommonDialog>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import { BoothOpenStatus } from "@/types/booth";
-import CommonDialog from "@/components/common/CommonDialog.vue";
+import { type DialogButtonParams } from "@/components/common/CommonDialog.vue";
+import BoothAddDialog from "@/components/navbar/BoothAddDialog.vue";
+import { BoothStatus } from "@myboothmanager/common";
 
 @Component({
   components: {
-    CommonDialog,
+    BoothAddDialog,
   },
 })
 export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
-  getBoothOpenStatusString = BoothOpenStatus.getBoothOpenStatusString;
-
   boothListFetching = false;
+  showBoothAddDialog = false;
+  titleButtons: DialogButtonParams[] = [
+    {
+      icon: "mdi-refresh",
+      onClick: async () => { await this.refreshBoothList(); },
+    },
+    {
+      icon: "mdi-plus",
+      onClick: () => { this.showBoothAddDialog = !this.showBoothAddDialog; },
+    },
+  ];
 
   get boothList() {
     return Object.values(useAdminStore().boothList);
+  }
+
+  getBoothOpenStatusString(status: BoothStatus): string {
+    switch(status) {
+      case BoothStatus.OPEN: return "운영 중";
+      case BoothStatus.PAUSE: return "일시 중지";
+      case BoothStatus.CLOSE: return "운영 종료";
+      case BoothStatus.PREPARE: return "운영 준비";
+      default: return "알 수 없음";
+    }
+  }
+
+  async refreshBoothList() {
+    this.boothListFetching = true;
+    await useAdminStore().fetchAllBooths();
+    this.boothListFetching = false;
   }
 
   @Watch("open")
   async onDialogShown() {
     if(!this.open) return;
 
-    this.boothListFetching = true;
-    await useAdminStore().fetchAllBooths();
-    this.boothListFetching = false;
+    await this.refreshBoothList();
   }
 
   onBoothSelect(boothId: number) {
