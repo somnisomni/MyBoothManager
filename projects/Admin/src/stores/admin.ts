@@ -124,6 +124,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   return {
+    currentAccount,
     currentBoothId,
     boothList,
     goodsCategoryList,

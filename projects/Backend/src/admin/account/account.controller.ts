@@ -39,7 +39,7 @@ export class AccountController {
     // SuperAdmin login
     if(loginDto.loginId === process.env.SUPERADMIN_ID
        && loginDto.loginPass === process.env.SUPERADMIN_PASS) {
-        return await this.accountService.loginSA();
+      return await this.accountService.loginSA();
     }
 
     // Normal login

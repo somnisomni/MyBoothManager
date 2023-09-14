@@ -73,6 +73,6 @@ export class AccountService {
       refreshToken: generatedToken.refreshToken,
       refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
       superadmin: true,
-    }
+    };
   }
 }
