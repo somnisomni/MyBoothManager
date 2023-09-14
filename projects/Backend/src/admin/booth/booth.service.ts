@@ -19,7 +19,7 @@ export class BoothService {
       }));
     } catch(error) {
       if(error instanceof BaseError) {
-        throw new InternalServerErrorException("DB error");
+        throw new InternalServerErrorException("DB 오류");
       } else {
         throw new BadRequestException();
       }
@@ -41,7 +41,7 @@ export class BoothService {
       },
     }) as BoothOutput;
 
-    if(!booth) throw new BadRequestException("Booth not found.");
+    if(!booth) throw new BadRequestException("부스를 찾을 수 없습니다.");
     return booth;
   }
 

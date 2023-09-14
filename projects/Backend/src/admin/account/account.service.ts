@@ -41,7 +41,7 @@ export class AccountService {
         const generatedToken = generateLoginToken(account);
 
         if(verifyLoginToken(generatedToken.token) !== JWTVerifyResult.OK) {
-          throw new InternalServerErrorException("Could not generate login token");
+          throw new InternalServerErrorException("로그인 토큰을 생성할 수 없습니다.");
         }
 
         return {
@@ -57,7 +57,7 @@ export class AccountService {
       }
     }
 
-    throw new ForbiddenException("Account not found or password is incorrect");
+    throw new ForbiddenException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");
   }
 
   async loginSA(): Promise<IAccountLoginResponse> {
