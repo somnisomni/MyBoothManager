@@ -27,4 +27,4 @@ const currencySymbolInfo: Record<string, Record<string, string>> = {
   },
 };
 
-export default currencySymbolInfo;
+export { currencySymbolInfo };
