@@ -10,7 +10,7 @@ const useAdminStore = defineStore("admin", () => {
   const $cookies = inject<VueCookies>("$cookies")!;
 
   /* States */
-  let currentAccount = ref<IAccountUserland | null>(null);
+  const currentAccount = ref<IAccountUserland | null>(null);
 
   const currentBoothId = 1;
   const boothList: Record<number, IBooth> = reactive({

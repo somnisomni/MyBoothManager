@@ -79,7 +79,6 @@
 <script lang="ts">
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import CommonDialog from "@/components/common/CommonDialog.vue";
 import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
 import type { GoodsData } from "@/types/goods";
 import { reactive } from "vue";
@@ -88,7 +87,6 @@ import AdminAPI from "@/lib/api-admin";
 
 @Component({
   components: {
-    CommonDialog,
     GoodsCategoryAddDialog,
     FormDataLossWarningDialog,
   },

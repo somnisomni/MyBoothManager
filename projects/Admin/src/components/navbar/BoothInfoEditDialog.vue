@@ -44,13 +44,11 @@
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import CommonDialog from "@/components/common/CommonDialog.vue";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
 import { currencySymbolInfo, type IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {
-    CommonDialog,
     FormDataLossWarningDialog,
   },
 })

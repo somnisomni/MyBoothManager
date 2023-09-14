@@ -6,13 +6,8 @@
 
 <script lang="ts">
 import { Vue, Component, Model } from "vue-facing-decorator";
-import CommonDialog from "@/components/common/CommonDialog.vue";
 
-@Component({
-  components: {
-    CommonDialog,
-  },
-})
+@Component({})
 export default class GoodsCategoryAddDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 }
