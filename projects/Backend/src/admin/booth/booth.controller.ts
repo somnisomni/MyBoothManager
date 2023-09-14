@@ -1,10 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import { DelayIntercepter } from "@/dev/delay-intercepter";
 
-@UseInterceptors(DelayIntercepter)
 @Controller("/admin/booth")
 export class BoothController {
   constructor(private readonly boothService: BoothService) {}
