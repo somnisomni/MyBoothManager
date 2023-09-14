@@ -9,6 +9,7 @@ import { inject } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
 import { type VueCookies } from "vue-cookies";
 import router from "@/router";
+import { useAdminStore } from "./stores/admin";
 
 @Component({})
 export default class App extends Vue {
@@ -18,14 +19,13 @@ export default class App extends Vue {
     // Auth route guard
     if($cookies) {
       router.beforeEach((to, from, next) => {
-        const isCurrentAccountAvailable = !!$cookies.get("currentAccount");
+        const isCurrentAccountAvailable = !!useAdminStore().currentAccount;
         const isAccessTokenAvailable = !!$cookies.get("accessToken");
         const isAllAvailable = isCurrentAccountAvailable && isAccessTokenAvailable;
 
         if(isAllAvailable && to.name === "login") {
           next({ name: "admin" });
         } else if(!isAllAvailable && to.name !== "login") {
-
           next({ name: "login" });
         } else {
           next();

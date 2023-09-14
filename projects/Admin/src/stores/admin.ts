@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { type GoodsCategoryData, type GoodsData } from "@/types/goods";
 import AdminAPI from "@/lib/api-admin";
-import { inject, reactive } from "vue";
+import { inject, reactive, ref } from "vue";
 import { BoothStatus, type IAccountUserland, type IBooth } from "@myboothmanager/common";
 import { type VueCookies } from "vue-cookies";
 
@@ -10,7 +10,7 @@ const useAdminStore = defineStore("admin", () => {
   const $cookies = inject<VueCookies>("$cookies")!;
 
   /* States */
-  let currentAccount: IAccountUserland | null = null;
+  let currentAccount = ref<IAccountUserland | null>(null);
 
   const currentBoothId = 1;
   const boothList: Record<number, IBooth> = reactive({
@@ -93,11 +93,12 @@ const useAdminStore = defineStore("admin", () => {
     const response = await AdminAPI.login({ loginId, loginPass });
 
     if(response && response instanceof Object) {
-      currentAccount = {
+      currentAccount.value = {
         id: response.id,
         name: response.name,
         loginId: response.loginId,
       };
+      if(response.superAdmin) currentAccount.value.superAdmin = response.superAdmin;
 
       $cookies.set("accessToken", response.token, response.tokenExpiresIn);
       $cookies.set("refreshToken", response.refreshToken, response.refreshTokenExpiresIn);
@@ -108,12 +109,12 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   function invalidateLoginData(): void {
-    currentAccount = null;
+    currentAccount.value = null;
     $cookies.remove("accessToken");
     $cookies.remove("refreshToken");
   }
 
-  async function fetchAllBooths() {
+  async function fetchAllBooths(): Promise<void> {
     const response = await AdminAPI.fetchAllBooths();
 
     if(response && response instanceof Array) {

@@ -9,13 +9,9 @@ export interface IAccount extends IDataModelBase {
   lastLoginAt: Date;
 }
 export type IAccountResponse = IAccount;
-export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount">;
+export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount"> & { superAdmin?: boolean };
 
 export interface IAccountLoginResponse extends IAccountUserland {
-  id: number;
-  name: string;
-  loginId: string;
-
   token: string;
   tokenExpiresIn: string;
   refreshToken: string;

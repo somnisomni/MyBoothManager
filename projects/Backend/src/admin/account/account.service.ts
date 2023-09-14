@@ -60,7 +60,7 @@ export class AccountService {
     throw new ForbiddenException("Account not found or password is incorrect");
   }
 
-  async loginSA(): Promise<IAccountLoginResponse & { superadmin: boolean }> {
+  async loginSA(): Promise<IAccountLoginResponse> {
     const generatedToken = generateLoginTokenSA();
 
     return {
@@ -72,7 +72,7 @@ export class AccountService {
       tokenExpiresIn: generatedToken.tokenExpiresIn,
       refreshToken: generatedToken.refreshToken,
       refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
-      superadmin: true,
+      superAdmin: true,
     };
   }
 }

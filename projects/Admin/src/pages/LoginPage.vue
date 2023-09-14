@@ -55,7 +55,7 @@ export default class LoginPage extends Vue {
     this.loginProgress = true;
 
     const result = await useAdminStore().adminLogin(this.loginData.loginId, this.loginData.loginPass);
-
+    console.log(result, useAdminStore().currentAccount);
     if(result === true) {
       router.replace({ name: "admin" });
     } else if(typeof result === "string") {
