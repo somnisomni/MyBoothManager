@@ -32,9 +32,5 @@ export default class BoothAddDialog extends Vue {
     location: "",
     currencySymbol: "₩",
   };
-
-  mounted() {
-    console.log("mount!");
-  }
 }
 </script>

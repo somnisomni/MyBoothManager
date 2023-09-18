@@ -25,7 +25,7 @@
       </VLayout>
     </VSheet>
 
-    <BoothAddDialog v-model="showBoothAddDialog" />
+    <BoothAddDialog v-model="boothAddDialogShown" />
   </CommonDialog>
 </template>
 
@@ -45,7 +45,7 @@ export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   boothListFetching = false;
-  showBoothAddDialog = false;
+  boothAddDialogShown = false;
   titleButtons: DialogButtonParams[] = [
     {
       icon: "mdi-refresh",
@@ -53,7 +53,7 @@ export default class BoothSelectionDialog extends Vue {
     },
     {
       icon: "mdi-plus",
-      onClick: () => { this.showBoothAddDialog = !this.showBoothAddDialog; },
+      onClick: this.showBoothAddDialog,
     },
   ];
 
@@ -69,6 +69,10 @@ export default class BoothSelectionDialog extends Vue {
       case BoothStatus.PREPARE: return "운영 준비";
       default: return "알 수 없음";
     }
+  }
+
+  showBoothAddDialog(): void {
+    this.boothAddDialogShown = true;
   }
 
   async refreshBoothList() {
