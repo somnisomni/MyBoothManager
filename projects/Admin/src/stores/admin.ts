@@ -104,6 +104,7 @@ const useAdminStore = defineStore("admin", () => {
       $cookies.set("refreshToken", response.refreshToken, response.refreshTokenExpiresIn);
       return true;
     } else {
+      invalidateLoginData();
       return response;
     }
   }
