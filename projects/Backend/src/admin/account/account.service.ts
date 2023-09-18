@@ -1,11 +1,9 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
-import { LoginDTO } from "./dto/login.dto";
 import Account from "@/db/models/account";
-import * as argon2 from "argon2";
-import { IAccountLoginResponse } from "@myboothmanager/common";
-import { JWTVerifyResult, generateLoginToken, generateLoginTokenSA, verifyLoginToken } from "./jwt";
+import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { IAuthPayload } from "../auth/jwt";
 
 @Injectable()
 export class AccountService {
@@ -13,12 +11,36 @@ export class AccountService {
     return "This action adds a new account";
   }
 
+  async findCurrent(authData: IAuthPayload): Promise<Account> {
+    return await this.findOneById(authData.id);
+  }
+
   findAll() {
     return "This action returns all account";
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async findOneById(id: number): Promise<Account> {
+    const result = await Account.findOne({
+      where: { id },
+      attributes: {
+        exclude: SEQUELIZE_INTERNAL_KEYS,
+      },
+    });
+
+    if(result) return result;
+    else throw new NotFoundException("계정을 찾을 수 없습니다.");
+  }
+
+  async findOneByLoginId(loginId: string): Promise<Account> {
+    const result = await Account.findOne({
+      where: { loginId },
+      attributes: {
+        exclude: SEQUELIZE_INTERNAL_KEYS,
+      },
+    });
+
+    if(result) return result;
+    else throw new NotFoundException("계정을 찾을 수 없습니다.");
   }
 
   update(id: number, updateAccountDto: UpdateAccountDTO) {
@@ -27,58 +49,5 @@ export class AccountService {
 
   remove(id: number) {
     return `This action removes a #${id} account`;
-  }
-
-  async login(loginDto: LoginDTO): Promise<IAccountLoginResponse> {
-    const account = await Account.findOne({
-      where: {
-        loginId: loginDto.loginId,
-      },
-    });
-
-    if(account) {
-      if(await argon2.verify(account.loginPassHash, loginDto.loginPass)) {
-        const generatedToken = generateLoginToken(account);
-
-        if(verifyLoginToken(generatedToken.token) !== JWTVerifyResult.OK) {
-          throw new InternalServerErrorException("로그인 토큰을 생성할 수 없습니다.");
-        }
-
-        // Update last login time and count
-        account.update({
-          lastLoginAt: new Date(),
-          loginCount: account.loginCount + 1,
-        });
-
-        return {
-          id: account.id,
-          name: account.name,
-          loginId: account.loginId,
-
-          token: generatedToken.token,
-          tokenExpiresIn: generatedToken.tokenExpiresIn,
-          refreshToken: generatedToken.refreshToken,
-          refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
-        };
-      }
-    }
-
-    throw new UnauthorizedException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");
-  }
-
-  async loginSA(): Promise<IAccountLoginResponse> {
-    const generatedToken = generateLoginTokenSA();
-
-    return {
-      id: -1,
-      name: "SUPER ADMIN",
-      loginId: process.env.SUPERADMIN_ID!,
-
-      token: generatedToken.token,
-      tokenExpiresIn: generatedToken.tokenExpiresIn,
-      refreshToken: generatedToken.refreshToken,
-      refreshTokenExpiresIn: generatedToken.refreshTokenExpiresIn,
-      superAdmin: true,
-    };
   }
 }

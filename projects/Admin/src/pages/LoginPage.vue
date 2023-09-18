@@ -38,9 +38,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import type { IAccountLoginRequest } from "@myboothmanager/common";
+import { useAuthStore } from "@/stores/auth";
 
 @Component({})
 export default class LoginPage extends Vue {
@@ -55,7 +55,7 @@ export default class LoginPage extends Vue {
   async doLogin() {
     this.loginProgress = true;
 
-    const result = await useAdminStore().adminLogin(this.loginData);
+    const result = await useAuthStore().adminLogin(this.loginData);
 
     if(result === true) {
       router.replace({ name: "admin" });

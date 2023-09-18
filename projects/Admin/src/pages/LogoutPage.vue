@@ -6,13 +6,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
+import { useAuthStore } from "@/stores/auth";
 
 @Component({})
 export default class LogoutPage extends Vue {
   mounted() {
-    useAdminStore().invalidateLoginData();
+    useAuthStore().invalidateLoginData();
     router.replace({ name: "login" });
   }
 }

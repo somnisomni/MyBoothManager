@@ -2,24 +2,27 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/commo
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
+import { AuthData } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/booth")
 export class BoothController {
   constructor(private readonly boothService: BoothService) {}
 
+  /* Normal routes */
   @Post()
-  create(@Body() createAdminDto: CreateBoothDTO) {
-    return this.boothService.create(1, createAdminDto);
+  create(@Body() createAdminDto: CreateBoothDTO, @AuthData() authData: IAuthPayload) {
+    return this.boothService.create(authData.id, createAdminDto);
   }
 
   @Get()
-  async findAll() {
-    return await this.boothService.findAll();
+  async findAllForCurrentAccount(@AuthData() authData: IAuthPayload) {
+    return await this.boothService.findAllForAccountId(authData.id);
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return await this.boothService.findOne(+id);
+  async findOneWithOwnerCheck(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findOne(+id, authData.id);
   }
 
   @Patch(":id")
@@ -33,12 +36,15 @@ export class BoothController {
   }
 
   @Get(":id/goods")
-  async findAllBoothGoods(@Param("id") boothId: string) {
-    return await this.boothService.findAllBoothGoods(+boothId);
+  async findAllBoothGoods(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findAllGoodsOfBooth(+boothId, authData.id);
   }
 
   @Get(":id/goods/category")
-  async findAllBoothGoodsCategory(@Param("id") boothId: string) {
-    return await this.boothService.findAllBoothGoodsCategory(+boothId);
+  async findAllBoothGoodsCategory(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findAllGoodsCategoryOfBooth(+boothId, authData.id);
   }
+
+  /* Super admin routes */
+  // TO BE ADDED
 }

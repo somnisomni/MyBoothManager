@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/auth";
 import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
@@ -11,28 +12,36 @@ export default class AdminAPI {
   };
 
   /* Basic fetch functions */
-  private static async adminAPICall(method: HTTPMethodString, path: string, payload?: Record<string, any>): Promise<Record<string, any>> {
+  private static async adminAPICall(method: HTTPMethodString, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<Record<string, any>> {
     const response = await fetch(`${this.API_URL}/admin/${path}`, {
       ...this.FETCH_COMMON_OPTIONS,
       method,
       body: payload ? JSON.stringify(payload) : undefined,
+      headers: {
+        ...this.FETCH_COMMON_OPTIONS.headers,
+        "Authorization": containAuthCredential ? `Bearer ${useAuthStore().authTokenData?.accessToken}` : "",
+      },
     });
 
     return await response.json();
   }
 
-  static GET = async (path: string) => await this.adminAPICall("GET", path);
-  static POST = async (path: string, payload: Record<string, any>) => await this.adminAPICall("POST", path, payload);
-  static PUT = async (path: string, payload: Record<string, any>) => await this.adminAPICall("PUT", path, payload);
-  static DELETE = async (path: string) => await this.adminAPICall("DELETE", path);
+  private static GET = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("GET", path, payload, containAuthCredential);
+  private static POST = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("POST", path, payload, containAuthCredential);
+  private static PUT = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("PUT", path, payload, containAuthCredential);
+  private static DELETE = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("DELETE", path, payload, containAuthCredential);
 
-  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>): Promise<T | string> {
-    const response = await callee(path, payload);
+  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | string> {
+    try {
+      const response = await callee(path, payload, containAuthCredential);
 
-    if(response.message) {
-      return (response as IBackendErrorResponse).message;
-    } else {
-      return response as T;
+      if(response.message) {
+        return (response as IBackendErrorResponse).message;
+      } else {
+        return response as T;
+      }
+    } catch {
+      return "API 서버 통신 실패";
     }
   }
 
@@ -45,7 +54,7 @@ export default class AdminAPI {
   }
 
   static async login(payload: IAccountLoginRequest): Promise<IAccountLoginResponse | string> {
-    return await this.apiCallWrapper<IAccountLoginResponse>(this.POST, "account/login", payload);
+    return await this.apiCallWrapper<IAccountLoginResponse>(this.POST, "auth/login", payload, false);
   }
 
   static async fetchAllBooths(): Promise<Array<IBoothResponse> | string> {

@@ -11,12 +11,11 @@ export interface IAccount extends IDataModelBase {
 export type IAccountResponse = IAccount;
 export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount"> & { superAdmin?: boolean };
 
-export interface IAccountLoginResponse extends IAccountUserland {
-  token: string;
-  tokenExpiresIn: string;
+export interface IAccountLoginTokenData {
+  accessToken: string;
   refreshToken: string;
-  refreshTokenExpiresIn: string;
 }
+export type IAccountLoginResponse = IAccountUserland & IAccountLoginTokenData;
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;

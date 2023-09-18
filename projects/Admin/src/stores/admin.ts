@@ -3,6 +3,7 @@ import AdminAPI from "@/lib/api-admin";
 import { inject, reactive, ref } from "vue";
 import { type IAccountLoginRequest, type IAccountUserland, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
 import { type VueCookies } from "vue-cookies";
+import { useAuthStore } from "./auth";
 
 const useAdminStore = defineStore("admin", () => {
   /* Dependencies (NOT TO BE EXPORTED) */
@@ -18,32 +19,6 @@ const useAdminStore = defineStore("admin", () => {
   const boothGoodsList: Record<number, IGoods> = reactive({});
 
   /* Actions */
-  async function adminLogin(data: IAccountLoginRequest): Promise<boolean | string> {
-    const response = await AdminAPI.login(data);
-
-    if(response && response instanceof Object) {
-      currentAccount.value = {
-        id: response.id,
-        name: response.name,
-        loginId: response.loginId,
-      };
-      if(response.superAdmin) currentAccount.value.superAdmin = response.superAdmin;
-
-      $cookies.set("accessToken", response.token, response.tokenExpiresIn);
-      $cookies.set("refreshToken", response.refreshToken, response.refreshTokenExpiresIn);
-      return true;
-    } else {
-      invalidateLoginData();
-      return response;
-    }
-  }
-
-  function invalidateLoginData(): void {
-    currentAccount.value = null;
-    $cookies.remove("accessToken");
-    $cookies.remove("refreshToken");
-  }
-
   async function fetchBoothsOfCurrentAccount(setFirstBoothAsCurrent: boolean = false): Promise<boolean | string> {
     const response = await AdminAPI.fetchAllBooths();
 
@@ -121,8 +96,6 @@ const useAdminStore = defineStore("admin", () => {
     goodsCategoryList,
     boothGoodsList,
 
-    adminLogin,
-    invalidateLoginData,
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
