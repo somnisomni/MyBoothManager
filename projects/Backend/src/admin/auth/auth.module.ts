@@ -12,7 +12,7 @@ import { AccountModule } from "../account/account.module";
       global: true,
       secret: JWT_SECRET,
       signOptions: {
-        expiresIn: "10m",
+        expiresIn: "5m",
         algorithm: JWT_ALGORITHM,
         issuer: JWT_ISSUER,
         subject: JWT_SUBJECT,

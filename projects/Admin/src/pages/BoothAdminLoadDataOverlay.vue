@@ -3,21 +3,46 @@
     <VProgressCircular indeterminate size="96" class="mb-4" />
     <div class="text-h6">데이터를 불러오는 중...</div>
   </VContainer>
+
+  <CommonDialog v-model="errorDialogShown"
+                width="500"
+                dialogPrimaryText="재시도"
+                :onDialogPrimary="onErrorDialogPrimary"
+                dialogTitle="데이터 불러오기 오류"
+                accentColor="red">
+    <div class="text-red font-bold">서버로부터 데이터를 불러오는 중 오류가 발생했습니다.</div>
+    <div>나중에 다시 시도하거나, <a :href="developerTwitterUrl">트위터 {{ developerTwitterHandle }}</a>로 문의해주세요.</div>
+  </CommonDialog>
 </template>
 
 <script lang="ts">
+import CommonDialog from "@/components/common/CommonDialog.vue";
 import { useAdminStore } from "@/stores/admin";
 import { Component, Vue } from "vue-facing-decorator";
+import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
 
 @Component({})
 export default class BoothAdminLoadDataOverlay extends Vue {
+  errorDialogShown = false;
+
+  get developerTwitterHandle(): string {
+    return `@${DEVELOPER_TWITTER_HANDLE}`;
+  }
+
+  get developerTwitterUrl(): string {
+    return `https://twitter.com/${DEVELOPER_TWITTER_HANDLE}`;
+  }
+
   async mounted() {
     if(await useAdminStore().startupFetch()) {
       this.$emit("complete");
     } else {
-      // TODO: alert dialog
-      alert("Error caused during fetch first startup data from server!");
+      this.errorDialogShown = true;
     }
+  }
+
+  onErrorDialogPrimary() {
+    window.location.reload();
   }
 }
 </script>

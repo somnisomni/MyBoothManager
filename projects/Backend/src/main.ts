@@ -5,7 +5,6 @@ import { HttpExceptionFilter, NotFoundExceptionFilter, TeapotExceptionFilter } f
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
 import fastifyHelmet from "@fastify/helmet";
-import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 
 let app: NestFastifyApplication;
 
@@ -41,10 +40,6 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  // Below causing errors, need to fix
-  // app.use(() => fastifyCookie, {
-  //   secret: process.env.JWT_SECRET,
-  // } as FastifyCookieOptions);
 
   // dev
   if(process.env.NODE_ENV === "development") await dev();
