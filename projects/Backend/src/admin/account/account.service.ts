@@ -44,6 +44,12 @@ export class AccountService {
           throw new InternalServerErrorException("로그인 토큰을 생성할 수 없습니다.");
         }
 
+        // Update last login time and count
+        account.update({
+          lastLoginAt: new Date(),
+          loginCount: account.loginCount + 1,
+        });
+
         return {
           id: account.id,
           name: account.name,
