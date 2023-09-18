@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
 import { LoginDTO } from "./dto/login.dto";
@@ -63,7 +63,7 @@ export class AccountService {
       }
     }
 
-    throw new ForbiddenException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");
+    throw new UnauthorizedException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");
   }
 
   async loginSA(): Promise<IAccountLoginResponse> {
