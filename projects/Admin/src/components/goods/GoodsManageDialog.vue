@@ -47,18 +47,18 @@
                   label="가격 (단가)"
                   :rules="numberValidator(manageFormData.price)" />
       <VRow class="ma-0 d-flex flex-row">
-        <VTextField v-model="manageFormData.stock!.current"
+        <VTextField v-model="manageFormData.stockRemaining"
                     tabindex="6"
                     density="compact"
                     type="number"
-                    :max="manageFormData.stock!.initial"
+                    :max="manageFormData.stockInitial"
                     min="0"
                     suffix="개"
                     label="현재 재고"
-                    :rules="numberValidator(manageFormData.stock!.current)"
-                    @focus="!manageFormData.stock!.current ? manageFormData.stock!.current = manageFormData.stock!.initial : undefined" />
+                    :rules="numberValidator(manageFormData.stockRemaining)"
+                    @focus="!manageFormData.stockRemaining ? manageFormData.stockRemaining = manageFormData.stockInitial : undefined" />
         <span class="mx-2 mt-1" style="font-size: 1.5em"> / </span>
-        <VTextField v-model="manageFormData.stock!.initial"
+        <VTextField v-model="manageFormData.stockInitial"
                     tabindex="5"
                     density="compact"
                     type="number"
@@ -66,7 +66,7 @@
                     min="0"
                     suffix="개"
                     label="초기 재고"
-                    :rules="numberValidator(manageFormData.stock!.initial)" />
+                    :rules="numberValidator(manageFormData.stockInitial)" />
       </VRow>
     </VForm>
 
@@ -80,10 +80,9 @@
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
-import type { GoodsData } from "@/types/goods";
 import { reactive } from "vue";
 import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
-import AdminAPI from "@/lib/api-admin";
+import type { IGoods } from "@myboothmanager/common";
 
 @Component({
   components: {
@@ -98,7 +97,7 @@ export default class GoodsManageDialog extends Vue {
 
   goodsCategoryAddDialogOpen: boolean = false;
   cancelWarningDialogShown: boolean = false;
-  manageFormData: Partial<GoodsData | Record<string, any>> = reactive({});
+  manageFormData: Partial<IGoods | Record<string, any>> = reactive({});
   manageFormValid: boolean = false;
   updateInProgress: boolean = false;
 
@@ -116,9 +115,9 @@ export default class GoodsManageDialog extends Vue {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
-  get currentGoodsData(): GoodsData | null {
+  get currentGoodsData(): IGoods | null {
     if(this.goodsId) {
-      return useAdminStore().goodsList[parseInt(this.goodsId.toString())];
+      return useAdminStore().boothGoodsList[parseInt(this.goodsId.toString())];
     } else {
       return null;
     }
@@ -140,7 +139,7 @@ export default class GoodsManageDialog extends Vue {
     } else if(this.editMode && this.currentGoodsData) {
       // FIXME: Only valid for single-level object( {a:b} ). Not working for current GoodsData type.
       for(const key in this.manageFormData) {
-        const k = key as keyof GoodsData;
+        const k = key as keyof IGoods;
 
         if(this.manageFormData[k] !== this.currentGoodsData[k]) {
           return true;
@@ -160,10 +159,8 @@ export default class GoodsManageDialog extends Vue {
         name: this.currentGoodsData.name,
         price: this.currentGoodsData.price,
         categoryId: this.currentGoodsData.categoryId,
-        stock: {
-          current: this.currentGoodsData.stock.current,
-          initial: this.currentGoodsData.stock.initial,
-        },
+        stockInitial: this.currentGoodsData.stockInitial,
+        stockRemaining: this.currentGoodsData.stockRemaining,
       });
     } else {
       this.manageFormData = reactive({
@@ -213,17 +210,19 @@ export default class GoodsManageDialog extends Vue {
       alert("NOT SUPPORTED YET");
     } else {
       // Creation
-      const response = await AdminAPI.createGoods({
+      const result = await useAdminStore().createGoods({
         boothId: useAdminStore().currentBoothId,
         name: this.manageFormData.name?.trim(),
         categoryId: this.manageFormData.categoryId,
         price: this.manageFormData.price,
-        stockInitial: this.manageFormData.stock!.initial,
-        stockRemaining: this.manageFormData.stock!.current,
+        stockInitial: this.manageFormData.stockInitial,
+        stockRemaining: this.manageFormData.stockRemaining,
       });
 
-      if(response) {
-        useAdminStore().goodsList[response.id] = { ...response };
+      if(typeof result === "string") {
+        // TODO: error dialog or toast
+        alert(result);
+      } else {
         success = true;
       }
     }

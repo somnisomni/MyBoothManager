@@ -73,7 +73,7 @@ export default class BoothSelectionDialog extends Vue {
 
   async refreshBoothList() {
     this.boothListFetching = true;
-    await useAdminStore().fetchAllBooths();
+    await useAdminStore().fetchBoothsOfCurrentAccount();
     this.boothListFetching = false;
   }
 
@@ -81,7 +81,7 @@ export default class BoothSelectionDialog extends Vue {
   async onDialogShown() {
     if(!this.open) return;
 
-    await this.refreshBoothList();
+    // await this.refreshBoothList();
   }
 
   onBoothSelect(boothId: number) {

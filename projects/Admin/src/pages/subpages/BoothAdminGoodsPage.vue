@@ -51,7 +51,7 @@ export default class BoothAdminGoodsPage extends Vue {
 
   get goodsList() {
     // TODO: Filtering will be done in the backend. Remove this line when the backend is ready.
-    return Object.values(useAdminStore().goodsList).filter((goods) => goods.boothId === useAdminStore().currentBoothId);
+    return Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.boothId === useAdminStore().currentBoothId);
   }
 
   findGoodsInCategory(categoryId: number) {

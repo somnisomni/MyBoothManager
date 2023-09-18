@@ -6,15 +6,18 @@
 </template>
 
 <script lang="ts">
+import { useAdminStore } from "@/stores/admin";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class FirstLoad extends Vue {
-  mounted() {
-    // TODO: implement
-    setTimeout(() => {
+  async mounted() {
+    if(await useAdminStore().startupFetch()) {
       this.$emit("complete");
-    }, 1000);
+    } else {
+      // TODO: alert dialog
+      alert("Error caused during fetch first startup data from server!");
+    }
   }
 }
 </script>
