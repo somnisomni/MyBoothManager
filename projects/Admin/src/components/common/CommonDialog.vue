@@ -18,7 +18,7 @@
         <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
 
         <VBtn v-for="btn in titleExtraButtons"
-              v-key="btn.icon"
+              :key="btn.icon"
               :disabled="progressActive || btn.disabled"
               icon
               variant="flat"
@@ -82,7 +82,7 @@ export default class CommonDialog extends Vue {
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
   @Prop({ type: Boolean, default: true }) scrollable!: boolean;
   @Prop({ type: String, default: "primary" }) accentColor!: string;
-  @Prop({ type: String, default: 700 }) width!: string | number;
+  @Prop({ type: String, default: "700px" }) width!: string | number;
   @Prop({ type: String, default: "100%" }) maxWidth!: string | number;
   @Prop({ type: Boolean, default: false }) hideCloseButton!: boolean;
   @Prop({ type: Object }) titleExtraButtons!: DialogButtonParams[];
