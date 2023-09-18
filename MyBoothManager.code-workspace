@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": ".",
+      "name": "[Root]"
+		},
+		{
+			"path": "packages/Common",
+      "name": "[packages] Common"
+		},
+		{
+			"path": "packages/I18n",
+      "name": "[packages] I18n"
+		},
+		{
+			"path": "projects/Admin",
+      "name": "[projects] Admin"
+		},
+		{
+			"path": "projects/Backend",
+      "name": "[projects] Backend"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
+		"typescript.enablePromptUseWorkspaceTsdk": true,
+    "jest.disabledWorkspaceFolders": [
+      "packages/Common",
+      "packages/I18n",
+      "projects/Admin",
+      "projects/Backend"
+    ]
+	}
+}
