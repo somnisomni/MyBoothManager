@@ -13,11 +13,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import { BoothOpenStatus } from "@/types/booth";
 import { useAdminStore } from "@/stores/admin";
 import BoothStatusPanel from "@/components/dashboard/BoothStatusPanel.vue";
 import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
-import type { IBooth } from "@myboothmanager/common";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {
@@ -26,7 +25,7 @@ import type { IBooth } from "@myboothmanager/common";
   },
 })
 export default class BoothAdminDashboardPage extends Vue {
-  BoothOpenStatus = BoothOpenStatus;
+  BoothStatus = BoothStatus;
 
   get currentBoothData(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];

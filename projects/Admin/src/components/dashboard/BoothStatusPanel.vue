@@ -1,16 +1,16 @@
 <template>
   <DashboardPanel title="부스 운영 상태">
     <!-- Booth status text -->
-    <div class="status-text">{{ getBoothOpenStatusString(currentBoothStatus.status) }}</div>
+    <div class="status-text">{{ getBoothOpenStatusString(currentBoothStatus) }}</div>
 
     <!-- When status is PAUSE: Reason text if available-->
-    <div v-if="currentBoothStatus.status === BoothOpenStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
+    <div v-if="currentBoothStatus === BoothStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
       <div class="text-grey-darken-2 reason-title">사유</div>
       <div class="reason-text">{{ currentBoothStatus.reason }}</div>
     </div>
 
     <!-- When status is PREPARE: Content publish setting -->
-    <VLayout v-if="currentBoothStatus.status === BoothOpenStatus.PREPARE" class="mt-6 text-center flex-column">
+    <VLayout v-if="currentBoothStatus === BoothStatus.PREPARE" class="mt-6 text-center flex-column">
       <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
       <VLayout class="flex-row justify-stretch mt-1">
         <VBtn :variant="currentBoothStatus.contentPublish ? 'flat' : 'outlined'"
@@ -28,8 +28,8 @@
       <VBtn v-for="item in STATUSES"
             :key="item.status"
             :color="item.color"
-            :variant="currentBoothStatus.status === item.status ? 'flat' : 'outlined'"
-            :disabled="currentBoothStatus.status === item.status"
+            :variant="currentBoothStatus === item.status ? 'flat' : 'outlined'"
+            :disabled="currentBoothStatus === item.status"
             class="my-1"
             height="42"
             @click="onBoothStatusUpdateButtonClick(item.status)">
@@ -45,11 +45,11 @@
 </template>
 
 <script lang="ts">
-import { BoothOpenStatus, type BoothStatusData } from "@/types/booth";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 import BoothStatusUpdateDialog from "@/components/BoothStatusUpdateDialog.vue";
 import DashboardPanel from "./DashboardPanel.vue";
 import { useAdminStore } from "@/stores/admin";
+import { BoothStatus } from "@myboothmanager/common";
 
 @Component({
   components: {
@@ -58,38 +58,47 @@ import { useAdminStore } from "@/stores/admin";
   },
 })
 export default class BoothStatusPanel extends Vue {
-  BoothOpenStatus = BoothOpenStatus;
-  getBoothOpenStatusString = BoothOpenStatus.getBoothOpenStatusString;
+  BoothStatus = BoothStatus;
 
-  @Prop({ required: true }) currentBoothStatus!: BoothStatusData;
+  @Prop({ required: true }) currentBoothStatus!: BoothStatus;
 
   readonly STATUSES = [
     {
-      status: BoothOpenStatus.PREPARE,
+      status: BoothStatus.PREPARE,
       icon: "mdi-store-clock",
       color: "green",
     },
     {
-      status: BoothOpenStatus.OPEN,
+      status: BoothStatus.OPEN,
       icon: "mdi-store-check",
       color: "blue",
     },
     {
-      status: BoothOpenStatus.PAUSE,
+      status: BoothStatus.PAUSE,
       icon: "mdi-store-alert",
       color: "orange-darken-1",
     },
     {
-      status: BoothOpenStatus.CLOSE,
+      status: BoothStatus.CLOSE,
       icon: "mdi-store-off",
       color: "red-darken-1",
     },
   ];
 
   statusUpdateDialogOpen = false;
-  statusUpdateDialogTargetStatus: BoothOpenStatus = BoothOpenStatus.OPEN;
+  statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
-  onBoothStatusUpdateButtonClick(newStatus: BoothOpenStatus): void {
+  getBoothOpenStatusString(status: BoothStatus): string {
+    switch(status) {
+      case BoothStatus.OPEN: return "운영 중";
+      case BoothStatus.PAUSE: return "일시 중지";
+      case BoothStatus.CLOSE: return "운영 종료";
+      case BoothStatus.PREPARE: return "운영 준비";
+      default: return "알 수 없음";
+    }
+  }
+
+  onBoothStatusUpdateButtonClick(newStatus: BoothStatus): void {
     this.statusUpdateDialogTargetStatus = newStatus;
     this.statusUpdateDialogOpen = true;
   }
@@ -101,19 +110,21 @@ export default class BoothStatusPanel extends Vue {
 
   updateContentPublishStatus(publish: boolean) {
     // TODO: Change with real API call
-    useAdminStore().boothList[useAdminStore().currentBoothId].status.contentPublish = publish;
+    useAdminStore().boothList[useAdminStore().currentBoothId].statusPublishContent = publish;
   }
 
   get openStatusString(): string {
-    switch(this.currentBoothStatus.status) {
-    case BoothOpenStatus.OPEN:
-      return "운영 중";
-    case BoothOpenStatus.PAUSE:
-      return "일시 중지";
-    case BoothOpenStatus.CLOSE:
-      return "운영 종료";
-    default:
-      return "알 수 없음";
+    switch(this.currentBoothStatus) {
+      case BoothStatus.OPEN:
+        return "운영 중";
+      case BoothStatus.PAUSE:
+        return "일시 중지";
+      case BoothStatus.CLOSE:
+        return "운영 종료";
+      case BoothStatus.PREPARE:
+        return "운영 준비";
+      default:
+        return "알 수 없음";
     }
   }
 }

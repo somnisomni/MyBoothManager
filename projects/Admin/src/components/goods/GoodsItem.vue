@@ -18,19 +18,19 @@
 
       <VLayout class="d-flex flex-row justify-space-between">
         <div>{{ currencySymbol }}{{ goodsData.price.toLocaleString() }}</div>
-        <div><span class="goods-stock-current">{{ goodsData.stock.current }}</span> <span class="goods-stock-initial">/ {{ goodsData.stock.initial }}</span></div>
+        <div><span class="goods-stock-current">{{ goodsData.stockRemaining }}</span> <span class="goods-stock-initial">/ {{ goodsData.stockInitial }}</span></div>
       </VLayout>
     </VLayout>
   </VSheet>
 </template>
 
 <script lang="ts">
+import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
-import { type GoodsData } from "@/types/goods";
 
 @Component({})
 export default class GoodsItem extends Vue {
-  @Prop({ required: true }) goodsData!: GoodsData;
+  @Prop({ required: true }) goodsData!: IGoods;
   @Prop({ default: "₩", required: true }) currencySymbol!: string;
 
   ELEVATION_NORMAL = 2;
