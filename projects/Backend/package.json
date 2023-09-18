@@ -17,6 +17,7 @@
     "test:cov": "jest --coverage"
   },
   "dependencies": {
+    "@fastify/cookie": "^9.0.4",
     "@fastify/helmet": "^11.0.0",
     "@myboothmanager/common": "../../packages/Common",
     "@nestjs/common": "^10.2.1",

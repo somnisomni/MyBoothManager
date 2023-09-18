@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Res } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
 import { LoginDTO } from "./dto/login.dto";
+import { FastifyReply } from "fastify";
+import { IAccountLoginResponse } from "@myboothmanager/common";
 
 @Controller("/admin/account")
 export class AccountController {
@@ -35,14 +37,22 @@ export class AccountController {
 
   @Post("login")
   @HttpCode(200)
-  async login(@Body() loginDto: LoginDTO) {
-    // SuperAdmin login
+  async login(@Body() loginDto: LoginDTO, @Res() response: FastifyReply) {
+    let result: IAccountLoginResponse;
+
     if(loginDto.loginId === process.env.SUPERADMIN_ID
        && loginDto.loginPass === process.env.SUPERADMIN_PASS) {
-      return await this.accountService.loginSA();
+      // SuperAdmin login
+      result = await this.accountService.loginSA();
+    } else {
+      // Normal login
+      result = await this.accountService.login(loginDto);
     }
 
-    // Normal login
-    return await this.accountService.login(loginDto);
+    // response.setCookie("accessToken", result.token, { httpOnly: true });
+    // response.setCookie("refreshToken", result.refreshToken, { httpOnly: true });
+
+    response.send(result);
+    return result;
   }
 }

@@ -17,6 +17,10 @@ export interface IAccountLoginResponse extends IAccountUserland {
   refreshToken: string;
   refreshTokenExpiresIn: string;
 }
+export interface IAccountLoginRequest {
+  loginId: string;
+  loginPass: string;
+}
 
 export type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
 export type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;
