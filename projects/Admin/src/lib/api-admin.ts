@@ -1,4 +1,4 @@
-import { type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
+import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -26,6 +26,16 @@ export default class AdminAPI {
   static PUT = async (path: string, payload: Record<string, any>) => await this.adminAPICall("PUT", path, payload);
   static DELETE = async (path: string) => await this.adminAPICall("DELETE", path);
 
+  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>): Promise<T | string> {
+    const response = await callee(path, payload);
+
+    if(response.message) {
+      return (response as IBackendErrorResponse).message;
+    } else {
+      return response as T;
+    }
+  }
+
   /* Endpoints */
   static async checkAPIServerAlive(): Promise<boolean> {
     const response = await fetch(`${this.API_URL}/teapot`, this.FETCH_COMMON_OPTIONS);
@@ -34,24 +44,27 @@ export default class AdminAPI {
     else return false;
   }
 
-  static async login(payload: { loginId: string, loginPass: string }): Promise<IAccountLoginResponse | string> {
-    const response = await this.POST("account/login", payload);
-
-    if(response.token) return response as IAccountLoginResponse;
-    else return (response as IBackendErrorResponse).message;
+  static async login(payload: IAccountLoginRequest): Promise<IAccountLoginResponse | string> {
+    return await this.apiCallWrapper<IAccountLoginResponse>(this.POST, "account/login", payload);
   }
 
   static async fetchAllBooths(): Promise<Array<IBoothResponse> | string> {
-    const response = await this.GET("booth");
+    return await this.apiCallWrapper<Array<IBoothResponse>>(this.GET, "booth");
+  }
 
-    if(response instanceof Array) return response as Array<IBoothResponse>;
-    else return (response as IBackendErrorResponse).message;
+  static async fetchAllGoods(): Promise<Array<IGoodsResponse> | string> {
+    return await this.apiCallWrapper<Array<IGoodsResponse>>(this.GET, "goods");
+  }
+
+  static async fetchAllGoodsOfBooth(boothId: number): Promise<Array<IGoodsResponse> | string> {
+    return await this.apiCallWrapper<Array<IGoodsResponse>>(this.GET, `booth/${boothId}/goods`);
+  }
+
+  static async fetchAllGoodsCategoriesOfBooth(boothId: number): Promise<Array<IGoodsCategoryResponse> | string> {
+    return await this.apiCallWrapper<Array<IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
   }
 
   static async createGoods(payload: IGoodsCreateRequest): Promise<IGoodsResponse | string> {
-    const response = await this.POST("goods", payload);
-
-    if(response.id) return response as IGoodsResponse;
-    else return (response as IBackendErrorResponse).message;
+    return await this.apiCallWrapper<IGoodsResponse>(this.POST, "goods", payload);
   }
 }
