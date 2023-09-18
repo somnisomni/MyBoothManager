@@ -108,7 +108,7 @@ const useAdminStore = defineStore("admin", () => {
       await fetchGoodsOfCurrentBooth(),
     ];
 
-    return responses.every((s) => { return typeof s !== "string"; });
+    return responses.every((s) => typeof s !== "string");
   }
 
   return {
