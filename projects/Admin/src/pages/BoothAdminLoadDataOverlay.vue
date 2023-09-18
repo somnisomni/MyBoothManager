@@ -10,7 +10,7 @@ import { useAdminStore } from "@/stores/admin";
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({})
-export default class FirstLoad extends Vue {
+export default class BoothAdminLoadDataOverlay extends Vue {
   async mounted() {
     if(await useAdminStore().startupFetch()) {
       this.$emit("complete");

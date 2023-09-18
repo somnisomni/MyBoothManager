@@ -11,6 +11,7 @@ const useAdminStore = defineStore("admin", () => {
   /* States */
   const currentAccount = ref<IAccountUserland | null>(null);
   const currentBoothId = ref<number>(1);
+  const isBaseDataLoaded = ref<boolean>(false);
 
   const boothList: Record<number, IBooth> = reactive({});
   const goodsCategoryList: Record<number, IGoodsCategory> = reactive({});
@@ -114,6 +115,8 @@ const useAdminStore = defineStore("admin", () => {
   return {
     currentAccount,
     currentBoothId,
+    isBaseDataLoaded,
+
     boothList,
     goodsCategoryList,
     boothGoodsList,

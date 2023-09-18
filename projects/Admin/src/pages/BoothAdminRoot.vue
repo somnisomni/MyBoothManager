@@ -1,18 +1,25 @@
 <template>
-  <FirstLoad v-if="!firstLoadCompleted" @complete="firstLoadCompleted = true" />
-  <RouterView v-if="firstLoadCompleted" />
+  <BoothAdminLoadDataOverlay v-if="!loaded" @complete="loaded = true" />
+  <RouterView v-if="loaded" />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import FirstLoad from "./BoothAdminFirstLoad.vue";
+import BoothAdminLoadDataOverlay from "./BoothAdminLoadDataOverlay.vue";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({
   components: {
-    FirstLoad,
+    BoothAdminLoadDataOverlay,
   },
 })
 export default class BoothAdminRoot extends Vue {
-  firstLoadCompleted: boolean = false;
+  get loaded(): boolean {
+    return useAdminStore().isBaseDataLoaded;
+  }
+
+  set loaded(value: boolean) {
+    useAdminStore().isBaseDataLoaded = value;
+  }
 }
 </script>
