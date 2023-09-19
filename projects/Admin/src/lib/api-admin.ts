@@ -19,7 +19,7 @@ export default class AdminAPI {
       body: payload ? JSON.stringify(payload) : undefined,
       headers: {
         ...this.FETCH_COMMON_OPTIONS.headers,
-        "Authorization": containAuthCredential ? `Bearer ${useAuthStore().authTokenData?.accessToken}` : "",
+        Authorization: containAuthCredential ? `Bearer ${useAuthStore().authTokenData?.accessToken}` : "",
       },
     });
 
@@ -40,7 +40,7 @@ export default class AdminAPI {
       } else {
         return response as T;
       }
-    } catch {
+    } catch{
       return "API 서버 통신 실패";
     }
   }

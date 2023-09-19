@@ -56,11 +56,11 @@ export default class BoothStatusUpdateDialog extends Vue {
 
   get dialogTitle(): string {
     switch(this.targetStatus) {
-    case BoothStatus.PREPARE: return "부스 운영 준비";
-    case BoothStatus.CLOSE: return "부스 운영 종료";
-    case BoothStatus.PAUSE: return "부스 일시 중지";
-    case BoothStatus.OPEN: return "부스 운영 시작";
-    default: return "<알 수 없는 상태로 변경>";
+      case BoothStatus.PREPARE: return "부스 운영 준비";
+      case BoothStatus.CLOSE: return "부스 운영 종료";
+      case BoothStatus.PAUSE: return "부스 일시 중지";
+      case BoothStatus.OPEN: return "부스 운영 시작";
+      default: return "<알 수 없는 상태로 변경>";
     }
   }
 
@@ -69,10 +69,10 @@ export default class BoothStatusUpdateDialog extends Vue {
   get targetStatusIsPausing(): boolean { return this.targetStatus === BoothStatus.PAUSE; }
   get accentColor(): string {
     switch(this.targetStatus) {
-    case BoothStatus.PREPARE: return "green";
-    case BoothStatus.CLOSE: return "red";
-    case BoothStatus.PAUSE: return "orange";
-    default: return "blue";
+      case BoothStatus.PREPARE: return "green";
+      case BoothStatus.CLOSE: return "red";
+      case BoothStatus.PAUSE: return "orange";
+      default: return "blue";
     }
   }
 

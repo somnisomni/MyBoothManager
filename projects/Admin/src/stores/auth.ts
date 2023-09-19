@@ -9,7 +9,7 @@ const useAuthStore = defineStore("auth", () => {
   const $adminStore = useAdminStore();
 
   /* States */
-  let authTokenData = ref<IAccountLoginTokenData | null>(null);
+  const authTokenData = ref<IAccountLoginTokenData | null>(null);
 
   /* Actions */
   async function adminLogin(data: IAccountLoginRequest): Promise<boolean | string> {

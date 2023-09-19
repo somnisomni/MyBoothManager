@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate {
       }
 
       (req.params as IFastifyRequestParamsCustom).authData = payload;
-    } catch {
+    } catch(e) {
       throw new UnauthorizedException("접근 권한이 유효하지 않거나 만료되었습니다.");
     }
 
