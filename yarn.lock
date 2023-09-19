@@ -1196,7 +1196,6 @@ __metadata:
     vite: ^4.4.9
     vite-plugin-vuetify: ^1.0.2
     vue: ^3.3.4
-    vue-cookies: ^1.8.3
     vue-facing-decorator: ^3.0.1
     vue-router: ^4.2.4
     vue-tsc: ^1.8.8
@@ -8846,13 +8845,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: c511024ceae39c68c7dbf2ac4381ee655cd7bb62cf43867a14798bc835d3320b8fa7867a336143c30825c191c1fb4e9aa3348fce831ab617e96203080d3d2908
-  languageName: node
-  linkType: hard
-
-"vue-cookies@npm:^1.8.3":
-  version: 1.8.3
-  resolution: "vue-cookies@npm:1.8.3"
-  checksum: 9a3883beeaf3e871ae5f105c1c79536812c495c0169412e418f6de69d04fb0ee5ecab0267d56fd4b6e1db62a0107b4dcfb31cced77a17cc6148352eda97c08a9
   languageName: node
   linkType: hard
 

@@ -1795,7 +1795,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["vite", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.4.9"],\
             ["vite-plugin-vuetify", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.2"],\
             ["vue", "npm:3.3.4"],\
-            ["vue-cookies", "npm:1.8.3"],\
             ["vue-facing-decorator", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.0.2"],\
             ["vue-router", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.2.4"],\
             ["vue-tsc", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.8.10"],\
@@ -10978,15 +10977,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@vue/runtime-dom", "npm:3.3.4"],\
             ["@vue/server-renderer", "virtual:174fadbea44493263729fa2b6f65daab4b25e9b0a7a008d5887cf4635c65a7954c0e996fdf3e5d8529a9ab481440768b691dd3c59aca8db6f1f12ce74ed59685#npm:3.3.4"],\
             ["@vue/shared", "npm:3.3.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["vue-cookies", [\
-        ["npm:1.8.3", {\
-          "packageLocation": "./.yarn/cache/vue-cookies-npm-1.8.3-10ad175773-9a3883beea.zip/node_modules/vue-cookies/",\
-          "packageDependencies": [\
-            ["vue-cookies", "npm:1.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\

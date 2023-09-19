@@ -1,14 +1,9 @@
 import { defineStore } from "pinia";
 import AdminAPI from "@/lib/api-admin";
-import { inject, reactive, ref } from "vue";
-import { type IAccountLoginRequest, type IAccountUserland, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
-import { type VueCookies } from "vue-cookies";
-import { useAuthStore } from "./auth";
+import { reactive, ref } from "vue";
+import { type IAccountUserland, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
 
 const useAdminStore = defineStore("admin", () => {
-  /* Dependencies (NOT TO BE EXPORTED) */
-  const $cookies = inject<VueCookies>("$cookies")!;
-
   /* States */
   const currentAccount = ref<IAccountUserland | null>(null);
   const currentBoothId = ref<number>(1);
