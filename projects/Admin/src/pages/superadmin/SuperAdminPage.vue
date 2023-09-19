@@ -1,5 +1,7 @@
 <template>
-  Super Admin
+  <VContainer>
+    <VBtn :to="{ name: 'logout' }">로그아웃</VBtn>
+  </VContainer>
 </template>
 
 <script lang="ts">

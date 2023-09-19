@@ -41,6 +41,7 @@ import { Component, Vue } from "vue-facing-decorator";
 import router from "@/router";
 import type { IAccountLoginRequest } from "@myboothmanager/common";
 import { useAuthStore } from "@/stores/auth";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({})
 export default class LoginPage extends Vue {
@@ -58,7 +59,11 @@ export default class LoginPage extends Vue {
     const result = await useAuthStore().adminLogin(this.loginData);
 
     if(result === true) {
-      router.replace({ name: "admin" });
+      if(useAdminStore().currentAccount?.superAdmin) {
+        router.replace({ name: "superadmin" });
+      } else {
+        router.replace({ name: "admin" });
+      }
     } else if(typeof result === "string") {
       this.errorMessage = result;
     }
