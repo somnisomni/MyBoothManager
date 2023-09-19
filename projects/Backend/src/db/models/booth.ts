@@ -1,7 +1,7 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
 import { accountModelName } from "./account";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { type InternalKeysWithId } from "@/lib/interface-omit";
+import { type InternalKeysWithId } from "@/lib/types";
 
 type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent">
                                & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent">>;
