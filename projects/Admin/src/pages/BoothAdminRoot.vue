@@ -1,6 +1,8 @@
 <template>
-  <BoothAdminLoadDataOverlay v-if="!loaded" @complete="loaded = true" />
-  <RouterView v-if="loaded" />
+  <VFadeTransition>
+    <BoothAdminLoadDataOverlay v-if="!loaded" @complete="loaded = true" />
+    <RouterView v-else />
+  </VFadeTransition>
 </template>
 
 <script lang="ts">
