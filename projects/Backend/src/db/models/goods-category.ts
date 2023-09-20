@@ -1,17 +1,17 @@
-import { ModelAttributes, Model, DataTypes } from "sequelize";
+import { ModelAttributes, Model, DataTypes, IndexesOptions } from "sequelize";
 import { goodsModelName } from "./goods";
 import { type IGoodsCategory } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
 
-type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
+export type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
 export default class GoodsCategory extends Model<IGoodsCategory, GoodsCategoryCreationAttributes> implements IGoodsCategory {
   declare id: number;
   declare boothId: number;
   declare name: string;
 }
 
-const goodsCategoryModelName = "GoodsCategory";
-const goodsCategoryModelAttrib: ModelAttributes<GoodsCategory> = {
+export const goodsCategoryModelName = "GoodsCategory";
+export const goodsCategoryModelAttrib: ModelAttributes<GoodsCategory> = {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     unique: true,
@@ -32,5 +32,7 @@ const goodsCategoryModelAttrib: ModelAttributes<GoodsCategory> = {
     allowNull: false,
   },
 };
-
-export { GoodsCategoryCreationAttributes, goodsCategoryModelName, goodsCategoryModelAttrib };
+export const goodsCategoryAdditionalUniqueIndex: IndexesOptions = {
+  unique: true,
+  fields: ["boothId", "name"],
+};

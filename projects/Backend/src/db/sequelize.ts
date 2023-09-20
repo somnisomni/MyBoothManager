@@ -4,7 +4,7 @@ import generateConfig from "./config";
 import Booth, { boothModelAttrib, boothModelName } from "./models/booth";
 import Goods, { goodsModelAttrib, goodsModelName } from "./models/goods";
 import GoodsSaleHistory, { goodsSaleHistoryModelAttrib, goodsSaleHistoryModelName } from "./models/goods-history";
-import GoodsCategory, { goodsCategoryModelAttrib, goodsCategoryModelName } from "./models/goods-category";
+import GoodsCategory, { goodsCategoryAdditionalUniqueIndex, goodsCategoryModelAttrib, goodsCategoryModelName } from "./models/goods-category";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
@@ -20,7 +20,7 @@ export default class MBMSequelize {
     Account.init(accountModelAttrib, { sequelize: MBMSequelize.instance, modelName: accountModelName });
     Booth.init(boothModelAttrib, { sequelize: MBMSequelize.instance, modelName: boothModelName });
     Goods.init(goodsModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsModelName });
-    GoodsCategory.init(goodsCategoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsCategoryModelName });
+    GoodsCategory.init(goodsCategoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsCategoryModelName, indexes: [goodsCategoryAdditionalUniqueIndex] });
     GoodsSaleHistory.init(goodsSaleHistoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsSaleHistoryModelName });
 
     /* == Model relationship setup == */
