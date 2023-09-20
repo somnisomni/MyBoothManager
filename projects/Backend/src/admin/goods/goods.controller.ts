@@ -1,25 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
 import { GoodsService } from "./goods.service";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
+import { SuperAdmin } from "../auth/auth.guard";
 
 @Controller("/admin/goods")
 export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
 
+  /* Normal routes */
   @Post()
-  create(@Body() createGoodDto: CreateGoodsDTO) {
-    return this.goodsService.create(createGoodDto);
-  }
-
-  @Get()
-  async findAll() {
-    return await this.goodsService.findAll();
+  async create(@Body() createGoodDto: CreateGoodsDTO) {
+    return await this.goodsService.create(createGoodDto);
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return await this.goodsService.findOne(+id);
+  async findOne(@Param("id") id: string, @Query("bId") boothId: string) {
+    return await this.goodsService.findGoodsBelongsToBooth(+id, parseInt(boothId));
   }
 
   @Patch(":id")
@@ -28,7 +25,14 @@ export class GoodsController {
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.goodsService.remove(+id);
+  async remove(@Param("id") id: string, @Query("bId") boothId: string) {
+    return await this.goodsService.remove(+id, parseInt(boothId));
+  }
+
+  /* Super admin routes */
+  @SuperAdmin()
+  @Get("all")
+  async findAll() {
+    return await this.goodsService.findAll();
   }
 }

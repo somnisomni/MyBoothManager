@@ -5,10 +5,14 @@ import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
 import { BaseError } from "sequelize";
-import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { GoodsService } from "../goods/goods.service";
+import { GoodsCategoryService } from "../goods/goods-category.service";
 
 @Injectable()
 export class BoothService {
+  constructor(private goodsService: GoodsService, private goodsCategoryService: GoodsCategoryService) {}
+
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
     const booth = await Booth.findByPk(boothId);
 
@@ -17,7 +21,7 @@ export class BoothService {
     else return booth;
   }
 
-  async create(ownerId: number, createBoothDto: CreateBoothDTO): Promise<Booth> {
+  async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
     try {
       return await Booth.create({
         ...createBoothDto,
@@ -32,50 +36,45 @@ export class BoothService {
     }
   }
 
-  async findAllForAccountId(ownerId: number): Promise<Array<Booth>> {
+  async findAll(ownerId?: number): Promise<Array<Booth>> {
+    const where = ownerId ? { ownerId } : undefined;
+
     return await Booth.findAll({
-      where: {
-        ownerId,
-      },
+      where,
       attributes: {
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     });
-  }
-
-  async findOne(boothId: number, callerAccountId: number): Promise<Booth> {
-    return await this.findBoothBelongsToAccount(boothId, callerAccountId);
   }
 
   async findAllGoodsOfBooth(boothId: number, callerAccountId: number): Promise<Array<Goods>> {
     // Throws error if the booth not found or not belongs to the account
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
-    return await Goods.findAll({
-      where: { boothId },
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
+    return await this.goodsService.findAll(boothId);
   }
 
   async findAllGoodsCategoryOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsCategory>> {
     // Throws error if the booth not found or not belongs to the account
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
-    return await GoodsCategory.findAll({
-      where: { boothId },
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
+    return await this.goodsCategoryService.findAll(boothId);
   }
 
   update(id: number, updateBoothDto: UpdateBoothDTO) {
     throw new BadRequestException("Booth update is not yet supported.");
   }
 
-  remove(id: number) {
-    throw new BadRequestException("Booth deletion is not yet supported.");
+  async remove(id: number, callerAccountId: number): Promise<IStatusOKResponse> {
+    const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
+
+    try {
+      await booth.destroy();
+      await booth.save();
+    } catch(err) {
+      throw new InternalServerErrorException("부스를 삭제할 수 없습니다.");
+    }
+
+    return STATUS_OK_RESPONSE;
   }
 }

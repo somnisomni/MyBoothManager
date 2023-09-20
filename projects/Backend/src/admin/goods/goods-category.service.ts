@@ -10,8 +10,11 @@ export class GoodsCategoryService {
     throw new BadRequestException("Goods category creation is not yet supported.");
   }
 
-  async findAll(): Promise<Array<GoodsCategory>> {
+  async findAll(boothId: number): Promise<Array<GoodsCategory>> {
+    const where = boothId ? { boothId } : undefined;
+
     return await GoodsCategory.findAll({
+      where,
       attributes: {
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },

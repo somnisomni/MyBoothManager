@@ -13,5 +13,9 @@ import { GoodsCategoryService } from "./goods-category.service";
     GoodsService,
     GoodsCategoryService,
   ],
+  exports: [
+    GoodsService,
+    GoodsCategoryService,
+  ],
 })
 export class GoodsModule {}

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/commo
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import { AuthData } from "../auth/auth.guard";
+import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/booth")
@@ -12,27 +12,22 @@ export class BoothController {
   /* Normal routes */
   @Post()
   create(@Body() createAdminDto: CreateBoothDTO, @AuthData() authData: IAuthPayload) {
-    return this.boothService.create(authData.id, createAdminDto);
+    return this.boothService.create(createAdminDto, authData.id);
   }
 
   @Get()
   async findAllForCurrentAccount(@AuthData() authData: IAuthPayload) {
-    return await this.boothService.findAllForAccountId(authData.id);
+    return await this.boothService.findAll(authData.id);
   }
 
   @Get(":id")
   async findOneWithOwnerCheck(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.findOne(+id, authData.id);
+    return await this.boothService.findBoothBelongsToAccount(+id, authData.id);
   }
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateAdminDto: UpdateBoothDTO) {
     return this.boothService.update(+id, updateAdminDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.boothService.remove(+id);
   }
 
   @Get(":id/goods")
@@ -46,5 +41,15 @@ export class BoothController {
   }
 
   /* Super admin routes */
-  // TO BE ADDED
+  @SuperAdmin()
+  @Delete(":id")
+  async remove(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.remove(+id, authData.id);
+  }
+
+  @SuperAdmin()
+  @Get("all")
+  async findAll() {
+    return await this.boothService.findAll();
+  }
 }
