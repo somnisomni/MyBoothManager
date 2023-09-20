@@ -17,11 +17,11 @@ import { useAdminStore } from "@/stores/admin";
 })
 export default class BoothAdminRoot extends Vue {
   get loaded(): boolean {
-    return useAdminStore().isBaseDataLoaded;
+    return useAdminStore().isBoothDataLoaded;
   }
 
   set loaded(value: boolean) {
-    useAdminStore().isBaseDataLoaded = value;
+    useAdminStore().isBoothDataLoaded = value;
   }
 }
 </script>

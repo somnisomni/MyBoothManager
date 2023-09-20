@@ -46,16 +46,16 @@ export default class BoothAdminGoodsPage extends Vue {
 
   get goodsCategoryList() {
     // TODO: Filtering will be done in the backend. Remove this line when the backend is ready.
-    return Object.values(useAdminStore().goodsCategoryList).filter((category) => category.boothId === useAdminStore().currentBoothId);
+    return useAdminStore().boothGoodsCategoryList;
   }
 
   get goodsList() {
     // TODO: Filtering will be done in the backend. Remove this line when the backend is ready.
-    return Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.boothId === useAdminStore().currentBoothId);
+    return useAdminStore().boothGoodsList;
   }
 
   findGoodsInCategory(categoryId: number) {
-    return this.goodsList.filter((goods) => goods.categoryId === categoryId);
+    return Object.values(this.goodsList).filter((goods) => goods.categoryId === categoryId);
   }
 
   openGoodsEditDialog(goodsId: number) {

@@ -89,7 +89,7 @@ export default class BoothSelectionDialog extends Vue {
   }
 
   onBoothSelect(boothId: number) {
-    useAdminStore().currentBoothId = boothId;
+    useAdminStore().changeBooth(boothId);
     this.open = false;
   }
 }

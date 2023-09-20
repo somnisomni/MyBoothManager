@@ -6,14 +6,24 @@ import { type IAccountUserland, type IBooth, type IGoods, type IGoodsCategory, t
 const useAdminStore = defineStore("admin", () => {
   /* States */
   const currentAccount = ref<IAccountUserland | null>(null);
-  const currentBoothId = ref<number>(1);
-  const isBaseDataLoaded = ref<boolean>(false);
+  const currentBoothId = ref<number>(-1);
+
+  const isBoothDataLoaded = ref<boolean>(false);
+  const isChangingBooth = ref<boolean>(false);
 
   const boothList: Record<number, IBooth> = reactive({});
-  const goodsCategoryList: Record<number, IGoodsCategory> = reactive({});
+  const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
   const boothGoodsList: Record<number, IGoods> = reactive({});
 
   /* Actions */
+  function changeBooth(boothId: number): void {
+    isChangingBooth.value = true;
+    currentBoothId.value = boothId;
+    clearAllBoothData(false);
+
+    isBoothDataLoaded.value = false;
+  }
+
   async function fetchBoothsOfCurrentAccount(setFirstBoothAsCurrent: boolean = false): Promise<boolean | string> {
     const response = await AdminAPI.fetchAllBooths();
 
@@ -38,7 +48,7 @@ const useAdminStore = defineStore("admin", () => {
 
     if(response && response instanceof Array) {
       for(const category of response) {
-        goodsCategoryList[category.id] = category;
+        boothGoodsCategoryList[category.id] = category;
       }
       return true;
     } else {
@@ -72,30 +82,49 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function startupFetch(): Promise<boolean> {
-    const responses = [
-      await fetchBoothsOfCurrentAccount(true),
+  function clearAllBoothData(includeBoothList: boolean = true): void {
+    if(includeBoothList) Object.keys(boothList).forEach((key) => delete boothList[parseInt(key)]);
+
+    Object.keys(boothGoodsList).forEach((key) => delete boothGoodsList[parseInt(key)]);
+    Object.keys(boothGoodsCategoryList).forEach((key) => delete boothGoodsCategoryList[parseInt(key)]);
+  }
+
+  async function fetchAllBoothData(startup: boolean = true): Promise<boolean> {
+    const responses = [];
+    if(startup && !isChangingBooth.value) {
+      responses.push(await fetchBoothsOfCurrentAccount(true));
+    }
+
+    responses.push(
       await fetchGoodsCategoriesOfCurrentBooth(),
       await fetchGoodsOfCurrentBooth(),
-    ];
+    );
 
-    return responses.every((s) => typeof s !== "string");
+    isChangingBooth.value = false;
+    if(responses.every((s) => typeof s !== "string")) {
+      isBoothDataLoaded.value = true;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return {
     currentAccount,
     currentBoothId,
-    isBaseDataLoaded,
+    isBoothDataLoaded,
 
     boothList,
-    goodsCategoryList,
+    boothGoodsCategoryList,
     boothGoodsList,
 
+    changeBooth,
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
     createGoods,
-    startupFetch,
+    clearAllBoothData,
+    fetchAllBoothData,
   };
 });
 
