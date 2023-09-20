@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
-import { FastifyRequest } from "fastify";
-import { IFastifyRequestParamsCustom, SuperAdmin } from "../auth/auth.guard";
+import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/account")
 export class AccountController {
@@ -11,8 +11,8 @@ export class AccountController {
 
   /* Normal routes */
   @Get()
-  async findCurrent(@Req() req: FastifyRequest) {
-    return await this.accountService.findCurrent((req.params as IFastifyRequestParamsCustom).authData);
+  async findCurrent(@AuthData() authData: IAuthPayload) {
+    return await this.accountService.findCurrent(authData);
   }
 
   /* Super admin routes */
