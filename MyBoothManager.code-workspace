@@ -25,10 +25,16 @@
 		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
 		"typescript.enablePromptUseWorkspaceTsdk": true,
     "jest.disabledWorkspaceFolders": [
-      "packages/Common",
-      "packages/I18n",
-      "projects/Admin",
-      "projects/Backend"
+      "./packages/Common",
+      "./packages/I18n",
+      "./projects/Admin",
+      "./projects/Backend"
+		],
+    "eslint.nodePath": ".yarn/sdks",
+		"eslint.lintTask.enable": true,
+		"eslint.workingDirectories": [
+      { "pattern": "./packages/*/" },
+      { "pattern": "./projects/*/" }
     ]
 	}
 }
