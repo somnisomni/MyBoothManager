@@ -1,12 +1,11 @@
 import { IAccount, IAccountLoginTokenData } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
-import * as jwt from "jsonwebtoken";
-import * as uuid from "uuid";
+import { randomUUID } from "crypto";
 
 export const JWT_SECRET: string = process.env.JWT_SECRET || "myboothmanager";
 export const JWT_ISSUER: string = "myboothmanager";
 export const JWT_SUBJECT: string = "admin";
-export const JWT_ALGORITHM: jwt.Algorithm = "HS384";
+export const JWT_ALGORITHM: "HS256" | "HS384" = "HS384";
 
 export enum JWTVerifyResult {
   OK,
@@ -30,7 +29,7 @@ export async function generateLoginToken(jwtService: JwtService, account: IAccou
 
   return {
     accessToken: await jwtService.signAsync(payload),
-    refreshToken: uuid.v4(),
+    refreshToken: randomUUID(),
   };
 }
 
