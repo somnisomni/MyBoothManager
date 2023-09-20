@@ -1,21 +1,43 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import Goods from "@/db/models/goods";
 import { BaseError } from "sequelize";
 import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import Booth from "@/db/models/booth";
 
 @Injectable()
 export class GoodsService {
-  async findGoodsBelongsToBooth(goodsId: number, boothId: number): Promise<Goods> {
-    const goods = await Goods.findByPk(goodsId);
+  // constructor(private boothService: BoothService) {}
 
+  private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
+    const goods = await Goods.findByPk(goodsId);
     if(!goods) throw new NotFoundException("굿즈를 찾을 수 없습니다.");
-    else if(goods.boothId !== boothId) throw new BadRequestException("해당 굿즈는 해당 부스에 속해있지 않습니다.");
-    else return goods;
+    if(goods.boothId !== boothId) throw new BadRequestException("해당 굿즈는 해당 부스에 속해있지 않습니다.");
+
+    /*
+    // The function in BoothService will throw errors on its own, No need to throw errors here.
+    // this.boothService.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      * Circular dependency error; workaround to use Booth model directly
+    */
+    const booth = await Booth.findByPk(boothId);
+    if(!booth) throw new ForbiddenException("접근 거부 - 굿즈가 소속된 부스를 찾을 수 없음");
+    if(booth.ownerId !== callerAccountId) throw new ForbiddenException("접근 거부 - 굿즈가 소속된 부스에 대한 권한이 없음");
+
+    return { goods, booth };
   }
 
-  async create(createGoodsDto: CreateGoodsDTO): Promise<Goods> {
+  async findGoodsBelongsToBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<Goods> {
+    const { goods } = await this.getGoodsAndParentBooth(goodsId, boothId, callerAccountId);
+    return goods;
+  }
+
+  async create(createGoodsDto: CreateGoodsDTO, callerAccountId: number): Promise<Goods> {
+    if(!(await Booth.findOne({ where: { ownerId: callerAccountId } }))) {
+      throw new ForbiddenException("굿즈가 소속될 부스를 찾을 수 없거나 권한이 없습니다.");
+    }
+
     if(createGoodsDto.stockRemaining === undefined) {
       createGoodsDto.stockRemaining = createGoodsDto.stockInitial;
     }
@@ -52,8 +74,8 @@ export class GoodsService {
     throw new BadRequestException("Goods update is not yet supported.");
   }
 
-  async remove(id: number, boothId: number): Promise<IStatusOKResponse> {
-    const goods = await this.findGoodsBelongsToBooth(id, boothId);
+  async remove(id: number, boothId: number, callerAccountId: number): Promise<IStatusOKResponse> {
+    const goods = await this.findGoodsBelongsToBooth(id, boothId, callerAccountId);
 
     try {
       await goods.destroy();
