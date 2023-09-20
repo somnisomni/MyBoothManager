@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import CommonDialog from "@/components/common/CommonDialog.vue";
 import { useAdminStore } from "@/stores/admin";
 import { Component, Vue } from "vue-facing-decorator";
 import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
@@ -34,7 +33,7 @@ export default class BoothAdminLoadDataOverlay extends Vue {
   }
 
   async mounted() {
-    if(await useAdminStore().startupFetch()) {
+    if(await useAdminStore().fetchAllBoothData()) {
       this.$emit("complete");
     } else {
       this.errorDialogShown = true;
