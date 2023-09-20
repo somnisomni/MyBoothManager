@@ -7,7 +7,17 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
+    "plugin:import/typescript",
+    // "plugin:import/recommended" causes error
   ],
+  settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
+    "import/resolver": {
+      "typescript": true,
+    },
+  },
   parserOptions: {
     ecmaVersion: "latest",
   },
@@ -48,5 +58,11 @@ module.exports = {
     "comma-dangle": [ "error", "always-multiline" ],
     "linebreak-style": [ "error", "unix" ],
     "eqeqeq": [ "error", "always", { "null": "ignore" } ],
+    "import/order": [ "error", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+    }],
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/exports-last": "error",
   },
 };
