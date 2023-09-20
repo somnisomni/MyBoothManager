@@ -35,6 +35,11 @@ export class BoothController {
     return await this.boothService.findAllGoodsOfBooth(+boothId, authData.id);
   }
 
+  @Get(":id/goods/count")
+  async countAllBoothGoods(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.countAllGoodsOfBooth(+boothId, authData.id);
+  }
+
   @Get(":id/goods/category")
   async findAllBoothGoodsCategory(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
     return await this.boothService.findAllGoodsCategoryOfBooth(+boothId, authData.id);

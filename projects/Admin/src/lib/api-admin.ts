@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/stores/auth";
-import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse } from "@myboothmanager/common";
+import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IValueResponse } from "@myboothmanager/common";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -67,6 +67,10 @@ export default class AdminAPI {
 
   static async fetchAllGoodsOfBooth(boothId: number): Promise<Array<IGoodsResponse> | string> {
     return await this.apiCallWrapper<Array<IGoodsResponse>>(this.GET, `booth/${boothId}/goods`);
+  }
+
+  static async countAllGoodsOfBooth(boothId: number): Promise<IValueResponse | string> {
+    return await this.apiCallWrapper<IValueResponse>(this.GET, `booth/${boothId}/goods/count`);
   }
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number): Promise<Array<IGoodsCategoryResponse> | string> {

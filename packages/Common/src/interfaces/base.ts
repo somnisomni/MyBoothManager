@@ -9,3 +9,5 @@ export interface IBackendErrorResponse {
 
 export type IStatusOKResponse = { status: "OK" };
 export const STATUS_OK_RESPONSE: Readonly<IStatusOKResponse> = Object.freeze({ status: "OK" });
+
+export type IValueResponse = { value: number | string };

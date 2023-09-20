@@ -3,7 +3,7 @@ import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import Goods from "@/db/models/goods";
 import { BaseError } from "sequelize";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
 
 @Injectable()
 export class GoodsService {
@@ -40,6 +40,12 @@ export class GoodsService {
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     });
+  }
+
+  async countAll(boothId?: number): Promise<IValueResponse> {
+    const where = boothId ? { boothId } : undefined;
+
+    return { value: await Goods.count({ where }) };
   }
 
   update(id: number, updateGoodDto: UpdateGoodsDTO) {

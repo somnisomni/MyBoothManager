@@ -5,7 +5,7 @@ import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
 import { BaseError } from "sequelize";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCategoryService } from "../goods/goods-category.service";
 
@@ -52,6 +52,13 @@ export class BoothService {
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     return await this.goodsService.findAll(boothId);
+  }
+
+  async countAllGoodsOfBooth(boothId: number, callerAccountId: number): Promise<IValueResponse> {
+    // Throws error if the booth not found or not belongs to the account
+    await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+    return await this.goodsService.countAll(boothId);
   }
 
   async findAllGoodsCategoryOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsCategory>> {
