@@ -124,7 +124,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get allCategoryData() {
-    return Object.values(useAdminStore().goodsCategoryList);
+    return Object.values(useAdminStore().boothGoodsCategoryList);
   }
 
   get isFormEdited(): boolean {
