@@ -8,7 +8,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:import/typescript",
-    // "plugin:import/recommended" causes error
+    "plugin:import/recommended",
   ],
   settings: {
     "import/parsers": {

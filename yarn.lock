@@ -1250,19 +1250,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=9d9b44&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=327ba5&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 0d39658afe2629100f0e211cc690e00da0f3e6244e590493806629157cf35365abaaf0bdf151954fb7fd6458de219992b40cc9423547e70749070efb2c432127
+  checksum: 63eb9fe5c404b5f56fb1a8e434f7fd58508cc6d09d0f5eda3fd2f29bf886cc3327c4ba005d4f83e1c17c5263ff8ba6f79d669fd5c3d1ae93d1e0ed1bfceda009
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=9d9b44&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=327ba5&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 0d39658afe2629100f0e211cc690e00da0f3e6244e590493806629157cf35365abaaf0bdf151954fb7fd6458de219992b40cc9423547e70749070efb2c432127
+  checksum: 63eb9fe5c404b5f56fb1a8e434f7fd58508cc6d09d0f5eda3fd2f29bf886cc3327c4ba005d4f83e1c17c5263ff8ba6f79d669fd5c3d1ae93d1e0ed1bfceda009
   languageName: node
   linkType: hard
 
@@ -1925,7 +1925,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^6.7.0":
+"@typescript-eslint/parser@npm:^6.7.0, @typescript-eslint/parser@npm:^6.7.2":
   version: 6.7.2
   resolution: "@typescript-eslint/parser@npm:6.7.2"
   dependencies:
@@ -7842,6 +7842,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@typescript-eslint/parser": ^6.7.2
     concurrently: ^8.2.1
     eslint: ^8.49.0
     eslint-import-resolver-typescript: ^3.6.0
