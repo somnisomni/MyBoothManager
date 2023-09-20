@@ -63,6 +63,8 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractAccessTokenFromHeader(req: FastifyRequest): string | null {
+    // Authorization: Bearer <access_token>
+
     if(!req.headers.authorization) return null;
 
     const [type, accessToken] = req.headers.authorization.split(" ");
