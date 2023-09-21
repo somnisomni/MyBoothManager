@@ -45,13 +45,21 @@ export default class BoothAdminGoodsPage extends Vue {
   }
 
   get goodsCategoryList() {
-    // TODO: Filtering will be done in the backend. Remove this line when the backend is ready.
-    return useAdminStore().boothGoodsCategoryList;
+    const list = Object.values(useAdminStore().boothGoodsCategoryList);
+    list.push({ boothId: -1, id: -1, name: "미분류" });
+
+    return list;
   }
 
   get goodsList() {
-    // TODO: Filtering will be done in the backend. Remove this line when the backend is ready.
-    return useAdminStore().boothGoodsList;
+    const list = useAdminStore().boothGoodsList;
+    for(const i in list) {
+      if(!list[i].categoryId || list[i].categoryId! < 0) {
+        list[i].categoryId = -1;
+      }
+    }
+
+    return list;
   }
 
   findGoodsInCategory(categoryId: number) {

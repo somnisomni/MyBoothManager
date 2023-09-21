@@ -7,9 +7,11 @@
                 dialogCancelText="취소"
                 :dialogPrimaryText="dynRes.primaryText"
                 :dialogSecondaryText="dynRes.secondaryText"
+                :dialogLeftButtonText="dynRes.leftButtonText"
                 :onDialogCancel="onDialogCancel"
-                :onDialogSecondary="resetForm"
                 :onDialogPrimary="onDialogConfirm"
+                :onDialogSecondary="resetForm"
+                :onDialogLeftButton="onDialogDeleteClick"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !manageFormValid"
                 :closeOnCancel="false">
@@ -108,6 +110,7 @@ export default class GoodsManageDialog extends Vue {
       title: this.editMode ? "굿즈 수정" : "굿즈 추가",
       primaryText: this.editMode ? "업데이트" : "추가",
       secondaryText: this.editMode ? "되돌리기" : "초기화",
+      leftButtonText: this.editMode ? "삭제" : null,
     };
   }
 
@@ -124,7 +127,10 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get allCategoryData() {
-    return Object.values(useAdminStore().boothGoodsCategoryList);
+    const list = Object.values(useAdminStore().boothGoodsCategoryList);
+    list.push({ boothId: -1, id: -1, name: "미분류" });
+
+    return list;
   }
 
   get isFormEdited(): boolean {
@@ -213,7 +219,7 @@ export default class GoodsManageDialog extends Vue {
       const result = await useAdminStore().createGoods({
         boothId: useAdminStore().currentBoothId,
         name: this.manageFormData.name?.trim(),
-        categoryId: this.manageFormData.categoryId,
+        categoryId: this.manageFormData.categoryId < 0 ? null : this.manageFormData.categoryId,
         price: this.manageFormData.price,
         stockInitial: this.manageFormData.stockInitial,
         stockRemaining: this.manageFormData.stockRemaining,
@@ -234,6 +240,10 @@ export default class GoodsManageDialog extends Vue {
     } else {
       // TODO: CREATION NOT SUCCESS HANDLING
     }
+  }
+
+  onDialogDeleteClick() {
+    alert("기능 추가 예정");
   }
 }
 </script>

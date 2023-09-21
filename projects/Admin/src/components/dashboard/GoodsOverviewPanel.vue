@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts">
-import type { IGoods } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import DashboardPanel from "./DashboardPanel.vue";
@@ -41,43 +40,37 @@ import DashboardPanel from "./DashboardPanel.vue";
   },
 })
 export default class GoodsOverviewPanel extends Vue {
-  private goodsListForEach(callback: (goods: IGoods) => void) {
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => {
-      callback(goods);
-    });
-  }
-
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
   get totalSumStockCount(): string {
     let count = 0;
-    this.goodsListForEach((goods) => { count += goods.stockInitial; });
+    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockInitial; });
     return count.toLocaleString();
   }
 
   get remainingSumStockCount(): string {
     let count = 0;
-    this.goodsListForEach((goods) => { count += goods.stockRemaining; });
+    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockRemaining; });
     return count.toLocaleString();
   }
 
   get totalSumSellCount(): string {
     let count = 0;
-    this.goodsListForEach((goods) => { count += goods.stockInitial - goods.stockRemaining; });
+    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockInitial - goods.stockRemaining; });
     return count.toLocaleString();
   }
 
   get totalSumStockValue(): string {
     let value = 0;
-    this.goodsListForEach((goods) => { value += goods.price * goods.stockInitial; });
+    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { value += goods.price * goods.stockInitial; });
     return value.toLocaleString();
   }
 
   get totalSumSellValue(): string {
     let value = 0;
-    this.goodsListForEach((goods) => { value += goods.price * (goods.stockInitial - goods.stockRemaining); });
+    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { value += goods.price * (goods.stockInitial - goods.stockRemaining); });
     return value.toLocaleString();
   }
 }
