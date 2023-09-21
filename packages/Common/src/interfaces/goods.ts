@@ -22,3 +22,6 @@ export type IGoodsResponse = IGoods;
 
 export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockInitial" | "stockRemaining";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
+
+export type GoodsUpdateRequestKey = "categoryId" | "name" | "description" | "status" | "statusReason" | "price" | "stockInitial" | "stockRemaining";
+export type IGoodsUpdateRequest = Partial<Pick<IGoods, GoodsUpdateRequestKey>>;

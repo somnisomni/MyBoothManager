@@ -7,9 +7,9 @@
                 dialogCancelText="취소"
                 dialogSecondaryText="되돌리기"
                 :dialogPrimaryText="dynRes.dialogPrimaryText"
-                :onDialogCancel="onEditDialogCancel"
+                :onDialogCancel="onDialogCancel"
                 :onDialogSecondary="resetForm"
-                :onDialogPrimary="onEditDialogConfirm"
+                :onDialogPrimary="onDialogConfirm"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -120,11 +120,11 @@ export default class BoothManageDialog extends Vue {
         location: boothData.location,
         description: boothData.description,
         currencySymbol: boothData.currencySymbol,
-      });
+      } as IBoothUpdateReuqest);
     } else {
       this.formData = reactive({
         ...BOOTH_ADD_DEFAULT_DATA,
-      });
+      } as IBoothCreateRequest);
     }
   }
 
@@ -136,7 +136,7 @@ export default class BoothManageDialog extends Vue {
     return rules;
   }
 
-  onEditDialogCancel() {
+  onDialogCancel() {
     if(this.isFormEdited) {
       this.cancelWarningDialogShown = true;
     } else {
@@ -144,7 +144,7 @@ export default class BoothManageDialog extends Vue {
     }
   }
 
-  async onEditDialogConfirm() {
+  async onDialogConfirm() {
     this.updateInProgress = true;
 
     const requestData: IBoothUpdateReuqest | IBoothCreateRequest = {
