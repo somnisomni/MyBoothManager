@@ -31,14 +31,14 @@
 
       <!-- Pause: optional reason input -->
       <VTextField v-if="targetStatusIsPausing"
-                  v-model="pausingReason"
+                  v-model="statusReason"
                   label="일시 중지 사유"
                   class="mt-4 mx-8" />
   </CommonDialog>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 
@@ -48,7 +48,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   @Prop({ required: true }) targetStatus!: BoothStatus;
 
   updateInProgress = false;
-  pausingReason = "";
+  statusReason = "";
 
   get currentBoothData(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
@@ -60,7 +60,7 @@ export default class BoothStatusUpdateDialog extends Vue {
       case BoothStatus.CLOSE: return "부스 운영 종료";
       case BoothStatus.PAUSE: return "부스 일시 중지";
       case BoothStatus.OPEN: return "부스 운영 시작";
-      default: return "<알 수 없는 상태로 변경>";
+      default: return "???";
     }
   }
 
@@ -76,13 +76,15 @@ export default class BoothStatusUpdateDialog extends Vue {
     }
   }
 
+  @Watch("open", { immediate: true }) onDialogOpen(value: boolean) { if(value) this.statusReason = ""; }
+
   @Emit("confirm")
   async onDialogConfirm() {
     this.updateInProgress = true;
 
     const result = await useAdminStore().updateCurrentBoothStatus({
       status: this.targetStatus,
-      statusReason: this.pausingReason,
+      statusReason: this.statusReason,
     });
 
     if(result === true) {

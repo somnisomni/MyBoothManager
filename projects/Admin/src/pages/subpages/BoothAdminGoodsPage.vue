@@ -67,8 +67,8 @@ export default class BoothAdminGoodsPage extends Vue {
   }
 
   openGoodsEditDialog(goodsId: number) {
-    this.goodsEditDialogOpen = true;
     this.editDialogGoodsId = goodsId;
+    this.goodsEditDialogOpen = true;
   }
 }
 </script>
