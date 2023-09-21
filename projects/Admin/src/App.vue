@@ -30,6 +30,11 @@ export default class App extends Vue {
          && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
         next({ name: "superadmin" });
         return;
+      } else if(isAllAvailable
+                && !useAdminStore().currentAccount?.superAdmin
+                && to.name === "superadmin") {
+        next({ name: "admin" });
+        return;
       }
 
       // Normal
