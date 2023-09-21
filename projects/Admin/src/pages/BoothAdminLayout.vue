@@ -46,7 +46,7 @@
       </VList>
     </VNavigationDrawer>
 
-    <VMain style="height: 100vh; overflow-y: auto">
+    <VMain style="overflow-y: auto">
       <RouterView />
     </VMain>
   </div>
