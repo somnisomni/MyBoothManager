@@ -104,7 +104,7 @@ export default class BoothAdminLayout extends Vue {
 
 <style lang="scss" scoped>
 .bgimage {
-  position: absolute;
+  position: fixed;
   opacity: 0.25;
   z-index: -1;
   width: 50vh;
