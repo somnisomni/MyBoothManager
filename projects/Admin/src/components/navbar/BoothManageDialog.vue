@@ -157,7 +157,7 @@ export default class BoothManageDialog extends Vue {
     if(this.editMode) {
       const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateReuqest);
 
-      if(result) {
+      if(result === true) {
         this.$emit("updated");
 
         this.updateInProgress = false;
@@ -171,7 +171,7 @@ export default class BoothManageDialog extends Vue {
     } else {
       const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
 
-      if(result) {
+      if(result === true) {
         this.$emit("updated");
 
         this.updateInProgress = false;
@@ -183,6 +183,8 @@ export default class BoothManageDialog extends Vue {
         alert("Create error");
       }
     }
+
+    this.updateInProgress = false;
   }
 }
 </script>

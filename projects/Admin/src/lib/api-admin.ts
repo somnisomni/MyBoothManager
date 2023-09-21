@@ -1,4 +1,4 @@
-import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothCreateRequest, type IBoothResponse, type IBoothUpdateReuqest, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IValueResponse } from "@myboothmanager/common";
+import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothCreateRequest, type IBoothResponse, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IStatusOKResponse, type IValueResponse } from "@myboothmanager/common";
 import { useAuthStore } from "@/stores/auth";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -84,6 +84,10 @@ export default class AdminAPI {
   /* Update */
   static async updateBoothInfo(boothId: number, payload: IBoothUpdateReuqest): Promise<IBoothResponse | string> {
     return await this.apiCallWrapper<IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
+  }
+
+  static async updateBoothStatus(boothId: number, payload: IBoothStatusUpdateRequest): Promise<IStatusOKResponse | string> {
+    return await this.apiCallWrapper<IStatusOKResponse>(this.PATCH, `booth/${boothId}/status`, payload);
   }
 
   /* Create */

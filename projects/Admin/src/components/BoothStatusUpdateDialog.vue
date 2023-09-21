@@ -77,19 +77,28 @@ export default class BoothStatusUpdateDialog extends Vue {
   }
 
   @Emit("confirm")
-  onDialogConfirm() {
+  async onDialogConfirm() {
     this.updateInProgress = true;
 
-    // TODO: API call here
+    const result = await useAdminStore().updateCurrentBoothStatus({
+      status: this.targetStatus,
+      statusReason: this.pausingReason,
+    });
 
-    setTimeout(() => {  // API call simulation; remove `setTimeout` in real code
-      this.currentBoothData.status = this.targetStatus;
-      this.currentBoothData.statusReason = this.pausingReason;
+    if(result === true) {
+      this.$emit("updated");
 
       this.updateInProgress = false;
       this.open = false;
-      this.$emit("updateSuccess");
-    }, 500);
+      return;
+    } else {
+      this.$emit("error");
+
+      // TODO: error dialog
+      alert(result);
+    }
+
+    this.updateInProgress = false;
   }
 
   onDialogCancel(): void {

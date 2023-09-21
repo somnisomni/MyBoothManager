@@ -4,6 +4,7 @@ import { IAuthPayload } from "../auth/jwt";
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
+import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 
 @Controller("/admin/booth")
 export class BoothController {
@@ -26,8 +27,13 @@ export class BoothController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateAdminDto: UpdateBoothDTO, @AuthData() authData: IAuthPayload) {
-    return this.boothService.update(+id, updateAdminDto, authData.id);
+  updateBoothInfo(@Param("id") id: string, @Body() updateBoothDto: UpdateBoothDTO, @AuthData() authData: IAuthPayload) {
+    return this.boothService.updateBoothInfo(+id, updateBoothDto, authData.id);
+  }
+
+  @Patch(":id/status")
+  updateBoothStatus(@Param("id") id: string, @Body() updateBoothStatusDto: UpdateBoothStatusDTO, @AuthData() authData: IAuthPayload) {
+    return this.boothService.updateBoothStatus(+id, updateBoothStatusDto, authData.id);
   }
 
   @Get(":id/goods")
