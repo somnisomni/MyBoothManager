@@ -1,6 +1,6 @@
 <template>
   <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column">
-    <VCard elevation="8" style="overflow: hidden">
+    <VCard elevation="8" class="overflow-hidden" style="max-width: 100%">
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
 

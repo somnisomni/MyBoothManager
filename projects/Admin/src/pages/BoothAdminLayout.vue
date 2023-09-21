@@ -14,8 +14,8 @@
     <VNavigationDrawer v-model="navOpen"
                        :permanent="navPersistent"
                        class="main-navdrawer">
-      <VList nav>
-        <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="storemode"
+      <VList nav class="overflow-y-auto">
+        <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="pos"
                    :to="{ name: 'admin-pos' }" exact />
 
         <VListSubheader>관리</VListSubheader>
