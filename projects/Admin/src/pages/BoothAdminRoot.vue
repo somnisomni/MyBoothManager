@@ -5,7 +5,11 @@
     </div>
   </VFadeTransition>
 
-  <RouterView v-if="loaded" />
+  <RouterView v-slot="{ Component }">
+    <VFadeTransition>
+      <component v-if="loaded" :is="Component" />
+    </VFadeTransition>
+  </RouterView>
 </template>
 
 <script lang="ts">
