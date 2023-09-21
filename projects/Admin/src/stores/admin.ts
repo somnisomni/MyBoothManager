@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 
 const useAdminStore = defineStore("admin", () => {
@@ -82,6 +82,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function updateCurrentBoothInfo(payload: IBoothUpdateReuqest): Promise<boolean | string> {
+    const response = await AdminAPI.updateBoothInfo(currentBoothId.value, payload);
+
+    if(response && response instanceof Object) {
+      boothList[currentBoothId.value] = {
+        ...boothList[currentBoothId.value],
+        ...response,
+      };
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   function clearAllBoothData(includeBoothList: boolean = true): void {
     if(includeBoothList) Object.keys(boothList).forEach((key) => delete boothList[parseInt(key)]);
 
@@ -122,6 +136,7 @@ const useAdminStore = defineStore("admin", () => {
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
+    updateCurrentBoothInfo,
     createGoods,
     clearAllBoothData,
     fetchAllBoothData,

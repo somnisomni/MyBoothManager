@@ -26,8 +26,8 @@ export class BoothController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateAdminDto: UpdateBoothDTO) {
-    return this.boothService.update(+id, updateAdminDto);
+  update(@Param("id") id: string, @Body() updateAdminDto: UpdateBoothDTO, @AuthData() authData: IAuthPayload) {
+    return this.boothService.update(+id, updateAdminDto, authData.id);
   }
 
   @Get(":id/goods")

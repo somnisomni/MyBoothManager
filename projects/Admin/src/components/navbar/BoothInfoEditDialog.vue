@@ -18,12 +18,20 @@
                   class="my-1"
                   density="compact"
                   label="부스명"
+                  placeholder="예시) 없을 거 빼곤 다 있는 부스"
                   :rules="stringValidator(editFormData.name!)" />
       <VTextField v-model="editFormData.description"
                   class="my-1"
                   density="compact"
                   label="부스 한 줄 설명"
+                  placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다"
                   :rules="stringValidator(editFormData.description!)" />
+      <VTextField v-model="editFormData.location"
+                  class="my-1"
+                  density="compact"
+                  label="부스 위치"
+                  placeholder="예시) 일산 킨텍스 5관 / 키보토스존 Kg99"
+                  :rules="stringValidator(editFormData.location!)" />
       <VSelect v-model="editFormData.currencySymbol"
                 class="my-1"
                 density="compact"
@@ -43,7 +51,7 @@
 <script lang="ts">
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import { currencySymbolInfo, type IBooth } from "@myboothmanager/common";
+import { currencySymbolInfo, type IBoothUpdateReuqest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
 
@@ -56,7 +64,7 @@ export default class BoothInfoEditDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   updateInProgress = false;
-  editFormData: Partial<IBooth> = reactive({});
+  editFormData: IBoothUpdateReuqest = reactive({});
   editFormValid = false;
   cancelWarningDialogShown = false;
 
@@ -78,7 +86,7 @@ export default class BoothInfoEditDialog extends Vue {
     let edited = false;
 
     for(const key in this.editFormData) {
-      const k = key as keyof IBooth;
+      const k = key as keyof IBoothUpdateReuqest;
 
       if(this.editFormData[k] !== currentBoothData[k]) {
         edited = true;
@@ -97,6 +105,7 @@ export default class BoothInfoEditDialog extends Vue {
 
     this.editFormData = reactive({
       name: boothData.name,
+      location: boothData.location,
       description: boothData.description,
       currencySymbol: boothData.currencySymbol,
     });
@@ -118,20 +127,23 @@ export default class BoothInfoEditDialog extends Vue {
     }
   }
 
-  onEditDialogConfirm() {
-    // TODO: Replace real API call. Below is a mock.
-
+  async onEditDialogConfirm() {
     this.updateInProgress = true;
-    setTimeout(() => {
-      Object.assign(useAdminStore().boothList[useAdminStore().currentBoothId], {
-        ...this.editFormData,
-        name: this.editFormData.name?.trim(),
-        description: this.editFormData.description?.trim(),
-      });
 
+    const result = await useAdminStore().updateCurrentBoothInfo({
+      ...this.editFormData,
+      name: this.editFormData.name?.trim(),
+      description: this.editFormData.description?.trim(),
+      location: this.editFormData.location?.trim(),
+    });
+
+    if(result) {
       this.updateInProgress = false;
       this.open = false;
-    }, 1000);
+    } else {
+      // TODO: error dialog
+      alert("Update error");
+    }
   }
 }
 </script>

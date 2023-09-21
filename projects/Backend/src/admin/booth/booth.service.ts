@@ -68,8 +68,17 @@ export class BoothService {
     return await this.goodsCategoryService.findAll(boothId);
   }
 
-  update(id: number, updateBoothDto: UpdateBoothDTO) {
-    throw new BadRequestException("Booth update is not yet supported.");
+  async update(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {
+    let booth = await this.findBoothBelongsToAccount(id, callerAccountId);
+
+    try {
+      await booth.update(updateBoothDto);
+      booth = await booth.save();
+    } catch(err) {
+      throw new InternalServerErrorException("부스의 정보를 수정할 수 없습니다.");
+    }
+
+    return booth;
   }
 
   async remove(id: number, callerAccountId: number): Promise<IStatusOKResponse> {

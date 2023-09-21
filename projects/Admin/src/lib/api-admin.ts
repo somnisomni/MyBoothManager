@@ -1,7 +1,7 @@
-import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IValueResponse } from "@myboothmanager/common";
+import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IBoothUpdateReuqest, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IValueResponse } from "@myboothmanager/common";
 import { useAuthStore } from "@/stores/auth";
 
-type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
+type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export default class AdminAPI {
   private static readonly API_URL: string = import.meta.env.VITE_MBM_API_SERVER_URL;
@@ -29,6 +29,7 @@ export default class AdminAPI {
   private static GET = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("GET", path, payload, containAuthCredential);
   private static POST = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("POST", path, payload, containAuthCredential);
   private static PUT = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("PUT", path, payload, containAuthCredential);
+  private static PATCH = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("PATCH", path, payload, containAuthCredential);
   private static DELETE = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("DELETE", path, payload, containAuthCredential);
 
   private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | string> {
@@ -45,7 +46,8 @@ export default class AdminAPI {
     }
   }
 
-  /* Endpoints */
+  /* == Endpoints == */
+  /* Common */
   static async checkAPIServerAlive(): Promise<boolean> {
     const response = await fetch(`${this.API_URL}/teapot`, this.FETCH_COMMON_OPTIONS);
 
@@ -53,10 +55,12 @@ export default class AdminAPI {
     else return false;
   }
 
+  /* Auth */
   static async login(payload: IAccountLoginRequest): Promise<IAccountLoginResponse | string> {
     return await this.apiCallWrapper<IAccountLoginResponse>(this.POST, "auth/login", payload, false);
   }
 
+  /* Fetch */
   static async fetchAllBooths(): Promise<Array<IBoothResponse> | string> {
     return await this.apiCallWrapper<Array<IBoothResponse>>(this.GET, "booth");
   }
@@ -77,6 +81,12 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
   }
 
+  /* Update */
+  static async updateBoothInfo(boothId: number, payload: IBoothUpdateReuqest): Promise<IBoothResponse | string> {
+    return await this.apiCallWrapper<IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
+  }
+
+  /* Create */
   static async createGoods(payload: IGoodsCreateRequest): Promise<IGoodsResponse | string> {
     return await this.apiCallWrapper<IGoodsResponse>(this.POST, "goods", payload);
   }

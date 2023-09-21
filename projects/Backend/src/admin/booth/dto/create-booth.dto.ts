@@ -1,6 +1,6 @@
-import { IBooth } from "@myboothmanager/common";
+import { IBoothCreateRequest } from "@myboothmanager/common";
 
-export class CreateBoothDTO implements Partial<IBooth> {
+export class CreateBoothDTO implements IBoothCreateRequest {
   name!: string;
   description?: string;
   location!: string;

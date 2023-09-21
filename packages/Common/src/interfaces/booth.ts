@@ -22,3 +22,7 @@ export type IBoothResponse = IBooth;
 
 export type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol";
 export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
+
+// Currently BoothCreate and BoothUpdate are identical, but have different name for future extensibility
+export type BoothUpdateRequestKey = "name" | "description" | "location" | "currencySymbol";
+export type IBoothUpdateReuqest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
