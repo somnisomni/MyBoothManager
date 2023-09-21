@@ -3,13 +3,15 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
-                :dialogTitle="dynRes.dialogTitle"
+                :dialogTitle="dynRes.title"
                 dialogCancelText="취소"
-                dialogSecondaryText="되돌리기"
-                :dialogPrimaryText="dynRes.dialogPrimaryText"
+                :dialogSecondaryText="dynRes.secondaryText"
+                :dialogPrimaryText="dynRes.primaryText"
+                :dialogLeftButtonText="dynRes.leftButtonText"
                 :onDialogCancel="onDialogCancel"
                 :onDialogSecondary="resetForm"
                 :onDialogPrimary="onDialogConfirm"
+                :onDialogLeftButton="onDialogDeleteClick"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -73,8 +75,10 @@ export default class BoothManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
 
   readonly dynRes = {
-    dialogTitle: this.editMode ? "부스 정보 수정" : "부스 추가",
-    dialogPrimaryText: this.editMode ? "업데이트" : "추가",
+    title: this.editMode ? "부스 정보 수정" : "부스 추가",
+    primaryText: this.editMode ? "업데이트" : "추가",
+    secondaryText: this.editMode ? "되돌리기" : "초기화",
+    leftButtonText: this.editMode ? "삭제" : null,
   };
 
   updateInProgress = false;
@@ -130,7 +134,7 @@ export default class BoothManageDialog extends Vue {
 
   stringValidator(input: string): Array<string | boolean> {
     const rules = [
-      input.trim().length <= 0 ? "입력한 내용이 없거나 공백으로만 이루어질 수 없습니다." : true,
+      (!input || input.trim().length <= 0) ? "입력한 내용이 없거나 공백으로만 이루어질 수 없습니다." : true,
     ];
 
     return rules;
@@ -145,6 +149,9 @@ export default class BoothManageDialog extends Vue {
   }
 
   async onDialogConfirm() {
+    let success = false;
+    let errorMsg = "";
+
     this.updateInProgress = true;
 
     const requestData: IBoothUpdateReuqest | IBoothCreateRequest = {
@@ -158,33 +165,35 @@ export default class BoothManageDialog extends Vue {
       const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateReuqest);
 
       if(result === true) {
-        this.$emit("updated");
-
-        this.updateInProgress = false;
-        this.open = false;
+        success = true;
       } else {
-        this.$emit("error");
-
-        // TODO: error dialog
-        alert("Update error");
+        errorMsg = result as string;
       }
     } else {
       const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
 
       if(result === true) {
-        this.$emit("updated");
-
-        this.updateInProgress = false;
-        this.open = false;
+        success = true;
       } else {
-        this.$emit("error");
-
-        // TODO: error dialog
-        alert("Create error");
+        errorMsg = result as string;
       }
     }
 
     this.updateInProgress = false;
+
+    if(success) {
+      this.$emit("updated");
+      this.open = false;
+    } else {
+      this.$emit("error");
+
+      // TODO: error dialog
+      alert(errorMsg);
+    }
+  }
+
+  onDialogDeleteClick() {
+    alert("기능 추가 예정");
   }
 }
 </script>
