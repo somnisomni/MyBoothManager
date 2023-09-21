@@ -40,6 +40,8 @@ import DashboardPanel from "./DashboardPanel.vue";
   },
 })
 export default class GoodsOverviewPanel extends Vue {
+  // FIXME: Computed values get wrong when add new goods
+
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
