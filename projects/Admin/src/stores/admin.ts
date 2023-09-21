@@ -24,6 +24,14 @@ const useAdminStore = defineStore("admin", () => {
     isBoothDataLoaded.value = false;
   }
 
+  function changeBoothToFirst(): void {
+    isChangingBooth.value = true;
+    currentBoothId.value = Object.keys(boothList).length > 0 ? parseInt(Object.keys(boothList)[0]) : -1;
+    clearAllBoothData(false);
+
+    isBoothDataLoaded.value = false;
+  }
+
   async function fetchBoothsOfCurrentAccount(setFirstBoothAsCurrent: boolean = false): Promise<boolean | string> {
     const response = await AdminAPI.fetchAllBooths();
 
@@ -145,6 +153,7 @@ const useAdminStore = defineStore("admin", () => {
     boothGoodsList,
 
     changeBooth,
+    changeBoothToFirst,
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,

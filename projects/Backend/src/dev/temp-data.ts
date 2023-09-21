@@ -93,6 +93,14 @@ const goodsList: Array<GoodsCreationAttributes> = [
 ];
 
 export async function insertTempDataIntoDB(): Promise<void> {
+  await Account.create({
+    name: "TEST 2 (EMPTY)",
+    loginId: "empty",
+    loginPassHash: await argon2.hash("empty"),
+  }, { ignoreDuplicates: true });
+  const emptyAccount = await Account.findOne({ where: { loginId: "empty" } });
+  (await Booth.findAll({ where: { ownerId: emptyAccount?.id } })).forEach(async (booth) => booth.destroy());
+
   if(await Account.findOne({ where: { loginId: "test" } })) return;
 
   await Account.create({
