@@ -25,7 +25,8 @@
       </VLayout>
     </VSheet>
 
-    <BoothAddDialog v-model="boothAddDialogShown" />
+    <BoothManageDialog v-model="boothAddDialogShown"
+                       :editMode="false" />
   </CommonDialog>
 </template>
 
@@ -34,11 +35,11 @@ import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import { type DialogButtonParams } from "@/components/common/CommonDialog.vue";
-import BoothAddDialog from "@/components/navbar/BoothAddDialog.vue";
+import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
   components: {
-    BoothAddDialog,
+    BoothManageDialog,
   },
 })
 export default class BoothSelectionDialog extends Vue {

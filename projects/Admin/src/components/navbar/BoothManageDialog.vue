@@ -3,36 +3,36 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
-                dialogTitle="부스 정보 수정"
+                :dialogTitle="dynRes.dialogTitle"
                 dialogCancelText="취소"
                 dialogSecondaryText="되돌리기"
-                dialogPrimaryText="업데이트"
+                :dialogPrimaryText="dynRes.dialogPrimaryText"
                 :onDialogCancel="onEditDialogCancel"
                 :onDialogSecondary="resetForm"
                 :onDialogPrimary="onEditDialogConfirm"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !editFormValid"
+                :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
-    <VForm v-model="editFormValid">
-      <VTextField v-model="editFormData.name"
+    <VForm v-model="formValid">
+      <VTextField v-model="formData.name"
                   class="my-1"
                   density="compact"
                   label="부스명"
                   placeholder="예시) 없을 거 빼곤 다 있는 부스"
-                  :rules="stringValidator(editFormData.name!)" />
-      <VTextField v-model="editFormData.description"
+                  :rules="stringValidator(formData.name!)" />
+      <VTextField v-model="formData.description"
                   class="my-1"
                   density="compact"
                   label="부스 한 줄 설명"
                   placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다"
-                  :rules="stringValidator(editFormData.description!)" />
-      <VTextField v-model="editFormData.location"
+                  :rules="stringValidator(formData.description!)" />
+      <VTextField v-model="formData.location"
                   class="my-1"
                   density="compact"
                   label="부스 위치"
                   placeholder="예시) 일산 킨텍스 5관 / 키보토스존 Kg99"
-                  :rules="stringValidator(editFormData.location!)" />
-      <VSelect v-model="editFormData.currencySymbol"
+                  :rules="stringValidator(formData.location!)" />
+      <VSelect v-model="formData.currencySymbol"
                 class="my-1"
                 density="compact"
                 :items="currencySymbols"
@@ -50,48 +50,58 @@
 
 <script lang="ts">
 import { reactive } from "vue";
-import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import { currencySymbolInfo, type IBoothUpdateReuqest } from "@myboothmanager/common";
+import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
+import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateReuqest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
+
+const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
+  name: "",
+  description: "",
+  location: "",
+  currencySymbol: "₩",
+};
 
 @Component({
   components: {
     FormDataLossWarningDialog,
   },
 })
-export default class BoothInfoEditDialog extends Vue {
+export default class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
+  @Prop({ type: Boolean, default: false }) editMode!: boolean;
+
+  readonly dynRes = {
+    dialogTitle: this.editMode ? "부스 정보 수정" : "부스 추가",
+    dialogPrimaryText: this.editMode ? "업데이트" : "추가",
+  };
 
   updateInProgress = false;
-  editFormData: IBoothUpdateReuqest = reactive({});
-  editFormValid = false;
+  formData: IBoothUpdateReuqest | IBoothCreateRequest = reactive({});
+  formValid = false;
   cancelWarningDialogShown = false;
 
   get currencySymbols(): Array<Record<string, string>> {
-    const symbols = [];
-
-    for(const symbol in currencySymbolInfo) {
-      symbols.push({
-        name: `${currencySymbolInfo[symbol].name} (${currencySymbolInfo[symbol].symbol})`,
-        symbol: currencySymbolInfo[symbol].symbol,
-      });
-    }
-
-    return symbols;
+    return Object.keys(currencySymbolInfo).map((key) => ({
+      ...currencySymbolInfo[key],
+      name: `${currencySymbolInfo[key].name} (${currencySymbolInfo[key].symbol})`,
+    }));
   }
 
   get isFormEdited(): boolean {
-    const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
     let edited = false;
 
-    for(const key in this.editFormData) {
-      const k = key as keyof IBoothUpdateReuqest;
-
-      if(this.editFormData[k] !== currentBoothData[k]) {
-        edited = true;
-        break;
-      }
+    if(this.editMode) {
+      const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+      edited = Object.keys(this.formData).some((key) => {
+        const k = key as keyof IBoothUpdateReuqest;
+        return this.formData[k] !== currentBoothData[k];
+      });
+    } else {
+      edited = Object.keys(this.formData).some((key) => {
+        const k = key as keyof IBoothCreateRequest;
+        return this.formData[k] !== BOOTH_ADD_DEFAULT_DATA[k];
+      });
     }
 
     return edited;
@@ -101,14 +111,20 @@ export default class BoothInfoEditDialog extends Vue {
   @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
 
   resetForm() {
-    const boothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+    if(this.editMode) {
+      const boothData = useAdminStore().boothList[useAdminStore().currentBoothId];
 
-    this.editFormData = reactive({
-      name: boothData.name,
-      location: boothData.location,
-      description: boothData.description,
-      currencySymbol: boothData.currencySymbol,
-    });
+      this.formData = reactive({
+        name: boothData.name,
+        location: boothData.location,
+        description: boothData.description,
+        currencySymbol: boothData.currencySymbol,
+      });
+    } else {
+      this.formData = reactive({
+        ...BOOTH_ADD_DEFAULT_DATA,
+      });
+    }
   }
 
   stringValidator(input: string): Array<string | boolean> {
@@ -130,19 +146,23 @@ export default class BoothInfoEditDialog extends Vue {
   async onEditDialogConfirm() {
     this.updateInProgress = true;
 
-    const result = await useAdminStore().updateCurrentBoothInfo({
-      ...this.editFormData,
-      name: this.editFormData.name?.trim(),
-      description: this.editFormData.description?.trim(),
-      location: this.editFormData.location?.trim(),
-    });
+    if(this.editMode) {
+      const result = await useAdminStore().updateCurrentBoothInfo({
+        ...this.formData,
+        name: this.formData.name?.trim(),
+        description: this.formData.description?.trim(),
+        location: this.formData.location?.trim(),
+      });
 
-    if(result) {
-      this.updateInProgress = false;
-      this.open = false;
+      if(result) {
+        this.updateInProgress = false;
+        this.open = false;
+      } else {
+        // TODO: error dialog
+        alert("Update error");
+      }
     } else {
-      // TODO: error dialog
-      alert("Update error");
+      // TODO
     }
   }
 }

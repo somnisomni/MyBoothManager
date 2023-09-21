@@ -11,19 +11,20 @@
   <VBtn icon class="ms-2 me-0" title="부스 정보 수정" @click.stop="boothInfoEditDialogOpen = !boothInfoEditDialogOpen"><VIcon>mdi-storefront-edit</VIcon></VBtn>
 
   <BoothSelectionDialog v-model="boothSelectionDialogOpen" />
-  <BoothInfoEditDialog v-model="boothInfoEditDialogOpen" />
+  <BoothManageDialog v-model="boothInfoEditDialogOpen"
+                     :editMode="true" />
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
 import BoothSelectionDialog from "@/components/navbar/BoothSelectionDialog.vue";
 import { useAdminStore } from "@/stores/admin";
-import BoothInfoEditDialog from "./BoothInfoEditDialog.vue";
+import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
   components: {
     BoothSelectionDialog,
-    BoothInfoEditDialog,
+    BoothManageDialog,
   },
 })
 export default class BoothSelectionArea extends Vue {
