@@ -1,8 +1,11 @@
 <template>
-  <VFadeTransition>
-    <BoothAdminLoadDataOverlay v-if="!loaded" @complete="loaded = true" />
-    <RouterView v-else />
+  <VFadeTransition leave-absolute>
+    <div v-if="!loaded" class="position-absolute w-100 h-100" style="z-index: 1000">
+      <BoothAdminLoadDataOverlay @complete="loaded = true" />
+    </div>
   </VFadeTransition>
+
+  <RouterView v-if="loaded" />
 </template>
 
 <script lang="ts">
