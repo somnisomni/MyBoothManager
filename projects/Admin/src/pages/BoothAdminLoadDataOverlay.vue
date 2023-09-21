@@ -6,6 +6,9 @@
 
   <CommonDialog v-model="errorDialogShown"
                 width="500"
+                persistent
+                disableCancel
+                hideCloseButton
                 dialogPrimaryText="재시도"
                 dialogSecondaryText="로그아웃"
                 :onDialogPrimary="onErrorDialogPrimary"
