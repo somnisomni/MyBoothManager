@@ -26,7 +26,9 @@ import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 
-@Component({})
+@Component({
+  emits: ["completed"],
+})
 export default class BoothAdminLoadDataOverlay extends Vue {
   errorDialogShown = false;
 
@@ -40,7 +42,7 @@ export default class BoothAdminLoadDataOverlay extends Vue {
 
   async mounted() {
     if(await useAdminStore().fetchAllBoothData()) {
-      this.$emit("complete");
+      this.$emit("completed");
     } else {
       this.errorDialogShown = true;
     }

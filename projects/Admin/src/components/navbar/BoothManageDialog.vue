@@ -66,6 +66,7 @@ const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
   components: {
     FormDataLossWarningDialog,
   },
+  emits: ["updated", "error"],
 })
 export default class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -157,7 +158,7 @@ export default class BoothManageDialog extends Vue {
       const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateReuqest);
 
       if(result) {
-        this.$emit("update");
+        this.$emit("updated");
 
         this.updateInProgress = false;
         this.open = false;
@@ -171,7 +172,7 @@ export default class BoothManageDialog extends Vue {
       const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
 
       if(result) {
-        this.$emit("update");
+        this.$emit("updated");
 
         this.updateInProgress = false;
         this.open = false;
