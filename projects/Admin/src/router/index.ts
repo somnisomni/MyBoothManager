@@ -79,8 +79,8 @@ const router = createRouter({
       ],
     },
     {
-      path: "/storemode",
-      name: "admin-storemode",
+      path: "/pos",
+      name: "admin-pos",
       component: PlaceholderPage,
     },
   ],

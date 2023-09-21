@@ -15,8 +15,9 @@
                        :permanent="navPersistent"
                        class="main-navdrawer">
       <VList nav>
-        <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드" value="storemode"
-                   :to="{ name: 'admin-storemode' }" exact />
+        <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="storemode"
+                   :to="{ name: 'admin-pos' }" exact />
+
         <VListSubheader>관리</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
                    :to="{ name: 'admin' }" exact />
