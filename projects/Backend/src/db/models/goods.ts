@@ -4,14 +4,15 @@ import { type InternalKeysWithId } from "@/lib/types";
 import { boothModelName } from "./booth";
 import { goodsCategoryModelName } from "./goods-category";
 
-export type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">
-                               & Partial<Pick<IGoods, "description" | "status" | "statusReason">>;
+export type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
+                               & Partial<Pick<IGoods, "description" | "type" | "status" | "statusReason">>;
 export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
   declare id: number;
   declare boothId: number;
   declare categoryId?: number;
   declare name: string;
   declare description?: string;
+  declare type?: string;
   declare status: GoodsStatus;
   declare statusReason?: string;
   declare price: number;
@@ -51,6 +52,11 @@ export const goodsModelAttrib: ModelAttributes<Goods> = {
   },
   description: {
     type: DataTypes.STRING(1024),
+    allowNull: true,
+    defaultValue: null,
+  },
+  type: {
+    type: DataTypes.STRING(128),
     allowNull: true,
     defaultValue: null,
   },
