@@ -30,7 +30,7 @@
       "./projects/Admin",
       "./projects/Backend"
 		],
-    "eslint.nodePath": "./.yarn/sdks",
+    "eslint.nodePath": "../../.yarn/sdks",
 		"eslint.workingDirectories": [
       { "pattern": "./packages/*/" },
       { "pattern": "./projects/*/" }

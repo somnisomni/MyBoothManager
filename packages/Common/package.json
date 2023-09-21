@@ -8,10 +8,11 @@
   "scripts": {
     "build": "yarn clean && tsc -p \"./tsconfig.build.json\"",
     "clean": "rimraf ./dist",
-    "lint": "eslint --resolve-plugins-relative-to .",
+    "lint": "eslint",
     "test": "jest"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.4.0",
     "@tsconfig/node18": "^18.2.2",
     "@types/jest": "^29.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.2",

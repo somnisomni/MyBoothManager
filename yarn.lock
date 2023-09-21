@@ -1219,6 +1219,7 @@ __metadata:
     "@nestjs/platform-fastify": ^10.2.5
     "@nestjs/schematics": ^10.0.2
     "@nestjs/testing": ^10.2.5
+    "@rushstack/eslint-patch": ^1.4.0
     "@tsconfig/node18": ^18.2.2
     "@types/jest": ^29.5.5
     "@types/node": ^18.17.18
@@ -1247,19 +1248,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=aa1ae0&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=b30c1c&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 788eef0cdbb8b544ce277d9bad06149f08363e7b2a3e548265359337f1dd5fd789ab3f379f34de06a90e80900f5782a556b9bae98339b2cc58eab81cb5e46e64
+  checksum: a16de81a1aed4e03c28fd97da3e7aa35bc3831f971aa179c9ed530726ae1634930c183a82e1bb228f9d328dda5c78e9e84cc418f74aabcd82d4702185b363c6e
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=aa1ae0&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=b30c1c&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: ^5.1.0
-  checksum: 788eef0cdbb8b544ce277d9bad06149f08363e7b2a3e548265359337f1dd5fd789ab3f379f34de06a90e80900f5782a556b9bae98339b2cc58eab81cb5e46e64
+  checksum: a16de81a1aed4e03c28fd97da3e7aa35bc3831f971aa179c9ed530726ae1634930c183a82e1bb228f9d328dda5c78e9e84cc418f74aabcd82d4702185b363c6e
   languageName: node
   linkType: hard
 
@@ -1267,6 +1268,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common@workspace:packages/Common"
   dependencies:
+    "@rushstack/eslint-patch": ^1.4.0
     "@tsconfig/node18": ^18.2.2
     "@types/jest": ^29.5.5
     "@typescript-eslint/eslint-plugin": ^6.7.2
