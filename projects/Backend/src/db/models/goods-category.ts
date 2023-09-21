@@ -1,7 +1,7 @@
 import { ModelAttributes, Model, DataTypes, IndexesOptions } from "sequelize";
-import { goodsModelName } from "./goods";
 import { type IGoodsCategory } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
+import { goodsModelName } from "./goods";
 
 export type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
 export default class GoodsCategory extends Model<IGoodsCategory, GoodsCategoryCreationAttributes> implements IGoodsCategory {

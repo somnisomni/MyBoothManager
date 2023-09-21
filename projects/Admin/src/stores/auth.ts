@@ -1,7 +1,7 @@
-import AdminAPI from "@/lib/api-admin";
 import type { IAccountLoginRequest, IAccountLoginTokenData } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./admin";
 
 const useAuthStore = defineStore("auth", () => {

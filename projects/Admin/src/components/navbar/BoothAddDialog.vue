@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from "vue-facing-decorator";
 import type { IBoothCreateRequest } from "@myboothmanager/common";
+import { Component, Model, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class BoothAddDialog extends Vue {

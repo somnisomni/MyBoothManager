@@ -1,10 +1,10 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { fastifyHelmet } from "@fastify/helmet";
 import { AppModule } from "@/app.module";
 import { HttpExceptionFilter, NotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
-import fastifyHelmet from "@fastify/helmet";
 
 let app: NestFastifyApplication;
 

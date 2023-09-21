@@ -1,6 +1,6 @@
+import { randomUUID } from "crypto";
 import { IAccount, IAccountLoginTokenData } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
-import { randomUUID } from "crypto";
 
 export const JWT_SECRET: string = process.env.JWT_SECRET || "myboothmanager";
 export const JWT_ISSUER: string = "myboothmanager";

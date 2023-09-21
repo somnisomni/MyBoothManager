@@ -52,12 +52,12 @@
 </template>
 
 <script lang="ts">
+import type { IBooth } from "@myboothmanager/common";
 import { unref } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
-import type { IBooth } from "@myboothmanager/common";
 import router from "@/router";
 
 @Component({

@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 import { GoodsService } from "./goods.service";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
-import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/goods")
 export class GoodsController {

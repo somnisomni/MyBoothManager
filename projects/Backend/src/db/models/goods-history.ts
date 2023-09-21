@@ -1,9 +1,9 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { goodsModelName } from "./goods";
 import { type IGoodsSaleHistory } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
+import { goodsModelName } from "./goods";
 
-type GoodsSaleHistoryCreationAttributes = Omit<IGoodsSaleHistory, InternalKeysWithId>;
+export type GoodsSaleHistoryCreationAttributes = Omit<IGoodsSaleHistory, InternalKeysWithId>;
 export default class GoodsSaleHistory extends Model<IGoodsSaleHistory, GoodsSaleHistoryCreationAttributes> implements IGoodsSaleHistory {
   declare id: number;
   declare goodsId: number;
@@ -12,8 +12,8 @@ export default class GoodsSaleHistory extends Model<IGoodsSaleHistory, GoodsSale
   declare timestamp: Date;
 }
 
-const goodsSaleHistoryModelName = "GoodsSaleHistory";
-const goodsSaleHistoryModelAttrib: ModelAttributes<GoodsSaleHistory> = {
+export const goodsSaleHistoryModelName = "GoodsSaleHistory";
+export const goodsSaleHistoryModelAttrib: ModelAttributes<GoodsSaleHistory> = {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     unique: true,
@@ -44,5 +44,3 @@ const goodsSaleHistoryModelAttrib: ModelAttributes<GoodsSaleHistory> = {
     allowNull: false,
   },
 };
-
-export { GoodsSaleHistoryCreationAttributes, goodsSaleHistoryModelName, goodsSaleHistoryModelAttrib };

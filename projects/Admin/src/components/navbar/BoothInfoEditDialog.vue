@@ -43,9 +43,9 @@
 <script lang="ts">
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
+import { currencySymbolInfo, type IBooth } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
-import { currencySymbolInfo, type IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

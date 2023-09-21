@@ -1,6 +1,6 @@
+import type { FastifyReply, FastifyRequest } from "fastify";
 import { IBackendErrorResponse } from "@myboothmanager/common";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, ImATeapotException, NotFoundException } from "@nestjs/common";
-import { FastifyReply, FastifyRequest } from "fastify";
 
 const SCREAM = [
   "FIND YOUR RIGHT WAY",

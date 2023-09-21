@@ -77,12 +77,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
-import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
-import { reactive } from "vue";
-import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
 import type { IGoods } from "@myboothmanager/common";
+import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
+import { reactive } from "vue";
+import { useAdminStore } from "@/stores/admin";
+import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
+import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
 
 @Component({
   components: {

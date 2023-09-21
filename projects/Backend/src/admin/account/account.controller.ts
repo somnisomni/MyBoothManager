@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 import { AccountService } from "./account.service";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
-import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/account")
 export class AccountController {

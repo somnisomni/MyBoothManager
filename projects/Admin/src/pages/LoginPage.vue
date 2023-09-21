@@ -37,9 +37,9 @@
 </template>
 
 <script lang="ts">
+import type { IAccountLoginRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import router from "@/router";
-import type { IAccountLoginRequest } from "@myboothmanager/common";
 import { useAuthStore } from "@/stores/auth";
 import { useAdminStore } from "@/stores/admin";
 

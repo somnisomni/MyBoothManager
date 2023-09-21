@@ -1,10 +1,10 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { boothModelName } from "./booth";
-import { goodsCategoryModelName } from "./goods-category";
 import { GoodsStatus, type IGoods } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
+import { boothModelName } from "./booth";
+import { goodsCategoryModelName } from "./goods-category";
 
-type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">
+export type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "status" | "statusReason">
                                & Partial<Pick<IGoods, "description" | "status" | "statusReason">>;
 export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
   declare id: number;
@@ -19,8 +19,8 @@ export default class Goods extends Model<IGoods, GoodsCreationAttributes> implem
   declare stockRemaining: number;
 }
 
-const goodsModelName = "Goods";
-const goodsModelAttrib: ModelAttributes<Goods> = {
+export const goodsModelName = "Goods";
+export const goodsModelAttrib: ModelAttributes<Goods> = {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     unique: true,
@@ -80,5 +80,3 @@ const goodsModelAttrib: ModelAttributes<Goods> = {
     defaultValue: 0,
   },
 };
-
-export { GoodsCreationAttributes, goodsModelName, goodsModelAttrib };

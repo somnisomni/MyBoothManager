@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import router from "@/router";
 import { Vue, Component } from "vue-facing-decorator";
+import router from "@/router";
 
 @Component({})
 export default class ErrorPage extends Vue {

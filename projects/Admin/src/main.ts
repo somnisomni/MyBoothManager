@@ -4,11 +4,12 @@ import piniaPersistedState from "pinia-plugin-persistedstate";
 
 import "@/styles/styles.scss";
 
+import CommonDialog from "@/components/common/CommonDialog.vue";
+
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 
-import CommonDialog from "@/components/common/CommonDialog.vue";
 
 const app = createApp(App);
 const pinia = createPinia();

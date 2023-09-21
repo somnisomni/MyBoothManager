@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { GoodsModule } from "../goods/goods.module";
 import { BoothController } from "./booth.controller";
 import { BoothService } from "./booth.service";
-import { GoodsModule } from "../goods/goods.module";
 
 describe("BoothController", () => {
   let controller: BoothController;

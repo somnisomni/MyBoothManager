@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import GoodsCategory from "@/db/models/goods-category";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
-import GoodsCategory from "@/db/models/goods-category";
-import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 
 @Injectable()
 export class GoodsCategoryService {

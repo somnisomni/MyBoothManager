@@ -13,10 +13,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import BoothStatusPanel from "@/components/dashboard/BoothStatusPanel.vue";
 import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
-import { BoothStatus, type IBooth } from "@myboothmanager/common";
 
 @Component({
   components: {

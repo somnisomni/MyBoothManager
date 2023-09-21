@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { ImATeapotException, NotFoundException } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { ImATeapotException, NotFoundException } from "@nestjs/common";
 
 describe("AppController", () => {
   let controller: AppController;

@@ -46,10 +46,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-facing-decorator";
-import BoothStatusUpdateDialog from "@/components/BoothStatusUpdateDialog.vue";
-import DashboardPanel from "./DashboardPanel.vue";
-import { useAdminStore } from "@/stores/admin";
 import { BoothStatus } from "@myboothmanager/common";
+import BoothStatusUpdateDialog from "@/components/BoothStatusUpdateDialog.vue";
+import { useAdminStore } from "@/stores/admin";
+import DashboardPanel from "./DashboardPanel.vue";
 
 @Component({
   components: {

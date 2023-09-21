@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
-import { IAuthPayload } from "../auth/jwt";
 
 @Controller("/admin/booth")
 export class BoothController {

@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import BoothAdminLoadDataOverlay from "./BoothAdminLoadDataOverlay.vue";
 import { useAdminStore } from "@/stores/admin";
+import BoothAdminLoadDataOverlay from "./BoothAdminLoadDataOverlay.vue";
 
 @Component({
   components: {

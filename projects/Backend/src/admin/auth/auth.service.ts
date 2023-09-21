@@ -1,10 +1,10 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { LoginDTO } from "./dto/login.dto";
 import * as argon2 from "argon2";
 import { IAccount, IAccountLoginResponse } from "@myboothmanager/common";
-import { IAuthPayload, generateLoginToken, generateLoginTokenSA } from "./jwt";
 import { JwtService } from "@nestjs/jwt";
 import { AccountService } from "../account/account.service";
+import { IAuthPayload, generateLoginToken, generateLoginTokenSA } from "./jwt";
+import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
 
 @Injectable()

@@ -1,46 +1,9 @@
+import { BoothStatus } from "@myboothmanager/common";
+import * as argon2 from "argon2";
 import Account from "@/db/models/account";
 import Booth, { BoothCreationAttributes } from "@/db/models/booth";
 import Goods, { GoodsCreationAttributes } from "@/db/models/goods";
 import GoodsCategory, { GoodsCategoryCreationAttributes } from "@/db/models/goods-category";
-import { BoothStatus } from "@myboothmanager/common";
-import * as argon2 from "argon2";
-
-export async function insertTempDataIntoDB(): Promise<void> {
-  if(await Account.findOne({ where: { loginId: "test" } })) return;
-
-  await Account.create({
-    name: "TEST",
-    loginId: "test",
-    loginPassHash: await argon2.hash("test"),
-  }, {
-    ignoreDuplicates: true,
-  });
-
-  const testAccount = await Account.findOne({ where: { loginId: "test" } });
-  if(testAccount) {
-    for(const booth of boothList) {
-      booth.ownerId = testAccount.id;
-      await Booth.create(booth);
-    }
-  }
-
-  const mainBooth = await Booth.findOne({ where: { name: "Main Test Booth" } });
-  if(mainBooth) {
-    for(const goodsCategory of goodsCategoryList) {
-      goodsCategory.boothId = mainBooth.id;
-      await GoodsCategory.create(goodsCategory);
-    }
-  }
-
-  const baCategory = await GoodsCategory.findOne({ where: { name: "블루아카이브" } });
-  if(mainBooth && baCategory) {
-    for(const goods of goodsList) {
-      goods.boothId = mainBooth.id;
-      goods.categoryId = baCategory.id;
-      await Goods.create(goods);
-    }
-  }
-}
 
 const boothList: Array<BoothCreationAttributes> = [
   {
@@ -128,3 +91,40 @@ const goodsList: Array<GoodsCreationAttributes> = [
     stockRemaining: 3,
   },
 ];
+
+export async function insertTempDataIntoDB(): Promise<void> {
+  if(await Account.findOne({ where: { loginId: "test" } })) return;
+
+  await Account.create({
+    name: "TEST",
+    loginId: "test",
+    loginPassHash: await argon2.hash("test"),
+  }, {
+    ignoreDuplicates: true,
+  });
+
+  const testAccount = await Account.findOne({ where: { loginId: "test" } });
+  if(testAccount) {
+    for(const booth of boothList) {
+      booth.ownerId = testAccount.id;
+      await Booth.create(booth);
+    }
+  }
+
+  const mainBooth = await Booth.findOne({ where: { name: "Main Test Booth" } });
+  if(mainBooth) {
+    for(const goodsCategory of goodsCategoryList) {
+      goodsCategory.boothId = mainBooth.id;
+      await GoodsCategory.create(goodsCategory);
+    }
+  }
+
+  const baCategory = await GoodsCategory.findOne({ where: { name: "블루아카이브" } });
+  if(mainBooth && baCategory) {
+    for(const goods of goodsList) {
+      goods.boothId = mainBooth.id;
+      goods.categoryId = baCategory.id;
+      await Goods.create(goods);
+    }
+  }
+}

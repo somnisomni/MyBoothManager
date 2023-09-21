@@ -59,7 +59,7 @@ module.exports = {
     "linebreak-style": [ "error", "unix" ],
     "eqeqeq": [ "error", "always", { null: "ignore" } ],
     "import/order": [ "error", {
-      groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+      groups: ["type", "builtin", "external", "internal", "parent", "sibling", "index", "object"],
     }],
     "import/first": "error",
     "import/newline-after-import": "error",

@@ -2,7 +2,7 @@ import { DataTypes, Model, ModelAttributes } from "sequelize";
 import { type IAccount } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
 
-type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
+export type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
 export default class Account extends Model<IAccount, AccountCreationAttributes> implements IAccount {
   declare id: number;
   declare name: string;
@@ -12,8 +12,8 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   declare lastLoginAt: Date;
 }
 
-const accountModelName = "Account";
-const accountModelAttrib: ModelAttributes<Account> = {
+export const accountModelName = "Account";
+export const accountModelAttrib: ModelAttributes<Account> = {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     unique: true,
@@ -45,5 +45,3 @@ const accountModelAttrib: ModelAttributes<Account> = {
     defaultValue: DataTypes.NOW,
   },
 };
-
-export { AccountCreationAttributes, accountModelName, accountModelAttrib };

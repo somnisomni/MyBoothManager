@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import { useAdminStore } from "@/stores/admin";
 import { Component, Vue } from "vue-facing-decorator";
 import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({})
 export default class BoothAdminLoadDataOverlay extends Vue {

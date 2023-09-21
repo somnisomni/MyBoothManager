@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
+import type { RouteRecordName } from "vue-router";
 import { Vue, Component } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "./stores/auth";
 import { useAdminStore } from "./stores/admin";
-import type { RouteRecordName } from "vue-router";
 
 @Component({})
 export default class App extends Vue {
@@ -18,7 +18,7 @@ export default class App extends Vue {
     router.beforeEach((to, from, next) => {
       const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
       const isAccountDataAvailable = !!useAdminStore().currentAccount;
-      const isAllAvailable = isTokenAvailable /* && isAccountDataAvailable */;
+      const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable */
 
       if(isTokenAvailable && !isAccountDataAvailable) {
         // TODO: Fetch account data using existing tokens

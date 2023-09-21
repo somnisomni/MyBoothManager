@@ -31,10 +31,10 @@
 
 <script lang="ts">
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
+import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import { type DialogButtonParams } from "@/components/common/CommonDialog.vue";
 import BoothAddDialog from "@/components/navbar/BoothAddDialog.vue";
-import { BoothStatus } from "@myboothmanager/common";
 
 @Component({
   components: {

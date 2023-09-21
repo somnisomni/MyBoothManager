@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from "@nestjs/common";
+import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import Account from "@/db/models/account";
+import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
-import Account from "@/db/models/account";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
-import { IAuthPayload } from "../auth/jwt";
 
 @Injectable()
 export class AccountService {
@@ -64,5 +64,5 @@ export class AccountService {
 
     if(rows === 1) return STATUS_OK_RESPONSE;
     else throw new InternalServerErrorException("계정을 삭제할 수 없습니다.");
-  };
+  }
 }

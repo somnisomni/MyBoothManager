@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/stores/auth";
 import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothResponse, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IValueResponse } from "@myboothmanager/common";
+import { useAuthStore } from "@/stores/auth";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "DELETE";
 

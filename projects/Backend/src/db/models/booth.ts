@@ -1,9 +1,9 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
-import { accountModelName } from "./account";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
+import { accountModelName } from "./account";
 
-type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent">
+export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent">
                                & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent">>;
 export default class Booth extends Model<IBooth, BoothCreationAttributes> implements IBooth {
   declare id: number;
@@ -17,8 +17,8 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   declare statusPublishContent?: boolean;
 }
 
-const boothModelName = "Booth";
-const boothModelAttrib: ModelAttributes<Booth> = {
+export const boothModelName = "Booth";
+export const boothModelAttrib: ModelAttributes<Booth> = {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     unique: true,
@@ -68,5 +68,3 @@ const boothModelAttrib: ModelAttributes<Booth> = {
     defaultValue: false,
   },
 };
-
-export { BoothCreationAttributes, boothModelName, boothModelAttrib };
