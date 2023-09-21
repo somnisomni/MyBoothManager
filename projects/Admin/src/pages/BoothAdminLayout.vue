@@ -1,5 +1,5 @@
 <template>
-  <VApp>
+  <div class="root">
     <img class="bgimage" src="@/res/images/bgimage_jeomo.png" />
 
     <VAppBar class="pr-6"
@@ -48,7 +48,7 @@
     <VMain style="height: 100vh; overflow-y: auto">
       <RouterView />
     </VMain>
-  </VApp>
+  </div>
 </template>
 
 <script lang="ts">
@@ -105,8 +105,8 @@ export default class BoothAdminLayout extends Vue {
 .bgimage {
   position: absolute;
   opacity: 0.25;
-  width: 50vh;
   z-index: -1;
+  width: 50vh;
   right: -2.5%;
   bottom: -7.5%;
 }
