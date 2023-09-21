@@ -33,14 +33,14 @@
                   placeholder="예시) 일산 킨텍스 5관 / 키보토스존 Kg99"
                   :rules="stringValidator(formData.location!)" />
       <VSelect v-model="formData.currencySymbol"
-                class="my-1"
-                density="compact"
-                :items="currencySymbols"
-                item-title="name"
-                item-value="symbol"
-                label="통화 기호"
-                hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
-                persistent-hint />
+               class="my-1"
+               density="compact"
+               :items="currencySymbols"
+               item-title="name"
+               item-value="symbol"
+               label="통화 기호"
+               hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
+               persistent-hint />
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -146,23 +146,41 @@ export default class BoothManageDialog extends Vue {
   async onEditDialogConfirm() {
     this.updateInProgress = true;
 
+    const requestData: IBoothUpdateReuqest | IBoothCreateRequest = {
+      ...this.formData,
+      name: this.formData.name?.trim(),
+      description: this.formData.description?.trim(),
+      location: this.formData.location?.trim(),
+    };
+
     if(this.editMode) {
-      const result = await useAdminStore().updateCurrentBoothInfo({
-        ...this.formData,
-        name: this.formData.name?.trim(),
-        description: this.formData.description?.trim(),
-        location: this.formData.location?.trim(),
-      });
+      const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateReuqest);
 
       if(result) {
+        this.$emit("update");
+
         this.updateInProgress = false;
         this.open = false;
       } else {
+        this.$emit("error");
+
         // TODO: error dialog
         alert("Update error");
       }
     } else {
-      // TODO
+      const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
+
+      if(result) {
+        this.$emit("update");
+
+        this.updateInProgress = false;
+        this.open = false;
+      } else {
+        this.$emit("error");
+
+        // TODO: error dialog
+        alert("Create error");
+      }
     }
   }
 }
