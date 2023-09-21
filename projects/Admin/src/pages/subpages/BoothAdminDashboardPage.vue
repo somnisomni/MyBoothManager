@@ -2,7 +2,7 @@
   <VContainer class="pa-8 d-flex flex-column">
     <VRow>
       <VCol cols="12" lg="4">
-        <BoothStatusPanel :currentBoothStatus="currentBoothData.status" />
+        <BoothStatusPanel />
       </VCol>
       <VCol cols="12" lg="8">
         <GoodsOverviewPanel />
