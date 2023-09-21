@@ -42,6 +42,10 @@ export class GoodsService {
       createGoodsDto.stockRemaining = createGoodsDto.stockInitial;
     }
 
+    if(createGoodsDto.categoryId && createGoodsDto.categoryId < 0) {
+      delete createGoodsDto.categoryId;
+    }
+
     try {
       return await Goods.create(createGoodsDto);
     } catch(error) {
@@ -70,7 +74,11 @@ export class GoodsService {
     return { value: await Goods.count({ where }) };
   }
 
-  update(id: number, updateGoodDto: UpdateGoodsDTO) {
+  update(id: number, updateGoodsDto: UpdateGoodsDTO) {
+    if(updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0) {
+      delete updateGoodsDto.categoryId;
+    }
+
     throw new BadRequestException("Goods update is not yet supported.");
   }
 
