@@ -45,6 +45,12 @@
 
       <!-- Dialog action -->
       <VCardActions v-if="isAnyDialogActionAvailable">
+        <VBtn v-if="dialogLeftButtonText && onDialogLeftButton"
+              :disabled="progressActive || disableLeftButton"
+              :color="leftButtonColor"
+              text
+              @click="onDialogLeftButtonClick">{{ dialogLeftButtonText }}</VBtn>
+
         <VSpacer />
 
         <VBtn v-if="dialogCancelText && (onDialogCancel || closeOnCancel)"
@@ -92,12 +98,16 @@ export default class CommonDialog extends Vue {
   @Prop({ type: String, default: "닫기" }) dialogCancelText!: string;
   @Prop({ type: String, default: "확인" }) dialogPrimaryText!: string;
   @Prop({ type: String, default: null }) dialogSecondaryText!: string | null;
+  @Prop({ type: String, default: null }) dialogLeftButtonText!: string | null;
+  @Prop({ type: String, default: "warning" }) leftButtonColor!: string;
   @Prop({ type: Boolean, default: false }) disableCancel!: boolean;
   @Prop({ type: Boolean, default: false }) disablePrimary!: boolean;
   @Prop({ type: Boolean, default: false }) disableSecondary!: boolean;
+  @Prop({ type: Boolean, default: false }) disableLeftButton!: boolean;
   @Prop({ type: Function, default: null }) onDialogCancel!: (() => void) | null;
   @Prop({ type: Function, default: null }) onDialogPrimary!: (() => void) | null;
   @Prop({ type: Function, default: null }) onDialogSecondary!: (() => void) | null;
+  @Prop({ type: Function, default: null }) onDialogLeftButton!: (() => void) | null;
   @Prop({ type: Boolean, default: true }) closeOnCancel!: boolean;
   @Prop({ type: Boolean, default: false }) progressActive!: boolean;
 
@@ -120,6 +130,11 @@ export default class CommonDialog extends Vue {
   @Emit("secondary")
   onDialogSecondaryButtonClick() {
     if(this.onDialogSecondary) this.onDialogSecondary();
+  }
+
+  @Emit("leftbutton")
+  onDialogLeftButtonClick() {
+    if(this.onDialogLeftButton) this.onDialogLeftButton();
   }
 
   @Emit("cancel")
