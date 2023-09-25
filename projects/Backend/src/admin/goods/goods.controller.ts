@@ -21,8 +21,8 @@ export class GoodsController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateGoodDto: UpdateGoodsDTO) {
-    return this.goodsService.update(+id, updateGoodDto);
+  async updateInfo(@Param("id") id: string, @Body() updateGoodsDto: UpdateGoodsDTO, @AuthData() authData: IAuthPayload) {
+    return await this.goodsService.updateInfo(+id, updateGoodsDto, authData.id);
   }
 
   @Delete(":id")

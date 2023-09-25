@@ -99,7 +99,7 @@ const GOODS_ADD_DEFAULT_DATA: Partial<IGoodsCreateRequest> = {
   description: "",
   type: "",
   price: undefined,
-  categoryId: undefined,
+  categoryId: -1,
   stockInitial: undefined,
   stockRemaining: undefined,
 };
@@ -123,7 +123,7 @@ export default class GoodsManageDialog extends Vue {
   };
 
   updateInProgress = false;
-  formData: IGoodsUpdateRequest | IGoodsCreateRequest = reactive({});
+  formData: IGoodsUpdateRequest | IGoodsCreateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
   goodsCategoryAddDialogShown = false;
   cancelWarningDialogShown = false;
@@ -142,7 +142,7 @@ export default class GoodsManageDialog extends Vue {
   get isFormEdited(): boolean {
     let edited = false;
 
-    if(this.editMode) {
+    if(this.goodsId && this.editMode) {
       const currentGoodsData = useAdminStore().boothGoodsList[Number(this.goodsId!)];
       const formDataTyped = this.formData as IGoodsUpdateRequest;
 
@@ -183,6 +183,8 @@ export default class GoodsManageDialog extends Vue {
         ...GOODS_ADD_DEFAULT_DATA,
       } as IGoodsCreateRequest);
     }
+
+    this.formData.boothId = useAdminStore().currentBoothId;
   }
 
   stringValidator(input?: string): Array<string | boolean> {

@@ -25,4 +25,4 @@ export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "descrip
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
 export type GoodsUpdateRequestKey = "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason";
-export type IGoodsUpdateRequest = Partial<Pick<IGoods, GoodsUpdateRequestKey>>;
+export type IGoodsUpdateRequest = Pick<IGoods, "boothId"> & Partial<Pick<IGoods, GoodsUpdateRequestKey>>;

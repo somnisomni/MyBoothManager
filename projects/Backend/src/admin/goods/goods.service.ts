@@ -74,12 +74,24 @@ export class GoodsService {
     return { value: await Goods.count({ where }) };
   }
 
-  update(id: number, updateGoodsDto: UpdateGoodsDTO) {
+  async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number) {
     if(updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0) {
       delete updateGoodsDto.categoryId;
     }
 
-    throw new BadRequestException("Goods update is not yet supported.");
+    let goods = await this.findGoodsBelongsToBooth(id, updateGoodsDto.boothId!, callerAccountId);
+
+    try {
+      await goods.update({
+        ...updateGoodsDto,
+        boothId: undefined,
+      });
+      goods = await goods.save();
+    } catch(err) {
+      throw new InternalServerErrorException("굿즈 정보를 수정할 수 없습니다.");
+    }
+
+    return goods;
   }
 
   async remove(id: number, boothId: number, callerAccountId: number): Promise<IStatusOKResponse> {

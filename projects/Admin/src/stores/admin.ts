@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 
 const useAdminStore = defineStore("admin", () => {
@@ -101,6 +101,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<boolean | string> {
+    const response = await AdminAPI.updateGoodsInfo(goodsId, payload);
+
+    if(response && response instanceof Object) {
+      boothGoodsList[goodsId] = {
+        ...boothGoodsList[goodsId],
+        ...response,
+      };
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function updateCurrentBoothInfo(payload: IBoothUpdateReuqest): Promise<boolean | string> {
     const response = await AdminAPI.updateBoothInfo(currentBoothId.value, payload);
 
@@ -171,6 +185,7 @@ const useAdminStore = defineStore("admin", () => {
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
+    updateGoodsInfo,
     updateCurrentBoothInfo,
     updateCurrentBoothStatus,
     createBooth,
