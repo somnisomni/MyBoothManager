@@ -49,10 +49,15 @@ export default class AdminAPI {
   /* == Endpoints == */
   /* Common */
   static async checkAPIServerAlive(): Promise<boolean> {
-    const response = await fetch(`${this.API_URL}/teapot`, this.FETCH_COMMON_OPTIONS);
+    try {
+      const response = await fetch(`${this.API_URL}/teapot`, this.FETCH_COMMON_OPTIONS);
 
-    if(response && response.status === 418) return true;
-    else return false;
+      if(response && response.status === 418) return true;
+      else return false;
+    } catch(error) {
+      console.debug("API Server is not available!");
+      return false;
+    }
   }
 
   /* Auth */

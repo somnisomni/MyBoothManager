@@ -13,13 +13,8 @@
 
 <script lang="ts">
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
-import CommonDialog from "./CommonDialog.vue";
 
-@Component({
-  components: {
-    CommonDialog,
-  },
-})
+@Component({})
 export default class FormDataLossWarningDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Function, default: () => {} }) closeCallback!: () => void;

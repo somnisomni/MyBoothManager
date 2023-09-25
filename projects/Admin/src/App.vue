@@ -1,6 +1,8 @@
 <template>
   <VApp class="bg-transparent">
-    <RouterView />
+    <RouterView v-if="!isServerNotAvailable" />
+
+    <ServerNotRespondErrorDialog v-model="isServerNotAvailable" />
   </VApp>
 </template>
 
@@ -10,10 +12,20 @@ import { Vue, Component } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "./stores/auth";
 import { useAdminStore } from "./stores/admin";
+import ServerNotRespondErrorDialog from "./components/common/ServerNotRespondErrorDialog.vue";
+import AdminAPI from "./lib/api-admin";
 
-@Component({})
+@Component({
+  components: {
+    ServerNotRespondErrorDialog,
+  },
+})
 export default class App extends Vue {
-  mounted() {
+  isServerNotAvailable = false;
+
+  async mounted() {
+    this.isServerNotAvailable = !(await AdminAPI.checkAPIServerAlive());
+
     // Auth route guard
     router.beforeEach((to, from, next) => {
       const isTokenAvailable = !!useAuthStore().isAuthTokenValid();

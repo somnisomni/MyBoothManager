@@ -16,7 +16,7 @@
                 dialogTitle="데이터 불러오기 오류"
                 accentColor="green">
     <div class="text-red font-bold">서버로부터 데이터를 불러오는 중 오류가 발생했습니다.</div>
-    <div>나중에 다시 시도하거나, <a :href="developerTwitterUrl">트위터 {{ developerTwitterHandle }}</a>로 문의해주세요.</div>
+    <div>나중에 다시 시도하거나, <a :href="developerTwitterUrl" target="_blank">트위터 {{ developerTwitterHandle }}</a>로 문의해주세요.</div>
   </CommonDialog>
 </template>
 
