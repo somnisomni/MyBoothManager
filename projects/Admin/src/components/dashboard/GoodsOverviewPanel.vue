@@ -3,15 +3,15 @@
     <VContainer class="flex-column">
       <VRow>
         <VCol>
-          <span>총 재고 개수: {{ totalSumStockCount }}개</span>
+          <span>총 재고 개수: {{ goodsOverviewData.totalSumStockCount.toLocaleString() }}개</span>
         </VCol>
         <VCol>
-          <span>남아있는 재고 개수: {{ remainingSumStockCount }}개</span>
+          <span>남아있는 재고 개수: {{ goodsOverviewData.remainingSumStockCount.toLocaleString() }}개</span>
         </VCol>
       </VRow>
       <VRow>
         <VCol>
-          <span>판매 개수: {{ totalSumSellCount }}개</span>
+          <span>판매 개수: {{ goodsOverviewData.totalSumSoldCount.toLocaleString() }}개</span>
         </VCol>
         <VCol>
           <span>무상 증정 개수: 00개</span>
@@ -19,10 +19,10 @@
       </VRow>
       <VRow>
         <VCol>
-          <span>총 재고 가치: {{ currencySymbol }}{{ totalSumStockValue }}</span>
+          <span>총 재고 가치: {{ currencySymbol }}{{ goodsOverviewData.totalSumStockValue.toLocaleString() }}</span>
         </VCol>
         <VCol>
-          <span>현재까지 판매된 재고 가치: {{ currencySymbol }}{{ totalSumSellValue }}</span>
+          <span>현재까지 판매된 재고 가치: {{ currencySymbol }}{{ goodsOverviewData.totalSumSoldValue.toLocaleString() }}</span>
         </VCol>
       </VRow>
     </VContainer>
@@ -34,46 +34,42 @@ import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import DashboardPanel from "./DashboardPanel.vue";
 
+interface IGoodsOverviewData {
+  totalSumStockCount: number;
+  remainingSumStockCount: number;
+  totalSumStockValue: number;
+  totalSumSoldCount: number;
+  totalSumSoldValue: number;
+}
+
 @Component({
   components: {
     DashboardPanel,
   },
 })
 export default class GoodsOverviewPanel extends Vue {
-  // FIXME: Computed values get wrong when add new goods
-
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
-  get totalSumStockCount(): string {
-    let count = 0;
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockInitial; });
-    return count.toLocaleString();
-  }
+  get goodsOverviewData(): IGoodsOverviewData {
+    const data: IGoodsOverviewData = {
+      totalSumStockCount: 0,
+      remainingSumStockCount: 0,
+      totalSumStockValue: 0,
+      totalSumSoldCount: 0,
+      totalSumSoldValue: 0,
+    };
 
-  get remainingSumStockCount(): string {
-    let count = 0;
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockRemaining; });
-    return count.toLocaleString();
-  }
+    for(const goods of Object.values(useAdminStore().boothGoodsList)) {
+      data.totalSumStockCount += Number(goods.stockInitial);
+      data.remainingSumStockCount += Number(goods.stockRemaining);
+      data.totalSumStockValue += Number(goods.price) * Number(goods.stockInitial);
+      data.totalSumSoldCount += Number(goods.stockInitial) - Number(goods.stockRemaining);
+      data.totalSumSoldValue += Number(goods.price) * (Number(goods.stockInitial) - Number(goods.stockRemaining));
+    }
 
-  get totalSumSellCount(): string {
-    let count = 0;
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { count += goods.stockInitial - goods.stockRemaining; });
-    return count.toLocaleString();
-  }
-
-  get totalSumStockValue(): string {
-    let value = 0;
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { value += goods.price * goods.stockInitial; });
-    return value.toLocaleString();
-  }
-
-  get totalSumSellValue(): string {
-    let value = 0;
-    Object.values(useAdminStore().boothGoodsList).forEach((goods) => { value += goods.price * (goods.stockInitial - goods.stockRemaining); });
-    return value.toLocaleString();
+    return data;
   }
 }
 </script>
