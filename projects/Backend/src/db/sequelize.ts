@@ -45,7 +45,7 @@ export default class MBMSequelize {
     GoodsSaleHistory.belongsTo(Goods, { foreignKey: "goodsId", targetKey: "id" });
 
     /* == Model sync == */
-    await MBMSequelize.instance.sync();
+    await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" });
 
     /* == End == */
     console.debug("Sequelize models are set up.");
