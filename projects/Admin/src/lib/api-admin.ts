@@ -1,7 +1,9 @@
-import { type IAccountLoginRequest, type IAccountLoginResponse, type IBackendErrorResponse, type IBoothCreateRequest, type IBoothResponse, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoodsCategoryResponse, type IGoodsCreateRequest, type IGoodsResponse, type IGoodsUpdateRequest, type IStatusOKResponse, type IValueResponse } from "@myboothmanager/common";
+import * as CT from "@myboothmanager/common";
 import { useAuthStore } from "@/stores/auth";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export type NeedRefreshMessage = "REFRESH";
 
 export default class AdminAPI {
   private static readonly API_URL: string = import.meta.env.VITE_MBM_API_SERVER_URL;
@@ -32,12 +34,14 @@ export default class AdminAPI {
   private static PATCH = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("PATCH", path, payload, containAuthCredential);
   private static DELETE = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("DELETE", path, payload, containAuthCredential);
 
-  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | string> {
+  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | NeedRefreshMessage | string> {
     try {
-      const response = await callee(path, payload, containAuthCredential);
+      const response = await callee(path, payload, containAuthCredential) as T | CT.IBackendErrorResponse | (CT.IBackendErrorResponse & CT.IAccountNeedRefreshResponse);
 
-      if(response.message) {
-        return (response as IBackendErrorResponse).message;
+      if((response as CT.IBackendErrorResponse).message) {
+        return (response as CT.IBackendErrorResponse).message;
+      } else if((response as CT.IAccountNeedRefreshResponse).needRefresh) {
+        return "REFRESH" as NeedRefreshMessage;
       } else {
         return response as T;
       }
@@ -61,50 +65,54 @@ export default class AdminAPI {
   }
 
   /* Auth */
-  static async login(payload: IAccountLoginRequest): Promise<IAccountLoginResponse | string> {
-    return await this.apiCallWrapper<IAccountLoginResponse>(this.POST, "auth/login", payload, false);
+  static async login(payload: CT.IAccountLoginRequest): Promise<CT.IAccountLoginResponse | string> {
+    return await this.apiCallWrapper<CT.IAccountLoginResponse>(this.POST, "auth/login", payload, false);
+  }
+
+  static async refreshAuth(payload: { id: number, refreshToken: string }): Promise<CT.IAccountLoginResponse | CT.IAccountNeedLoginResponse | string> {
+    return await this.apiCallWrapper<CT.IAccountLoginResponse | { needLogin: true }>(this.POST, "auth/refresh", payload, false);
   }
 
   /* Fetch */
-  static async fetchAllBooths(): Promise<Array<IBoothResponse> | string> {
-    return await this.apiCallWrapper<Array<IBoothResponse>>(this.GET, "booth");
+  static async fetchAllBooths(): Promise<Array<CT.IBoothResponse> | string> {
+    return await this.apiCallWrapper<Array<CT.IBoothResponse>>(this.GET, "booth");
   }
 
-  static async fetchAllGoods(): Promise<Array<IGoodsResponse> | string> {
-    return await this.apiCallWrapper<Array<IGoodsResponse>>(this.GET, "goods");
+  static async fetchAllGoods(): Promise<Array<CT.IGoodsResponse> | string> {
+    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(this.GET, "goods");
   }
 
-  static async fetchAllGoodsOfBooth(boothId: number): Promise<Array<IGoodsResponse> | string> {
-    return await this.apiCallWrapper<Array<IGoodsResponse>>(this.GET, `booth/${boothId}/goods`);
+  static async fetchAllGoodsOfBooth(boothId: number): Promise<Array<CT.IGoodsResponse> | string> {
+    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(this.GET, `booth/${boothId}/goods`);
   }
 
-  static async countAllGoodsOfBooth(boothId: number): Promise<IValueResponse | string> {
-    return await this.apiCallWrapper<IValueResponse>(this.GET, `booth/${boothId}/goods/count`);
+  static async countAllGoodsOfBooth(boothId: number): Promise<CT.IValueResponse | string> {
+    return await this.apiCallWrapper<CT.IValueResponse>(this.GET, `booth/${boothId}/goods/count`);
   }
 
-  static async fetchAllGoodsCategoriesOfBooth(boothId: number): Promise<Array<IGoodsCategoryResponse> | string> {
-    return await this.apiCallWrapper<Array<IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
+  static async fetchAllGoodsCategoriesOfBooth(boothId: number): Promise<Array<CT.IGoodsCategoryResponse> | string> {
+    return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
   }
 
   /* Update */
-  static async updateBoothInfo(boothId: number, payload: IBoothUpdateReuqest): Promise<IBoothResponse | string> {
-    return await this.apiCallWrapper<IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
+  static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateReuqest): Promise<CT.IBoothResponse | string> {
+    return await this.apiCallWrapper<CT.IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
   }
 
-  static async updateBoothStatus(boothId: number, payload: IBoothStatusUpdateRequest): Promise<IStatusOKResponse | string> {
-    return await this.apiCallWrapper<IStatusOKResponse>(this.PATCH, `booth/${boothId}/status`, payload);
+  static async updateBoothStatus(boothId: number, payload: CT.IBoothStatusUpdateRequest): Promise<CT.IStatusOKResponse | string> {
+    return await this.apiCallWrapper<CT.IStatusOKResponse>(this.PATCH, `booth/${boothId}/status`, payload);
   }
 
-  static async updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<IGoodsResponse | string> {
-    return await this.apiCallWrapper<IGoodsResponse>(this.PATCH, `goods/${goodsId}`, payload);
+  static async updateGoodsInfo(goodsId: number, payload: CT.IGoodsUpdateRequest): Promise<CT.IGoodsResponse | string> {
+    return await this.apiCallWrapper<CT.IGoodsResponse>(this.PATCH, `goods/${goodsId}`, payload);
   }
 
   /* Create */
-  static async createBooth(payload: IBoothCreateRequest): Promise<IBoothResponse | string> {
-    return await this.apiCallWrapper<IBoothResponse>(this.POST, "booth", payload);
+  static async createBooth(payload: CT.IBoothCreateRequest): Promise<CT.IBoothResponse | string> {
+    return await this.apiCallWrapper<CT.IBoothResponse>(this.POST, "booth", payload);
   }
 
-  static async createGoods(payload: IGoodsCreateRequest): Promise<IGoodsResponse | string> {
-    return await this.apiCallWrapper<IGoodsResponse>(this.POST, "goods", payload);
+  static async createGoods(payload: CT.IGoodsCreateRequest): Promise<CT.IGoodsResponse | string> {
+    return await this.apiCallWrapper<CT.IGoodsResponse>(this.POST, "goods", payload);
   }
 }

@@ -42,6 +42,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const statusCode = exception.getStatus();
 
     response.status(statusCode).send({
+      ...exception.getResponse() as object,
+      error: undefined,
       message: exception.message ?? "HTTP Error",
       timestamp: (new Date()).toISOString(),
       path: request.url,

@@ -1,24 +1,37 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import * as argon2 from "argon2";
-import { IAccount, IAccountLoginResponse } from "@myboothmanager/common";
+import { IAccount, IAccountLoginResponse, IAccountNeedLoginResponse } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
 import { AccountService } from "../account/account.service";
-import { IAuthPayload, generateLoginToken, generateLoginTokenSA } from "./jwt";
+import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshToken, verifyRefreshToken } from "./jwt";
 import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
+
+const SA_LOGIN_DATA: IAuthPayload = {
+  id: -1,
+  name: "SUPER ADMIN",
+  loginId: process.env.SUPERADMIN_ID!,
+};
 
 @Injectable()
 export class AuthService {
   constructor(private accountService: AccountService, private jwtService: JwtService) {}
 
+  // Refresh UUID memory store
+  private REFRESH_UUID_STORE: Map<number, string> = new Map();
+
   private async generateTokenAndLoginResponse(account: IAccount): Promise<IAccountLoginResponse> {
-    const generatedTokenData = await generateLoginToken(this.jwtService, account);
+    const generatedToken = await generateAuthToken(this.jwtService, account);
+    const generatedRefreshToken = await generateRefreshToken(this.jwtService, account);
+
+    this.REFRESH_UUID_STORE.set(account.id, generatedRefreshToken.refreshUUID);
 
     return {
       id: account.id,
       name: account.name,
       loginId: account.loginId,
-      ...generatedTokenData,
+      accessToken: generatedToken,
+      refreshToken: generatedRefreshToken.refreshToken,
     };
   }
 
@@ -41,22 +54,40 @@ export class AuthService {
   }
 
   async loginSA(): Promise<IAccountLoginResponse> {
-    const generatedTokenData = await generateLoginTokenSA(this.jwtService);
+    const generatedToken = await generateAuthTokenSA(this.jwtService);
+    const generatedRefreshToken = await generateRefreshToken(this.jwtService, SA_LOGIN_DATA);
 
     return {
       id: -1,
       name: "SUPER ADMIN",
       loginId: process.env.SUPERADMIN_ID!,
-      ...generatedTokenData,
+      accessToken: generatedToken,
+      refreshToken: generatedRefreshToken.refreshToken,
       superAdmin: true,
     };
   }
 
-  async refresh(refreshDto: RefreshDTO, authData: IAuthPayload): Promise<IAccountLoginResponse> {
+  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse | IAccountNeedLoginResponse> {
     if(!refreshDto.refreshToken) throw new UnauthorizedException("유효한 토큰이 아닙니다.");
 
-    // TODO: Implement refresh token logic
+    const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
+    if(typeof verifyResult === "string" && verifyResult === "expired") {
+      // Refresh token expired, require login
+      this.REFRESH_UUID_STORE.delete(refreshDto.id);
 
-    return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(authData.id));
+      return { needLogin: true } as IAccountNeedLoginResponse;
+    } else if(!verifyResult) {
+      // Invalid token
+      throw new InternalServerErrorException("처리할 수 없는 토큰입니다.");
+    } else {
+      // Refresh authorization
+      const refreshUuid = this.REFRESH_UUID_STORE.get(refreshDto.id);
+
+      if(refreshUuid === verifyResult.refreshUUID) {
+        return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(refreshDto.id));
+      } else {
+        throw new UnauthorizedException("유효한 토큰이 아닙니다.");
+      }
+    }
   }
 }

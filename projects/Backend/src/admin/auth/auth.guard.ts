@@ -3,6 +3,7 @@ import { CanActivate, ExecutionContext, Injectable, SetMetadata, UnauthorizedExc
 import { JwtService } from "@nestjs/jwt";
 import { Reflector } from "@nestjs/core";
 import { IAuthPayload, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt";
+import { UnauthorizedNeedRefreshException } from "./auth.exception";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -55,7 +56,12 @@ export class AuthGuard implements CanActivate {
       }
 
       (req.params as IFastifyRequestParamsCustom).authData = payload;
-    } catch(e) {
+    } catch(error) {
+      // TokenExpiredError
+      if(typeof error === "object" && (error as Record<string, unknown>).expiredAt) {
+        throw new UnauthorizedNeedRefreshException();
+      }
+
       throw new UnauthorizedException("접근 권한이 유효하지 않거나 만료되었습니다.");
     }
 
