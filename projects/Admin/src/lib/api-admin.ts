@@ -4,6 +4,7 @@ import { useAuthStore } from "@/stores/auth";
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export type NeedRefreshMessage = "REFRESH";
+export const NEED_REFRESH_MESSAGE: NeedRefreshMessage = "REFRESH";
 
 export default class AdminAPI {
   private static readonly API_URL: string = import.meta.env.VITE_MBM_API_SERVER_URL;
@@ -41,11 +42,11 @@ export default class AdminAPI {
       if((response as CT.IBackendErrorResponse).message) {
         return (response as CT.IBackendErrorResponse).message;
       } else if((response as CT.IAccountNeedRefreshResponse).needRefresh) {
-        return "REFRESH" as NeedRefreshMessage;
+        return NEED_REFRESH_MESSAGE;
       } else {
         return response as T;
       }
-    } catch{
+    } catch(error) {
       return "API 서버 통신 실패";
     }
   }

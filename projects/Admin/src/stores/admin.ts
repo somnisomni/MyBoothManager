@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
-import AdminAPI from "@/lib/api-admin";
+import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
+import { useAuthStore } from "./auth";
 
 const useAdminStore = defineStore("admin", () => {
+  /* Dependencies (not to be exported) */
+  const $authStore = useAuthStore();
+
   /* States */
   const currentAccount = ref<IAccountUserland | null>(null);
   const currentBoothId = ref<number>(-1);
@@ -14,6 +18,24 @@ const useAdminStore = defineStore("admin", () => {
   const boothList: Record<number, IBooth> = reactive({});
   const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
   const boothGoodsList: Record<number, IGoods> = reactive({});
+
+  /* Private actions (not to be exported) */
+  async function apiWrapper(func: Function) {
+    const result = await func();
+
+    if(typeof result === "string" && result === NEED_REFRESH_MESSAGE) {
+      const refreshResponse = await $authStore.adminAuthRefresh();
+
+      if(typeof refreshResponse === "boolean") {
+        if(refreshResponse === true) {
+          // Refresh success, retry API call
+          return await func();
+        }
+      }
+    } else {
+      return result;
+    }
+  }
 
   /* Actions */
   function changeBooth(boothId: number): void {
