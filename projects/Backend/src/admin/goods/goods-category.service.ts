@@ -37,7 +37,7 @@ export class GoodsCategoryService {
     throw new BadRequestException("Goods category update is not yet supported.");
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     throw new BadRequestException("Goods category deletion is not yet supported.");
   }
 }

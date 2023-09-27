@@ -3,7 +3,7 @@ import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_R
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
-import { create } from "@/lib/common-functions";
+import { create, removeTarget } from "@/lib/common-functions";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCategoryService } from "../goods/goods-category.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -90,14 +90,6 @@ export class BoothService {
 
   async remove(id: number, callerAccountId: number): Promise<IStatusOKResponse> {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
-
-    try {
-      await booth.destroy();
-      await booth.save();
-    } catch(err) {
-      throw new InternalServerErrorException("부스를 삭제할 수 없습니다.");
-    }
-
-    return STATUS_OK_RESPONSE;
+    return await removeTarget(booth);
   }
 }

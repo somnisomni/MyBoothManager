@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
-import { create } from "@/lib/common-functions";
+import { create, removeTarget } from "@/lib/common-functions";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 
@@ -88,14 +88,6 @@ export class GoodsService {
 
   async remove(id: number, boothId: number, callerAccountId: number): Promise<IStatusOKResponse> {
     const goods = await this.findGoodsBelongsToBooth(id, boothId, callerAccountId);
-
-    try {
-      await goods.destroy();
-      await goods.save();
-    } catch(err) {
-      throw new InternalServerErrorException("굿즈를 삭제할 수 없습니다.");
-    }
-
-    return STATUS_OK_RESPONSE;
+    return await removeTarget(goods);
   }
 }

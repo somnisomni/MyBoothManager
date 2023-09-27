@@ -1,7 +1,7 @@
-import { Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from "@nestjs/common";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { Injectable, NotFoundException, NotImplementedException } from "@nestjs/common";
+import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
-import { create } from "@/lib/common-functions";
+import { create, removeOne } from "@/lib/common-functions";
 import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
@@ -65,11 +65,6 @@ export class AccountService {
   }
 
   async remove(id: number): Promise<IStatusOKResponse> {
-    const rows = await Account.destroy({
-      where: { id },
-    });
-
-    if(rows === 1) return STATUS_OK_RESPONSE;
-    else throw new InternalServerErrorException("계정을 삭제할 수 없습니다.");
+    return await removeOne(Account, { id });
   }
 }
