@@ -112,6 +112,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IGoodsResponse>(this.PATCH, `goods/${goodsId}`, payload);
   }
 
+  static async updateGoodsCategoryInfo(categoryId: number, payload: CT.IGoodsCategoryUpdateRequest): Promise<CT.IGoodsCategoryResponse | string> {
+    return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(this.PATCH, `goods/category/${categoryId}`, payload);
+  }
+
   /* Create */
   static async createBooth(payload: CT.IBoothCreateRequest): Promise<CT.IBoothResponse | string> {
     return await this.apiCallWrapper<CT.IBoothResponse>(this.POST, "booth", payload);

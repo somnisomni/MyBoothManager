@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
 import router from "@/router";
 import { useAuthStore } from "./auth";
@@ -164,6 +164,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function updateGoodsCategoryInfo(categoryId: number, payload: IGoodsCategoryUpdateRequest): Promise<boolean | string> {
+    const response = await apiWrapper(() => AdminAPI.updateGoodsCategoryInfo(categoryId, payload));
+
+    if(response && response instanceof Object) {
+      boothGoodsCategoryList[categoryId] = {
+        ...boothGoodsCategoryList[categoryId],
+        ...response,
+      };
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function updateCurrentBoothInfo(payload: IBoothUpdateReuqest): Promise<boolean | string> {
     const response = await apiWrapper(() => AdminAPI.updateBoothInfo(currentBoothId.value, payload));
 
@@ -236,6 +250,7 @@ const useAdminStore = defineStore("admin", () => {
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
     updateGoodsInfo,
+    updateGoodsCategoryInfo,
     updateCurrentBoothInfo,
     updateCurrentBoothStatus,
     createBooth,

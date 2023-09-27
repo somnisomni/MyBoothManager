@@ -1,4 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { AuthData } from "../auth/auth.guard";
+import { IAuthPayload } from "../auth/jwt";
 import { GoodsCategoryService } from "./goods-category.service";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
@@ -23,8 +25,8 @@ export class GoodsCategoryController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateGoodsCategoryDTO: UpdateGoodsCategoryDTO) {
-    return this.goodsCategoryService.update(+id, updateGoodsCategoryDTO);
+  update(@Param("id") id: string, @Body() updateGoodsCategoryDTO: UpdateGoodsCategoryDTO, @AuthData() authData: IAuthPayload) {
+    return this.goodsCategoryService.updateInfo(+id, updateGoodsCategoryDTO, authData.id);
   }
 
   @Delete(":id")

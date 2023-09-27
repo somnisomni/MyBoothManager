@@ -5,7 +5,8 @@
     <div v-for="category in goodsCategoryList"
          :key="category.id"
          class="mt-8">
-      <h2 class="text-2xl font-bold mb-4">{{ category.name }}</h2>
+      <GoodsCategoryTitle :categoryData="category"
+                          @openEditDialog="openGoodsCategoryEditDialog" />
 
       <VRow class="justify-start">
         <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
@@ -20,6 +21,9 @@
   <GoodsManageDialog v-model="goodsEditDialogOpen"
                      :editMode="true"
                      :goodsId="editDialogGoodsId" />
+  <GoodsCategoryManageDialog v-model="goodsCategoryEditDialogOpen"
+                             :editMode="true"
+                             :categoryId="editDialogCategoryId" />
 </template>
 
 <script lang="ts">
@@ -28,17 +32,23 @@ import { useAdminStore } from "@/stores/admin";
 import GoodsItem from "@/components/goods/GoodsItem.vue";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/goods/GoodsManageDialog.vue";
+import GoodsCategoryTitle from "@/components/goods/GoodsCategoryTitle.vue";
+import GoodsCategoryManageDialog from "@/components/goods/GoodsCategoryManageDialog.vue";
 
 @Component({
   components: {
     GoodsItem,
+    GoodsCategoryTitle,
     GoodsManagePanel,
     GoodsManageDialog,
+    GoodsCategoryManageDialog,
   },
 })
 export default class BoothAdminGoodsPage extends Vue {
   goodsEditDialogOpen = false;
+  goodsCategoryEditDialogOpen = false;
   editDialogGoodsId: number | null = null;
+  editDialogCategoryId: number | null = null;
 
   get boothCurrencySymbol() {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
@@ -69,6 +79,11 @@ export default class BoothAdminGoodsPage extends Vue {
   openGoodsEditDialog(goodsId: number) {
     this.editDialogGoodsId = goodsId;
     this.goodsEditDialogOpen = true;
+  }
+
+  openGoodsCategoryEditDialog(categoryId: number) {
+    this.editDialogCategoryId = categoryId;
+    this.goodsCategoryEditDialogOpen = true;
   }
 }
 </script>

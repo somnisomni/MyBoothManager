@@ -126,7 +126,7 @@ export default class GoodsCategoryManageDialog extends Vue {
         boothId: useAdminStore().currentBoothId,
         name: this.formData.name?.trim(),
       };
-      const result = await useAdminStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);  // TODO
+      const result = await useAdminStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
 
       if(result === true) {
         success = true;
