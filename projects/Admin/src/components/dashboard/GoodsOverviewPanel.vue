@@ -14,7 +14,7 @@
           <span>판매 개수: {{ goodsOverviewData.totalSumSoldCount.toLocaleString() }}개</span>
         </VCol>
         <VCol>
-          <span>무상 증정 개수: 00개</span>
+          <span>???</span>
         </VCol>
       </VRow>
       <VRow>
