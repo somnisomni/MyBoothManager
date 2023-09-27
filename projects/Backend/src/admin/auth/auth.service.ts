@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDTO, updateLoginCount: boolean = true): Promise<IAccountLoginResponse> {
-    const account = await this.accountService.findOneByLoginId(loginDto.loginId);
+    const account = await this.accountService.findOneByLoginId(loginDto.loginId, false);
 
     if(!account || !(await argon2.verify(account.loginPassHash, loginDto.loginPass))) {
       throw new UnauthorizedException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");

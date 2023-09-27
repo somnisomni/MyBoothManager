@@ -45,13 +45,13 @@ export class AccountService {
     else throw new NotFoundException("계정을 찾을 수 없습니다.");
   }
 
-  async findOneByLoginId(loginId: string): Promise<Account> {
+  async findOneByLoginId(loginId: string, excludePassHash: boolean = true): Promise<Account> {
     const result = await Account.findOne({
       where: { loginId },
       attributes: {
         exclude: [
           ...SEQUELIZE_INTERNAL_KEYS,
-          // "loginPassHash",
+          ...(excludePassHash ? ["loginPassHash"] : []),
         ],
       },
     });
