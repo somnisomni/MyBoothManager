@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { BaseError } from "sequelize";
 import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
+import { create } from "@/lib/common-functions";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCategoryService } from "../goods/goods-category.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -15,7 +15,11 @@ export class BoothService {
   constructor(private goodsService: GoodsService, private goodsCategoryService: GoodsCategoryService) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await Booth.findByPk(boothId);
+    const booth = await Booth.findByPk(boothId, {
+      attributes: {
+        exclude: SEQUELIZE_INTERNAL_KEYS,
+      },
+    });
 
     if(!booth) throw new NotFoundException("부스를 찾을 수 없습니다.");
     else if(booth.ownerId !== accountId) throw new BadRequestException("부스에 대한 권한이 없습니다.");
@@ -23,18 +27,7 @@ export class BoothService {
   }
 
   async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
-    try {
-      return await Booth.create({
-        ...createBoothDto,
-        ownerId,
-      });
-    } catch(error) {
-      if(error instanceof BaseError) {
-        throw new InternalServerErrorException("DB 오류");
-      } else {
-        throw new BadRequestException();
-      }
-    }
+    return await create(Booth, createBoothDto, { ownerId });
   }
 
   async findAll(ownerId?: number): Promise<Array<Booth>> {

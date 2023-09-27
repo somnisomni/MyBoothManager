@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { BaseError } from "sequelize";
 import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
+import { create } from "@/lib/common-functions";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 
@@ -46,15 +46,7 @@ export class GoodsService {
       delete createGoodsDto.categoryId;
     }
 
-    try {
-      return await Goods.create(createGoodsDto);
-    } catch(error) {
-      if(error instanceof BaseError) {
-        throw new InternalServerErrorException("DB 오류");
-      } else {
-        throw new BadRequestException();
-      }
-    }
+    return await create(Goods, createGoodsDto);
   }
 
   async findAll(boothId?: number): Promise<Array<Goods>> {

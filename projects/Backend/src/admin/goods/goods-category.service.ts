@@ -1,13 +1,14 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import GoodsCategory from "@/db/models/goods-category";
+import { create } from "@/lib/common-functions";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
 
 @Injectable()
 export class GoodsCategoryService {
-  create(createGoodsCategoryDto: CreateGoodsCategoryDTO) {
-    throw new BadRequestException("Goods category creation is not yet supported.");
+  async create(createGoodsCategoryDto: CreateGoodsCategoryDTO): Promise<GoodsCategory> {
+    return await create(GoodsCategory, createGoodsCategoryDto);
   }
 
   async findAll(boothId: number): Promise<Array<GoodsCategory>> {
