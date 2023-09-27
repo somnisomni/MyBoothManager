@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
 import router from "@/router";
 import { useAuthStore } from "./auth";
@@ -139,6 +139,17 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function createGoodsCategory(payload: IGoodsCategoryCreateRequest): Promise<boolean | string> {
+    const response = await apiWrapper(() => AdminAPI.createGoodsCategory(payload));
+
+    if(response && response instanceof Object) {
+      boothGoodsCategoryList[response.id] = response;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<boolean | string> {
     const response = await apiWrapper(() => AdminAPI.updateGoodsInfo(goodsId, payload));
 
@@ -229,6 +240,7 @@ const useAdminStore = defineStore("admin", () => {
     updateCurrentBoothStatus,
     createBooth,
     createGoods,
+    createGoodsCategory,
     clearAllBoothData,
     fetchAllBoothData,
   };

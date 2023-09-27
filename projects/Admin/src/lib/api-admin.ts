@@ -120,4 +120,8 @@ export default class AdminAPI {
   static async createGoods(payload: CT.IGoodsCreateRequest): Promise<CT.IGoodsResponse | string> {
     return await this.apiCallWrapper<CT.IGoodsResponse>(this.POST, "goods", payload);
   }
+
+  static async createGoodsCategory(payload: CT.IGoodsCategoryCreateRequest): Promise<CT.IGoodsCategoryResponse | string> {
+    return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(this.POST, "goods/category", payload);
+  }
 }

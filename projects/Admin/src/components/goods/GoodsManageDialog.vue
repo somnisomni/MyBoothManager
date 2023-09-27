@@ -32,7 +32,7 @@
                  label="카테고리"
                  :rules="[!formData.categoryId ? '카테고리를 선택해주세요.' : true]" />
         <VBtn icon variant="flat" class="mt-1 ml-2"
-              @click="goodsCategoryAddDialogShown = !goodsCategoryAddDialogShown">
+              @click="goodsCategoryManageDialogShown = !goodsCategoryManageDialogShown">
           <VIcon>mdi-plus</VIcon>
         </VBtn>
       </VRow>
@@ -80,7 +80,7 @@
       </VRow>
     </VForm>
 
-    <GoodsCategoryAddDialog v-model="goodsCategoryAddDialogShown" />
+    <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                                :closeCallback="() => { open = false; }" />
   </CommonDialog>
@@ -92,11 +92,11 @@ import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { reactive } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
-import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
+import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 
 @Component({
   components: {
-    GoodsCategoryAddDialog,
+    GoodsCategoryManageDialog,
     FormDataLossWarningDialog,
   },
 })
@@ -126,7 +126,7 @@ export default class GoodsManageDialog extends Vue {
   updateInProgress = false;
   formData: IGoodsUpdateRequest | IGoodsCreateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
-  goodsCategoryAddDialogShown = false;
+  goodsCategoryManageDialogShown = false;
   cancelWarningDialogShown = false;
 
   get currencySymbol(): string {
@@ -235,7 +235,7 @@ export default class GoodsManageDialog extends Vue {
         description: this.formData.description?.trim(),
         type: this.formData.type?.trim(),
       };
-      const result = await useAdminStore().updateGoodsInfo(Number(this.goodsId!), requestData);  // TODO
+      const result = await useAdminStore().updateGoodsInfo(Number(this.goodsId!), requestData);
 
       if(result === true) {
         success = true;
