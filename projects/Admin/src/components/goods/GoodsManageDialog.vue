@@ -94,16 +94,6 @@ import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
 import GoodsCategoryAddDialog from "./GoodsCategoryAddDialog.vue";
 
-const GOODS_ADD_DEFAULT_DATA: Partial<IGoodsCreateRequest> = {
-  name: "",
-  description: "",
-  type: "",
-  price: undefined,
-  categoryId: -1,
-  stockInitial: undefined,
-  stockRemaining: undefined,
-};
-
 @Component({
   components: {
     GoodsCategoryAddDialog,
@@ -114,6 +104,17 @@ export default class GoodsManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
   @Prop({ type: Number, default: null }) goodsId!: number | string | null;
+
+  readonly GOODS_ADD_DEFAULT_DATA: Partial<IGoodsCreateRequest> = {
+    boothId: useAdminStore().currentBoothId,
+    name: "",
+    description: "",
+    type: "",
+    price: undefined,
+    categoryId: -1,
+    stockInitial: undefined,
+    stockRemaining: undefined,
+  };
 
   readonly dynRes = {
     title: this.editMode ? "굿즈 수정" : "굿즈 추가",
@@ -155,7 +156,7 @@ export default class GoodsManageDialog extends Vue {
 
       edited = Object.keys(this.formData).some((key) => {
         const k = key as keyof IGoodsCreateRequest;
-        return formDataTyped[k] !== GOODS_ADD_DEFAULT_DATA[k];
+        return formDataTyped[k] !== this.GOODS_ADD_DEFAULT_DATA[k];
       });
     }
 
@@ -180,7 +181,7 @@ export default class GoodsManageDialog extends Vue {
       } as IGoodsUpdateRequest);
     } else {
       this.formData = reactive({
-        ...GOODS_ADD_DEFAULT_DATA,
+        ...this.GOODS_ADD_DEFAULT_DATA,
       } as IGoodsCreateRequest);
     }
 
