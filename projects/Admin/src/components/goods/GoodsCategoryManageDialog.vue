@@ -1,5 +1,6 @@
 <template>
   <CommonDialog v-model="open"
+                width="500px"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
