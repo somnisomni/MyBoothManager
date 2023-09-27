@@ -1,5 +1,7 @@
 <template>
   <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column">
+    <VSnackbar v-model="hasLogout" timeout="5000">로그아웃 되었습니다.</VSnackbar>
+
     <VCard elevation="8" class="overflow-hidden" style="max-width: 100%">
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
@@ -52,6 +54,11 @@ export default class LoginPage extends Vue {
   };
 
   errorMessage = "";
+  hasLogout = window.history.state?.logout ?? false;
+
+  mounted() {
+    window.history.state.logout = false;
+  }
 
   async doLogin() {
     this.loginProgress = true;

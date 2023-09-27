@@ -13,7 +13,7 @@ import { useAuthStore } from "@/stores/auth";
 export default class LogoutPage extends Vue {
   mounted() {
     useAuthStore().invalidateLoginData();
-    router.replace({ name: "login" });
+    router.replace({ name: "login", state: { logout: true } });
   }
 }
 </script>
