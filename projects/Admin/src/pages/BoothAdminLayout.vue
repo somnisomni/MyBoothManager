@@ -36,7 +36,7 @@
 
         <VListSubheader>계정</VListSubheader>
         <VListItem density="compact" min-height="30px" max-height="30px">
-          <span class="text-subtitle-2 text-disabled">로그인 계정: {{ currentAccount?.name }} ({{ currentAccount?.loginId }})</span>
+          <span class="text-subtitle-2 text-disabled">로그인 계정: {{ currentAccount?.name }}</span>
         </VListItem>
         <VListItem prepend-icon="mdi-logout" title="로그아웃" value="logout"
                    :href="logoutPageHref" />
