@@ -53,7 +53,7 @@ export class AccountService {
       attributes: {
         exclude: [
           ...SEQUELIZE_INTERNAL_KEYS,
-          "loginPassHash",
+          // "loginPassHash",
         ],
       },
     });

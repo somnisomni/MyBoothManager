@@ -17,7 +17,7 @@ const SA_LOGIN_DATA: IAuthPayload = {
 export class AuthService {
   constructor(private accountService: AccountService, private jwtService: JwtService) {}
 
-  // Refresh UUID memory store
+  // Refresh UUID memory storage
   private REFRESH_UUID_STORE: Map<number, string> = new Map();
 
   private async generateTokenAndLoginResponse(account: IAccount): Promise<IAccountLoginResponse> {
