@@ -94,12 +94,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
   const isAccountDataAvailable = !!useAdminStore().currentAccount;
-  const isAllAvailable = isTokenAvailable && isAccountDataAvailable;
-
-  if(isTokenAvailable && !isAccountDataAvailable) {
-    useAdminStore().isBoothDataLoaded = false;
-    next();
-  }
+  const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable; */
 
   // SuperAdmin
   if(isAllAvailable
