@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordName } from "vue-router";
 import ErrorPage from "@/pages/ErrorPage.vue";
 import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
 import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
@@ -8,7 +8,10 @@ import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
 import SuperAdminPage from "@/pages/superadmin/SuperAdminPage.vue";
+import { useAdminStore } from "@/stores/admin";
+import { useAuthStore } from "@/stores/auth";
 
+/* Router definitions */
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -84,6 +87,41 @@ const router = createRouter({
       component: PlaceholderPage,
     },
   ],
+});
+
+/* Router global hooks */
+// Auth route guard
+router.beforeEach((to, from, next) => {
+  const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
+  const isAccountDataAvailable = !!useAdminStore().currentAccount;
+  const isAllAvailable = isTokenAvailable && isAccountDataAvailable;
+
+  if(isTokenAvailable && !isAccountDataAvailable) {
+    useAdminStore().isBoothDataLoaded = false;
+    next();
+  }
+
+  // SuperAdmin
+  if(isAllAvailable
+      && useAdminStore().currentAccount?.superAdmin
+      && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
+    next({ name: "superadmin" });
+    return;
+  } else if(isAllAvailable
+            && !useAdminStore().currentAccount?.superAdmin
+            && to.name === "superadmin") {
+    next({ name: "admin" });
+    return;
+  }
+
+  // Normal
+  if(isAllAvailable && to.name === "login") {
+    next({ name: "admin" });
+  } else if(!isAllAvailable && to.name !== "login") {
+    next({ name: "login" });
+  } else {
+    next();
+  }
 });
 
 export default router;

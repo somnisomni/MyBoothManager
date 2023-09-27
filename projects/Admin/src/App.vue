@@ -7,11 +7,7 @@
 </template>
 
 <script lang="ts">
-import type { RouteRecordName } from "vue-router";
 import { Vue, Component } from "vue-facing-decorator";
-import router from "@/router";
-import { useAuthStore } from "./stores/auth";
-import { useAdminStore } from "./stores/admin";
 import ServerNotRespondErrorDialog from "./components/common/ServerNotRespondErrorDialog.vue";
 import AdminAPI from "./lib/api-admin";
 
@@ -25,40 +21,6 @@ export default class App extends Vue {
 
   async mounted() {
     this.isServerNotAvailable = !(await AdminAPI.checkAPIServerAlive());
-
-    // Auth route guard
-    router.beforeEach((to, from, next) => {
-      const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
-      const isAccountDataAvailable = !!useAdminStore().currentAccount;
-      const isAllAvailable = isTokenAvailable && isAccountDataAvailable;
-
-      if(isTokenAvailable && !isAccountDataAvailable) {
-        useAdminStore().isBoothDataLoaded = false;
-        next();
-      }
-
-      // SuperAdmin
-      if(isAllAvailable
-         && useAdminStore().currentAccount?.superAdmin
-         && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
-        next({ name: "superadmin" });
-        return;
-      } else if(isAllAvailable
-                && !useAdminStore().currentAccount?.superAdmin
-                && to.name === "superadmin") {
-        next({ name: "admin" });
-        return;
-      }
-
-      // Normal
-      if(isAllAvailable && to.name === "login") {
-        next({ name: "admin" });
-      } else if(!isAllAvailable && to.name !== "login") {
-        next({ name: "login" });
-      } else {
-        next();
-      }
-    });
   }
 }
 </script>
