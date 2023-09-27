@@ -31,7 +31,7 @@ const useAdminStore = defineStore("admin", () => {
         if(refreshResult === true) {
           return await func();
         } else {
-          router.replace({ name: "logout" });
+          window.location.replace(router.resolve({ name: "logout" }).href);
           return "logout";
         }
       } else {
