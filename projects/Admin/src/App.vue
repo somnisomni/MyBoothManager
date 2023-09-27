@@ -30,10 +30,11 @@ export default class App extends Vue {
     router.beforeEach((to, from, next) => {
       const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
       const isAccountDataAvailable = !!useAdminStore().currentAccount;
-      const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable */
+      const isAllAvailable = isTokenAvailable && isAccountDataAvailable;
 
       if(isTokenAvailable && !isAccountDataAvailable) {
-        // TODO: Fetch account data using existing tokens
+        useAdminStore().isBoothDataLoaded = false;
+        next();
       }
 
       // SuperAdmin

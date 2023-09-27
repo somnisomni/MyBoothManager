@@ -1,5 +1,6 @@
 <template>
-  <VBtn title="관리할 부스 선택"
+  <VBtn class="pr-2"
+        title="관리할 부스 선택"
         size="large"
         @click.stop="boothSelectionDialogOpen = !boothSelectionDialogOpen">
     <VToolbarTitle class="d-flex flex-row text-right" style="line-height: 1.1">

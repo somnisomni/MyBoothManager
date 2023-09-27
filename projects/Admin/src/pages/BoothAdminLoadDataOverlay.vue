@@ -42,7 +42,7 @@ export default class BoothAdminLoadDataOverlay extends Vue {
 
   async mounted() {
     if(!useAdminStore().currentAccount) {
-      if(!await useAdminStore().fetchCurrentAccountInfo()) {
+      if(typeof (await useAdminStore().fetchCurrentAccountInfo()) === "string") {
         this.errorDialogShown = true;
         return;
       }
