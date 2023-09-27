@@ -75,6 +75,10 @@ export default class AdminAPI {
   }
 
   /* Fetch */
+  static async fetchCurrentAccountInfo(): Promise<CT.IAccount | string> {
+    return await this.apiCallWrapper<CT.IAccount>(this.GET, "account");
+  }
+
   static async fetchAllBooths(): Promise<Array<CT.IBoothResponse> | string> {
     return await this.apiCallWrapper<Array<CT.IBoothResponse>>(this.GET, "booth");
   }

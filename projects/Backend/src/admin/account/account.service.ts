@@ -21,7 +21,10 @@ export class AccountService {
   async findAll(): Promise<Array<Account>> {
     const result = await Account.findAll({
       attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
+        exclude: [
+          ...SEQUELIZE_INTERNAL_KEYS,
+          "loginPassHash",
+        ],
       },
     });
 
@@ -33,7 +36,10 @@ export class AccountService {
     const result = await Account.findOne({
       where: { id },
       attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
+        exclude: [
+          ...SEQUELIZE_INTERNAL_KEYS,
+          "loginPassHash",
+        ],
       },
     });
 
@@ -45,7 +51,10 @@ export class AccountService {
     const result = await Account.findOne({
       where: { loginId },
       attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
+        exclude: [
+          ...SEQUELIZE_INTERNAL_KEYS,
+          "loginPassHash",
+        ],
       },
     });
 
