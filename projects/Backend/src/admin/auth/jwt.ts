@@ -3,7 +3,7 @@ import { IAccount } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
 
 export const JWT_SECRET: string = process.env.JWT_SECRET || "myboothmanager";
-export const JWT_SECRET_REFRESH: string = `${new Date().toISOString()}_${JWT_SECRET}-refresh`;
+export const JWT_SECRET_REFRESH: string = `${JWT_SECRET}-refresh`;
 export const JWT_ISSUER: string = "myboothmanager";
 export const JWT_SUBJECT: string = "admin";
 export const JWT_SUBJECT_REFRESH: string = `${JWT_SUBJECT}-refresh`;

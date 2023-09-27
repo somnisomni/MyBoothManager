@@ -39,10 +39,10 @@ export default class AdminAPI {
     try {
       const response = await callee(path, payload, containAuthCredential) as T | CT.IBackendErrorResponse | (CT.IBackendErrorResponse & CT.IAccountNeedRefreshResponse);
 
-      if((response as CT.IBackendErrorResponse).message) {
-        return (response as CT.IBackendErrorResponse).message;
-      } else if((response as CT.IAccountNeedRefreshResponse).needRefresh) {
+      if((response as CT.IAccountNeedRefreshResponse).needRefresh) {
         return NEED_REFRESH_MESSAGE;
+      } else if((response as CT.IBackendErrorResponse).message) {
+        return (response as CT.IBackendErrorResponse).message;
       } else {
         return response as T;
       }

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
+import router from "@/router";
 import { useAuthStore } from "./auth";
 
 const useAdminStore = defineStore("admin", () => {
@@ -20,17 +21,21 @@ const useAdminStore = defineStore("admin", () => {
   const boothGoodsList: Record<number, IGoods> = reactive({});
 
   /* Private actions (not to be exported) */
-  async function apiWrapper(func: Function) {
+  async function apiWrapper<T>(func: () => Promise<T>): Promise<T | string> {
     const result = await func();
 
     if(typeof result === "string" && result === NEED_REFRESH_MESSAGE) {
-      const refreshResponse = await $authStore.adminAuthRefresh();
+      const refreshResult = await $authStore.adminAuthRefresh();
 
-      if(typeof refreshResponse === "boolean") {
-        if(refreshResponse === true) {
-          // Refresh success, retry API call
+      if(typeof refreshResult === "boolean") {
+        if(refreshResult === true) {
           return await func();
+        } else {
+          router.replace({ name: "logout" });
+          return "logout";
         }
+      } else {
+        return refreshResult as string;
       }
     } else {
       return result;
@@ -54,8 +59,19 @@ const useAdminStore = defineStore("admin", () => {
     isBoothDataLoaded.value = false;
   }
 
+  async function fetchCurrentAccountInfo(): Promise<boolean | string> {
+    const response = await apiWrapper(() => AdminAPI.fetchCurrentAccountInfo());
+
+    if(response && response instanceof Object) {
+      currentAccount.value = response;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function fetchBoothsOfCurrentAccount(setFirstBoothAsCurrent: boolean = false): Promise<boolean | string> {
-    const response = await AdminAPI.fetchAllBooths();
+    const response = await apiWrapper(() => AdminAPI.fetchAllBooths());
 
     if(response && response instanceof Array) {
       if(setFirstBoothAsCurrent) {
@@ -74,7 +90,7 @@ const useAdminStore = defineStore("admin", () => {
   async function fetchGoodsCategoriesOfCurrentBooth(): Promise<boolean | string> {
     if(currentBoothId.value === -1) return false;
 
-    const response = await AdminAPI.fetchAllGoodsCategoriesOfBooth(currentBoothId.value);
+    const response = await apiWrapper(() => AdminAPI.fetchAllGoodsCategoriesOfBooth(currentBoothId.value));
 
     if(response && response instanceof Array) {
       for(const category of response) {
@@ -89,7 +105,7 @@ const useAdminStore = defineStore("admin", () => {
   async function fetchGoodsOfCurrentBooth(): Promise<boolean | string> {
     if(currentBoothId.value === -1) return false;
 
-    const response = await AdminAPI.fetchAllGoodsOfBooth(currentBoothId.value);
+    const response = await apiWrapper(() => AdminAPI.fetchAllGoodsOfBooth(currentBoothId.value));
 
     if(response && response instanceof Array) {
       for(const goods of response) {
@@ -102,7 +118,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function createBooth(payload: IBoothCreateRequest): Promise<boolean | string> {
-    const response = await AdminAPI.createBooth(payload);
+    const response = await apiWrapper(() => AdminAPI.createBooth(payload));
 
     if(response && response instanceof Object) {
       boothList[response.id] = response;
@@ -113,7 +129,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function createGoods(payload: IGoodsCreateRequest): Promise<boolean | string> {
-    const response = await AdminAPI.createGoods(payload);
+    const response = await apiWrapper(() => AdminAPI.createGoods(payload));
 
     if(response && response instanceof Object) {
       boothGoodsList[response.id] = response;
@@ -124,7 +140,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<boolean | string> {
-    const response = await AdminAPI.updateGoodsInfo(goodsId, payload);
+    const response = await apiWrapper(() => AdminAPI.updateGoodsInfo(goodsId, payload));
 
     if(response && response instanceof Object) {
       boothGoodsList[goodsId] = {
@@ -138,7 +154,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function updateCurrentBoothInfo(payload: IBoothUpdateReuqest): Promise<boolean | string> {
-    const response = await AdminAPI.updateBoothInfo(currentBoothId.value, payload);
+    const response = await apiWrapper(() => AdminAPI.updateBoothInfo(currentBoothId.value, payload));
 
     if(response && response instanceof Object) {
       boothList[currentBoothId.value] = {
@@ -152,7 +168,7 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function updateCurrentBoothStatus(payload: IBoothStatusUpdateRequest): Promise<boolean | string> {
-    const response = await AdminAPI.updateBoothStatus(currentBoothId.value, payload);
+    const response = await apiWrapper(() => AdminAPI.updateBoothStatus(currentBoothId.value, payload));
 
     if(response && response instanceof Object) {
       boothList[currentBoothId.value] = {
@@ -204,6 +220,7 @@ const useAdminStore = defineStore("admin", () => {
 
     changeBooth,
     changeBoothToFirst,
+    fetchCurrentAccountInfo,
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,

@@ -9,10 +9,12 @@ const useAuthStore = defineStore("auth", () => {
   const $adminStore = useAdminStore();
 
   /* States */
+  const id = ref<number | null>(null);
   const authTokenData = ref<IAccountLoginTokenData | null>(null);
 
   /* Actions */
   function registerAuthData(data: IAccountLoginResponse): void {
+    id.value = data.id;
     $adminStore.currentAccount = {
       id: data.id,
       name: data.name,
@@ -39,10 +41,10 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   async function adminAuthRefresh(): Promise<boolean | string> {
-    if(!$adminStore.currentAccount || !authTokenData.value) return false;
+    if(!id.value || !authTokenData.value) return false;
 
     const response = await AdminAPI.refreshAuth({
-      id: $adminStore.currentAccount.id,
+      id: id.value,
       refreshToken: authTokenData.value.refreshToken!,
     });
 
@@ -61,7 +63,8 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   function isAuthTokenValid(): boolean {
-    if(authTokenData.value
+    if(id.value
+       && authTokenData.value
        && authTokenData.value.accessToken
        && authTokenData.value.refreshToken) {
       return true;
@@ -72,10 +75,12 @@ const useAuthStore = defineStore("auth", () => {
 
   function invalidateLoginData(): void {
     $adminStore.currentAccount = null;
+    id.value = null;
     authTokenData.value = null;
   }
 
   return {
+    id,
     authTokenData,
 
     adminLogin,

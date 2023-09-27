@@ -84,9 +84,13 @@ export class AuthService {
       const refreshUuid = this.REFRESH_UUID_STORE.get(refreshDto.id);
 
       if(refreshUuid === verifyResult.refreshUUID) {
+        // All OK
         return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(refreshDto.id));
       } else {
-        throw new UnauthorizedException("유효한 토큰이 아닙니다.");
+        // Refresh token is not matched, require login
+        this.REFRESH_UUID_STORE.delete(refreshDto.id);
+
+        return { needLogin: true } as IAccountNeedLoginResponse;
       }
     }
   }
