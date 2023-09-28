@@ -9,28 +9,22 @@
     </VToolbarTitle>
     <VIcon class="ms-4">mdi-store-search</VIcon>
   </VBtn>
-  <VBtn icon class="ms-2 me-0" title="부스 정보 수정" @click.stop="boothInfoEditDialogOpen = !boothInfoEditDialogOpen"><VIcon>mdi-storefront-edit</VIcon></VBtn>
 
   <BoothSelectionDialog v-model="boothSelectionDialogOpen" />
-  <BoothManageDialog v-model="boothInfoEditDialogOpen"
-                     :editMode="true" />
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionDialog from "@/components/dialogs/BoothSelectionDialog.vue";
-import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
 
 @Component({
   components: {
     BoothSelectionDialog,
-    BoothManageDialog,
   },
 })
 export default class BoothSelectionArea extends Vue {
   boothSelectionDialogOpen = false;
-  boothInfoEditDialogOpen = false;
 
   get boothName() {
     return useAdminStore().boothList[useAdminStore().currentBoothId].name;
