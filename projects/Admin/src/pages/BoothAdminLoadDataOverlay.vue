@@ -10,7 +10,7 @@
                 persistent
                 disableCancel
                 hideCloseButton
-                dialogPrimaryText="재시도"
+                dialogPrimaryText="새로 고침"
                 dialogSecondaryText="로그아웃"
                 :onDialogPrimary="onErrorDialogPrimary"
                 :onDialogSecondary="onErrorDialogSecondary"
