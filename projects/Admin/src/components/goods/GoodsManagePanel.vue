@@ -4,7 +4,8 @@
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
     <VRow class="pa-2">
-      <VBtn class="flex-grow-1" variant="outlined"
+      <VBtn class="flex-grow-1"
+            variant="outlined"
             size="x-large"
             @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen">굿즈 추가</VBtn>
     </VRow>

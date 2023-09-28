@@ -1,14 +1,17 @@
 <template>
   <VContainer class="mt-4">
-    BoothAdminInfoPage
+    <BoothInfoPanel />
   </VContainer>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
+import BoothInfoPanel from "@/components/info/BoothInfoPanel.vue";
 
-@Component({})
-export default class BoothAdminInfoPage extends Vue {
-  
-}
+@Component({
+  components: {
+    BoothInfoPanel,
+  },
+})
+export default class BoothAdminInfoPage extends Vue { }
 </script>
