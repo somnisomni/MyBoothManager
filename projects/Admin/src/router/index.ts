@@ -3,6 +3,7 @@ import ErrorPage from "@/pages/ErrorPage.vue";
 import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
 import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
 import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
+import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
@@ -63,6 +64,11 @@ const router = createRouter({
               component: BoothAdminDashboardPage,
             },
             {
+              path: "info",
+              name: "admin-info",
+              component: BoothAdminInfoPage,
+            },
+            {
               path: "goods",
               name: "admin-goods",
               component: BoothAdminGoodsPage,
@@ -93,7 +99,7 @@ const router = createRouter({
 // Auth route guard
 router.beforeEach((to, from, next) => {
   const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
-  const isAccountDataAvailable = !!useAdminStore().currentAccount;
+  // const isAccountDataAvailable = !!useAdminStore().currentAccount;
   const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable; */
 
   // SuperAdmin

@@ -21,6 +21,8 @@
         <VListSubheader>관리</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
                    :to="{ name: 'admin' }" exact />
+        <VListItem prepend-icon="mdi-store-cog" title="부스 정보 / 인포" value="info"
+                   :to="{ name: 'admin-info' }" exact />
         <VListItem prepend-icon="mdi-store" title="굿즈" value="goods"
                    :to="{ name: 'admin-goods' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
