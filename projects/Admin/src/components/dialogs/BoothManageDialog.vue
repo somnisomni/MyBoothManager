@@ -55,7 +55,7 @@ import { reactive } from "vue";
 import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
 import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateReuqest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
-import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
+import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
   name: "",

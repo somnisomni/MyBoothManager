@@ -4,7 +4,7 @@ import piniaPersistedState from "pinia-plugin-persistedstate";
 
 import "@/styles/styles.scss";
 
-import CommonDialog from "@/components/common/CommonDialog.vue";
+import CommonDialog from "@/components/dialogs/common/CommonDialog.vue";
 
 import App from "./App.vue";
 import router from "./router";

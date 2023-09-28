@@ -34,7 +34,7 @@
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
-import { type DialogButtonParams } from "@/components/common/CommonDialog.vue";
+import { type DialogButtonParams } from "./common/CommonDialog.vue";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({

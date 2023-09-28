@@ -48,7 +48,7 @@ import { Component, Vue } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import { getBoothStatusString } from "@/lib/enum-to-string";
-import BoothStatusUpdateDialog from "./BoothStatusUpdateDialog.vue";
+import BoothStatusUpdateDialog from "@/components/dialogs/BoothStatusUpdateDialog.vue";
 import DashboardPanel from "./DashboardPanel.vue";
 
 @Component({

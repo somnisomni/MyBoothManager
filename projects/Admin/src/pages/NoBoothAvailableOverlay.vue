@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import BoothManageDialog from "@/components/navbar/BoothManageDialog.vue";
+import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
 
 @Component({
   components: {

@@ -17,8 +17,8 @@
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
-import GoodsManageDialog from "./GoodsManageDialog.vue";
 
 @Component({
   components: {

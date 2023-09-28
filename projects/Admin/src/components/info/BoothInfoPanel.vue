@@ -17,8 +17,8 @@
 import type { IBooth } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
-import BoothManageDialog from "../navbar/BoothManageDialog.vue";
 
 @Component({
   components: {

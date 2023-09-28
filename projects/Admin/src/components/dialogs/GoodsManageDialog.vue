@@ -91,7 +91,7 @@ import type { IGoodsCreateRequest, IGoodsUpdateRequest } from "@myboothmanager/c
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { reactive } from "vue";
 import { useAdminStore } from "@/stores/admin";
-import FormDataLossWarningDialog from "@/components/common/FormDataLossWarningDialog.vue";
+import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 
 @Component({

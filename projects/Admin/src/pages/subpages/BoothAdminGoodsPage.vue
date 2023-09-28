@@ -31,9 +31,9 @@ import { Vue, Component } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import GoodsItem from "@/components/goods/GoodsItem.vue";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
-import GoodsManageDialog from "@/components/goods/GoodsManageDialog.vue";
 import GoodsCategoryTitle from "@/components/goods/GoodsCategoryTitle.vue";
-import GoodsCategoryManageDialog from "@/components/goods/GoodsCategoryManageDialog.vue";
+import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
+import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 
 @Component({
   components: {

@@ -35,7 +35,7 @@ import type { IGoodsCategoryCreateRequest, IGoodsCategoryUpdateRequest } from "@
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import FormDataLossWarningDialog from "../common/FormDataLossWarningDialog.vue";
+import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 @Component({
   components: {
