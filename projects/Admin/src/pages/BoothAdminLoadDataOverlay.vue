@@ -1,5 +1,6 @@
 <template>
-  <VContainer class="w-100 h-100 d-flex align-center justify-center flex-column bg-background">
+  <VContainer class="position-fixed w-100 h-100 d-flex align-center justify-center flex-column bg-background"
+              style="left: 0; right: 0; top: 0; bottom: 0;">
     <VProgressCircular indeterminate size="96" class="mb-4" />
     <div class="text-h6">데이터를 불러오는 중...</div>
   </VContainer>
