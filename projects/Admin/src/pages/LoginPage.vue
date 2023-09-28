@@ -1,8 +1,8 @@
 <template>
   <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column">
-    <VSnackbar v-model="hasLogout" timeout="5000">로그아웃 되었습니다.</VSnackbar>
+    <VSnackbar v-model="hasLogout" timeout="5000" class="mb-8">로그아웃 되었습니다.</VSnackbar>
 
-    <VCard elevation="8" class="overflow-hidden" style="max-width: 100%">
+    <VCard elevation="8" class="overflow-hidden" style="max-width: 100%; z-index: 1000;">
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
 
@@ -35,11 +35,15 @@
         </VForm>
       </VCardText>
     </VCard>
+
+    <div class="position-fixed d-block text-center text-subtitle-2 text-grey mb-2" style="bottom: 0; left: 0; right: 0;">
+      <strong>{{ APP_NAME }}</strong> <span>| Copyright © 2023- <a href="https://somni.one/" target="_blank" style="color: currentColor;">somni</a>, All rights reserved.</span>
+    </div>
   </VContainer>
 </template>
 
 <script lang="ts">
-import type { IAccountLoginRequest } from "@myboothmanager/common";
+import { APP_NAME, type IAccountLoginRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
@@ -47,6 +51,8 @@ import { useAdminStore } from "@/stores/admin";
 
 @Component({})
 export default class LoginPage extends Vue {
+  readonly APP_NAME = APP_NAME;
+
   loginProgress = false;
   loginData: IAccountLoginRequest = {
     loginId: "",
