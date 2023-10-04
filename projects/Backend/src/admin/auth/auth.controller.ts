@@ -24,6 +24,7 @@ export class AuthController {
 
   @Public()
   @Post("refresh")
+  @HttpCode(200)
   async refresh(@Body() refreshDto: RefreshDTO) {
     return await this.authService.refresh(refreshDto);
   }
