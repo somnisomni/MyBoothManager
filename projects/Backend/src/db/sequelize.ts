@@ -3,8 +3,8 @@ import Account, { accountModelAttrib, accountModelName } from "./models/account"
 import generateConfig from "./config";
 import Booth, { boothModelAttrib, boothModelName } from "./models/booth";
 import Goods, { goodsModelAttrib, goodsModelName } from "./models/goods";
-import GoodsSaleHistory, { goodsSaleHistoryModelAttrib, goodsSaleHistoryModelName } from "./models/goods-history";
 import GoodsCategory, { goodsCategoryAdditionalUniqueIndex, goodsCategoryModelAttrib, goodsCategoryModelName } from "./models/goods-category";
+import GoodsOrder, { goodsOrderModelAttrib, goodsOrderModelName } from "./models/goods-order";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
@@ -21,7 +21,7 @@ export default class MBMSequelize {
     Booth.init(boothModelAttrib, { sequelize: MBMSequelize.instance, modelName: boothModelName });
     Goods.init(goodsModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsModelName });
     GoodsCategory.init(goodsCategoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsCategoryModelName, indexes: [goodsCategoryAdditionalUniqueIndex] });
-    GoodsSaleHistory.init(goodsSaleHistoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsSaleHistoryModelName });
+    GoodsOrder.init(goodsOrderModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsOrderModelName });
 
     /* == Model relationship setup == */
     // Account `id` <-> Booth `ownerId`
@@ -36,13 +36,13 @@ export default class MBMSequelize {
     Booth.hasMany(GoodsCategory, { foreignKey: "boothId", sourceKey: "id" });
     GoodsCategory.belongsTo(Booth, { foreignKey: "boothId", targetKey: "id" });
 
+    // Booth `id` <-> Goods Order `boothId`
+    Booth.hasMany(GoodsOrder, { foreignKey: "boothId", sourceKey: "id" });
+    GoodsOrder.belongsTo(Booth, { foreignKey: "boothId", targetKey: "id" });
+
     // Goods Category `id` <-> Goods `categoryId`
     GoodsCategory.hasMany(Goods, { foreignKey: "categoryId", sourceKey: "id" });
     Goods.belongsTo(GoodsCategory, { foreignKey: "categoryId", targetKey: "id" });
-
-    // Goods `id` <-> GoodsSaleHistory `goodsId`
-    Goods.hasMany(GoodsSaleHistory, { foreignKey: "goodsId", sourceKey: "id" });
-    GoodsSaleHistory.belongsTo(Goods, { foreignKey: "goodsId", targetKey: "id" });
 
     /* == Model sync == */
     await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });
