@@ -18,11 +18,8 @@
             <VImg :src="'https://picsum.photos/seed/' + item.goodsId + '/200/250'" cover height="72px">
               <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
                 <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
-                  <span class="font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</span>
-
-                  <VSlideXReverseTransition :key="item.quantity">
-                    <span>{{ item.quantity }}</span>
-                  </VSlideXReverseTransition>
+                  <span class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</span>
+                  <span class="text-body-2">{{ item.quantity }}개 · {{ calculateGoodsPrice(item.goodsId, item.quantity) }}</span>
                 </div>
 
                 <div>
@@ -37,6 +34,7 @@
 
       <VList nav class="flex-shrink-0 pa-0 pb-2">
         <VListItem class="px-2 py-1">
+          <div class="text-body-2 text-center mb-2">총 가격: <strong>{{ totalOrderWorthString }}</strong></div>
           <VBtn prepend-icon="mdi-cart-heart" color="primary" size="x-large" class="w-100">판매 확인</VBtn>
         </VListItem>
       </VList>
@@ -83,6 +81,20 @@ export default class BoothPOSPage extends Vue {
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get totalOrderWorthString(): string {
+    let total = 0;
+
+    for(const goodsId in this.goodsInOrder) {
+      total += this.boothGoodsDict[goodsId].price * this.goodsInOrder[goodsId].quantity;
+    }
+
+    return `${this.currencySymbol}${total.toLocaleString()}`;
+  }
+
+  calculateGoodsPrice(goodsId: number, quantity: number): string {
+    return `${this.currencySymbol}${(this.boothGoodsDict[goodsId].price * quantity).toLocaleString()}`;
   }
 
   onGoodsItemClick(goodsId: number) {
