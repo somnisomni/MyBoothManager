@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
+import router from "@/router";
 import { useAuthStore } from "./auth";
 
 const useAdminStore = defineStore("admin", () => {
@@ -30,8 +31,7 @@ const useAdminStore = defineStore("admin", () => {
         if(refreshResult === true) {
           return await func();
         } else {
-          alert("need logout!");
-          //window.location.replace(router.resolve({ name: "logout" }).href);
+          window.location.replace(router.resolve({ name: "logout" }).href);
           return "logout";
         }
       } else {
