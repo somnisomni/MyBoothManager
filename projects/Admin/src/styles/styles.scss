@@ -9,3 +9,9 @@
   -webkit-user-drag: none;
   user-drag: none;
 }
+
+/* VNavigationDrawer content -> flex */
+.navdrawer-flex .v-navigation-drawer__content {
+  display: flex;
+  flex-direction: column;
+}

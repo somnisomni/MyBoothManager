@@ -13,7 +13,7 @@
 
     <VNavigationDrawer v-model="navOpen"
                        :permanent="navPersistent"
-                       class="main-navdrawer">
+                       class="navdrawer-flex">
       <VList nav class="overflow-y-auto">
         <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="pos"
                    :to="{ name: 'admin-pos' }" exact />
@@ -102,14 +102,6 @@ export default class BoothAdminLayout extends Vue {
   }
 }
 </script>
-
-<style lang="scss">
-/* Workaround */
-.main-navdrawer .v-navigation-drawer__content {
-  display: flex;
-  flex-direction: column;
-}
-</style>
 
 <style lang="scss" scoped>
 .bgimage {
