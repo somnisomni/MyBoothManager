@@ -3,9 +3,10 @@
     <VNavigationDrawer permanent class="navdrawer-flex">
       <VList nav class="flex-shrink-0">
         <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }" />
-        <VListItem class="text-center mt-2">
-          <div class="appname text-grey-darken-2">{{ APP_NAME }}</div>
-          <div class="text-h4 font-weight-medium">주문 목록</div>
+        <VListItem class="text-center">
+          <div class="appname text-grey">{{ APP_NAME }}</div>
+          <div class="boothname text-darken-2">{{ boothName }}</div>
+          <div class="mt-1 text-h4 font-weight-bold">주문 목록</div>
         </VListItem>
       </VList>
 
@@ -71,6 +72,10 @@ export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly goodsInOrder: Record<number, IGoodsOrder> = {};
 
+  get boothName(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].name;
+  }
+
   get boothGoods(): Array<IGoods> {
     return Object.values(useAdminStore().boothGoodsList);
   }
@@ -122,10 +127,17 @@ export default class BoothPOSPage extends Vue {
 
 <style lang="scss" scoped>
 .appname {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.6rem;
+  font-weight: 500;
   letter-spacing: 0.125rem;
-  line-height: 1.5rem;
+  line-height: 1.33;
+}
+
+.boothname {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.125rem;
+  line-height: 1.33;
 }
 
 .order-item {
