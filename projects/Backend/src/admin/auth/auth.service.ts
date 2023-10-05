@@ -6,6 +6,7 @@ import { AccountService } from "../account/account.service";
 import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshToken, verifyRefreshToken } from "./jwt";
 import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
+import AuthStorage from "./auth.storage";
 
 const SA_LOGIN_DATA: IAuthPayload = {
   id: -1,
@@ -17,14 +18,11 @@ const SA_LOGIN_DATA: IAuthPayload = {
 export class AuthService {
   constructor(private accountService: AccountService, private jwtService: JwtService) {}
 
-  // Refresh UUID memory storage
-  private REFRESH_UUID_STORE: Map<number, string> = new Map();
-
   private async generateTokenAndLoginResponse(account: IAccount): Promise<IAccountLoginResponse> {
     const generatedToken = await generateAuthToken(this.jwtService, account);
     const generatedRefreshToken = await generateRefreshToken(this.jwtService, account);
 
-    this.REFRESH_UUID_STORE.set(account.id, generatedRefreshToken.refreshUUID);
+    AuthStorage.REFRESH_UUID_STORE.set(account.id, generatedRefreshToken.refreshUUID);
 
     return {
       id: account.id,
@@ -73,7 +71,7 @@ export class AuthService {
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
     if(typeof verifyResult === "string" && verifyResult === "expired") {
       // Refresh token expired, require login
-      this.REFRESH_UUID_STORE.delete(refreshDto.id);
+      AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
 
       return { needLogin: true } as IAccountNeedLoginResponse;
     } else if(!verifyResult) {
@@ -81,14 +79,14 @@ export class AuthService {
       throw new InternalServerErrorException("처리할 수 없는 토큰입니다.");
     } else {
       // Refresh authorization
-      const refreshUuid = this.REFRESH_UUID_STORE.get(refreshDto.id);
+      const refreshUuid = AuthStorage.REFRESH_UUID_STORE.get(refreshDto.id);
 
       if(refreshUuid === verifyResult.refreshUUID) {
         // All OK
         return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(refreshDto.id));
       } else {
         // Refresh token is not matched, require login
-        this.REFRESH_UUID_STORE.delete(refreshDto.id);
+        AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
 
         return { needLogin: true } as IAccountNeedLoginResponse;
       }
