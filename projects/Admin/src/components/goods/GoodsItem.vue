@@ -1,5 +1,6 @@
 <template>
   <VSheet class="goods-item d-flex ma-4"
+          :class="{ 'edit': editMode }"
           width="200"
           height="250"
           rounded="lg"
@@ -7,11 +8,11 @@
           :elevation="elevation"
           @pointerenter="elevation = ELEVATION_HOVER"
           @pointerleave="elevation = ELEVATION_NORMAL"
-          @click.stop="openEditDialog">
+          @click.stop="onItemClick">
     <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/250'" aspect-ratio="1/1" />
     <div class="goods-image-overlay"></div>
 
-    <div class="click-to-edit-text">클릭하여 수정</div>
+    <div v-if="editMode" class="click-to-edit-text">클릭하여 수정</div>
 
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name">{{ goodsData.name }}</div>
@@ -28,17 +29,23 @@
 import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
 
-@Component({})
+@Component({
+  emits: ["click", "openEditDialog"],
+})
 export default class GoodsItem extends Vue {
   @Prop({ required: true }) goodsData!: IGoods;
   @Prop({ default: "₩", required: true }) currencySymbol!: string;
+  @Prop({ default: true }) editMode!: boolean;
 
-  ELEVATION_NORMAL = 2;
-  ELEVATION_HOVER = 6;
+  readonly ELEVATION_NORMAL = 2;
+  readonly ELEVATION_HOVER = 6;
   elevation = this.ELEVATION_NORMAL;
 
-  @Emit("openEditDialog")
-  openEditDialog() { return this.goodsData.id; }
+  @Emit("click")
+  onItemClick() {
+    if(this.editMode) this.$emit("openEditDialog", this.goodsData.id);
+    return this.goodsData.id;
+  }
 }
 </script>
 
@@ -49,7 +56,7 @@ export default class GoodsItem extends Vue {
   overflow: hidden;
   transition: box-shadow 0.25s, transform 0.25s ease-in-out;
 
-  &:hover {
+  &.edit:hover {
     transform: translateY(-5%);
   }
 
@@ -68,7 +75,7 @@ export default class GoodsItem extends Vue {
     transition: transform 0.25s ease-in-out;
   }
 
-  &:hover .click-to-edit-text {
+  &.edit:hover .click-to-edit-text {
     transform: translateY(0);
   }
 
