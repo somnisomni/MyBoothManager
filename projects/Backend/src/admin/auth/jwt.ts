@@ -55,13 +55,13 @@ export async function generateRefreshToken(jwtService: JwtService, account: IAut
 
 export async function verifyRefreshToken(jwtService: JwtService, token: string): Promise<IRefreshPayload | "expired" | null> {
   try {
-    const result = await jwtService.verifyAsync(token, {
+    const result = (await jwtService.verifyAsync(token, {
       secret: JWT_SECRET_REFRESH,
       issuer: JWT_ISSUER,
       subject: JWT_SUBJECT_REFRESH,
       complete: true,
-    });
-    return result as unknown as IRefreshPayload;
+    }) as { header: object, payload: object, signature: string }).payload;
+    return result as IRefreshPayload;
   } catch(error) {
     // error instanceof jwt.JsonWebTokenError
     if(error && typeof error === "object" && (error as Record<string, string>).message) {
