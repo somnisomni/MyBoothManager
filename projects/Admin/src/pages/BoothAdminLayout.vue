@@ -49,7 +49,7 @@
       <VSpacer />
 
       <VList nav>
-        <VListItem prepend-icon="mdi-arrow-left" title="부스 페이지로 이동" value="booth_view_page" />
+        <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
       </VList>
     </VNavigationDrawer>
 
