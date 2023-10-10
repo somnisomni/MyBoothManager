@@ -9,7 +9,7 @@ export enum GoodsStatus {
 export interface IGoods extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
-  categoryId?: number;  // Foreign key to GoodsCategory.id
+  categoryId?: number | null;  // Foreign key to GoodsCategory.id
   name: string;
   description?: string;
   type?: string;

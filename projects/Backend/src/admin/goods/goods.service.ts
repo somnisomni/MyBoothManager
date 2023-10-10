@@ -76,7 +76,7 @@ export class GoodsService {
     try {
       await goods.update({
         ...updateGoodsDto,
-        boothId: undefined,
+        boothId: undefined,  // Prevent boothId from being updated
       });
       goods = await goods.save();
     } catch(err) {

@@ -3,6 +3,7 @@ import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/comm
 import GoodsCategory from "@/db/models/goods-category";
 import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
+import Goods from "@/db/models/goods";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
 
@@ -74,6 +75,17 @@ export class GoodsCategoryService {
 
   async remove(id: number): Promise<IStatusOKResponse> {
     const category = await this.findOne(id);
+
+    // Find goods by category and set to default(uncategorized)
+    const goods = await Goods.findAll({
+      where: {
+        categoryId: id,
+      },
+    });
+    for(const g of goods) {
+      await (g.set("categoryId", null)).save();
+    }
+
     return await removeTarget(category);
   }
 }
