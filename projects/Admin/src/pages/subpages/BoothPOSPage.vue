@@ -53,10 +53,11 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, type IGoods } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import GoodsItem from "@/components/goods/GoodsItem.vue";
+import router from "@/router";
 
 interface IGoodsOrder {
   goodsId: number;
@@ -72,8 +73,16 @@ export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly goodsInOrder: Record<number, IGoodsOrder> = {};
 
+  get currentBooth(): IBooth {
+    return useAdminStore().boothList[useAdminStore().currentBoothId];
+  }
+
   get boothName(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].name;
+    return this.currentBooth.name;
+  }
+
+  get currencySymbol(): string {
+    return this.currentBooth.currencySymbol;
   }
 
   get boothGoods(): Array<IGoods> {
@@ -84,10 +93,6 @@ export default class BoothPOSPage extends Vue {
     return useAdminStore().boothGoodsList;
   }
 
-  get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
-  }
-
   get totalOrderWorthString(): string {
     let total = 0;
 
@@ -96,6 +101,12 @@ export default class BoothPOSPage extends Vue {
     }
 
     return `${this.currencySymbol}${total.toLocaleString()}`;
+  }
+
+  mounted(): void {
+    if(this.currentBooth.status !== BoothStatus.OPEN) {
+      router.replace({ name: "admin" });
+    }
   }
 
   calculateGoodsPrice(goodsId: number, quantity: number): string {

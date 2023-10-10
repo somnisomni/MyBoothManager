@@ -16,7 +16,9 @@
                        class="navdrawer-flex">
       <VList nav class="overflow-y-auto">
         <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="pos"
-                   :to="{ name: 'admin-pos' }" exact />
+                   :to="{ name: 'admin-pos' }" exact
+                   :disabled="currentBooth.status !== BoothStatus.OPEN"
+                   :subtitle="currentBooth.status !== BoothStatus.OPEN ? '부스가 운영 중이어야 사용 가능합니다.' : undefined" />
 
         <VListSubheader>관리</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
@@ -58,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import type { IBooth } from "@myboothmanager/common";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { unref } from "vue";
 import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
@@ -72,6 +74,8 @@ import router from "@/router";
   },
 })
 export default class BoothAdminLayout extends Vue {
+  BoothStatus = BoothStatus;
+
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
 
@@ -85,12 +89,8 @@ export default class BoothAdminLayout extends Vue {
     return unref(useDisplay().mdAndUp);
   }
 
-  get selectedBooth(): number {
-    return useAdminStore().currentBoothId;
-  }
-
-  set selectedBooth(value: number) {
-    useAdminStore().currentBoothId = value;
+  get currentBooth(): IBooth {
+    return useAdminStore().boothList[useAdminStore().currentBoothId];
   }
 
   get boothList(): IBooth[] {
