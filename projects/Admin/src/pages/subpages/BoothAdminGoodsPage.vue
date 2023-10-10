@@ -9,11 +9,13 @@
                           @openEditDialog="openGoodsCategoryEditDialog" />
 
       <VRow class="justify-start">
-        <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
-                  :key="goods.id"
-                  :goodsData="goods"
-                  :currencySymbol="boothCurrencySymbol"
-                  @openEditDialog="openGoodsEditDialog" />
+        <VSlideYReverseTransition group leave-absolute>
+          <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
+                     :key="goods.id"
+                     :goodsData="goods"
+                     :currencySymbol="boothCurrencySymbol"
+                     @openEditDialog="openGoodsEditDialog" />
+        </VSlideYReverseTransition>
       </VRow>
     </div>
   </VContainer>
