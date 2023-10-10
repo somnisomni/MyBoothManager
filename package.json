@@ -4,6 +4,7 @@
   "packageManager": "yarn@3.6.3",
   "scripts": {
     "all": "yarn workspaces foreach run",
+    "all:build": "yarn all build",
     "common": "yarn workspace @myboothmanager/common",
     "common:build": "yarn common build && yarn install",
     "admin": "yarn workspace @myboothmanager/admin",
