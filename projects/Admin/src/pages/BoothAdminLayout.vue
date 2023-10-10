@@ -49,6 +49,9 @@
       <VSpacer />
 
       <VList nav>
+        <VListItem v-if="isDevEnv">
+          <div class="text-subtitle-2 text-disabled text-center" density="compact">개발 환경에서 실행 중</div>
+        </VListItem>
         <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
       </VList>
     </VNavigationDrawer>
@@ -99,6 +102,10 @@ export default class BoothAdminLayout extends Vue {
 
   get currentAccount() {
     return useAdminStore().currentAccount;
+  }
+
+  get isDevEnv() {
+    return import.meta.env.DEV;
   }
 }
 </script>
