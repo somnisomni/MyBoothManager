@@ -6,7 +6,6 @@ import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
 import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
-import BoothPOSPage from "@/pages/subpages/BoothPOSPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
 import SuperAdminPage from "@/pages/superadmin/SuperAdminPage.vue";
@@ -89,7 +88,7 @@ const router = createRouter({
         {
           path: "/pos",
           name: "admin-pos",
-          component: BoothPOSPage,
+          component: () => import("@/pages/subpages/BoothPOSPage.vue"),
         },
       ],
     },
