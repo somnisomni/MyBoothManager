@@ -42,6 +42,10 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  function emptyObject(target: Record<any, unknown>) {
+    Object.keys(target).forEach((key) => delete target[key]);
+  }
+
   /* Actions */
   function changeBooth(boothId: number): void {
     isChangingBooth.value = true;
@@ -87,12 +91,14 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function fetchGoodsCategoriesOfCurrentBooth(): Promise<boolean | string> {
+  async function fetchGoodsCategoriesOfCurrentBooth(refresh: boolean = false): Promise<boolean | string> {
     if(currentBoothId.value === -1) return false;
 
     const response = await apiWrapper(() => AdminAPI.fetchAllGoodsCategoriesOfBooth(currentBoothId.value));
 
     if(response && response instanceof Array) {
+      if(refresh) emptyObject(boothGoodsCategoryList);
+
       for(const category of response) {
         boothGoodsCategoryList[category.id] = category;
       }
@@ -102,12 +108,14 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function fetchGoodsOfCurrentBooth(): Promise<boolean | string> {
+  async function fetchGoodsOfCurrentBooth(refresh: boolean = false): Promise<boolean | string> {
     if(currentBoothId.value === -1) return false;
 
     const response = await apiWrapper(() => AdminAPI.fetchAllGoodsOfBooth(currentBoothId.value));
 
     if(response && response instanceof Array) {
+      if(refresh) emptyObject(boothGoodsList);
+
       for(const goods of response) {
         boothGoodsList[goods.id] = goods;
       }
@@ -206,6 +214,22 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteGoodsCategory(categoryId: number): Promise<boolean | string> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoodsCategory(categoryId));
+
+    if(response && response instanceof Object) {
+      // Force fetch goods & goods categories
+      const results = [
+        await fetchGoodsOfCurrentBooth(true),
+        await fetchGoodsCategoriesOfCurrentBooth(true),
+      ];
+
+      return results.every((s) => typeof s === "boolean" && s === true);
+    } else {
+      return response;
+    }
+  }
+
   function clearAllBoothData(includeBoothList: boolean = true): void {
     if(includeBoothList) Object.keys(boothList).forEach((key) => delete boothList[parseInt(key)]);
 
@@ -256,6 +280,7 @@ const useAdminStore = defineStore("admin", () => {
     createBooth,
     createGoods,
     createGoodsCategory,
+    deleteGoodsCategory,
     clearAllBoothData,
     fetchAllBoothData,
   };

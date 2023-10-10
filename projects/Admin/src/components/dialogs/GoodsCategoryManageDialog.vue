@@ -41,6 +41,7 @@ import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
   components: {
     FormDataLossWarningDialog,
   },
+  emits: ["error", "updated", "deleted"],
 })
 export default class GoodsCategoryManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -169,8 +170,19 @@ export default class GoodsCategoryManageDialog extends Vue {
     }
   }
 
-  onDialogDeleteClick() {
-    alert("기능 추가 예정");
+  async onDialogDeleteClick() {
+    this.updateInProgress = true;
+
+    if(this.categoryId) {
+      const response = await useAdminStore().deleteGoodsCategory(this.categoryId);
+
+      if(typeof response === "boolean" && response === true) {
+        this.$emit("deleted");
+        this.open = false;
+      }
+    }
+
+    this.updateInProgress = false;
   }
 }
 </script>

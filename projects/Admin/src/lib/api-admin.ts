@@ -128,4 +128,9 @@ export default class AdminAPI {
   static async createGoodsCategory(payload: CT.IGoodsCategoryCreateRequest): Promise<CT.IGoodsCategoryResponse | string> {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(this.POST, "goods/category", payload);
   }
+
+  /* Delete */
+  static async deleteGoodsCategory(categoryId: number): Promise<CT.IStatusOKResponse | string> {
+    return await this.apiCallWrapper<CT.IStatusOKResponse>(this.DELETE, `goods/category/${categoryId}`);
+  }
 }
