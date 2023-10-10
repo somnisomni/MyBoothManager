@@ -10,6 +10,16 @@
   user-drag: none;
 }
 
+.no-selection {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
 /* VNavigationDrawer content -> flex */
 .navdrawer-flex .v-navigation-drawer__content {
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <VSheet class="goods-item d-flex ma-4"
+  <VSheet class="goods-item no-selection d-flex ma-4"
           :class="{ 'edit': editMode }"
           width="200"
           height="250"
