@@ -86,6 +86,6 @@ export class GoodsCategoryService {
       await (g.set("categoryId", null)).save();
     }
 
-    return await removeTarget(category);
+    return await removeTarget(category, true);
   }
 }
