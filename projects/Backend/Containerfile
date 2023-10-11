@@ -1,0 +1,16 @@
+FROM node:lts-alpine as build
+
+# Copy files
+WORKDIR /build
+COPY ../../packages/Common packages/Common
+COPY . projects/Backend
+
+# Build common package
+WORKDIR /build/packages/Common
+RUN yarn install
+RUN yarn build
+
+# Build backend
+WORKDIR /build/projects/Backend
+RUN yarn install
+RUN yarn build
