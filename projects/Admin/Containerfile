@@ -14,3 +14,16 @@ RUN yarn build
 WORKDIR /build/projects/Admin
 RUN yarn install
 RUN yarn build
+
+### PRODUCTION STAGE ###
+FROM node:lts-alpine as production
+
+# Copy files
+WORKDIR /app
+COPY --from=build /build/projects/Admin/dist .
+
+# Expose port
+EXPOSE 31112
+
+# Start server
+ENTRYPOINT ["yarn", "dlx", "http-server", "--proxy", "http://localhost:31112?", "--port", "31112"]

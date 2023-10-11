@@ -1,3 +1,4 @@
+### BUILD STAGE ###
 FROM node:lts-alpine as build
 
 # Copy files
@@ -14,3 +15,22 @@ RUN yarn build
 WORKDIR /build/projects/Backend
 RUN yarn install
 RUN yarn build
+
+### PRODUCTION STAGE ###
+FROM node:lts-alpine as production
+
+# Copy files
+WORKDIR /app
+COPY --from=build /build/packages/Common/dist packages/Common
+COPY --from=build /build/packages/Common/package.json packages/Common/package.json
+COPY --from=build /build/projects/Backend/dist projects/Backend
+COPY --from=build /build/projects/Backend/package.json projects/Backend/package.json
+
+# Install production dependencies
+RUN yarn workspaces focus --production
+
+# Expose port
+EXPOSE 31111
+
+# Start server
+ENTRYPOINT ["yarn", "--cwd", "projects/Backend", "start:prod"]
