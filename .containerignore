@@ -1,0 +1,8 @@
+.github/
+.vscode/
+dist/
+coverage/
+node_modules/
+.env
+.env.*
+*.code-workspace
