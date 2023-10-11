@@ -1,0 +1,16 @@
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: ./projects/Admin/Containerfile
+    ports:
+    environment:
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./projects/Backend/Containerfile
+    ports:
+    environment:

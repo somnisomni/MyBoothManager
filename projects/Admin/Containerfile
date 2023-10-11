@@ -2,8 +2,8 @@ FROM node:lts-alpine as build
 
 # Copy files
 WORKDIR /build
-COPY ../../packages/Common packages/Common
-COPY . projects/Admin
+COPY packages/Common packages/Common
+COPY projects/Admin projects/Admin
 
 # Build common package
 WORKDIR /build/packages/Common
