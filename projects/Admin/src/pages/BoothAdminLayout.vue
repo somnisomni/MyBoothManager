@@ -48,8 +48,8 @@
 
       <VSpacer />
 
-      <VList nav>
-        <VListItem v-if="isDevEnv">
+      <VList nav class="flex-shrink-0">
+        <VListItem v-if="isDevEnv" density="compact" min-height="30px" max-height="30px">
           <div class="text-subtitle-2 text-disabled text-center" density="compact">개발 환경에서 실행 중</div>
         </VListItem>
         <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
