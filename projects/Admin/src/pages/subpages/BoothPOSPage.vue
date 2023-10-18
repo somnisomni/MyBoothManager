@@ -45,7 +45,7 @@
       <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity(goodsId, 1)" />
     </VContainer>
 
-    <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" top>
+    <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
       <span class="text-body-2">재고가 부족합니다.</span>
     </VSnackbar>
   </VMain>
