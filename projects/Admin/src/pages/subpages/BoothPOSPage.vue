@@ -20,7 +20,7 @@
               <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
                 <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
                   <span class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</span>
-                  <span class="text-body-2">{{ item.quantity }}개 · {{ calculateGoodsPrice(item.goodsId, item.quantity) }}</span>
+                  <span class="text-body-2"><strong>{{ item.quantity }} 개</strong> · {{ calculateGoodsPrice(item.goodsId, item.quantity) }}</span>
                 </div>
 
                 <div>
