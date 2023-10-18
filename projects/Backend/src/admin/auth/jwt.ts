@@ -2,14 +2,14 @@ import { randomUUID } from "crypto";
 import { IAccount } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
 
-export const JWT_SECRET: string = process.env.JWT_SECRET || "myboothmanager";
+export const JWT_SECRET: string = `${(process.env.JWT_SECRET || "myboothmanager")}${new Date().getTime()}`;
 export const JWT_SECRET_REFRESH: string = `${JWT_SECRET}-refresh`;
 export const JWT_ISSUER: string = "myboothmanager";
 export const JWT_SUBJECT: string = "admin";
 export const JWT_SUBJECT_REFRESH: string = `${JWT_SUBJECT}-refresh`;
 export const JWT_ALGORITHM: "HS256" | "HS384" = "HS384";
 
-export type IAuthPayload = Pick<IAccount, "id" | "loginId" | "name">;
+export type IAuthPayload = Pick<IAccount, "id" | "name">;
 
 export interface IRefreshPayload {
   id: number;
@@ -19,7 +19,6 @@ export interface IRefreshPayload {
 export async function generateAuthToken(jwtService: JwtService, account: IAuthPayload): Promise<string> {
   const payload: IAuthPayload = {
     id: account.id,
-    loginId: account.loginId,
     name: account.name,
   };
 
@@ -29,7 +28,6 @@ export async function generateAuthToken(jwtService: JwtService, account: IAuthPa
 export async function generateAuthTokenSA(jwtService: JwtService): Promise<string> {
   return await generateAuthToken(jwtService, {
     id: -1,
-    loginId: process.env.SUPERADMIN_ID!,
     name: "SUPER ADMIN",
   });
 }

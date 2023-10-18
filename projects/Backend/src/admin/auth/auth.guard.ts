@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate {
         subject: JWT_SUBJECT,
       });
 
-      if(isSuperAdmin && !(payload.id === -1 && payload.loginId === process.env.SUPERADMIN_ID!)) {
+      if(isSuperAdmin && payload.id !== -1) {
         throw new UnauthorizedException("접근할 수 있는 권한이 없습니다.");
       } else {
         (req.params as IFastifyRequestParamsCustom).superAdmin = true;

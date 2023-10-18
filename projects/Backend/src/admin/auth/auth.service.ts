@@ -10,8 +10,7 @@ import AuthStorage from "./auth.storage";
 
 const SA_LOGIN_DATA: IAuthPayload = {
   id: -1,
-  name: "SUPER ADMIN",
-  loginId: process.env.SUPERADMIN_ID!,
+  name: "YOUFOUNDME",
 };
 
 @Injectable()
@@ -57,7 +56,7 @@ export class AuthService {
 
     return {
       id: -1,
-      name: "SUPER ADMIN",
+      name: "YOUFOUNDME",
       loginId: process.env.SUPERADMIN_ID!,
       accessToken: generatedToken,
       refreshToken: generatedRefreshToken.refreshToken,
