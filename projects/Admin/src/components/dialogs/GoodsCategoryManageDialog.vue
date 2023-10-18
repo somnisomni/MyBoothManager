@@ -16,7 +16,7 @@
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
-    <VForm v-model="formValid">
+    <VForm v-model="formValid" @submit.prevent>
       <VTextField v-model="formData.name"
                   tabindex="1"
                   density="compact"
