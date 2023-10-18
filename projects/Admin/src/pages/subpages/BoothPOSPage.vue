@@ -10,12 +10,12 @@
         </VListItem>
       </VList>
 
-      <VList class="overflow-auto flex-grow-1">
+      <VList class="overflow-auto overflow-x-hidden flex-grow-1">
         <VSlideXReverseTransition group leave-absolute>
           <VListItem v-for="item in goodsInOrder"
-                    :key="item.goodsId"
-                    class="order-item pa-0"
-                    height="72px">
+                     :key="item.goodsId"
+                     class="order-item pa-0"
+                     height="72px">
             <VImg :src="'https://picsum.photos/seed/' + item.goodsId + '/200/250'" cover height="72px">
               <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
                 <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
