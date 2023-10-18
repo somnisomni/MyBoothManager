@@ -1,6 +1,6 @@
 <template>
   <VSheet class="goods-item no-selection d-flex ma-4"
-          :class="{ 'edit': editMode }"
+          :class="{ 'edit': editable }"
           width="200"
           height="250"
           rounded="lg"
@@ -12,7 +12,7 @@
     <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/250'" aspect-ratio="1/1" />
     <div class="goods-image-overlay"></div>
 
-    <div v-if="editMode" class="click-to-edit-text">클릭하여 수정</div>
+    <div v-if="editable" class="click-to-edit-text">클릭하여 수정</div>
 
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name">{{ goodsData.name }}</div>
@@ -28,22 +28,26 @@
 <script lang="ts">
 import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({
   emits: ["click", "openEditDialog"],
 })
 export default class GoodsItem extends Vue {
   @Prop({ required: true }) goodsData!: IGoods;
-  @Prop({ default: "₩", required: true }) currencySymbol!: string;
-  @Prop({ default: true }) editMode!: boolean;
+  @Prop({ default: true }) editable!: boolean;
 
   readonly ELEVATION_NORMAL = 2;
   readonly ELEVATION_HOVER = 6;
   elevation = this.ELEVATION_NORMAL;
 
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
   @Emit("click")
   onItemClick() {
-    if(this.editMode) this.$emit("openEditDialog", this.goodsData.id);
+    if(this.editable) this.$emit("openEditDialog", this.goodsData.id);
     return this.goodsData.id;
   }
 }

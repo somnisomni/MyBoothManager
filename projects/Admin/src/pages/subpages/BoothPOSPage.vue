@@ -42,12 +42,7 @@
     </VNavigationDrawer>
 
     <VContainer class="d-flex flex-row flex-wrap">
-      <GoodsItem v-for="goods in boothGoods"
-                 :key="goods.id"
-                 :goodsData="goods"
-                 :currencySymbol="currencySymbol"
-                 :editMode="false"
-                 @click="onGoodsItemClick" />
+      <GoodsListView :onGoodsClick="onGoodsItemClick" />
     </VContainer>
   </VMain>
 </template>
@@ -56,8 +51,8 @@
 import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import GoodsItem from "@/components/goods/GoodsItem.vue";
 import router from "@/router";
+import GoodsListView from "@/components/goods/GoodsListView.vue";
 
 interface IGoodsOrder {
   goodsId: number;
@@ -66,7 +61,8 @@ interface IGoodsOrder {
 
 @Component({
   components: {
-    GoodsItem,
+    GoodsListView,
+
   },
 })
 export default class BoothPOSPage extends Vue {
@@ -83,10 +79,6 @@ export default class BoothPOSPage extends Vue {
 
   get currencySymbol(): string {
     return this.currentBooth.currencySymbol;
-  }
-
-  get boothGoods(): Array<IGoods> {
-    return Object.values(useAdminStore().boothGoodsList);
   }
 
   get boothGoodsDict(): Record<number, IGoods> {
