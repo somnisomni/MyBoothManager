@@ -41,7 +41,7 @@
       </VList>
     </VNavigationDrawer>
 
-    <VContainer class="d-flex flex-row flex-wrap">
+    <VContainer class="d-flex flex-column flex-wrap">
       <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity(goodsId, 1)" />
     </VContainer>
 
