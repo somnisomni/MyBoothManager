@@ -1,5 +1,5 @@
 <template>
-  <VMain>
+  <VMain class="bg-background">
     <VNavigationDrawer permanent class="navdrawer-flex">
       <VList nav class="flex-shrink-0">
         <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }" />

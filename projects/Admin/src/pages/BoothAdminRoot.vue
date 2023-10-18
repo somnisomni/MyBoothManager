@@ -9,7 +9,7 @@
   </VFadeTransition>
 
   <RouterView v-slot="{ Component }">
-    <VFadeTransition>
+    <VFadeTransition leave-absolute>
       <component v-if="loaded && boothAvailable" :is="Component" />
     </VFadeTransition>
   </RouterView>
