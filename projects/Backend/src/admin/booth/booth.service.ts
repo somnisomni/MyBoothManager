@@ -3,16 +3,21 @@ import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_R
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
+import GoodsOrder from "@/db/models/goods-order";
 import { create, removeTarget } from "@/lib/common-functions";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCategoryService } from "../goods/goods-category.service";
+import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 
 @Injectable()
 export class BoothService {
-  constructor(private goodsService: GoodsService, private goodsCategoryService: GoodsCategoryService) {}
+  constructor(
+    private goodsService: GoodsService,
+    private goodsCategoryService: GoodsCategoryService,
+    private goodsOrderService: GoodsOrderService) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
     const booth = await Booth.findByPk(boothId, {
@@ -60,6 +65,13 @@ export class BoothService {
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     return await this.goodsCategoryService.findAll(boothId);
+  }
+
+  async findAllGoodsOrderOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsOrder>> {
+    // Throws error if the booth not found or not belongs to the account
+    await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+    return await this.goodsOrderService.findAll(boothId);
   }
 
   async updateBoothInfo(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {

@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
-import { create, removeTarget } from "@/lib/common-functions";
+import { create as createTarget, removeTarget } from "@/lib/common-functions";
 import GoodsOrder from "@/db/models/goods-order";
 import { CreateGoodsOrderDTO } from "./dto/create-goods.dto";
 
@@ -31,7 +31,7 @@ export class GoodsOrderService {
       throw new ForbiddenException("굿즈가 소속될 부스를 찾을 수 없거나 권한이 없습니다.");
     }
 
-    return await create(GoodsOrder, createGoodsOrderDto);
+    return await createTarget(GoodsOrder, createGoodsOrderDto);
   }
 
   async findAll(boothId?: number): Promise<Array<GoodsOrder>> {

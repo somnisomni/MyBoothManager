@@ -51,6 +51,11 @@ export class BoothController {
     return await this.boothService.findAllGoodsCategoryOfBooth(+boothId, authData.id);
   }
 
+  @Get(":id/goods/order")
+  async findAllBoothGoodsOrder(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findAllGoodsOrderOfBooth(+boothId, authData.id);
+  }
+
   /* Super admin routes */
   @SuperAdmin()
   @Delete(":id")

@@ -99,6 +99,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
   }
 
+  static async fetchAllGoodsOrderOfBooth(boothId: number): Promise<Array<CT.IGoodsOrderResponse> | string> {
+    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(this.GET, `booth/${boothId}/goods/order`);
+  }
+
   /* Update */
   static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateReuqest): Promise<CT.IBoothResponse | string> {
     return await this.apiCallWrapper<CT.IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
@@ -127,6 +131,10 @@ export default class AdminAPI {
 
   static async createGoodsCategory(payload: CT.IGoodsCategoryCreateRequest): Promise<CT.IGoodsCategoryResponse | string> {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(this.POST, "goods/category", payload);
+  }
+
+  static async createGoodsOrder(payload: CT.IGoodsOrderCreateRequest): Promise<CT.IGoodsOrderResponse | string> {
+    return await this.apiCallWrapper<CT.IGoodsOrderResponse>(this.POST, "goods/order", payload);
   }
 
   /* Delete */
