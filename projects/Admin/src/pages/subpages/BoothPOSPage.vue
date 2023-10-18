@@ -42,8 +42,12 @@
     </VNavigationDrawer>
 
     <VContainer class="d-flex flex-row flex-wrap">
-      <GoodsListView :onGoodsClick="onGoodsItemClick" />
+      <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity(goodsId, 1)" />
     </VContainer>
+
+    <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" top>
+      <span class="text-body-2">재고가 부족합니다.</span>
+    </VSnackbar>
   </VMain>
 </template>
 
@@ -68,6 +72,8 @@ interface IGoodsOrder {
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly goodsInOrder: Record<number, IGoodsOrder> = {};
+
+  showStockNotEnoughSnackbar: boolean = false;
 
   get currentBooth(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
@@ -107,7 +113,11 @@ export default class BoothPOSPage extends Vue {
 
   onGoodsItemClick(goodsId: number) {
     if(this.goodsInOrder[goodsId]) {
-      this.goodsInOrder[goodsId].quantity++;
+      if(this.goodsInOrder[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
+        this.goodsInOrder[goodsId].quantity++;
+      } else {
+        this.showStockNotEnoughSnackbar = true;
+      }
     } else {
       this.goodsInOrder[goodsId] = {
         goodsId,
@@ -118,11 +128,22 @@ export default class BoothPOSPage extends Vue {
 
   updateGoodsInOrderQuantity(goodsId: number, delta: number) {
     if(this.goodsInOrder[goodsId]) {
-      this.goodsInOrder[goodsId].quantity += delta;
+      if(this.goodsInOrder[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
+        this.goodsInOrder[goodsId].quantity += delta;
+      } else {
+        this.showStockNotEnoughSnackbar = true;
+      }
 
       if(this.goodsInOrder[goodsId].quantity <= 0) {
         delete this.goodsInOrder[goodsId];
       }
+    } else {
+      if(delta <= 0) return;
+
+      this.goodsInOrder[goodsId] = {
+        goodsId,
+        quantity: delta,
+      };
     }
   }
 }
