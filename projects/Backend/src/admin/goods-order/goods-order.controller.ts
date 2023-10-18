@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Query } from "@nestjs/commo
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { GoodsOrderService } from "./goods-order.service";
-import { CreateGoodsOrderDTO } from "./dto/create-goods.dto";
+import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
 
 @Controller("/admin/goods/order")
 export class GoodsOrderController {

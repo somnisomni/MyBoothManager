@@ -1782,7 +1782,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/admin", "workspace:projects/Admin"],\
             ["@mdi/font", "npm:7.2.96"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["@rushstack/eslint-patch", "npm:1.4.0"],\
             ["@tsconfig/node18", "npm:18.2.2"],\
             ["@types/node", "npm:18.17.18"],\
@@ -1815,7 +1815,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@myboothmanager/backend", "workspace:projects/Backend"],\
             ["@fastify/helmet", "npm:11.1.1"],\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["@nestjs/cli", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.1.17"],\
             ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.5"],\
             ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.5"],\
@@ -1853,18 +1853,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@myboothmanager/common", [\
-        ["file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-3719034746-7eb1e4418f.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-d02977b9f3-60796c2ad0.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\
         }],\
-        ["file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
-          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-8ce4a362a9-7eb1e4418f.zip/node_modules/@myboothmanager/common/",\
+        ["file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
+          "packageLocation": "./.yarn/cache/@myboothmanager-common-file-7540d45f43-60796c2ad0.zip/node_modules/@myboothmanager/common/",\
           "packageDependencies": [\
-            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=2446a4&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+            ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=bbbd32&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
             ["currency-symbol-map", "npm:5.1.0"]\
           ],\
           "linkType": "HARD"\

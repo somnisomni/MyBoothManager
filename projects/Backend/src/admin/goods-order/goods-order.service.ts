@@ -1,9 +1,9 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
-import { create as createTarget, removeTarget } from "@/lib/common-functions";
 import GoodsOrder from "@/db/models/goods-order";
-import { CreateGoodsOrderDTO } from "./dto/create-goods.dto";
+import { create as createTarget, removeTarget } from "@/lib/common-functions";
+import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
 
 @Injectable()
 export class GoodsOrderService {

@@ -1,5 +1,5 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { IGoodsOrder } from "@myboothmanager/common";
+import { IGoodsOrder, IGoodsOrderDetailItem } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
 import { boothModelName } from "./booth";
 
@@ -7,7 +7,7 @@ export type GoodsOrderCreationAttributes = Omit<IGoodsOrder, InternalKeysWithId>
 export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAttributes> implements IGoodsOrder {
   declare id: number;
   declare boothId: number;
-  declare order: { gId: number; quantity: number; }[];
+  declare order: Array<IGoodsOrderDetailItem>;
   declare totalPrice: number;
 }
 
