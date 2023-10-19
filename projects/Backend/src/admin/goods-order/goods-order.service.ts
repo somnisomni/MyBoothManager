@@ -3,11 +3,12 @@ import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myb
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create as createTarget, removeTarget } from "@/lib/common-functions";
+import { GoodsService } from "../goods/goods.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
 
 @Injectable()
 export class GoodsOrderService {
-  // constructor(private boothService: BoothService) {}
+  constructor(private goodsService: GoodsService) {}
 
   private async getGoodsOrderAndParentBooth(orderId: number, boothId: number, callerAccountId: number): Promise<{ order: GoodsOrder, booth: Booth }> {
     const order = await GoodsOrder.findByPk(orderId);
@@ -29,6 +30,18 @@ export class GoodsOrderService {
   async create(createGoodsOrderDto: CreateGoodsOrderDTO, callerAccountId: number): Promise<GoodsOrder> {
     if(!(await Booth.findOne({ where: { ownerId: callerAccountId } }))) {
       throw new ForbiddenException("굿즈가 소속될 부스를 찾을 수 없거나 권한이 없습니다.");
+    }
+
+    // Check goods availability
+    if(!createGoodsOrderDto.order) throw new BadRequestException("구매 데이터 없습니다.");
+    for(const order of createGoodsOrderDto.order) {
+      const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
+      if(!goods) throw new BadRequestException("찾을 수 없거나 권한이 없는 굿즈가 포함되어 있습니다.");
+
+      if(goods.stockRemaining < order.quantity) throw new BadRequestException("유효하지 않은 판매 수량");
+
+      // If all good, update remaining stock count of the goods
+      await goods.update({ stockRemaining: goods.stockRemaining - order.quantity });
     }
 
     return await createTarget(GoodsOrder, createGoodsOrderDto);
