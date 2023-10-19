@@ -27,6 +27,8 @@
                    :to="{ name: 'admin-info' }" exact />
         <VListItem prepend-icon="mdi-gift-open" title="굿즈" value="goods"
                    :to="{ name: 'admin-goods' }" exact />
+        <VListItem prepend-icon="mdi-receipt-text" title="판매 기록" value="orders"
+                   :to="{ name: 'admin-orders' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
                    :to="{ name: 'admin-analytics' }" exact />
 

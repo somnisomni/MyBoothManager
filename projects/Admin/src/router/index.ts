@@ -75,9 +75,14 @@ const router = createRouter({
               component: BoothAdminGoodsPage,
             },
             {
+              path: "orders",
+              name: "admin-orders",
+              component: BoothAdminGoodsOrdersPage,
+            },
+            {
               path: "analytics",
               name: "admin-analytics",
-              component: BoothAdminGoodsOrdersPage,
+              component: PlaceholderPage,
             },
             {
               path: "utility/price-calculator",
