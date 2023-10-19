@@ -160,6 +160,10 @@ export default class BoothPOSPage extends Vue {
       }
     } else {
       if(delta <= 0) return;
+      if(this.boothGoodsDict[goodsId].stockRemaining <= 0) {
+        this.showStockNotEnoughSnackbar = true;
+        return;
+      }
 
       this.goodsInOrder[goodsId] = {
         goodsId,
