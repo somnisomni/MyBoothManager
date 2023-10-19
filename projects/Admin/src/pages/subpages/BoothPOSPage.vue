@@ -71,7 +71,6 @@ import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
-import AdminAPI from "@/lib/api-admin";
 
 interface IGoodsOrder {
   goodsId: number;
@@ -187,7 +186,8 @@ export default class BoothPOSPage extends Vue {
     }
 
     // API call
-    if(await AdminAPI.createGoodsOrder(data) && await useAdminStore().fetchGoodsOfCurrentBooth(true)) {
+    const results = [await useAdminStore().createGoodsOrder(data), await useAdminStore().fetchGoodsOfCurrentBooth(true)];
+    if(results.every((res) => typeof res !== "string")) {
       // If API call success, empty the order list
       this.goodsInOrder = { };
       this.showOrderSuccessSnackbar = true;

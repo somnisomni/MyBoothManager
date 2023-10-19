@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
 import router from "@/router";
 import { useAuthStore } from "./auth";
@@ -176,6 +176,17 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function createGoodsOrder(payload: IGoodsOrderCreateRequest): Promise<boolean | string> {
+    const response = await apiWrapper(() => AdminAPI.createGoodsOrder(payload));
+
+    if(response && response instanceof Object) {
+      // Nothing will be added to any list
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<boolean | string> {
     const response = await apiWrapper(() => AdminAPI.updateGoodsInfo(goodsId, payload));
 
@@ -300,6 +311,7 @@ const useAdminStore = defineStore("admin", () => {
     createBooth,
     createGoods,
     createGoodsCategory,
+    createGoodsOrder,
     deleteGoodsCategory,
     clearAllBoothData,
     fetchAllBoothData,
