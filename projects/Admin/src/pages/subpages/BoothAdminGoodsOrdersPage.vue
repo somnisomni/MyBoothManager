@@ -1,5 +1,6 @@
 <template>
   <div>
+    <VBtn @click="onRefreshClick">Refresh list</VBtn>
     <VProgressCircular indeterminate v-if="dataLoading" />
 
     <div v-for="order in boothGoodsOrders"
@@ -24,13 +25,22 @@ export default class BoothAdminGoodsOrdersPage extends Vue {
   dataLoading: boolean = true;
 
   async mounted() {
-    // Fetch the goods orders while loading this page, not application first load
-    await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+    // Fetch the goods orders if not initialized before
+    if(Object.keys(this.boothGoodsOrders).length <= 0) {
+      await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+    }
+
     this.dataLoading = false;
   }
 
   get boothGoodsOrders() {
     return useAdminStore().boothGoodsOrderList;
+  }
+
+  async onRefreshClick() {
+    this.dataLoading = true;
+    await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+    this.dataLoading = false;
   }
 }
 </script>
