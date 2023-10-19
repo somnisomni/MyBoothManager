@@ -55,11 +55,11 @@
       <span class="text-body-2">재고가 부족합니다.</span>
     </VSnackbar>
 
-    <VSnackbar v-model="showOrderSuccessSnackbar" :timeout="2000" close-on-back close-on-content-click location="top" color="success">
+    <VSnackbar v-model="showOrderSuccessSnackbar" :timeout="3000" close-on-back close-on-content-click location="top" color="success">
       <span class="text-body-2"><VIcon>mdi-check-bold</VIcon> 판매가 성공적으로 기록되었습니다.</span>
     </VSnackbar>
 
-    <VSnackbar v-model="showOrderFailedSnackbar" :timeout="2000" close-on-back close-on-content-click location="top" color="error">
+    <VSnackbar v-model="showOrderFailedSnackbar" :timeout="3000" close-on-back close-on-content-click location="top" color="error">
       <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
     </VSnackbar>
   </VMain>
