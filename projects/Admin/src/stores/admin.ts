@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
 import router from "@/router";
 import { useAuthStore } from "./auth";
@@ -19,6 +19,7 @@ const useAdminStore = defineStore("admin", () => {
   const boothList: Record<number, IBooth> = reactive({});
   const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
   const boothGoodsList: Record<number, IGoods> = reactive({});
+  const boothGoodsOrderList: Record<number, IGoodsOrder> = reactive({});
 
   /* Private actions (not to be exported) */
   async function apiWrapper<T>(func: () => Promise<T>): Promise<T | string> {
@@ -118,6 +119,23 @@ const useAdminStore = defineStore("admin", () => {
 
       for(const goods of response) {
         boothGoodsList[goods.id] = goods;
+      }
+      return true;
+    } else {
+      return response;
+    }
+  }
+
+  async function fetchGoodsOrdersOfCurrentBooth(refresh: boolean = false): Promise<boolean | string> {
+    if(currentBoothId.value === -1) return false;
+
+    const response = await apiWrapper(() => AdminAPI.fetchAllGoodsOrdersOfBooth(currentBoothId.value));
+
+    if(response && response instanceof Array) {
+      if(refresh) emptyObject(boothGoodsList);
+
+      for(const order of response) {
+        boothGoodsOrderList[order.id] = order;
       }
       return true;
     } else {
@@ -266,6 +284,7 @@ const useAdminStore = defineStore("admin", () => {
     boothList,
     boothGoodsCategoryList,
     boothGoodsList,
+    boothGoodsOrderList,
 
     changeBooth,
     changeBoothToFirst,
@@ -273,6 +292,7 @@ const useAdminStore = defineStore("admin", () => {
     fetchBoothsOfCurrentAccount,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
+    fetchGoodsOrdersOfCurrentBooth,
     updateGoodsInfo,
     updateGoodsCategoryInfo,
     updateCurrentBoothInfo,

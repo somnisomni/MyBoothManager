@@ -99,7 +99,7 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(this.GET, `booth/${boothId}/goods/category`);
   }
 
-  static async fetchAllGoodsOrderOfBooth(boothId: number): Promise<Array<CT.IGoodsOrderResponse> | string> {
+  static async fetchAllGoodsOrdersOfBooth(boothId: number): Promise<Array<CT.IGoodsOrderResponse> | string> {
     return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(this.GET, `booth/${boothId}/goods/order`);
   }
 

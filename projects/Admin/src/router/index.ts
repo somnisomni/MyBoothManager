@@ -6,6 +6,7 @@ import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
 import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
+import BoothAdminGoodsOrdersPage from "@/pages/subpages/BoothAdminGoodsOrdersPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
 import SuperAdminPage from "@/pages/superadmin/SuperAdminPage.vue";
@@ -76,7 +77,7 @@ const router = createRouter({
             {
               path: "analytics",
               name: "admin-analytics",
-              component: PlaceholderPage,
+              component: BoothAdminGoodsOrdersPage,
             },
             {
               path: "utility/price-calculator",

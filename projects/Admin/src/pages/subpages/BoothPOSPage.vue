@@ -36,7 +36,13 @@
       <VList nav class="flex-shrink-0 pa-0 pb-2">
         <VListItem class="px-2 py-1">
           <div class="text-body-2 text-center mb-2">총 가격: <strong>{{ totalOrderWorthString }}</strong></div>
-          <VBtn prepend-icon="mdi-cart-heart" color="primary" size="x-large" class="w-100">판매 확인</VBtn>
+          <VBtn prepend-icon="mdi-cart-heart"
+                color="primary"
+                size="x-large"
+                class="w-100"
+                :loading="orderCreationInProgress"
+                :disabled="orderCreationInProgress"
+                @click="onOrderConfirmClick">판매 확인</VBtn>
         </VListItem>
       </VList>
     </VNavigationDrawer>
@@ -48,15 +54,24 @@
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
       <span class="text-body-2">재고가 부족합니다.</span>
     </VSnackbar>
+
+    <VSnackbar v-model="showOrderSuccessSnackbar" :timeout="2000" close-on-back close-on-content-click location="top" color="success">
+      <span class="text-body-2"><VIcon>mdi-check-bold</VIcon> 판매가 성공적으로 기록되었습니다.</span>
+    </VSnackbar>
+
+    <VSnackbar v-model="showOrderFailedSnackbar" :timeout="2000" close-on-back close-on-content-click location="top" color="error">
+      <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
+    </VSnackbar>
   </VMain>
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
+import AdminAPI from "@/lib/api-admin";
 
 interface IGoodsOrder {
   goodsId: number;
@@ -71,9 +86,12 @@ interface IGoodsOrder {
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  readonly goodsInOrder: Record<number, IGoodsOrder> = {};
+  goodsInOrder: Record<number, IGoodsOrder> = {};
 
   showStockNotEnoughSnackbar: boolean = false;
+  showOrderSuccessSnackbar: boolean = false;
+  showOrderFailedSnackbar: boolean = false;
+  orderCreationInProgress: boolean = false;
 
   get currentBooth(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
@@ -91,14 +109,18 @@ export default class BoothPOSPage extends Vue {
     return useAdminStore().boothGoodsList;
   }
 
-  get totalOrderWorthString(): string {
+  get totalOrderWorth(): number {
     let total = 0;
 
     for(const goodsId in this.goodsInOrder) {
       total += this.boothGoodsDict[goodsId].price * this.goodsInOrder[goodsId].quantity;
     }
 
-    return `${this.currencySymbol}${total.toLocaleString()}`;
+    return total;
+  }
+
+  get totalOrderWorthString(): string {
+    return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`;
   }
 
   mounted(): void {
@@ -145,6 +167,35 @@ export default class BoothPOSPage extends Vue {
         quantity: delta,
       };
     }
+  }
+
+  async onOrderConfirmClick() {
+    this.orderCreationInProgress = true;
+
+    const data: IGoodsOrderCreateRequest = {
+      boothId: this.currentBooth.id,
+      totalPrice: this.totalOrderWorth,
+      order: [],
+    };
+
+    for(const goodsId in this.goodsInOrder) {
+      data.order.push({
+        gId: Number(goodsId),
+        price: this.boothGoodsDict[goodsId].price,
+        quantity: this.goodsInOrder[goodsId].quantity,
+      });
+    }
+
+    // API call
+    if(await AdminAPI.createGoodsOrder(data) && await useAdminStore().fetchGoodsOfCurrentBooth(true)) {
+      // If API call success, empty the order list
+      this.goodsInOrder = { };
+      this.showOrderSuccessSnackbar = true;
+    } else {
+      this.showOrderFailedSnackbar = true;
+    }
+
+    this.orderCreationInProgress = false;
   }
 }
 </script>
