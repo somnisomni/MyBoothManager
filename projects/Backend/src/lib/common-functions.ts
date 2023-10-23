@@ -11,6 +11,8 @@ export async function create<T extends Model<any, any>>(model: { new (): T }, dt
       ...additionalParams,
     }) as unknown as T;
   } catch(error) {
+    console.error(error);
+
     if(error instanceof BaseError) {
       // DB error
       throw new InternalServerErrorException("DB 오류");
@@ -26,6 +28,8 @@ export async function removeTarget<T extends Model<any, any>>(model: T, ignorePa
     await model.destroy({ force: ignoreParanoid });
     await model.save();
   } catch(error) {
+    console.error(error);
+
     throw new BadRequestException("삭제할 수 없습니다.");
   }
 
@@ -39,6 +43,8 @@ export async function removeOne<T extends Model<any, any>>(model: { new (): T },
 
     return await removeTarget(target[0], ignoreParanoid);
   } catch(error) {
+    console.error(error);
+
     if(error instanceof BaseError) {
       // DB error
       throw new InternalServerErrorException("DB 오류");
