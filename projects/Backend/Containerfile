@@ -3,7 +3,7 @@ FROM node:lts-alpine as build
 
 # Copy files
 WORKDIR /build
-COPY packages/Common packages/Common
+COPY packages/        packages/
 COPY projects/Backend projects/Backend
 
 # Build common package
@@ -21,13 +21,14 @@ FROM node:lts-alpine as production
 
 # Copy files
 WORKDIR /app
-COPY --from=build /build/packages/Common/dist packages/Common
-COPY --from=build /build/packages/Common/package.json packages/Common/package.json
-COPY --from=build /build/projects/Backend/dist projects/Backend
+COPY              ./package.json                         ./package.json
+COPY --from=build /build/packages/Common/dist          packages/Common
+COPY --from=build /build/packages/Common/package.json  packages/Common/package.json
+COPY --from=build /build/projects/Backend/dist         projects/Backend
 COPY --from=build /build/projects/Backend/package.json projects/Backend/package.json
 
 # Install production dependencies
-RUN yarn workspaces focus --production
+RUN yarn workspaces focus @myboothmanager/backend --production
 
 # Expose port
 EXPOSE 31111
