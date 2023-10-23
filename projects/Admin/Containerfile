@@ -1,6 +1,12 @@
 ### BUILD STAGE ###
 FROM node:lts-alpine as build
 
+# Build arguments
+ARG API_SERVER_URL=http://localhost:31111
+ARG BASE_PATH=/admin
+ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
+ENV VITE_BASE_PATH=${BASE_PATH}
+
 # Copy files
 WORKDIR /build
 COPY packages/      packages/
