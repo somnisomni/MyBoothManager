@@ -8,12 +8,16 @@ COPY projects/Admin projects/Admin
 
 # Build common package
 WORKDIR /build/packages/Common
+# Workaround
+RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
 # Build admin frontend
 WORKDIR /build/projects/Admin
+# Workaround
+RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build
@@ -29,4 +33,5 @@ COPY --from=build /build/projects/Admin/dist .
 EXPOSE 31112
 
 # Start server
-ENTRYPOINT ["yarn", "dlx", "http-server", "--proxy", "http://localhost:31112?", "--port", "31112"]
+RUN npm install -g http-server
+ENTRYPOINT ["npx", "http-server", "--proxy", "http://localhost:31112?", "--port", "31112"]

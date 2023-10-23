@@ -8,12 +8,16 @@ COPY projects/Backend projects/Backend
 
 # Build common package
 WORKDIR /build/packages/Common
+# Workaround
+RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
 # Build backend
 WORKDIR /build/projects/Backend
+# Workaround
+RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build
@@ -23,7 +27,7 @@ FROM node:lts-alpine as production
 
 # Copy files
 WORKDIR /app
-COPY              ./package.json                         ./package.json
+COPY              ./package.json                       ./package.json
 COPY --from=build /build/packages/Common/dist          packages/Common
 COPY --from=build /build/packages/Common/package.json  packages/Common/package.json
 COPY --from=build /build/projects/Backend/dist         projects/Backend
