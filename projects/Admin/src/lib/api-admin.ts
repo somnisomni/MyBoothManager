@@ -121,6 +121,12 @@ export default class AdminAPI {
   }
 
   /* Create */
+  static async createAccount(currentUserData: CT.IAccountUserland, payload: CT.IAccountCreateRequest): Promise<CT.IAccountResponse | string> {
+    if(currentUserData.superAdmin)
+      return await this.apiCallWrapper<CT.IAccountResponse>(this.POST, "account", payload);
+    else return "NO_ACCESS";
+  }
+
   static async createBooth(payload: CT.IBoothCreateRequest): Promise<CT.IBoothResponse | string> {
     return await this.apiCallWrapper<CT.IBoothResponse>(this.POST, "booth", payload);
   }

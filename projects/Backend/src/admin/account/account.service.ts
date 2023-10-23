@@ -1,3 +1,4 @@
+import * as argon2 from "argon2";
 import { Injectable, NotFoundException, NotImplementedException } from "@nestjs/common";
 import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
@@ -9,7 +10,12 @@ import { UpdateAccountDTO } from "./dto/update-account.dto";
 @Injectable()
 export class AccountService {
   async create(createAccountDto: CreateAccountDTO): Promise<Account> {
-    return await create(Account, createAccountDto);
+    const request: CreateAccountDTO & { loginPassHash: string } = {
+      ...createAccountDto,
+      loginPassHash: await argon2.hash(createAccountDto.loginPass),
+    };
+
+    return await create(Account, request);
   }
 
   async findCurrent(authData: IAuthPayload): Promise<Account> {

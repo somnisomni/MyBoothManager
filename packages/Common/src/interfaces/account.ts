@@ -23,5 +23,6 @@ export interface IAccountLoginRequest {
   loginPass: string;
 }
 
-export type AccountCreateRequestKey = "name" | "loginId" | "loginPassHash";
-export type IAccountCreateRequest = Pick<IAccount, AccountCreateRequestKey>;
+export interface IAccountCreateRequest extends Pick<IAccount, "name" | "loginId"> {
+  loginPass: string;
+}

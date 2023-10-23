@@ -1,7 +1,7 @@
-import { IAccount } from "@myboothmanager/common";
+import { IAccountCreateRequest } from "@myboothmanager/common";
 
-export class CreateAccountDTO implements Partial<IAccount> {
+export class CreateAccountDTO implements IAccountCreateRequest {
   name!: string;
   loginId!: string;
-  loginPassHash!: string;
+  loginPass!: string;
 }

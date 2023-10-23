@@ -3,5 +3,5 @@ import { CreateAccountDTO } from "./create-account.dto";
 
 export class UpdateAccountDTO extends PartialType(CreateAccountDTO) {
   name?: string;
-  loginPassHash?: string;
+  loginPass?: string;
 }
