@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { fastifyHelmet } from "@fastify/helmet";
+// import { fastifyHelmet } from "@fastify/helmet";
 import { AppModule } from "@/app.module";
 import { HttpExceptionFilter, NotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
@@ -12,10 +12,10 @@ async function dev() {
   if(process.env.NODE_ENV === "development") {
     console.debug("dev env");
 
-    await app.register(fastifyHelmet, {
-      crossOriginResourcePolicy: false,
-      contentSecurityPolicy: false,
-    });
+    // await app.register(fastifyHelmet, {
+    //   crossOriginResourcePolicy: false,
+    //   contentSecurityPolicy: false,
+    // });
 
     if(MBMSequelize.instance) {
       await insertTempDataIntoDB();
