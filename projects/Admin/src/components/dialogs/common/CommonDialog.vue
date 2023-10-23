@@ -48,25 +48,25 @@
         <VBtn v-if="dialogLeftButtonText && onDialogLeftButton"
               :disabled="progressActive || disableLeftButton"
               :color="leftButtonColor"
-              text
+              variant="text"
               @click="onDialogLeftButtonClick">{{ dialogLeftButtonText }}</VBtn>
 
         <VSpacer />
 
         <VBtn v-if="dialogCancelText && (onDialogCancel || closeOnCancel)"
               :disabled="progressActive || disableCancel"
-              text
+              variant="text"
               @click="onDialogCancelButtonClick">{{ dialogCancelText }}</VBtn>
 
         <VBtn v-if="dialogSecondaryText && onDialogSecondary"
               :disabled="progressActive || disableSecondary"
-              text
+              variant="text"
               @click="onDialogSecondaryButtonClick">{{ dialogSecondaryText }}</VBtn>
 
         <VBtn v-if="dialogPrimaryText && onDialogPrimary"
               :disabled="progressActive || disablePrimary"
               :color="accentColor"
-              text
+              variant="text"
               @click="onDialogPrimaryButtonClick">{{ dialogPrimaryText }}</VBtn>
       </VCardActions>
     </VCard>
