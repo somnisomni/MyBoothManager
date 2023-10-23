@@ -28,9 +28,9 @@ FROM node:lts-alpine as production
 # Copy files
 WORKDIR /app
 COPY              ./package.json                       ./package.json
-COPY --from=build /build/packages/Common/dist          packages/Common
+COPY --from=build /build/packages/Common/dist          packages/Common/dist
 COPY --from=build /build/packages/Common/package.json  packages/Common/package.json
-COPY --from=build /build/projects/Backend/dist         projects/Backend
+COPY --from=build /build/projects/Backend/dist         projects/Backend/dist
 COPY --from=build /build/projects/Backend/package.json projects/Backend/package.json
 
 # Using Yarn Berry
@@ -43,4 +43,4 @@ RUN yarn workspaces focus @myboothmanager/backend --production
 EXPOSE 31111
 
 # Start server
-ENTRYPOINT ["yarn", "--cwd", "projects/Backend", "start:prod"]
+ENTRYPOINT ["yarn", "workspace", "@myboothmanager/backend", "start:prod"]
