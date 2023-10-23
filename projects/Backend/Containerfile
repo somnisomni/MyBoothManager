@@ -8,11 +8,13 @@ COPY projects/Backend projects/Backend
 
 # Build common package
 WORKDIR /build/packages/Common
+RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
 # Build backend
 WORKDIR /build/projects/Backend
+RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
@@ -26,6 +28,9 @@ COPY --from=build /build/packages/Common/dist          packages/Common
 COPY --from=build /build/packages/Common/package.json  packages/Common/package.json
 COPY --from=build /build/projects/Backend/dist         projects/Backend
 COPY --from=build /build/projects/Backend/package.json projects/Backend/package.json
+
+# Using Yarn Berry
+RUN yarn set version berry
 
 # Install production dependencies
 RUN yarn workspaces focus @myboothmanager/backend --production

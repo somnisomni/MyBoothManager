@@ -8,11 +8,13 @@ COPY projects/Admin projects/Admin
 
 # Build common package
 WORKDIR /build/packages/Common
+RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
 # Build admin frontend
 WORKDIR /build/projects/Admin
+RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
