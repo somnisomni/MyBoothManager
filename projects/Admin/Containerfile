@@ -12,6 +12,9 @@ WORKDIR /build
 COPY packages/      packages/
 COPY projects/Admin projects/Admin
 
+# Install necessary packages for building the project
+RUN apk add git
+
 # Build common package
 WORKDIR /build/packages/Common
 # Workaround
