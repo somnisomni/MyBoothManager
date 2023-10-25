@@ -41,7 +41,7 @@
                 size="x-large"
                 class="w-100"
                 :loading="orderCreationInProgress"
-                :disabled="orderCreationInProgress"
+                :disabled="isGoodsInOrderEmpty || orderCreationInProgress"
                 @click="onOrderConfirmClick">판매 확인</VBtn>
         </VListItem>
       </VList>
@@ -106,6 +106,10 @@ export default class BoothPOSPage extends Vue {
 
   get boothGoodsDict(): Record<number, IGoods> {
     return useAdminStore().boothGoodsList;
+  }
+
+  get isGoodsInOrderEmpty(): boolean {
+    return Object.keys(this.goodsInOrder).length <= 0;
   }
 
   get totalOrderWorth(): number {

@@ -33,7 +33,7 @@ export class GoodsOrderService {
     }
 
     // Check goods availability
-    if(!createGoodsOrderDto.order) throw new BadRequestException("구매 데이터 없습니다.");
+    if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new BadRequestException("구매 데이터가 없습니다.");
     for(const order of createGoodsOrderDto.order) {
       const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
       if(!goods) throw new BadRequestException("찾을 수 없거나 권한이 없는 굿즈가 포함되어 있습니다.");
