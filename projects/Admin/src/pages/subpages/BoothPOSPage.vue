@@ -42,7 +42,7 @@
                 class="w-100"
                 :loading="orderCreationInProgress"
                 :disabled="isGoodsInOrderEmpty || orderCreationInProgress"
-                @click="onOrderConfirmClick">판매 확인</VBtn>
+                @click="showOrderConfirmDialog = true">판매 확인</VBtn>
         </VListItem>
       </VList>
     </VNavigationDrawer>
@@ -63,6 +63,10 @@
       <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
     </VSnackbar>
   </VMain>
+
+  <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
+                         :orders="goodsInOrder"
+                         @confirm="onOrderConfirm" />
 </template>
 
 <script lang="ts">
@@ -71,8 +75,9 @@ import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
+import POSOrderConfirmDialog from "@/components/dialogs/POSOrderConfirmDialog.vue";
 
-interface IGoodsOrder {
+export interface IGoodsOrderInternal {
   goodsId: number;
   quantity: number;
 }
@@ -80,13 +85,14 @@ interface IGoodsOrder {
 @Component({
   components: {
     GoodsListView,
-
+    POSOrderConfirmDialog,
   },
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  goodsInOrder: Record<number, IGoodsOrder> = {};
+  goodsInOrder: Record<number, IGoodsOrderInternal> = {};
 
+  showOrderConfirmDialog: boolean = false;
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
@@ -176,7 +182,7 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
-  async onOrderConfirmClick() {
+  async onOrderConfirm() {
     this.orderCreationInProgress = true;
 
     const data: IGoodsOrderCreateRequest = {
