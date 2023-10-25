@@ -2,8 +2,10 @@
 FROM node:lts-alpine as build
 
 # Build arguments
+ARG GIT_HASH
 ARG API_SERVER_URL=http://localhost:31111
 ARG BASE_PATH=/admin
+ENV GIT_HASH=${GIT_HASH}
 ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
 ENV VITE_BASE_PATH=${BASE_PATH}
 
@@ -11,9 +13,6 @@ ENV VITE_BASE_PATH=${BASE_PATH}
 WORKDIR /build
 COPY packages/      packages/
 COPY projects/Admin projects/Admin
-
-# Install necessary packages for building the project
-RUN apk add git
 
 # Build common package
 WORKDIR /build/packages/Common

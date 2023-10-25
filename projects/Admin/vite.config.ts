@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 
-const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
+const commitHash = process.env.GIT_HASH ?? execSync("git rev-parse --short HEAD").toString().trim();
 const packageJson = require("./package.json");
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({
