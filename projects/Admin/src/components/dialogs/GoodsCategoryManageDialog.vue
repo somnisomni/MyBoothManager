@@ -4,11 +4,11 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
-                :dialogTitle="dynRes.title"
+                :dialogTitle="dynString.title"
                 dialogCancelText="취소"
-                :dialogPrimaryText="dynRes.primaryText"
-                :dialogSecondaryText="dynRes.secondaryText"
-                :dialogLeftButtonText="dynRes.leftButtonText"
+                :dialogPrimaryText="dynString.primaryText"
+                :dialogSecondaryText="dynString.secondaryText"
+                :dialogLeftButtonText="dynString.leftButtonText"
                 :onDialogCancel="onDialogCancel"
                 :onDialogPrimary="onDialogConfirm"
                 :onDialogSecondary="resetForm"
@@ -53,17 +53,19 @@ export default class GoodsCategoryManageDialog extends Vue {
     name: "",
   };
 
-  readonly dynRes = {
-    title: this.editMode ? "굿즈 카테고리 수정" : "굿즈 카테고리 추가",
-    primaryText: this.editMode ? "업데이트" : "추가",
-    secondaryText: this.editMode ? "되돌리기" : "초기화",
-    leftButtonText: this.editMode ? "삭제" : null,
-  };
-
   updateInProgress = false;
   formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
   cancelWarningDialogShown = false;
+
+  get dynString(): Record<string, string | null> {
+    return {
+      title: this.editMode ? "굿즈 카테고리 수정" : "굿즈 카테고리 추가",
+      primaryText: this.editMode ? "업데이트" : "추가",
+      secondaryText: this.editMode ? "되돌리기" : "초기화",
+      leftButtonText: this.editMode ? "삭제" : null,
+    };
+  }
 
   get isFormEdited(): boolean {
     let edited = false;
