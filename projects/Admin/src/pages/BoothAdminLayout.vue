@@ -41,7 +41,7 @@
         <VDivider />
 
         <VListSubheader>계정</VListSubheader>
-        <VListItem density="compact" min-height="30px" max-height="30px">
+        <VListItem density="compact" min-height="30px">
           <span class="text-subtitle-2 text-disabled">로그인 계정: {{ currentAccount?.name }}</span>
         </VListItem>
         <VListItem prepend-icon="mdi-logout" title="로그아웃" value="logout"
@@ -51,8 +51,9 @@
       <VSpacer />
 
       <VList nav class="flex-shrink-0">
-        <VListItem v-if="isDevEnv" density="compact" min-height="30px" max-height="30px">
-          <div class="text-subtitle-2 text-disabled text-center" density="compact">개발 환경에서 실행 중</div>
+        <VListItem density="compact" min-height="30px">
+          <div v-if="isDevEnv" class="text-subtitle-2 text-disabled text-center">개발 환경에서 실행 중</div>
+          <div class="text-subtitle-2 text-disabled text-center">{{ appVersion }} <small>({{ appGitHash }})</small></div>
         </VListItem>
         <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
       </VList>
@@ -106,8 +107,16 @@ export default class BoothAdminLayout extends Vue {
     return useAdminStore().currentAccount;
   }
 
-  get isDevEnv() {
+  get isDevEnv(): boolean {
     return import.meta.env.DEV;
+  }
+
+  get appVersion(): string {
+    return `v${import.meta.env.VITE__APP_VERSION}`;
+  }
+
+  get appGitHash(): string {
+    return import.meta.env.VITE__GIT_HASH;
   }
 }
 </script>
