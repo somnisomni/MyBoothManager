@@ -22,8 +22,6 @@ RUN yarn build
 
 # Build admin frontend
 WORKDIR /build/projects/Admin
-# Workaround
-RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build

@@ -16,8 +16,6 @@ RUN yarn build
 
 # Build backend
 WORKDIR /build/projects/Backend
-# Workaround
-RUN rm .containerignore
 RUN yarn set version berry
 RUN yarn install
 RUN yarn build
