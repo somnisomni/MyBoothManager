@@ -3,11 +3,11 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
-                :dialogTitle="dynRes.title"
+                :dialogTitle="dynString.title"
                 dialogCancelText="취소"
-                :dialogPrimaryText="dynRes.primaryText"
-                :dialogSecondaryText="dynRes.secondaryText"
-                :dialogLeftButtonText="dynRes.leftButtonText"
+                :dialogPrimaryText="dynString.primaryText"
+                :dialogSecondaryText="dynString.secondaryText"
+                :dialogLeftButtonText="dynString.leftButtonText"
                 :onDialogCancel="onDialogCancel"
                 :onDialogPrimary="onDialogConfirm"
                 :onDialogSecondary="resetForm"
@@ -116,18 +116,20 @@ export default class GoodsManageDialog extends Vue {
     stockRemaining: undefined,
   };
 
-  readonly dynRes = {
-    title: this.editMode ? "굿즈 수정" : "굿즈 추가",
-    primaryText: this.editMode ? "업데이트" : "추가",
-    secondaryText: this.editMode ? "되돌리기" : "초기화",
-    leftButtonText: this.editMode ? "삭제" : null,
-  };
-
   updateInProgress = false;
   formData: IGoodsUpdateRequest | IGoodsCreateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
   goodsCategoryManageDialogShown = false;
   cancelWarningDialogShown = false;
+
+  get dynString(): Record<string, string | null> {
+    return {
+      title: this.editMode ? "굿즈 정보 수정" : "굿즈 추가",
+      primaryText: this.editMode ? "업데이트" : "추가",
+      secondaryText: this.editMode ? "되돌리기" : "초기화",
+      leftButtonText: this.editMode ? "삭제" : null,
+    };
+  }
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;

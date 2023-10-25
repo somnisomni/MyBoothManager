@@ -3,11 +3,11 @@
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"
-                :dialogTitle="dynRes.title"
+                :dialogTitle="dynString.title"
                 dialogCancelText="취소"
-                :dialogSecondaryText="dynRes.secondaryText"
-                :dialogPrimaryText="dynRes.primaryText"
-                :dialogLeftButtonText="dynRes.leftButtonText"
+                :dialogSecondaryText="dynString.secondaryText"
+                :dialogPrimaryText="dynString.primaryText"
+                :dialogLeftButtonText="dynString.leftButtonText"
                 :onDialogCancel="onDialogCancel"
                 :onDialogSecondary="resetForm"
                 :onDialogPrimary="onDialogConfirm"
@@ -74,17 +74,19 @@ export default class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
 
-  readonly dynRes = {
-    title: this.editMode ? "부스 정보 수정" : "부스 추가",
-    primaryText: this.editMode ? "업데이트" : "추가",
-    secondaryText: this.editMode ? "되돌리기" : "초기화",
-    leftButtonText: this.editMode ? "삭제" : null,
-  };
-
   updateInProgress = false;
   formData: IBoothUpdateReuqest | IBoothCreateRequest = reactive({});
   formValid = false;
   cancelWarningDialogShown = false;
+
+  get dynString(): Record<string, string | null> {
+    return {
+      title: this.editMode ? "부스 정보 수정" : "부스 추가",
+      primaryText: this.editMode ? "업데이트" : "추가",
+      secondaryText: this.editMode ? "되돌리기" : "초기화",
+      leftButtonText: this.editMode ? "삭제" : null,
+    };
+  }
 
   get currencySymbols(): Array<Record<string, string>> {
     return Object.keys(currencySymbolInfo).map((key) => ({
