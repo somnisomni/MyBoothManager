@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { emptyNumberKeyObject, emptyObject, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI, { NEED_REFRESH_MESSAGE } from "@/lib/api-admin";
 import router from "@/router";
 import { useAuthStore } from "./auth";
@@ -41,10 +41,6 @@ const useAdminStore = defineStore("admin", () => {
     } else {
       return result;
     }
-  }
-
-  function emptyObject(target: Record<any, unknown>) {
-    Object.keys(target).forEach((key) => delete target[key]);
   }
 
   /* Actions */
@@ -260,10 +256,11 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   function clearAllBoothData(includeBoothList: boolean = true): void {
-    if(includeBoothList) Object.keys(boothList).forEach((key) => delete boothList[parseInt(key)]);
+    if(includeBoothList) emptyNumberKeyObject(boothList);
 
-    Object.keys(boothGoodsList).forEach((key) => delete boothGoodsList[parseInt(key)]);
-    Object.keys(boothGoodsCategoryList).forEach((key) => delete boothGoodsCategoryList[parseInt(key)]);
+    emptyNumberKeyObject(boothGoodsList);
+    emptyNumberKeyObject(boothGoodsCategoryList);
+    emptyNumberKeyObject(boothGoodsOrderList);
   }
 
   async function fetchAllBoothData(startup: boolean = true): Promise<boolean> {
