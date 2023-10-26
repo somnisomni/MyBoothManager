@@ -1,11 +1,11 @@
 <template>
-  <VBtn class="pr-2"
+  <VBtn class="d-block flex-shrink-1 mr-0 px-2"
         title="관리할 부스 선택"
         size="large"
         @click.stop="boothSelectionDialogOpen = !boothSelectionDialogOpen">
     <VToolbarTitle class="d-flex flex-row text-right" style="line-height: 1.1">
       <div style="font-size: 0.66em; font-weight: 300">현재 관리 중인 부스</div>
-      <div class="text-decoration-underline">{{ boothName }}</div>
+      <div class="text-decoration-underline overflow-hidden" style="text-overflow: ellipsis;">{{ boothName }}</div>
     </VToolbarTitle>
     <VIcon class="ms-4">mdi-store-search</VIcon>
   </VBtn>
