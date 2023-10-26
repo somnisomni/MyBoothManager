@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="pa-8 d-flex flex-column">
+  <VContainer class="mt-4 pa-2 pa-md-6 d-flex flex-column">
     <VRow>
       <VCol cols="12" lg="4">
         <BoothStatusPanel />

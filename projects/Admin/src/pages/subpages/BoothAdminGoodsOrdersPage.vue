@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <VContainer class="mt-4 pa-2 pa-md-6">
     <VBtn @click="onRefreshClick">Refresh list</VBtn>
     <VProgressCircular indeterminate v-if="dataLoading" />
 
@@ -13,7 +13,7 @@
         <div>gId: {{ item.gId }}, price: {{ item.price }}, quant: {{ item.quantity }}</div>
       </div>
     </div>
-  </div>
+  </VContainer>
 </template>
 
 <script lang="ts">

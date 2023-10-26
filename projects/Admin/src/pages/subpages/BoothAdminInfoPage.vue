@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="mt-4">
+  <VContainer class="mt-4 pa-2 pa-md-6">
     <BoothInfoPanel />
   </VContainer>
 </template>
