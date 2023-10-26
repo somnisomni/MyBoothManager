@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 
-const commitHash = process.env.GIT_HASH ?? execSync("git rev-parse --short HEAD").toString().trim();
+const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim(); } catch(e) { return null; } })();
 const packageJson = require("./package.json");
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({
@@ -22,7 +22,7 @@ console.debug();
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({ isProduction: process.env.NODE_ENV === "production" }),
     vuetify({ autoImport: true }),
   ],
   resolve: {

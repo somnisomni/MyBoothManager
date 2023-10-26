@@ -116,7 +116,7 @@ export default class BoothAdminLayout extends Vue {
   }
 
   get appGitHash(): string {
-    return import.meta.env.VITE__GIT_HASH;
+    return import.meta.env.VITE__GIT_HASH ?? "unknown";
   }
 }
 </script>
