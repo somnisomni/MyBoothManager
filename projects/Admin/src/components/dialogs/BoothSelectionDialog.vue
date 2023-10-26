@@ -5,10 +5,12 @@
                 :titleExtraButtons="titleButtons"
                 :titleExtraMargin="true"
                 :closeOnCancel="false"
+                :fullscreenOnSmallScreen="true"
                 dialogTitle="관리할 부스 선택">
     <VSheet v-for="booth in boothList"
             :key="booth.id"
             class="booth-item"
+            min-height="120px"
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
@@ -21,7 +23,7 @@
           <div class="booth-item-name">{{ booth.name }}</div>
           <div class="booth-item-desc">{{ booth.description }}</div>
         </VLayout>
-        <div>{{ getBoothOpenStatusString(booth.status) }}</div>
+        <div class="flex-shrink-0">{{ getBoothOpenStatusString(booth.status) }}</div>
       </VLayout>
     </VSheet>
 

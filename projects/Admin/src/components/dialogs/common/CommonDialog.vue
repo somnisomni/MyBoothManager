@@ -3,6 +3,8 @@
            :persistent="progressActive || persistent"
            :width="width"
            :max-width="maxWidth"
+           :height="isFullScreenOnSmallScreenEligable ? '100%' : ''"
+           :max-height="isFullScreenOnSmallScreenEligable ? '100%' : ''"
            :scrollable="scrollable"
            class="dialog-common">
     <VCard :loading="progressActive" class="ma-0 ma-sm-4">
@@ -14,25 +16,27 @@
       </template>
 
       <!-- Title -->
-      <VRow class="pa-4" :class="{ 'py-6': titleExtraMargin }">
+      <VLayout class="d-flex flex-row flex-grow-0 flex-shrink-0 flex-wrap justify-end align-center pa-2" :class="{ 'py-4': titleExtraMargin }">
         <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
 
-        <VBtn v-for="btn in titleExtraButtons"
-              :key="btn.icon"
-              :disabled="progressActive || btn.disabled"
-              icon
-              variant="flat"
-              class="mr-2"
-              @click="() => { btn.onClick(); }"><VIcon>{{ btn.icon }}</VIcon></VBtn>
-        <VBtn v-if="!hideCloseButton"
-              :disabled="progressActive || persistent"
-              icon
-              variant="flat"
-              class="mr-2"
-              @click.stop="onCloseButtonClick">
-          <VIcon>mdi-close</VIcon>
-        </VBtn>
-      </VRow>
+        <div class="d-flex flex-row flex-nowrap">
+          <VBtn v-for="btn in titleExtraButtons"
+                :key="btn.icon"
+                :disabled="progressActive || btn.disabled"
+                icon
+                variant="flat"
+                class="mr-2"
+                @click="() => { btn.onClick(); }"><VIcon>{{ btn.icon }}</VIcon></VBtn>
+          <VBtn v-if="!hideCloseButton"
+                :disabled="progressActive || persistent"
+                icon
+                variant="flat"
+                class="mr-2"
+                @click.stop="onCloseButtonClick">
+            <VIcon>mdi-close</VIcon>
+          </VBtn>
+        </div>
+      </VLayout>
 
       <VDivider />
 
@@ -74,7 +78,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { unref } from "vue";
+import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import { useDisplay } from "vuetify";
 
 export interface DialogButtonParams {
   icon: string;
@@ -88,6 +94,7 @@ export default class CommonDialog extends Vue {
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
   @Prop({ type: Boolean, default: true }) scrollable!: boolean;
   @Prop({ type: String, default: "primary" }) accentColor!: string;
+  @Prop({ type: Boolean, default: false }) fullscreenOnSmallScreen!: boolean;
   @Prop({ type: String, default: "700px" }) width!: string | number;
   @Prop({ type: String, default: "100%" }) maxWidth!: string | number;
   @Prop({ type: Boolean, default: false }) hideCloseButton!: boolean;
@@ -115,6 +122,10 @@ export default class CommonDialog extends Vue {
     return (!!this.dialogPrimaryText && !!this.onDialogPrimary) ||
            (!!this.dialogSecondaryText && !!this.onDialogSecondary) ||
            (!!this.dialogCancelText && ((this.onDialogCancel && !this.closeOnCancel) || (!this.onDialogCancel && this.closeOnCancel)));
+  }
+
+  get isFullScreenOnSmallScreenEligable(): boolean {
+    return this.fullscreenOnSmallScreen && unref(useDisplay().mobile);  // FIXME: Not reactive... why???
   }
 
   @Emit("close")
