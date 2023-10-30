@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory, type RouteRecordName } from "vue-router";
-import ErrorPage from "@/pages/ErrorPage.vue";
+import { createRouter, createWebHistory, type RouteRecordName, type RouteRecordRaw } from "vue-router";
+import NotFoundErrorPage from "@/pages/NotFoundErrorPage.vue";
 import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
 import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
 import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
@@ -13,20 +13,22 @@ import SuperAdminPage from "@/pages/superadmin/SuperAdminPage.vue";
 import { useAdminStore } from "@/stores/admin";
 import { useAuthStore } from "@/stores/auth";
 
+const isProd: boolean = import.meta.env.PROD;
+const placeholderRoute: RouteRecordRaw = {
+  path: "/:pathMatch(.*)*",
+  name: "placeholder",
+  component: PlaceholderPage,
+};
+
 /* Router definitions */
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    /* Falloff route */
+    ...(isProd ? [] : [placeholderRoute]),
     {
-      path: "/:pathMatch(.*)*",
-      name: "placeholder",
-      component: PlaceholderPage,
-    },
-    {
-      path: "/404",  // Change this to "/:pathMatch(.*)*" later, on real production
+      path: isProd ? "/:pathMatch(.*)*" : "/404",
       name: "404",
-      component: ErrorPage,
+      component: NotFoundErrorPage,
     },
 
     /* Login / Logout */
