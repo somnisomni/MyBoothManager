@@ -23,13 +23,15 @@ import router from "@/router";
 
 @Component({})
 export default class NotFoundErrorPage extends Vue {
-  readonly rootRouteUrl: string = router.resolve({ name: "admin" })?.path ?? (import.meta.env.BASE_URL ?? "/");
-
   public mounted() {
     document.addEventListener("contextmenu", this.prevent);
     document.addEventListener("copy", this.prevent);
     document.addEventListener("cut", this.prevent);
     document.addEventListener("drag", this.prevent);
+  }
+
+  get rootRouteUrl(): string {
+    return router.resolve({ name: "admin" }).href ?? (import.meta.env.BASE_URL ?? "/");
   }
 
   prevent(event: Event) {
