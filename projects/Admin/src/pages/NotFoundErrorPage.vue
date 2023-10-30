@@ -25,8 +25,8 @@ import { Vue, Component } from "vue-facing-decorator";
 import router from "@/router";
 
 @Component({})
-export default class ErrorPage extends Vue {
-  rootRouteUrl: string = router.resolve({ name: "admin-root" })?.path ?? "/";
+export default class NotFoundErrorPage extends Vue {
+  rootRouteUrl: string = router.resolve({ name: "admin" })?.path ?? (import.meta.env.BASE_URL ?? "/");
 
   public mounted() {
     document.addEventListener("contextmenu", this.prevent);
