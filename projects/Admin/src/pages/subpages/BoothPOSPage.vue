@@ -14,21 +14,11 @@
         <VSlideXReverseTransition group leave-absolute>
           <VListItem v-for="item in goodsInOrder"
                      :key="item.goodsId"
-                     class="order-item pa-0"
+                     class="pa-0"
                      height="72px">
-            <VImg :src="'https://picsum.photos/seed/' + item.goodsId + '/200/250'" cover height="72px">
-              <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
-                <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
-                  <span class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</span>
-                  <span class="text-body-2"><strong>{{ item.quantity }} 개</strong> · {{ calculateGoodsPrice(item.goodsId, item.quantity) }}</span>
-                </div>
-
-                <div>
-                  <VBtn icon="mdi-plus" variant="text" size="small" @click.stop="updateGoodsInOrderQuantity(item.goodsId, 1)" />
-                  <VBtn icon="mdi-minus" variant="text" size="small" @click.stop="updateGoodsInOrderQuantity(item.goodsId, -1)" />
-                </div>
-              </VLayout>
-            </VImg>
+            <POSGoodsOrderListItem :item="item"
+                                   :currencySymbol="currencySymbol"
+                                   @quantityChange="updateGoodsInOrderQuantity" />
           </VListItem>
         </VSlideXReverseTransition>
       </VList>
@@ -55,7 +45,7 @@
     </VNavigationDrawer>
 
     <VContainer class="d-flex flex-column flex-wrap">
-      <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity(goodsId, 1)" />
+      <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity({ goodsId, delta: 1 })" />
     </VContainer>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -80,6 +70,7 @@
 </template>
 
 <script lang="ts">
+import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { APP_NAME, BoothStatus, emptyNumberKeyObject, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
@@ -87,15 +78,12 @@ import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderConfirmDialog from "@/components/dialogs/POSOrderConfirmDialog.vue";
 import POSListResetConfirmDialog from "@/components/dialogs/POSListResetConfirmDialog.vue";
-
-export interface IGoodsOrderInternal {
-  goodsId: number;
-  quantity: number;
-}
+import POSGoodsOrderListItem from "@/components/pos/POSGoodsOrderListItem.vue";
 
 @Component({
   components: {
     GoodsListView,
+    POSGoodsOrderListItem,
     POSOrderConfirmDialog,
     POSListResetConfirmDialog,
   },
@@ -151,10 +139,6 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
-  calculateGoodsPrice(goodsId: number, quantity: number): string {
-    return `${this.currencySymbol}${(this.boothGoodsDict[goodsId].price * quantity).toLocaleString()}`;
-  }
-
   resetOrderList(): void {
     emptyNumberKeyObject(this.goodsInOrder);
   }
@@ -174,7 +158,9 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
-  updateGoodsInOrderQuantity(goodsId: number, delta: number) {
+  updateGoodsInOrderQuantity(eventData: { goodsId: number, delta: number }) {
+    const { goodsId, delta } = eventData;
+
     if(this.goodsInOrder[goodsId]) {
       if(this.goodsInOrder[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
         this.goodsInOrder[goodsId].quantity += delta;
@@ -248,16 +234,5 @@ export default class BoothPOSPage extends Vue {
   font-weight: 500;
   letter-spacing: 0.125rem;
   line-height: 1.33;
-}
-
-.order-item {
-  & * {
-    white-space: nowrap;
-
-    & span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
 }
 </style>

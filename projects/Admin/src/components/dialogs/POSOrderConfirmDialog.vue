@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.vue";
 import type { IGoods } from "@myboothmanager/common";
+import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
