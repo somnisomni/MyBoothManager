@@ -37,7 +37,8 @@
     </VCard>
 
     <div class="position-fixed d-block text-center text-subtitle-2 text-grey mb-2" style="bottom: 0; left: 0; right: 0;">
-      <strong>{{ APP_NAME }}</strong> <span>| Copyright © 2023- <a href="https://somni.one/" target="_blank" style="color: currentColor;">somni</a>, All rights reserved.</span>
+      <span><strong>{{ APP_NAME }}</strong> {{ APP_VERSION }} <small>({{ APP_GIT_HASH }})</small></span><br />
+      <span>Copyright © 2023- <a href="https://somni.one/" target="_blank" style="color: currentColor;">somni</a>, All rights reserved.</span>
     </div>
   </VContainer>
 </template>
@@ -48,10 +49,13 @@ import { Component, Vue } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
 import { useAdminStore } from "@/stores/admin";
+import { Const } from "@/lib/const";
 
 @Component({})
 export default class LoginPage extends Vue {
   readonly APP_NAME = APP_NAME;
+  readonly APP_VERSION = Const.APP_VERSION;
+  readonly APP_GIT_HASH = Const.APP_GIT_HASH;
 
   loginProgress = false;
   loginData: IAccountLoginRequest = {

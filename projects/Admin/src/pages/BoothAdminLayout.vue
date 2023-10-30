@@ -53,7 +53,7 @@
       <VList nav class="flex-shrink-0">
         <VListItem density="compact" min-height="30px">
           <div v-if="isDevEnv" class="text-subtitle-2 text-disabled text-center">개발 환경에서 실행 중</div>
-          <div class="text-subtitle-2 text-disabled text-center">{{ appVersion }} <small>({{ appGitHash }})</small></div>
+          <div class="text-subtitle-2 text-disabled text-center">{{ APP_VERSION }} <small>({{ GIT_HASH }})</small></div>
         </VListItem>
         <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
       </VList>
@@ -73,6 +73,7 @@ import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
 import router from "@/router";
+import { Const } from "@/lib/const";
 
 @Component({
   components: {
@@ -81,6 +82,8 @@ import router from "@/router";
 })
 export default class BoothAdminLayout extends Vue {
   BoothStatus = BoothStatus;
+  readonly APP_VERSION = Const.APP_VERSION;
+  readonly GIT_HASH = Const.APP_GIT_HASH;
 
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
@@ -109,14 +112,6 @@ export default class BoothAdminLayout extends Vue {
 
   get isDevEnv(): boolean {
     return import.meta.env.DEV;
-  }
-
-  get appVersion(): string {
-    return `v${import.meta.env.VITE__APP_VERSION}`;
-  }
-
-  get appGitHash(): string {
-    return import.meta.env.VITE__GIT_HASH ?? "unknown";
   }
 }
 </script>
