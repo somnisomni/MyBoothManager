@@ -125,7 +125,7 @@ export default class CommonDialog extends Vue {
   }
 
   get isFullScreenOnSmallScreenEligable(): boolean {
-    return this.fullscreenOnSmallScreen && unref(useDisplay().mobile);  // FIXME: Not reactive... why???
+    return this.fullscreenOnSmallScreen && unref(useDisplay().smAndDown);
   }
 
   @Emit("close")
