@@ -1,8 +1,9 @@
 <template>
-  <div id="error-page" class="d-flex align-center justify-center text-center"
+  <div id="error-page" class="d-flex align-center justify-center text-center pa-4"
+       style="max-width: 100%;"
        @contextmenu.prevent="prevent">
     <div>
-      <video id="error-image" autoplay loop muted playsinline poster="@/res/images/error_jeomo.png">
+      <video id="error-image" autoplay loop muted playsinline poster="@/res/images/error_jeomo.png" style="max-width: 100%; min-width: 300px;">
         <source src="@/res/images/error_jeomo_anim.webm" type="video/webm" />
         <source src="@/res/images/error_jeomo.png" type="image/png" />
       </video>
