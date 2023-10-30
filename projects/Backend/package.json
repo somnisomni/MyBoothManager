@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "somni <me@somni.one>",
   "private": true,
-  "packageManager": "yarn@4.0.0",
+  "packageManager": "yarn@4.0.1",
   "scripts": {
     "build": "nest build",
     "start": "nest start",
