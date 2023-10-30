@@ -35,6 +35,13 @@
 
       <VList nav class="flex-shrink-0 pa-0 pb-2">
         <VListItem class="px-2 py-1">
+          <VBtn prepend-icon="mdi-playlist-remove"
+                class="w-100"
+                variant="text"
+                :disabled="isGoodsInOrderEmpty || orderCreationInProgress"
+                @click="showListResetConfirmDialog = true">목록 초기화</VBtn>
+        </VListItem>
+        <VListItem class="px-2 py-1">
           <div class="text-body-2 text-center mb-2">총 가격: <strong>{{ totalOrderWorthString }}</strong></div>
           <VBtn prepend-icon="mdi-cart-heart"
                 color="primary"
@@ -67,15 +74,19 @@
   <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
                          :orders="goodsInOrder"
                          @confirm="onOrderConfirm" />
+
+  <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
+                             @confirm="onListResetConfirm" />
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, emptyNumberKeyObject, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderConfirmDialog from "@/components/dialogs/POSOrderConfirmDialog.vue";
+import POSListResetConfirmDialog from "@/components/dialogs/POSListResetConfirmDialog.vue";
 
 export interface IGoodsOrderInternal {
   goodsId: number;
@@ -86,13 +97,15 @@ export interface IGoodsOrderInternal {
   components: {
     GoodsListView,
     POSOrderConfirmDialog,
+    POSListResetConfirmDialog,
   },
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  goodsInOrder: Record<number, IGoodsOrderInternal> = {};
+  readonly goodsInOrder: Record<number, IGoodsOrderInternal> = {};
 
   showOrderConfirmDialog: boolean = false;
+  showListResetConfirmDialog: boolean = false;
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
@@ -140,6 +153,10 @@ export default class BoothPOSPage extends Vue {
 
   calculateGoodsPrice(goodsId: number, quantity: number): string {
     return `${this.currencySymbol}${(this.boothGoodsDict[goodsId].price * quantity).toLocaleString()}`;
+  }
+
+  resetOrderList(): void {
+    emptyNumberKeyObject(this.goodsInOrder);
   }
 
   onGoodsItemClick(goodsId: number) {
@@ -203,13 +220,17 @@ export default class BoothPOSPage extends Vue {
     const results = [await useAdminStore().createGoodsOrder(data), await useAdminStore().fetchGoodsOfCurrentBooth(true)];
     if(results.every((res) => typeof res !== "string")) {
       // If API call success, empty the order list
-      this.goodsInOrder = { };
+      this.resetOrderList();
       this.showOrderSuccessSnackbar = true;
     } else {
       this.showOrderFailedSnackbar = true;
     }
 
     this.orderCreationInProgress = false;
+  }
+
+  onListResetConfirm(): void {
+    this.resetOrderList();
   }
 }
 </script>

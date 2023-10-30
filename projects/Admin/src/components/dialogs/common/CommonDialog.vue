@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import { unref } from "vue";
-import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
 export interface DialogButtonParams {
