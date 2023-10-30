@@ -1,14 +1,11 @@
 <template>
   <div id="error-page" class="d-flex align-center justify-center text-center"
-       @contextmenu="prevent">
+       @contextmenu.prevent="prevent">
     <div>
       <video id="error-image" autoplay loop muted playsinline poster="@/res/images/error_jeomo.png">
         <source src="@/res/images/error_jeomo_anim.webm" type="video/webm" />
         <source src="@/res/images/error_jeomo.png" type="image/png" />
       </video>
-      <!-- <img id="error-image"
-           alt="Error image (illustration by @Je_o_mo)"
-           src="@/res/images/error_jeomo.png" /> -->
 
       <div id="error-text">
         <p style="font-size: 2em"><strong>404.</strong></p>
@@ -26,7 +23,7 @@ import router from "@/router";
 
 @Component({})
 export default class NotFoundErrorPage extends Vue {
-  rootRouteUrl: string = router.resolve({ name: "admin" })?.path ?? (import.meta.env.BASE_URL ?? "/");
+  readonly rootRouteUrl: string = router.resolve({ name: "admin" })?.path ?? (import.meta.env.BASE_URL ?? "/");
 
   public mounted() {
     document.addEventListener("contextmenu", this.prevent);
