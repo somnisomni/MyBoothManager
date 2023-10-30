@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./projects/Admin/Containerfile
       args:
-        GIT_HASH: $(git rev-parse --short HEAD)
+        GIT_HASH: ${GIT_COMMIT_HASH}
         API_SERVER_URL: "http://localhost:31111"
         BASE_PATH: "/admin"
     ports:
