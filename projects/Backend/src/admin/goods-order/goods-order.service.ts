@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create as createTarget, removeTarget } from "@/lib/common-functions";
@@ -64,7 +64,7 @@ export class GoodsOrderService {
     return { value: await GoodsOrder.count({ where }) };
   }
 
-  async remove(id: number, boothId: number, callerAccountId: number): Promise<IStatusOKResponse> {
+  async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     const goods = await this.findGoodsOrderBelongsToBooth(id, boothId, callerAccountId);
     return await removeTarget(goods);
   }

@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { IBackendErrorResponse } from "@myboothmanager/common";
+import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, ImATeapotException, NotFoundException } from "@nestjs/common";
 
 const SCREAM = [
@@ -48,6 +48,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
+      errorCode: ErrorCodes.UNKNOWN_ERROR,
     } as IBackendErrorResponse);
   }
 }
@@ -65,6 +66,7 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
+      errorCode: ErrorCodes.ROUTE_NOT_FOUND,
     } as IBackendErrorResponse);
   }
 }
@@ -82,6 +84,7 @@ export class TeapotExceptionFilter implements ExceptionFilter {
       timestamp: (new Date()).toISOString(),
       path: request.url,
       statusCode,
+      errorCode: ErrorCodes.SUCCESS,
     } as IBackendErrorResponse);
   }
 }

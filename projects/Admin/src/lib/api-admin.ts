@@ -108,8 +108,8 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IBoothResponse>(this.PATCH, `booth/${boothId}`, payload);
   }
 
-  static async updateBoothStatus(boothId: number, payload: CT.IBoothStatusUpdateRequest): Promise<CT.IStatusOKResponse | string> {
-    return await this.apiCallWrapper<CT.IStatusOKResponse>(this.PATCH, `booth/${boothId}/status`, payload);
+  static async updateBoothStatus(boothId: number, payload: CT.IBoothStatusUpdateRequest): Promise<CT.ISuccessResponse | string> {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(this.PATCH, `booth/${boothId}/status`, payload);
   }
 
   static async updateGoodsInfo(goodsId: number, payload: CT.IGoodsUpdateRequest): Promise<CT.IGoodsResponse | string> {
@@ -144,7 +144,7 @@ export default class AdminAPI {
   }
 
   /* Delete */
-  static async deleteGoodsCategory(categoryId: number): Promise<CT.IStatusOKResponse | string> {
-    return await this.apiCallWrapper<CT.IStatusOKResponse>(this.DELETE, `goods/category/${categoryId}`);
+  static async deleteGoodsCategory(categoryId: number): Promise<CT.ISuccessResponse | string> {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(this.DELETE, `goods/category/${categoryId}`);
   }
 }

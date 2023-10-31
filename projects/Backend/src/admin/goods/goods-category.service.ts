@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import GoodsCategory from "@/db/models/goods-category";
 import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
@@ -73,7 +73,7 @@ export class GoodsCategoryService {
     return category;
   }
 
-  async remove(id: number): Promise<IStatusOKResponse> {
+  async remove(id: number): Promise<ISuccessResponse> {
     const category = await this.findOne(id);
 
     // Find goods by category and set to default(uncategorized)

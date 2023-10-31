@@ -1,6 +1,6 @@
 import * as argon2 from "argon2";
 import { Injectable, NotFoundException, NotImplementedException } from "@nestjs/common";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
 import { create, removeOne } from "@/lib/common-functions";
 import { IAuthPayload } from "../auth/jwt";
@@ -70,7 +70,7 @@ export class AccountService {
     throw new NotImplementedException("ACCOUNT DATA UPDATE NOT IMPLEMENTED");
   }
 
-  async remove(id: number): Promise<IStatusOKResponse> {
+  async remove(id: number): Promise<ISuccessResponse> {
     return await removeOne(Account, { id });
   }
 }

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, STATUS_OK_RESPONSE } from "@myboothmanager/common";
+import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
@@ -87,7 +87,7 @@ export class BoothService {
     return booth;
   }
 
-  async updateBoothStatus(id: number, updateBoothStatusDto: UpdateBoothStatusDTO, callerAccountId: number): Promise<IStatusOKResponse> {
+  async updateBoothStatus(id: number, updateBoothStatusDto: UpdateBoothStatusDTO, callerAccountId: number): Promise<ISuccessResponse> {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 
     try {
@@ -97,10 +97,10 @@ export class BoothService {
       throw new InternalServerErrorException("부스 상태를 수정할 수 없습니다.");
     }
 
-    return STATUS_OK_RESPONSE;
+    return SUCCESS_RESPONSE;
   }
 
-  async remove(id: number, callerAccountId: number): Promise<IStatusOKResponse> {
+  async remove(id: number, callerAccountId: number): Promise<ISuccessResponse> {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
     return await removeTarget(booth);
   }
