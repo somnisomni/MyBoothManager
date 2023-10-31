@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { APP_NAME, type IAccountLoginRequest } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue, Watch } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
 import { useAdminStore } from "@/stores/admin";
@@ -86,6 +86,11 @@ export default class LoginPage extends Vue {
     }
 
     this.loginProgress = false;
+  }
+
+  @Watch("loginData", { deep: true })
+  onLoginFormDataChange() {
+    this.errorMessage = "";
   }
 }
 </script>
