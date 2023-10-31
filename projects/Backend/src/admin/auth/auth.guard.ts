@@ -3,7 +3,7 @@ import { CanActivate, ExecutionContext, Injectable, SetMetadata, UnauthorizedExc
 import { JwtService } from "@nestjs/jwt";
 import { Reflector } from "@nestjs/core";
 import { IAuthPayload, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt";
-import { UnauthorizedNeedRefreshException } from "./auth.exception";
+import { UnauthorizedNeedRefreshException, UnauthorizedNoTokenException } from "./auth.exception";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
     const token = this.extractAccessTokenFromHeader(req);
 
-    if(!token) throw new UnauthorizedException("접근할 수 있는 권한이 없습니다.");
+    if(!token) throw new UnauthorizedNoTokenException();
 
     try {
       const payload = await this.jwtService.verifyAsync<IAuthPayload>(token, {

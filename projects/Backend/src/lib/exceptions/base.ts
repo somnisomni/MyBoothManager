@@ -1,26 +1,37 @@
 import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
 import { HttpException, HttpStatus } from "@nestjs/common";
 
-export default class BaseHttpException extends HttpException implements IBackendErrorResponse {
+export type IBackendException = Omit<IBackendErrorResponse, "path">;
+
+export default class BaseHttpException extends HttpException implements IBackendException {
   timestamp: string;
-  path: string;
   statusCode: HttpStatus;
   errorCode: ErrorCodes;
 
-  constructor(path: string, errorCode: ErrorCodes, status: HttpStatus) {
+  constructor(errorCode: ErrorCodes, status: HttpStatus) {
     super(errorCode.toString(), status);
-    this.path = path;
     this.errorCode = errorCode;
     this.statusCode = status;
     this.timestamp = (new Date()).toISOString();
   }
 
-  getResponse(): Record<string, unknown> {
+  getResponse(): IBackendException {
     return {
       timestamp: this.timestamp,
-      path: this.path,
       statusCode: this.statusCode,
       errorCode: this.errorCode,
     };
+  }
+}
+
+export class ApplicationUncaughtedException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.INTERNAL_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export class InvalidRequestBodyException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.INVALID_REQUEST_BODY, HttpStatus.BAD_REQUEST);
   }
 }

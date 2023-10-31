@@ -8,7 +8,6 @@ export interface IBackendErrorResponseBase {
 }
 
 export interface IBackendErrorResponse extends IBackendErrorResponseBase {
-  message: string;    // TO BE DEPRECATED
   timestamp: string;
   path: string;
 }

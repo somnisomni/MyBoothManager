@@ -20,4 +20,6 @@ export enum ErrorCodes {
   ACCOUNT_BANNED          = 1006,
   ACCOUNT_DISABLED        = 1007,
   AUTH_TOKEN_NEED_REFRESH = 1008,
+  AUTH_TOKEN_MISSING      = 1009,
+  NO_ACCESS               = 1010,
 }

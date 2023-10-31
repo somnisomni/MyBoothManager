@@ -1,12 +1,14 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
 import { IAccount, IAccountLoginResponse, IAccountNeedLoginResponse } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
+import { InvalidRequestBodyException } from "@/lib/exceptions/base";
 import { AccountService } from "../account/account.service";
 import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshToken, verifyRefreshToken } from "./jwt";
 import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
 import AuthStorage from "./auth.storage";
+import { InvalidRefreshTokenException, LoginAccountNotFoundException } from "./auth.exception";
 
 const SA_LOGIN_DATA: IAuthPayload = {
   id: -1,
@@ -36,7 +38,7 @@ export class AuthService {
     const account = await this.accountService.findOneByLoginId(loginDto.loginId, false);
 
     if(!account || !(await argon2.verify(account.loginPassHash, loginDto.loginPass))) {
-      throw new UnauthorizedException("계정을 찾을 수 없거나 입력한 정보와 일치하지 않습니다.");
+      throw new LoginAccountNotFoundException();
     } else {
       // Update last login time and count
       if(updateLoginCount) {
@@ -65,7 +67,7 @@ export class AuthService {
   }
 
   async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse | IAccountNeedLoginResponse> {
-    if(!refreshDto.refreshToken) throw new UnauthorizedException("유효한 토큰이 아닙니다.");
+    if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
 
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
     if(typeof verifyResult === "string" && verifyResult === "expired") {
@@ -75,7 +77,7 @@ export class AuthService {
       return { needLogin: true } as IAccountNeedLoginResponse;
     } else if(!verifyResult) {
       // Invalid token
-      throw new InternalServerErrorException("처리할 수 없는 토큰입니다.");
+      throw new InvalidRefreshTokenException();
     } else {
       // Refresh authorization
       const refreshUuid = AuthStorage.REFRESH_UUID_STORE.get(refreshDto.id);

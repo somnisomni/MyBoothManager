@@ -2,7 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 // import { fastifyHelmet } from "@fastify/helmet";
 import { AppModule } from "@/app.module";
-import { HttpExceptionFilter, NotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
+import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
 
@@ -45,8 +45,9 @@ async function bootstrap() {
   if(process.env.NODE_ENV === "development") await dev();
 
   app.useGlobalFilters(
-    new HttpExceptionFilter(),
-    new NotFoundExceptionFilter(),
+    new AllExceptionsFilter(),
+    // new HttpExceptionFilter(),
+    new RouteNotFoundExceptionFilter(),
     new TeapotExceptionFilter(),
   );
 
