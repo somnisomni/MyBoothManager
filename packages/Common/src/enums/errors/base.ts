@@ -1,0 +1,23 @@
+export enum ErrorCodes {
+  SUCCESS = -1,
+  UNKNOWN_ERROR = 0,
+
+  // XXX: Generic errors
+  INTERNAL_ERROR        = 1,
+  ROUTE_NOT_FOUND       = 2,
+  ENTITY_NOT_FOUND      = 3,
+  INVALID_REQUEST_BODY  = 4,
+  INVALID_REQUEST_QUERY = 5,
+  INVALID_HTTP_METHOD   = 6,
+
+  // 1XXX: Authentication/Account errors
+  UNKNOWN_AUTH_ERROR      = 1000,
+  INVALID_AUTH_TOKEN      = 1001,
+  EXPIRED_AUTH_TOKEN      = 1002,
+  INVALID_REFRESH_TOKEN   = 1003,
+  EXPIRED_REFRESH_TOKEN   = 1004,
+  AUTH_REFRESH_FAILED     = 1005,
+  ACCOUNT_BANNED          = 1006,
+  ACCOUNT_DISABLED        = 1007,
+  AUTH_TOKEN_NEED_REFRESH = 1008,
+}
