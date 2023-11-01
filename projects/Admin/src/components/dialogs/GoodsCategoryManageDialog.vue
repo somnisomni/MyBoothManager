@@ -91,7 +91,7 @@ export default class GoodsCategoryManageDialog extends Vue {
   }
 
   mounted() { this.resetForm(); }
-  @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
+  @Watch("open", { immediate: true }) onDialogOpen() { this.resetForm(); }
 
   resetForm(): void {
     if(this.categoryId && this.editMode) {

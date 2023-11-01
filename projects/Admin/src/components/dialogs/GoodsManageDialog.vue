@@ -168,7 +168,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   mounted() { this.resetForm(); }
-  @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
+  @Watch("open", { immediate: true }) onDialogOpen() { this.resetForm(); }
 
   resetForm() {
     if(this.goodsId && this.editMode) {
