@@ -21,7 +21,9 @@ import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 })
 export default class GoodsOrderListView extends Vue {
   get orderList(): Record<number, IGoodsOrder> {
-    return useAdminStore().boothGoodsOrderList;
+    return Object.values(useAdminStore().boothGoodsOrderList).sort((a, b) =>
+      new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime(),
+    );
   }
 }
 </script>
