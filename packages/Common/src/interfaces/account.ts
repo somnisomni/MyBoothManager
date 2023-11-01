@@ -16,8 +16,6 @@ export interface IAccountLoginTokenData {
   refreshToken: string;
 }
 export type IAccountLoginResponse = IAccountUserland & IAccountLoginTokenData;
-export type IAccountNeedRefreshResponse = { needRefresh: true };
-export type IAccountNeedLoginResponse = { needLogin: true };
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;

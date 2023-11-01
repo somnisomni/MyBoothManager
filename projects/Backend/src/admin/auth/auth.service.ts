@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
-import { IAccount, IAccountLoginResponse, IAccountNeedLoginResponse } from "@myboothmanager/common";
+import { IAccount, IAccountLoginResponse } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
 import { InvalidRequestBodyException } from "@/lib/exceptions";
 import { AccountService } from "../account/account.service";
@@ -8,7 +8,7 @@ import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshTo
 import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
 import AuthStorage from "./auth.storage";
-import { InvalidRefreshTokenException, LoginAccountNotFoundException } from "./auth.exception";
+import { InvalidRefreshTokenException, LoginAccountNotFoundException, NeedReloginException, RefreshTokenExpiredException } from "./auth.exception";
 
 const SA_LOGIN_DATA: IAuthPayload = {
   id: -1,
@@ -66,7 +66,7 @@ export class AuthService {
     };
   }
 
-  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse | IAccountNeedLoginResponse> {
+  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse> {
     if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
 
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
@@ -74,7 +74,7 @@ export class AuthService {
       // Refresh token expired, require login
       AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
 
-      return { needLogin: true } as IAccountNeedLoginResponse;
+      throw new RefreshTokenExpiredException();
     } else if(!verifyResult) {
       // Invalid token
       throw new InvalidRefreshTokenException();
@@ -89,7 +89,7 @@ export class AuthService {
         // Refresh token is not matched, require login
         AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
 
-        return { needLogin: true } as IAccountNeedLoginResponse;
+        throw new NeedReloginException();
       }
     }
   }

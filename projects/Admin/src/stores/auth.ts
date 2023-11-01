@@ -1,4 +1,4 @@
-import type { IAccountLoginRequest, IAccountLoginResponse, IAccountLoginTokenData, IAccountNeedLoginResponse } from "@myboothmanager/common";
+import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type IAccountLoginTokenData } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
@@ -28,10 +28,10 @@ const useAuthStore = defineStore("auth", () => {
     });
   }
 
-  async function adminLogin(data: IAccountLoginRequest): Promise<boolean | string> {
+  async function adminLogin(data: IAccountLoginRequest): Promise<boolean | ErrorCodes> {
     const response = await AdminAPI.login(data);
 
-    if(response && response instanceof Object) {
+    if(response && typeof response === "object") {
       registerAuthData(response);
       return true;
     } else {
@@ -40,7 +40,7 @@ const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function adminAuthRefresh(): Promise<boolean | string> {
+  async function adminAuthRefresh(): Promise<boolean | ErrorCodes> {
     if(!id.value || !authTokenData.value) return false;
 
     const response = await AdminAPI.refreshAuth({
@@ -48,17 +48,17 @@ const useAuthStore = defineStore("auth", () => {
       refreshToken: authTokenData.value.refreshToken!,
     });
 
-    if((response as IAccountNeedLoginResponse).needLogin) {
-      // Refresh token is expired, require re-login
-      invalidateLoginData();
-      return false;
-    } else if(typeof response === "object" && (response as IAccountLoginResponse).accessToken) {
-      // Authorization refreshed
-      registerAuthData(response as IAccountLoginResponse);
+    if(response && typeof response === "object") {
+      registerAuthData(response);
       return true;
     } else {
-      // Error
-      return response as string;
+      if(response === ErrorCodes.AUTH_TOKEN_NEED_REFRESH || response === ErrorCodes.NEED_RELOGIN) {
+        // Refresh token is expired, require re-login
+        invalidateLoginData();
+        return false;
+      } else {
+        return response;
+      }
     }
   }
 

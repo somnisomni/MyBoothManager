@@ -5,7 +5,8 @@
     <div class="text-h6">데이터를 불러오는 중...</div>
   </VContainer>
 
-  <ServerDataLoadErrorDialog v-model="errorDialogShown" />
+  <ServerDataLoadErrorDialog v-model="errorDialogShown"
+                             :errorCode="errorCode" />
 </template>
 
 <script lang="ts">
@@ -21,18 +22,23 @@ import ServerDataLoadErrorDialog from "@/components/dialogs/common/ServerDataLoa
 })
 export default class BoothAdminLoadDataOverlay extends Vue {
   errorDialogShown = false;
+  errorCode: number | null = null;
 
   async mounted() {
     if(!useAdminStore().currentAccount) {
-      if(typeof (await useAdminStore().fetchCurrentAccountInfo()) === "string") {
+      const response = await useAdminStore().fetchCurrentAccountInfo();
+      if(typeof response === "number") {
+        this.errorCode = response;
         this.errorDialogShown = true;
         return;
       }
     }
 
-    if(await useAdminStore().fetchAllBoothData()) {
+    const response = await useAdminStore().fetchAllBoothData();
+    if(response) {
       this.$emit("completed");
     } else {
+      this.errorCode = null;
       this.errorDialogShown = true;
     }
   }

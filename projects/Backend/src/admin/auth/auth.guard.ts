@@ -2,8 +2,9 @@ import type { FastifyRequest } from "fastify";
 import { CanActivate, ExecutionContext, Injectable, SetMetadata, createParamDecorator } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Reflector } from "@nestjs/core";
+import { NoAccessException } from "@/lib/exceptions";
 import { IAuthPayload, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt";
-import { AuthTokenNeedRefreshException, InvalidAuthTokenException, UnauthorizedNoAccessException, UnauthorizedNoTokenException } from "./auth.exception";
+import { AuthTokenNeedRefreshException, InvalidAuthTokenException, UnauthorizedNoTokenException } from "./auth.exception";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -50,7 +51,7 @@ export class AuthGuard implements CanActivate {
       });
 
       if(isSuperAdmin && payload.id !== -1) {
-        throw new UnauthorizedNoAccessException();
+        throw new NoAccessException();
       } else {
         (req.params as IFastifyRequestParamsCustom).superAdmin = true;
       }

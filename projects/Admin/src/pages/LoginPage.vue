@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, type IAccountLoginRequest } from "@myboothmanager/common";
+import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
@@ -81,8 +81,21 @@ export default class LoginPage extends Vue {
       } else {
         router.replace({ name: "admin" });
       }
-    } else if(typeof result === "string") {
-      this.errorMessage = result;
+    } else if(typeof result === "number") {
+      switch(result) {
+        case ErrorCodes.ENTITY_NOT_FOUND:
+          this.errorMessage = "로그인 ID 또는 패스워드가 잘못되었습니다.";
+          break;
+        case ErrorCodes.ACCOUNT_BANNED:
+          this.errorMessage = "정지된 계정입니다.";
+          break;
+        case ErrorCodes.ACCOUNT_DISABLED:
+          this.errorMessage = "비활성화된 계정입니다.";
+          break;
+        default:
+          this.errorMessage = `로그인 중 알 수 없는 오류가 발생했습니다. (${result})`;
+          break;
+      }
     }
 
     this.loginProgress = false;

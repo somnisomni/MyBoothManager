@@ -26,14 +26,20 @@ export class InvalidRefreshTokenException extends BaseHttpException {
   }
 }
 
+export class RefreshTokenExpiredException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.EXPIRED_REFRESH_TOKEN, HttpStatus.UNAUTHORIZED);
+  }
+}
+
 export class UnauthorizedNoTokenException extends BaseHttpException {
   constructor() {
     super(ErrorCodes.AUTH_TOKEN_MISSING, HttpStatus.UNAUTHORIZED);
   }
 }
 
-export class UnauthorizedNoAccessException extends BaseHttpException {
+export class NeedReloginException extends BaseHttpException {
   constructor() {
-    super(ErrorCodes.NO_ACCESS, HttpStatus.FORBIDDEN);
+    super(ErrorCodes.NEED_RELOGIN, HttpStatus.UNAUTHORIZED);
   }
 }
