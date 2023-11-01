@@ -35,19 +35,19 @@ export default class AdminAPI {
   private static PATCH = async (path: string, payload: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("PATCH", path, payload, containAuthCredential);
   private static DELETE = async (path: string, payload?: Record<string, any>, containAuthCredential = true) => await this.adminAPICall("DELETE", path, payload, containAuthCredential);
 
-  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | NeedRefreshMessage | string> {
+  private static async apiCallWrapper<T>(callee: Function, path: string, payload?: Record<string, any>, containAuthCredential = true): Promise<T | NeedRefreshMessage | CT.ErrorCodes> {
     try {
       const response = await callee(path, payload, containAuthCredential) as T | CT.IBackendErrorResponse | (CT.IBackendErrorResponse & CT.IAccountNeedRefreshResponse);
 
       if((response as CT.IAccountNeedRefreshResponse).needRefresh) {
         return NEED_REFRESH_MESSAGE;
-      } else if((response as CT.IBackendErrorResponse).message) {
-        return (response as CT.IBackendErrorResponse).message;
+      } else if((response as CT.IBackendErrorResponse).errorCode) {
+        return (response as CT.IBackendErrorResponse).errorCode as CT.ErrorCodes;
       } else {
         return response as T;
       }
     } catch(error) {
-      return "API 서버 통신 실패";
+      return CT.ErrorCodes.UNKNOWN_ERROR;
     }
   }
 

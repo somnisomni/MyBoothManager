@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
 import { ArgumentsHost, Catch, ExceptionFilter, ImATeapotException as Nest__ImATeapotException, NotFoundException as Nest__NotFoundException } from "@nestjs/common";
-import BaseHttpException, { ApplicationUncaughtedException } from "./lib/exceptions/base";
+import BaseHttpException, { ApplicationUncaughtedException } from "./lib/exceptions";
 
 const SCREAM = [
   "FIND YOUR RIGHT WAY",
@@ -62,6 +62,8 @@ export class RouteNotFoundExceptionFilter implements ExceptionFilter {
     const statusCode = exception.getStatus();
 
     response.status(statusCode).send({
+      donthackme: SCREAM[Math.floor(Math.random() * SCREAM.length)],
+
       ...new BaseHttpException(ErrorCodes.ROUTE_NOT_FOUND, statusCode).getResponse(),
       path: request.url,
     } as IBackendErrorResponse);

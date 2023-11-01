@@ -1,11 +1,13 @@
-import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import GoodsCategory from "@/db/models/goods-category";
 import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
+import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
+import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoundException } from "./goods-category.exception";
 
 @Injectable()
 export class GoodsCategoryService {
@@ -16,12 +18,12 @@ export class GoodsCategoryService {
       },
     });
 
-    if(!category) throw new NotFoundException("굿즈 카테고리를 찾을 수 없습니다.");
-    else if(category.boothId !== boothId) throw new BadRequestException("굿즈 카테고리에 대한 권한이 없습니다.");
+    if(!category) throw new EntityNotFoundException();
+    else if(category.boothId !== boothId) throw new NoAccessException();
 
     const booth = await Booth.findByPk(boothId);
-    if(!booth) throw new ForbiddenException("접근 거부 - 굿즈가 소속된 부스를 찾을 수 없음");
-    if(booth.ownerId !== callerAccountId) throw new ForbiddenException("접근 거부 - 굿즈가 소속된 부스에 대한 권한이 없음");
+    if(!booth) throw new GoodsCategoryParentBoothNotFoundException();
+    if(booth.ownerId !== callerAccountId) throw new NoAccessException();
 
     return { booth, category };
   }
@@ -53,7 +55,7 @@ export class GoodsCategoryService {
       },
     });
 
-    if(!category) throw new BadRequestException("Goods category not found.");
+    if(!category) throw new EntityNotFoundException();
     return category;
   }
 
@@ -67,7 +69,7 @@ export class GoodsCategoryService {
       });
       category = await category.save();
     } catch(err) {
-      throw new InternalServerErrorException("굿즈 정보를 수정할 수 없습니다.");
+      throw new GoodsCategoryInfoUpdateFailedException();
     }
 
     return category;

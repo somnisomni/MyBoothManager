@@ -1,16 +1,18 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import GoodsCategory from "@/db/models/goods-category";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, removeTarget } from "@/lib/common-functions";
+import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { GoodsService } from "../goods/goods.service";
-import { GoodsCategoryService } from "../goods/goods-category.service";
+import { GoodsCategoryService } from "../goods-category/goods-category.service";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
+import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 
 @Injectable()
 export class BoothService {
@@ -26,8 +28,8 @@ export class BoothService {
       },
     });
 
-    if(!booth) throw new NotFoundException("부스를 찾을 수 없습니다.");
-    else if(booth.ownerId !== accountId) throw new BadRequestException("부스에 대한 권한이 없습니다.");
+    if(!booth) throw new EntityNotFoundException();
+    else if(booth.ownerId !== accountId) throw new NoAccessException();
     else return booth;
   }
 
@@ -81,7 +83,7 @@ export class BoothService {
       await booth.update(updateBoothDto);
       booth = await booth.save();
     } catch(err) {
-      throw new InternalServerErrorException("부스 정보를 수정할 수 없습니다.");
+      throw new BoothInfoUpdateFailedException();
     }
 
     return booth;
@@ -94,7 +96,7 @@ export class BoothService {
       await booth.update(updateBoothStatusDto);
       await booth.save();
     } catch(err) {
-      throw new InternalServerErrorException("부스 상태를 수정할 수 없습니다.");
+      throw new BoothStatusUpdateFailedException();
     }
 
     return SUCCESS_RESPONSE;

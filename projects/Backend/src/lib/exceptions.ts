@@ -30,6 +30,18 @@ export class ApplicationUncaughtedException extends BaseHttpException {
   }
 }
 
+export class EntityNotFoundException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.ENTITY_NOT_FOUND, HttpStatus.NOT_FOUND);
+  }
+}
+
+export class NoAccessException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.NO_ACCESS, HttpStatus.FORBIDDEN);
+  }
+}
+
 export class InvalidRequestBodyException extends BaseHttpException {
   constructor() {
     super(ErrorCodes.INVALID_REQUEST_BODY, HttpStatus.BAD_REQUEST);

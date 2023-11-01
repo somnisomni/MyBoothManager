@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
 import { IAccount, IAccountLoginResponse, IAccountNeedLoginResponse } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
-import { InvalidRequestBodyException } from "@/lib/exceptions/base";
+import { InvalidRequestBodyException } from "@/lib/exceptions";
 import { AccountService } from "../account/account.service";
 import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshToken, verifyRefreshToken } from "./jwt";
 import { LoginDTO } from "./dto/login.dto";

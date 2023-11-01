@@ -3,10 +3,10 @@ import { Injectable, NotImplementedException } from "@nestjs/common";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
 import { create, removeOne } from "@/lib/common-functions";
+import { EntityNotFoundException } from "@/lib/exceptions";
 import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
-import { AccountNotFoundException } from "./account.exception";
 
 @Injectable()
 export class AccountService {
@@ -34,7 +34,7 @@ export class AccountService {
     });
 
     if(result && result.length > 0) return result;
-    else throw new AccountNotFoundException();
+    else throw new EntityNotFoundException();
   }
 
   async findOneById(id: number): Promise<Account> {
@@ -49,7 +49,7 @@ export class AccountService {
     });
 
     if(result) return result;
-    else throw new AccountNotFoundException();
+    else throw new EntityNotFoundException();
   }
 
   async findOneByLoginId(loginId: string, excludePassHash: boolean = true): Promise<Account> {
@@ -64,7 +64,7 @@ export class AccountService {
     });
 
     if(result) return result;
-    else throw new AccountNotFoundException();
+    else throw new EntityNotFoundException();
   }
 
   update(id: number, updateAccountDto: UpdateAccountDTO) {

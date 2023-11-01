@@ -1,6 +1,6 @@
 import { ErrorCodes } from "@myboothmanager/common";
 import { HttpStatus } from "@nestjs/common";
-import BaseHttpException from "@/lib/exceptions/base";
+import BaseHttpException from "@/lib/exceptions";
 
 export class AuthTokenNeedRefreshException extends BaseHttpException {
   constructor() {
@@ -11,6 +11,12 @@ export class AuthTokenNeedRefreshException extends BaseHttpException {
 export class LoginAccountNotFoundException extends BaseHttpException {
   constructor() {
     super(ErrorCodes.ENTITY_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+  }
+}
+
+export class InvalidAuthTokenException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.INVALID_AUTH_TOKEN, HttpStatus.UNAUTHORIZED);
   }
 }
 
@@ -28,6 +34,6 @@ export class UnauthorizedNoTokenException extends BaseHttpException {
 
 export class UnauthorizedNoAccessException extends BaseHttpException {
   constructor() {
-    
+    super(ErrorCodes.NO_ACCESS, HttpStatus.FORBIDDEN);
   }
 }
