@@ -51,10 +51,12 @@ export default class BoothSelectionDialog extends Vue {
   boothAddDialogShown = false;
   titleButtons: DialogButtonParams[] = [
     {
+      title: "목록 새로고침",
       icon: "mdi-refresh",
       onClick: async () => { await this.refreshBoothList(); },
     },
     {
+      title: "새로운 부스 추가",
       icon: "mdi-plus",
       onClick: this.showBoothAddDialog,
     },

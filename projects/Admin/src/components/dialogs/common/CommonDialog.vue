@@ -23,16 +23,22 @@
           <VBtn v-for="btn in titleExtraButtons"
                 :key="btn.icon"
                 :disabled="progressActive || btn.disabled"
+                :title="btn.title"
                 icon
                 variant="flat"
                 class="mr-2"
-                @click="() => { btn.onClick(); }"><VIcon>{{ btn.icon }}</VIcon></VBtn>
+                @click="() => { btn.onClick(); }">
+            <VTooltip activator="parent" location="bottom">{{ btn.title }}</VTooltip>
+            <VIcon>{{ btn.icon }}</VIcon>
+          </VBtn>
           <VBtn v-if="!hideCloseButton"
                 :disabled="progressActive || persistent"
+                title="닫기"
                 icon
                 variant="flat"
                 class="mr-2"
                 @click.stop="onCloseButtonClick">
+            <VTooltip activator="parent" location="bottom">닫기</VTooltip>
             <VIcon>mdi-close</VIcon>
           </VBtn>
         </div>
@@ -83,6 +89,7 @@ import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
 export interface DialogButtonParams {
+  title: string;
   icon: string;
   disabled?: boolean;
   onClick: () => void;
