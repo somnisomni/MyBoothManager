@@ -3,7 +3,7 @@
        :key="category.id"
        class="mt-8">
     <GoodsCategoryTitle :categoryData="category"
-                        :editable="editable"
+                        :editable="editable && category.id !== -1"
                         @click="onGoodsCategoryClick"
                         @openEditDialog="onGoodsCategoryEdit" />
 
