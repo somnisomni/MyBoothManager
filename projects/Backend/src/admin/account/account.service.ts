@@ -1,8 +1,9 @@
 import * as argon2 from "argon2";
-import { Injectable, NotFoundException, NotImplementedException } from "@nestjs/common";
-import { IStatusOKResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { Injectable, NotImplementedException } from "@nestjs/common";
+import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
 import { create, removeOne } from "@/lib/common-functions";
+import { EntityNotFoundException } from "@/lib/exceptions";
 import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDTO } from "./dto/update-account.dto";
@@ -33,7 +34,7 @@ export class AccountService {
     });
 
     if(result && result.length > 0) return result;
-    else throw new NotFoundException("사용 가능한 계정이 존재하지 않습니다.");
+    else throw new EntityNotFoundException();
   }
 
   async findOneById(id: number): Promise<Account> {
@@ -48,7 +49,7 @@ export class AccountService {
     });
 
     if(result) return result;
-    else throw new NotFoundException("계정을 찾을 수 없습니다.");
+    else throw new EntityNotFoundException();
   }
 
   async findOneByLoginId(loginId: string, excludePassHash: boolean = true): Promise<Account> {
@@ -63,14 +64,14 @@ export class AccountService {
     });
 
     if(result) return result;
-    else throw new NotFoundException("계정을 찾을 수 없습니다.");
+    else throw new EntityNotFoundException();
   }
 
   update(id: number, updateAccountDto: UpdateAccountDTO) {
     throw new NotImplementedException("ACCOUNT DATA UPDATE NOT IMPLEMENTED");
   }
 
-  async remove(id: number): Promise<IStatusOKResponse> {
+  async remove(id: number): Promise<ISuccessResponse> {
     return await removeOne(Account, { id });
   }
 }

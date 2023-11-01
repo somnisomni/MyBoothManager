@@ -1,13 +1,18 @@
+import { ErrorCodes } from "../enums/errors";
+
 export interface IDataModelBase {}
 
-export interface IBackendErrorResponse {
-  message: string;
-  timestamp: string;
-  path: string;
+export interface IBackendErrorResponseBase {
   statusCode: number;
+  errorCode: ErrorCodes;
 }
 
-export type IStatusOKResponse = { status: "OK" };
-export const STATUS_OK_RESPONSE: Readonly<IStatusOKResponse> = Object.freeze({ status: "OK" });
+export interface IBackendErrorResponse extends IBackendErrorResponseBase {
+  timestamp: string;
+  path: string;
+}
 
-export type IValueResponse = { value: number | string };
+export interface ISuccessResponse { success: true; }
+export const SUCCESS_RESPONSE: Readonly<ISuccessResponse> = Object.freeze({ success: true });
+
+export interface IValueResponse  { value: number | string; }

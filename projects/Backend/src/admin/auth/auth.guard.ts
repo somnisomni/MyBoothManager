@@ -1,9 +1,10 @@
 import type { FastifyRequest } from "fastify";
-import { CanActivate, ExecutionContext, Injectable, SetMetadata, UnauthorizedException, createParamDecorator } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, SetMetadata, createParamDecorator } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Reflector } from "@nestjs/core";
+import { NoAccessException } from "@/lib/exceptions";
 import { IAuthPayload, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt";
-import { UnauthorizedNeedRefreshException } from "./auth.exception";
+import { AuthTokenNeedRefreshException, InvalidAuthTokenException, UnauthorizedNoTokenException } from "./auth.exception";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -39,7 +40,7 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
     const token = this.extractAccessTokenFromHeader(req);
 
-    if(!token) throw new UnauthorizedException("접근할 수 있는 권한이 없습니다.");
+    if(!token) throw new UnauthorizedNoTokenException();
 
     try {
       const payload = await this.jwtService.verifyAsync<IAuthPayload>(token, {
@@ -50,7 +51,7 @@ export class AuthGuard implements CanActivate {
       });
 
       if(isSuperAdmin && payload.id !== -1) {
-        throw new UnauthorizedException("접근할 수 있는 권한이 없습니다.");
+        throw new NoAccessException();
       } else {
         (req.params as IFastifyRequestParamsCustom).superAdmin = true;
       }
@@ -59,10 +60,10 @@ export class AuthGuard implements CanActivate {
     } catch(error) {
       // TokenExpiredError
       if(typeof error === "object" && (error as Record<string, unknown>).expiredAt) {
-        throw new UnauthorizedNeedRefreshException();
+        throw new AuthTokenNeedRefreshException();
       }
 
-      throw new UnauthorizedException("접근 권한이 유효하지 않거나 만료되었습니다.");
+      throw new InvalidAuthTokenException();
     }
 
     return true;

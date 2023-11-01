@@ -1,10 +1,12 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { IStatusOKResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { Injectable } from "@nestjs/common";
+import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create as createTarget, removeTarget } from "@/lib/common-functions";
+import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { GoodsService } from "../goods/goods.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
+import { GoodsOrderCreateGoodsNotFoundException, GoodsOrderCreateInvalidGoodsAmountException, GoodsOrderCreateOrderEmptyException, GoodsOrderParentBoothNotFoundException } from "./goods-order.exception";
 
 @Injectable()
 export class GoodsOrderService {
@@ -12,12 +14,12 @@ export class GoodsOrderService {
 
   private async getGoodsOrderAndParentBooth(orderId: number, boothId: number, callerAccountId: number): Promise<{ order: GoodsOrder, booth: Booth }> {
     const order = await GoodsOrder.findByPk(orderId);
-    if(!order) throw new NotFoundException("굿즈 주문 내역을 찾을 수 없습니다.");
-    if(order.boothId !== boothId) throw new BadRequestException("해당 굿즈 주문 내역은 해당 부스에 속해있지 않습니다.");
+    if(!order) throw new EntityNotFoundException();
+    if(order.boothId !== boothId) throw new NoAccessException();
 
     const booth = await Booth.findByPk(boothId);
-    if(!booth) throw new ForbiddenException("접근 거부 - 굿즈 주문 내역이 소속된 부스를 찾을 수 없음");
-    if(booth.ownerId !== callerAccountId) throw new ForbiddenException("접근 거부 - 굿즈 주문 내역이 소속된 부스에 대한 권한이 없음");
+    if(!booth) throw new GoodsOrderParentBoothNotFoundException();
+    if(booth.ownerId !== callerAccountId) throw new NoAccessException();
 
     return { order, booth };
   }
@@ -29,16 +31,16 @@ export class GoodsOrderService {
 
   async create(createGoodsOrderDto: CreateGoodsOrderDTO, callerAccountId: number): Promise<GoodsOrder> {
     if(!(await Booth.findOne({ where: { ownerId: callerAccountId } }))) {
-      throw new ForbiddenException("굿즈가 소속될 부스를 찾을 수 없거나 권한이 없습니다.");
+      throw new GoodsOrderParentBoothNotFoundException();
     }
 
     // Check goods availability
-    if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new BadRequestException("구매 데이터가 없습니다.");
+    if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new GoodsOrderCreateOrderEmptyException();
     for(const order of createGoodsOrderDto.order) {
       const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
-      if(!goods) throw new BadRequestException("찾을 수 없거나 권한이 없는 굿즈가 포함되어 있습니다.");
+      if(!goods) throw new GoodsOrderCreateGoodsNotFoundException();
 
-      if(goods.stockRemaining < order.quantity) throw new BadRequestException("유효하지 않은 판매 수량");
+      if(goods.stockRemaining < order.quantity) throw new GoodsOrderCreateInvalidGoodsAmountException();
 
       // If all good, update remaining stock count of the goods
       await goods.update({ stockRemaining: goods.stockRemaining - order.quantity });
@@ -64,7 +66,7 @@ export class GoodsOrderService {
     return { value: await GoodsOrder.count({ where }) };
   }
 
-  async remove(id: number, boothId: number, callerAccountId: number): Promise<IStatusOKResponse> {
+  async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     const goods = await this.findGoodsOrderBelongsToBooth(id, boothId, callerAccountId);
     return await removeTarget(goods);
   }
