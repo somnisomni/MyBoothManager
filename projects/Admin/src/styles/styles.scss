@@ -1,3 +1,7 @@
+html {
+  touch-action: manipulation;
+}
+
 .no-interaction {
   pointer-events: none;
 
