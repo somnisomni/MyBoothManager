@@ -21,10 +21,7 @@ export default class BoothAdminGoodsOrdersPage extends Vue {
   dataLoading: boolean = true;
 
   async mounted() {
-    // Fetch the goods orders if not initialized before
-    if(Object.keys(this.boothGoodsOrders).length <= 0) {
-      await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
-    }
+    await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
 
     this.dataLoading = false;
   }
