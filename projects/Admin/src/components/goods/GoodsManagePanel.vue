@@ -4,6 +4,16 @@
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
     <VRow class="pa-2">
+      <VBtn class="mr-4 px-0"
+            variant="outlined"
+            min-width="64px"
+            size="x-large"
+            :disabled="goodsListRefreshing"
+            :loading="goodsListRefreshing"
+            @click.stop="onListRefreshClick">
+        <VTooltip activator="parent" location="bottom">목록 새로고침</VTooltip>
+        <VIcon>mdi-refresh</VIcon>
+      </VBtn>
       <VBtn class="flex-grow-1"
             variant="outlined"
             size="x-large"
@@ -37,8 +47,16 @@ import DashboardPanel from "../dashboard/DashboardPanel.vue";
 export default class GoodsManagePanel extends Vue {
   goodsAddDialogOpen = false;
 
+  goodsListRefreshing = false;
+
   get goodsCount(): string {
     return Object.keys(useAdminStore().boothGoodsList).length.toLocaleString();
+  }
+
+  async onListRefreshClick() {
+    this.goodsListRefreshing = true;
+    await useAdminStore().fetchGoodsOfCurrentBooth(true);
+    this.goodsListRefreshing = false;
   }
 
   onLoadGoodsFromFileClick(): void {
