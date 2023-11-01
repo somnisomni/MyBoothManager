@@ -32,7 +32,9 @@
                  label="카테고리"
                  :rules="[!formData.categoryId ? '카테고리를 선택해주세요.' : true]" />
         <VBtn icon variant="flat" class="mt-1 ml-2"
+              title="굿즈 카테고리 추가"
               @click="goodsCategoryManageDialogShown = !goodsCategoryManageDialogShown">
+          <VTooltip activator="parent" location="bottom">굿즈 카테고리 추가</VTooltip>
           <VIcon>mdi-plus</VIcon>
         </VBtn>
       </VRow>
