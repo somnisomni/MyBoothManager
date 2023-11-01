@@ -1,10 +1,11 @@
 <template>
-  <VList>
+  <VList class="overflow-hidden bg-transparent">
     <VSlideXReverseTransition leave-absolute group>
       <VListItem v-for="item in orderList"
                  :key="item.id"
                  class="my-2">
-        <GoodsOrderListItem :orderData="item" />
+        <GoodsOrderListItem :orderData="item"
+                            @click="onGoodsOrderItemClick" />
       </VListItem>
     </VSlideXReverseTransition>
   </VList>
@@ -26,6 +27,10 @@ export default class GoodsOrderListView extends Vue {
     return Object.values(useAdminStore().boothGoodsOrderList).sort((a, b) =>
       new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime(),
     );
+  }
+
+  onGoodsOrderItemClick(data: IGoodsOrder) {
+    // TO BE IMPLEMENTED
   }
 }
 </script>

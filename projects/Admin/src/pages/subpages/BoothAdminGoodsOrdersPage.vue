@@ -1,9 +1,13 @@
 <template>
   <VContainer class="mt-4 pa-2 pa-md-6">
-    <VBtn @click="onRefreshClick">Refresh list</VBtn>
+    <VLayout class="pa-2">
+      <VBtn size="large"
+            :disabled="dataLoading"
+            :loading="dataLoading"
+            @click="onRefreshClick"><VIcon>mdi-refresh</VIcon> 새로고침</VBtn>
+    </VLayout>
 
-    <VProgressCircular indeterminate v-if="dataLoading" />
-    <GoodsOrderListView v-else />
+    <GoodsOrderListView />
   </VContainer>
 </template>
 

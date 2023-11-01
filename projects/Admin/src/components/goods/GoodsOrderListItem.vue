@@ -1,18 +1,74 @@
 <template>
-  <VSheet>
-    <div><VIcon>mdi-check</VIcon></div>
-    <div>totalPrice: {{ orderData.totalPrice }}</div>
-    <div v-if="orderData.createdAt">createdAt: {{ orderData.createdAt }}</div>
-    <div v-for="item in orderData.order" :key="item.gId">gId: {{ item.gId }}, price: {{ item.price }}, quant: {{ item.quantity }}</div>
+  <VSheet v-ripple class="order-item d-flex flex-row align-center border-md w-100" @click.stop="onItemClick">
+    <div class="status-area position-relative overflow-hidden">
+      <VIcon class="icon position-absolute" color="green" style="font-size: var(--order-item-height)">mdi-check</VIcon>
+    </div>
+
+    <div class="flex-grow-1 pa-2 border-s-sm">
+      <div v-if="orderData.createdAt" class="text-h5"><strong>{{ createdTimeString }}</strong> <small>{{ createdDateString }}</small></div>
+      <div class="text-h6">판매 금액: <strong>{{ totalPriceFormatted }}</strong></div>
+      <div>굿즈 총 <strong>{{ totalItemCount }}종</strong> / 재고 총 <strong>{{ totalStockQuantity }}개</strong> 판매</div>
+    </div>
+
+    <div class="px-2">
+      <VIcon>mdi-chevron-right</VIcon>
+    </div>
   </VSheet>
 </template>
 
 <script lang="ts">
 import type { IGoodsOrder } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({})
 export default class GoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
+
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get createdTimeString(): string | undefined {
+    return new Date(this.orderData.createdAt as Date).toLocaleTimeString();
+  }
+
+  get createdDateString(): string | undefined {
+    return new Date(this.orderData.createdAt as Date).toLocaleDateString();
+  }
+
+  get totalPriceFormatted(): string {
+    return `${this.currencySymbol}${this.orderData.totalPrice.toLocaleString()}`;
+  }
+
+  get totalStockQuantity(): number {
+    return this.orderData.order.reduce((acc, cur) => acc + cur.quantity, 0);
+  }
+
+  get totalItemCount(): number {
+    return this.orderData.order.length;
+  }
+
+  @Emit("click")
+  onItemClick() {
+    return this.orderData;
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.order-item {
+  --order-item-height: 120px;
+  height: var(--order-item-height);
+  cursor: pointer;
+
+  .status-area {
+    width: calc(var(--order-item-height) - var(--order-item-height) / 4);
+    height: var(--order-item-height);
+
+    .icon {
+      right: calc(var(--order-item-height) / -4);
+    }
+  }
+}
+</style>
