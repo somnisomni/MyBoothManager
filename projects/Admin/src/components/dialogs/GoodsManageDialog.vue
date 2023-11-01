@@ -242,7 +242,7 @@ export default class GoodsManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     } else {
       const requestData: IGoodsCreateRequest = {
@@ -257,7 +257,7 @@ export default class GoodsManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     }
 

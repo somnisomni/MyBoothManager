@@ -134,7 +134,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     } else {
       const requestData: IGoodsCategoryCreateRequest = {
@@ -147,7 +147,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     }
 

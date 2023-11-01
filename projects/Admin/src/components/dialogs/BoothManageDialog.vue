@@ -169,7 +169,7 @@ export default class BoothManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     } else {
       const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
@@ -177,7 +177,7 @@ export default class BoothManageDialog extends Vue {
       if(result === true) {
         success = true;
       } else {
-        errorMsg = result as string;
+        errorMsg = `오류 (${result})`;
       }
     }
 
