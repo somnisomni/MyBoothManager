@@ -55,6 +55,7 @@ export class GoodsOrderService {
     return await GoodsOrder.findAll({
       where,
       attributes: {
+        include: ["createdAt"],
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },
     });
