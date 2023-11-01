@@ -1,10 +1,12 @@
 <template>
   <VList>
-    <VListItem v-for="item in orderList"
-               :key="item.id"
-               class="my-2">
-      <GoodsOrderListItem :orderData="item" />
-    </VListItem>
+    <VSlideXReverseTransition leave-absolute group>
+      <VListItem v-for="item in orderList"
+                 :key="item.id"
+                 class="my-2">
+        <GoodsOrderListItem :orderData="item" />
+      </VListItem>
+    </VSlideXReverseTransition>
   </VList>
 </template>
 
