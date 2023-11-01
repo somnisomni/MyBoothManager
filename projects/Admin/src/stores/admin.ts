@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateReuqest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
+import router from "@/router";
 import { useAuthStore } from "./auth";
 
 const useAdminStore = defineStore("admin", () => {
@@ -21,22 +22,27 @@ const useAdminStore = defineStore("admin", () => {
   const boothGoodsOrderList: Record<number, IGoodsOrder> = reactive({});
 
   /* Private actions (not to be exported) */
-  async function apiWrapper<T>(func: () => Promise<T>): Promise<T | ErrorCodes> {
+  async function apiWrapper<T>(func: () => Promise<T | ErrorCodes>): Promise<T | ErrorCodes> {
     const result = await func();
 
-    if(typeof result === "number" && result === ErrorCodes.AUTH_TOKEN_NEED_REFRESH) {
-      const refreshResult = await $authStore.adminAuthRefresh();
+    if(typeof result === "number") {
+      if(result === ErrorCodes.AUTH_TOKEN_NEED_REFRESH) {
+        // Try to refresh auth token and retry API call
+        const refreshResult = await $authStore.adminAuthRefresh();
 
-      if(typeof refreshResult === "boolean") {
-        if(refreshResult === true) {
-          return await func();
+        if(typeof refreshResult === "boolean") {
+          if(refreshResult === true) {
+            return await func();
+          }
         }
+      } else if(result === ErrorCodes.INVALID_AUTH_TOKEN) {
+        // Logout
+        router.replace({ name: "logout", state: { authTokenInvalid: true } });
+        return ErrorCodes.NEED_RELOGIN;
       }
-
-      return ErrorCodes.NEED_RELOGIN;
-    } else {
-      return result;
     }
+
+    return result;
   }
 
   /* Actions */

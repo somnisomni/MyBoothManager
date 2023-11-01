@@ -1,6 +1,9 @@
 <template>
   <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column">
-    <VSnackbar v-model="hasLogout" timeout="5000" class="mb-8">로그아웃 되었습니다.</VSnackbar>
+    <VSnackbar v-model="hasLogout" timeout="5000" class="mb-8">
+      <span v-if="hasLogoutByInvalidAuthToken">로그인 정보가 유효하지 않아 다시 로그인해야 합니다.</span>
+      <span v-else>로그아웃 되었습니다.</span>
+    </VSnackbar>
 
     <VCard elevation="8" class="overflow-hidden" style="max-width: 100%; z-index: 1000;">
       <VCardText>
@@ -65,6 +68,7 @@ export default class LoginPage extends Vue {
 
   errorMessage = "";
   hasLogout = window.history.state?.logout ?? false;
+  hasLogoutByInvalidAuthToken = window.history.state?.authTokenInvalid ?? false;
 
   mounted() {
     window.history.state.logout = false;
