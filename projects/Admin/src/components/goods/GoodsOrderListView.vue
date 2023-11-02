@@ -3,7 +3,7 @@
     <VSlideXReverseTransition leave-absolute group>
       <VListItem v-for="item in orderList"
                  :key="item.id"
-                 class="my-2">
+                 class="px-0 px-sm-4 py-0 py-sm-2 my-0 my-sm-2">
         <GoodsOrderListItem :orderData="item"
                             @click="onGoodsOrderItemClick" />
       </VListItem>

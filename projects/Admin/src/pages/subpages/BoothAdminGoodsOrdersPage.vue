@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="mt-4 pa-2 pa-md-6">
+  <VContainer class="mt-4 pa-0 pa-sm-2 pa-md-6">
     <VLayout class="pa-2">
       <VBtn size="large"
             :disabled="dataLoading"
