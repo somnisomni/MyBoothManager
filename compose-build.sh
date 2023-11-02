@@ -22,5 +22,12 @@ if ! [ -f "$COMPOSE_FILE" ]; then
   fi
 fi
 
+echo
+echo "=========="
+echo "Using compose file:    $COMPOSE_FILE"
+echo "Using compose command: $COMPOSE"
+echo "=========="
+echo
+
 $COMPOSE -f $COMPOSE_FILE down
 $COMPOSE -f $COMPOSE_FILE up -d --build
