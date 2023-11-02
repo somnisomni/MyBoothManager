@@ -3,8 +3,8 @@
     <VRow class="pa-2">
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
-    <VRow class="pa-2">
-      <VBtn class="mr-4 px-0"
+    <VRow class="pa-2 justify-space-between">
+      <VBtn class="mr-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
             min-width="64px"
             size="x-large"
@@ -14,11 +14,12 @@
         <VTooltip activator="parent" location="bottom">목록 새로고침</VTooltip>
         <VIcon>mdi-refresh</VIcon>
       </VBtn>
-      <VBtn class="flex-grow-1"
+      <VBtn class="my-1 flex-grow-1 order-first order-sm-0"
             variant="outlined"
             size="x-large"
+            :width="smAndUp ? 'auto' : '100%'"
             @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen"><VIcon>mdi-plus</VIcon> 굿즈 추가</VBtn>
-      <VBtn class="ml-4 px-0"
+      <VBtn class="ml-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
             min-width="64px"
             size="x-large"
@@ -34,6 +35,8 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
+import { useDisplay } from "vuetify";
+import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
@@ -51,6 +54,10 @@ export default class GoodsManagePanel extends Vue {
 
   get goodsCount(): string {
     return Object.keys(useAdminStore().boothGoodsList).length.toLocaleString();
+  }
+
+  get smAndUp(): boolean {
+    return unref(useDisplay().smAndUp);
   }
 
   async onListRefreshClick() {
