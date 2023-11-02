@@ -14,10 +14,14 @@
       <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
       <VLayout class="flex-row justify-stretch mt-1">
         <VBtn :variant="currentBoothStatusContentPublish ? 'flat' : 'outlined'"
-              :disabled="currentBoothStatusContentPublish" color="green" class="mr-1 flex-grow-1"
+              :disabled="currentBoothStatusContentPublish || contentPublishStatusUpdateProgress"
+              :loading="contentPublishStatusUpdateProgress"
+              color="green" class="mr-1 flex-grow-1"
               @click.stop="updateContentPublishStatus(true)">공개</VBtn>
         <VBtn :variant="!currentBoothStatusContentPublish ? 'flat' : 'outlined'"
-              :disabled="!currentBoothStatusContentPublish" color="grey" class="ml-1 flex-grow-1"
+              :disabled="!currentBoothStatusContentPublish || contentPublishStatusUpdateProgress"
+              :loading="contentPublishStatusUpdateProgress"
+              color="grey" class="ml-1 flex-grow-1"
               @click.stop="updateContentPublishStatus(false)">비공개</VBtn>
       </VLayout>
     </VLayout>
@@ -84,6 +88,8 @@ export default class BoothStatusPanel extends Vue {
     },
   ];
 
+  contentPublishStatusUpdateProgress = false;
+
   statusUpdateDialogOpen = false;
   statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
@@ -104,9 +110,22 @@ export default class BoothStatusPanel extends Vue {
     this.statusUpdateDialogOpen = true;
   }
 
-  updateContentPublishStatus(publish: boolean) {
-    // TODO: Change with real API call
-    useAdminStore().boothList[useAdminStore().currentBoothId].statusPublishContent = publish;
+  async updateContentPublishStatus(publish: boolean) {
+    this.contentPublishStatusUpdateProgress = true;
+
+    const response = await useAdminStore().updateCurrentBoothStatus({
+      ...{
+        status: this.currentBoothStatus,
+        statusReason: this.currentBoothStatusReason,
+      },
+      statusPublishContent: publish,
+    });
+
+    if(response !== true) {
+      alert("오류 발생 : " + response);
+    }
+
+    this.contentPublishStatusUpdateProgress = false;
   }
 }
 </script>
