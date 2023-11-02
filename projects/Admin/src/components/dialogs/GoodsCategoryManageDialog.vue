@@ -12,7 +12,7 @@
                 :onDialogCancel="onDialogCancel"
                 :onDialogPrimary="onDialogConfirm"
                 :onDialogSecondary="resetForm"
-                :onDialogLeftButton="onDialogDeleteClick"
+                :onDialogLeftButton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -28,6 +28,8 @@
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @confirm="() => { open = false; }" />
+  <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
+                             @confirm="onDeleteConfirm" />
 </template>
 
 <script lang="ts">
@@ -36,10 +38,12 @@ import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
+import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
     FormDataLossWarningDialog,
+    ItemDeleteWarningDialog,
   },
   emits: ["error", "updated", "deleted"],
 })
@@ -57,6 +61,7 @@ export default class GoodsCategoryManageDialog extends Vue {
   formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
   cancelWarningDialogShown = false;
+  deleteWarningDialogShown = false;
 
   get dynString(): Record<string, string | null> {
     return {
@@ -72,12 +77,15 @@ export default class GoodsCategoryManageDialog extends Vue {
 
     if(this.categoryId && this.editMode) {
       const currentGoodsData = useAdminStore().boothGoodsCategoryList[Number(this.categoryId!)];
-      const formDataTyped = this.formData as IGoodsCategoryUpdateRequest;
 
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IGoodsCategoryUpdateRequest;
-        return formDataTyped[k] !== currentGoodsData[k];
-      });
+      if(currentGoodsData) {
+        const formDataTyped = this.formData as IGoodsCategoryUpdateRequest;
+
+        edited = Object.keys(this.formData).some((key) => {
+          const k = key as keyof IGoodsCategoryUpdateRequest;
+          return formDataTyped[k] !== currentGoodsData[k];
+        });
+      }
     } else {
       const formDataTyped = this.formData as IGoodsCategoryCreateRequest;
 
@@ -97,9 +105,11 @@ export default class GoodsCategoryManageDialog extends Vue {
     if(this.categoryId && this.editMode) {
       const goodsData = useAdminStore().boothGoodsCategoryList[Number(this.categoryId)];
 
-      this.formData = reactive({
-        name: goodsData.name,
-      } as IGoodsCategoryUpdateRequest);
+      if(goodsData) {
+        this.formData = reactive({
+          name: goodsData.name,
+        } as IGoodsCategoryUpdateRequest);
+      }
     } else {
       this.formData = reactive({
         ...this.GOODS_CATEGORY_ADD_DEFAULT_DATA,
@@ -172,7 +182,7 @@ export default class GoodsCategoryManageDialog extends Vue {
     }
   }
 
-  async onDialogDeleteClick() {
+  async onDeleteConfirm() {
     this.updateInProgress = true;
 
     if(this.categoryId) {
