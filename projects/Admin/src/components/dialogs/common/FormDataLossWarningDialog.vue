@@ -4,7 +4,7 @@
                 dialogTitle="경고"
                 dialogCancelText="돌아가기"
                 dialogPrimaryText="닫기"
-                :onDialogPrimary="() => { closeCallback(); open = false; }"
+                :onDialogPrimary="onDialogPrimary"
                 accentColor="red">
     <p><span class="text-red"><strong>아직 반영되지 않은 변경된 정보가 있습니다.</strong></span></p>
     <p>변경한 내용을 취소하고 창을 닫으시겠습니까?</p>
@@ -12,11 +12,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class FormDataLossWarningDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Function, default: () => {} }) closeCallback!: () => void;
+
+  @Emit("confirm")
+  onDialogPrimary(): void {
+    this.open = false;
+  }
 }
 </script>

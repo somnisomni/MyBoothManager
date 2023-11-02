@@ -84,7 +84,7 @@
 
     <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                               :closeCallback="() => { open = false; }" />
+                               @confirm="() => { open = false; }" />
   </CommonDialog>
 </template>
 

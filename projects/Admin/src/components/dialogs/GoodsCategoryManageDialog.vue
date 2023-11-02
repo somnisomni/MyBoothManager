@@ -27,7 +27,7 @@
   </CommonDialog>
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                             :closeCallback="() => { open = false; }" />
+                             @confirm="() => { open = false; }" />
 </template>
 
 <script lang="ts">
