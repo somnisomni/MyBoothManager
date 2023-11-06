@@ -10,7 +10,7 @@
     <VForm>
       <VTextField v-model="orderDataCopied.quantity"
                   type="number"
-                  min="0"
+                  min="1"
                   label="판매 수량"
                   placeholder="기본값 사용"
                   suffix="개"
