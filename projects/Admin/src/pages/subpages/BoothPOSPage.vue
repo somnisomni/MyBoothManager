@@ -18,7 +18,8 @@
                      height="72px">
             <POSGoodsOrderListItem :item="item"
                                    :currencySymbol="currencySymbol"
-                                   @quantityChange="updateGoodsInOrderQuantity" />
+                                   @quantityChange="updateGoodsInOrderQuantity"
+                                   @itemAdvancedConfirm="(newGoodsData: IGoodsOrderInternal) => onOrderItemAdvancedConfirm(item.goodsId, newGoodsData)" />
           </VListItem>
         </VSlideXReverseTransition>
       </VList>
@@ -64,7 +65,6 @@
   <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
                          :orders="goodsInOrder"
                          @confirm="onOrderConfirm" />
-
   <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
                              @confirm="onListResetConfirm" />
 </template>
@@ -94,6 +94,8 @@ export default class BoothPOSPage extends Vue {
 
   showOrderConfirmDialog: boolean = false;
   showListResetConfirmDialog: boolean = false;
+  showOrderItemEditDialog: boolean = false;
+
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
@@ -123,7 +125,7 @@ export default class BoothPOSPage extends Vue {
     let total = 0;
 
     for(const goodsId in this.goodsInOrder) {
-      total += this.boothGoodsDict[goodsId].price * this.goodsInOrder[goodsId].quantity;
+      total += (this.goodsInOrder[goodsId].price ?? this.boothGoodsDict[goodsId].price) * this.goodsInOrder[goodsId].quantity;
     }
 
     return total;
@@ -185,6 +187,10 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
+  onOrderItemAdvancedConfirm(goodsId: number, newOrderData: IGoodsOrderInternal) {
+    this.goodsInOrder[goodsId] = newOrderData;
+  }
+
   async onOrderConfirm() {
     this.orderCreationInProgress = true;
 
@@ -197,7 +203,7 @@ export default class BoothPOSPage extends Vue {
     for(const goodsId in this.goodsInOrder) {
       data.order.push({
         gId: Number(goodsId),
-        price: this.boothGoodsDict[goodsId].price,
+        price: this.goodsInOrder[goodsId].price ?? this.boothGoodsDict[goodsId].price,
         quantity: this.goodsInOrder[goodsId].quantity,
       });
     }
