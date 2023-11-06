@@ -23,7 +23,7 @@
                   class="mx-2"
                   :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"/>
       <VChipGroup v-model="orderDataCopied.quantity"
-                  class="d-flex flex-row justify-center"
+                  class="d-flex flex-row justify-start"
                   selected-class="text-primary"
                   mandatory>
         <VChip v-for="quantity in quickQuantityChips"
@@ -41,8 +41,14 @@
                   :placeholder="goodsItem.price"
                   :prefix="currencySymbol"
                   variant="outlined"
-                  class="mx-2 mt-4"
+                  class="mx-2 mt-6"
                   :rules="[(val: number) => val === undefined || val >= 0 ? true : '판매 단가는 음수일 수 없습니다.']" />
+      <VChipGroup v-model="orderDataCopied.price"
+                  class="d-flex flex-row justify-start"
+                  selected-class="text-primary"
+                  mandatory>
+        <VChip :value="0">무료 증정</VChip>
+      </VChipGroup>
     </VForm>
   </CommonDialog>
 </template>
