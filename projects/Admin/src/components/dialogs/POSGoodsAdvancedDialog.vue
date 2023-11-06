@@ -54,7 +54,7 @@ import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
 @Component({
-  emits: ["confirm"],
+  emits: ["confirm", "deleteItemRequest"],
 })
 export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
