@@ -19,6 +19,7 @@
             <POSGoodsOrderListItem :item="item"
                                    :currencySymbol="currencySymbol"
                                    @quantityChange="updateGoodsInOrderQuantity"
+                                   @itemAdvancedDeleteRequest="(goodsId: number) => delete goodsInOrder[goodsId]"
                                    @itemAdvancedConfirm="(newGoodsData: IGoodsOrderInternal) => onOrderItemAdvancedConfirm(item.goodsId, newGoodsData)" />
           </VListItem>
         </VSlideXReverseTransition>

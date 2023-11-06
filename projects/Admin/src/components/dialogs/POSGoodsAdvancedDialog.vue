@@ -3,7 +3,9 @@
                 width="400px"
                 dialogTitle="굿즈 판매 정보 세부 설정"
                 dialogCancelText="취소"
+                dialogLeftButtonText="삭제"
                 dialogPrimaryText="확인"
+                :onDialogLeftButton="onDialogLeftButton"
                 :onDialogPrimary="onDialogPrimary">
     <p class="text-h6 text-center mb-4"><strong>{{ goodsItem.name }}</strong></p>
 
@@ -70,6 +72,12 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  @Emit("deleteItemRequest")
+  onDialogLeftButton(): number {
+    this.open = false;
+    return this.goodsId;
   }
 
   @Emit("confirm")

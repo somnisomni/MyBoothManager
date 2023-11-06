@@ -21,6 +21,7 @@
   <POSGoodsAdvancedDialog v-model="showAdvancedDialog"
                           :goodsId="item.goodsId"
                           :orderData="item"
+                          @deleteItemRequest="onGoodsAdvancedDialogDeleteRequest"
                           @confirm="onGoodsAdvancedDialogConfirm" />
 </template>
 
@@ -50,6 +51,11 @@ export default class POSGoodsOrderListItem extends Vue {
   calculateGoodsPrice(goodsId: number, quantity: number): string {
     const singlePrice = this.item.price ?? this.boothGoodsDict[goodsId].price;
     return `${this.currencySymbol}${(singlePrice * quantity).toLocaleString()}`;
+  }
+
+  @Emit("itemAdvancedDeleteRequest")
+  onGoodsAdvancedDialogDeleteRequest(goodsId: number) {
+    return goodsId;
   }
 
   @Emit("itemAdvancedConfirm")
