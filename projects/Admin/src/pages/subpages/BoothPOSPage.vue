@@ -189,7 +189,11 @@ export default class BoothPOSPage extends Vue {
   }
 
   onOrderItemAdvancedConfirm(goodsId: number, newOrderData: IGoodsOrderInternal) {
-    this.goodsInOrder[goodsId] = newOrderData;
+    this.goodsInOrder[goodsId] = {
+      ...newOrderData,
+      quantity: this.goodsInOrder[goodsId].quantity,
+    };
+    this.updateGoodsInOrderQuantity({ goodsId, delta: newOrderData.quantity - this.goodsInOrder[goodsId].quantity });
   }
 
   async onOrderConfirm() {
