@@ -6,19 +6,22 @@
                 dialogLeftButtonText="삭제"
                 dialogPrimaryText="확인"
                 :onDialogLeftButton="onDialogLeftButton"
-                :onDialogPrimary="onDialogPrimary">
+                :onDialogPrimary="onDialogPrimary"
+                :disablePrimary="!formValid">
     <p class="text-h6 text-center mb-4"><strong>{{ goodsItem.name }}</strong></p>
 
-    <VForm>
+    <VForm v-model="formValid">
       <VTextField v-model="orderDataCopied.quantity"
                   type="number"
                   min="1"
+                  :max="goodsItem.stockRemaining"
                   label="판매 수량"
                   placeholder="기본값 사용"
                   suffix="개"
                   variant="outlined"
-                  hide-details
-                  class="mx-2" />
+                  :hide-details="formValid"
+                  class="mx-2"
+                  :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"/>
       <VChipGroup v-model="orderDataCopied.quantity"
                   class="d-flex flex-row justify-center"
                   selected-class="text-primary"
@@ -59,6 +62,7 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   readonly quickQuantityChips: Array<number> = [ 1, 2, 3, 5, 10, 20 ];
 
+  formValid: boolean = false;
   orderDataCopied: IGoodsOrderInternal = { ...this.orderData };
 
   mounted(): void {
