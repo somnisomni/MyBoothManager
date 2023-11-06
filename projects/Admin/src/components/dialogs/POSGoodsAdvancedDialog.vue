@@ -38,6 +38,7 @@
                   label="판매 단가 (가격)"
                   hint="비워두면 굿즈의 기본 가격 사용"
                   persistent-hint
+                  clearable
                   :placeholder="goodsItem.price"
                   :prefix="currencySymbol"
                   variant="outlined"
