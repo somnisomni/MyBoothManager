@@ -41,7 +41,8 @@
                   :placeholder="goodsItem.price"
                   :prefix="currencySymbol"
                   variant="outlined"
-                  class="mx-2 mt-4" />
+                  class="mx-2 mt-4"
+                  :rules="[(val: number) => val === undefined || val >= 0 ? true : '판매 단가는 음수일 수 없습니다.']" />
     </VForm>
   </CommonDialog>
 </template>
