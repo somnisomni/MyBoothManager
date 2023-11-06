@@ -78,6 +78,13 @@ export default class POSGoodsAdvancedDialog extends Vue {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
+  @Watch("orderDataCopied.price", { immediate: true })
+  onOrderDataPriceChange(value: number | string) {
+    if(value === "") {
+      this.orderDataCopied.price = undefined;
+    }
+  }
+
   @Emit("deleteItemRequest")
   onDialogLeftButton(): number {
     this.open = false;
