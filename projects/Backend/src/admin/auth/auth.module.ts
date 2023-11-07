@@ -12,7 +12,7 @@ import { AuthController } from "./auth.controller";
       global: true,
       secret: JWT_SECRET,
       signOptions: {
-        expiresIn: "5m",
+        expiresIn: "15m",
         algorithm: JWT_ALGORITHM,
         issuer: JWT_ISSUER,
         subject: JWT_SUBJECT,
