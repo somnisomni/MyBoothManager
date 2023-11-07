@@ -61,7 +61,7 @@ import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
 @Component({
-  emits: ["confirm", "deleteItemRequest"],
+  emits: ["confirm", "deleteRequest"],
 })
 export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
@@ -93,16 +93,16 @@ export default class POSGoodsAdvancedDialog extends Vue {
     }
   }
 
-  @Emit("deleteItemRequest")
+  @Emit("deleteRequest")
   onDialogLeftButton(): number {
     this.open = false;
     return this.goodsId;
   }
 
   @Emit("confirm")
-  onDialogPrimary(): IGoodsOrderInternal {
+  onDialogPrimary(): { goodsId: number, newOrderData: IGoodsOrderInternal } {
     this.open = false;
-    return this.orderDataCopied;
+    return { goodsId: this.goodsId, newOrderData: this.orderDataCopied };
   }
 }
 </script>

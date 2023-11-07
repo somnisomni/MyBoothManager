@@ -17,12 +17,6 @@
       </div>
     </VLayout>
   </VImg>
-
-  <POSGoodsAdvancedDialog v-model="showAdvancedDialog"
-                          :goodsId="item.goodsId"
-                          :orderData="item"
-                          @deleteItemRequest="onGoodsAdvancedDialogDeleteRequest"
-                          @confirm="onGoodsAdvancedDialogConfirm" />
 </template>
 
 <script lang="ts">
@@ -30,13 +24,9 @@ import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import type { IGoods } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 
 @Component({
-  components: {
-    POSGoodsAdvancedDialog,
-  },
-  emits: ["quantityChange", "itemClick"],
+  emits: ["quantityChange", "click"],
 })
 export default class POSGoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) item!: IGoodsOrderInternal;
@@ -53,23 +43,13 @@ export default class POSGoodsOrderListItem extends Vue {
     return `${this.currencySymbol}${(singlePrice * quantity).toLocaleString()}`;
   }
 
-  @Emit("itemAdvancedDeleteRequest")
-  onGoodsAdvancedDialogDeleteRequest(goodsId: number) {
-    return goodsId;
-  }
-
-  @Emit("itemAdvancedConfirm")
-  onGoodsAdvancedDialogConfirm(newOrderData: IGoodsOrderInternal) {
-    return newOrderData;
-  }
-
   @Emit("quantityChange")
   onOrderQuantityChangeRequest(goodsId: number, delta: number) {
     return { goodsId, delta };
   }
 
-  @Emit("itemClick")
-  onOrderItemClick() {
+  @Emit("click")
+  onOrderItemClick(): IGoodsOrderInternal {
     this.showAdvancedDialog = true;
     return this.item;
   }

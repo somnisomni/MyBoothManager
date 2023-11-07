@@ -18,9 +18,8 @@
                      height="72px">
             <POSGoodsOrderListItem :item="item"
                                    :currencySymbol="currencySymbol"
-                                   @quantityChange="updateGoodsInOrderQuantity"
-                                   @itemAdvancedDeleteRequest="(goodsId: number) => delete goodsInOrder[goodsId]"
-                                   @itemAdvancedConfirm="(newGoodsData: IGoodsOrderInternal) => onOrderItemAdvancedConfirm(item.goodsId, newGoodsData)" />
+                                   @click="onGoodsOrderItemClick"
+                                   @quantityChange="updateGoodsInOrderQuantity" />
           </VListItem>
         </VSlideXReverseTransition>
       </VList>
@@ -68,6 +67,11 @@
                          @confirm="onOrderConfirm" />
   <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
                              @confirm="onListResetConfirm" />
+  <POSGoodsAdvancedDialog v-model="showOrderAdvancedDialog"
+                          :goodsId="orderAdvancedDialogGoodsId"
+                          :orderData="orderAdvancedDialogOrderData"
+                          @deleteRequest="(goodsId: number) => delete goodsInOrder[goodsId]"
+                          @confirm="onOrderItemAdvancedConfirm" />
 </template>
 
 <script lang="ts">
@@ -80,6 +84,7 @@ import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderConfirmDialog from "@/components/dialogs/POSOrderConfirmDialog.vue";
 import POSListResetConfirmDialog from "@/components/dialogs/POSListResetConfirmDialog.vue";
 import POSGoodsOrderListItem from "@/components/pos/POSGoodsOrderListItem.vue";
+import POSGoodsAdvancedDialog from "@/components/dialogs/POSGoodsAdvancedDialog.vue";
 
 @Component({
   components: {
@@ -87,6 +92,7 @@ import POSGoodsOrderListItem from "@/components/pos/POSGoodsOrderListItem.vue";
     POSGoodsOrderListItem,
     POSOrderConfirmDialog,
     POSListResetConfirmDialog,
+    POSGoodsAdvancedDialog,
   },
 })
 export default class BoothPOSPage extends Vue {
@@ -96,6 +102,9 @@ export default class BoothPOSPage extends Vue {
   showOrderConfirmDialog: boolean = false;
   showListResetConfirmDialog: boolean = false;
   showOrderItemEditDialog: boolean = false;
+  showOrderAdvancedDialog: boolean = false;
+  orderAdvancedDialogGoodsId: number | null = null;
+  orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
 
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
@@ -161,6 +170,12 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
+  onGoodsOrderItemClick(orderData: IGoodsOrderInternal) {
+    this.showOrderAdvancedDialog = true;
+    this.orderAdvancedDialogGoodsId = orderData.goodsId;
+    this.orderAdvancedDialogOrderData = orderData;
+  }
+
   updateGoodsInOrderQuantity(eventData: { goodsId: number, delta: number }) {
     const { goodsId, delta } = eventData;
 
@@ -188,12 +203,16 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
-  onOrderItemAdvancedConfirm(goodsId: number, newOrderData: IGoodsOrderInternal) {
-    this.goodsInOrder[goodsId] = {
-      ...newOrderData,
-      quantity: this.goodsInOrder[goodsId].quantity,
+  onOrderItemAdvancedConfirm(eventData: { goodsId: number, newOrderData: IGoodsOrderInternal }) {
+    this.goodsInOrder[eventData.goodsId] = {
+      ...eventData.newOrderData,
+      quantity: this.goodsInOrder[eventData.goodsId].quantity,
     };
-    this.updateGoodsInOrderQuantity({ goodsId, delta: newOrderData.quantity - this.goodsInOrder[goodsId].quantity });
+
+    this.updateGoodsInOrderQuantity({
+      goodsId: eventData.goodsId,
+      delta: eventData.newOrderData.quantity - this.goodsInOrder[eventData.goodsId].quantity,
+    });
   }
 
   async onOrderConfirm() {
