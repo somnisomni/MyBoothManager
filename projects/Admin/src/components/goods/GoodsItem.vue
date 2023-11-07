@@ -130,6 +130,7 @@ export default class GoodsItem extends Vue {
       -webkit-line-clamp: 2;
               line-clamp: 2;
       -webkit-box-orient: vertical;
+      word-break: keep-all;
 
       font-size: 1.25em;
       font-weight: 700;
