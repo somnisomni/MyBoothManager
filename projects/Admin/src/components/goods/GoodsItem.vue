@@ -6,8 +6,8 @@
           rounded="lg"
           v-ripple
           :elevation="elevation"
-          @pointerenter="elevation = ELEVATION_HOVER"
-          @pointerleave="elevation = ELEVATION_NORMAL"
+          @pointerenter="isHovering = true"
+          @pointerleave="isHovering = false"
           @click.stop="onItemClick">
     <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/200'" aspect-ratio="1/1" cover />
     <div class="goods-image-overlay"></div>
@@ -40,13 +40,13 @@ export default class GoodsItem extends Vue {
   @Prop({ default: true }) editable!: boolean;
 
   readonly ELEVATION_NORMAL = 2;
-  readonly ELEVATION_HOVER = 6;
-  elevation = this.ELEVATION_NORMAL;
-
-  readonly WIDTH_NORMAL = 200;
+  readonly ELEVATION_HOVER  = 6;
+  readonly WIDTH_NORMAL  = 200;
   readonly HEIGHT_NORMAL = 250;
-  readonly WIDTH_SMALL = 150;
-  readonly HEIGHT_SMALL = 150;
+  readonly WIDTH_SMALL   = 150;
+  readonly HEIGHT_SMALL  = 150;
+
+  isHovering: boolean = false;
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
@@ -56,6 +56,7 @@ export default class GoodsItem extends Vue {
     return unref(useDisplay().mdAndUp);
   }
 
+  get elevation(): number { return this.isHovering ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL; }
   get width(): number { return this.mdAndUp ? this.WIDTH_NORMAL : this.WIDTH_SMALL; }
   get height(): number { return this.mdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL; }
 
