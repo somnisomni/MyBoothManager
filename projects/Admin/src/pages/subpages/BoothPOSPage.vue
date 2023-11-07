@@ -252,7 +252,7 @@ export default class BoothPOSPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-$drawer-width: 300px;
+$drawer-width: 250px;
 
 .order-drawer {
   position: fixed;
@@ -267,25 +267,25 @@ $drawer-width: 300px;
   width: $drawer-width;
   max-width: 100%;
   height: 100%;
+
+  .appname {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.125rem;
+    line-height: 1.33;
+  }
+
+  .boothname {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.125rem;
+    line-height: 1.33;
+  }
 }
 
 .pos-item-area {
   width: 100%;
   margin: 0;
   padding-left: calc($drawer-width + 1rem);
-}
-
-.appname {
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.125rem;
-  line-height: 1.33;
-}
-
-.boothname {
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.125rem;
-  line-height: 1.33;
 }
 </style>
