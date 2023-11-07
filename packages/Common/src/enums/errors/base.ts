@@ -23,6 +23,7 @@ export enum ErrorCodes {
   AUTH_TOKEN_NEED_REFRESH = 1008,
   AUTH_TOKEN_MISSING      = 1009,
   NEED_RELOGIN            = 1010,
+  SESSION_ALREADY_EXISTS  = 1011,
 
   // 2XXX: Booth errors
   UNKNOWN_BOOTH_ERROR        = 2000,
