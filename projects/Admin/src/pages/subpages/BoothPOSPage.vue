@@ -1,6 +1,6 @@
 <template>
   <VMain class="bg-background">
-    <VNavigationDrawer permanent class="navdrawer-flex">
+    <div class="order-drawer">
       <VList nav class="flex-shrink-0">
         <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }" />
         <VListItem class="text-center">
@@ -43,11 +43,11 @@
                 @click="showOrderConfirmDialog = true">판매 확인</VBtn>
         </VListItem>
       </VList>
-    </VNavigationDrawer>
+    </div>
 
-    <VContainer class="d-flex flex-column flex-wrap">
+    <VLayout class="pos-item-area d-flex flex-column flex-wrap">
       <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity({ goodsId, delta: 1 })" />
-    </VContainer>
+    </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
       <span class="text-body-2">재고가 부족합니다.</span>
@@ -252,6 +252,29 @@ export default class BoothPOSPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
+$drawer-width: 300px;
+
+.order-drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  border-right: thin solid #CCC;
+
+  display: flex;
+  flex-direction: column;
+  width: $drawer-width;
+  max-width: 100%;
+  height: 100%;
+}
+
+.pos-item-area {
+  width: 100%;
+  margin: 0;
+  padding-left: calc($drawer-width + 1rem);
+}
+
 .appname {
   font-size: 0.6rem;
   font-weight: 500;
