@@ -46,9 +46,8 @@
                   :rules="[(val: number) => val === undefined || val >= 0 ? true : '판매 단가는 음수일 수 없습니다.']" />
       <VChipGroup v-model="orderDataCopied.price"
                   class="d-flex flex-row justify-start"
-                  selected-class="text-primary"
-                  mandatory>
-        <VChip :value="0">무료 증정</VChip>
+                  selected-class="text-primary">
+        <VChip :value="0"><VIcon size="small" class="mr-2">mdi-gift</VIcon> 무료 증정</VChip>
       </VChipGroup>
     </VForm>
   </CommonDialog>

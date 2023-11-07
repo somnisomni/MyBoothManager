@@ -7,8 +7,22 @@
         @click.stop="onOrderItemClick">
     <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
       <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
-        <span class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</span>
-        <span class="text-body-2"><strong>{{ item.quantity }} 개</strong> · {{ calculateGoodsPrice(item.goodsId, item.quantity) }}</span>
+        <div class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</div>
+        <div class="text-body-2 d-flex flex-row align-center">
+          <span><strong>{{ item.quantity }} 개</strong> · {{ calculatedGoodsPriceString }}</span>
+
+          <!-- Free gift indicator -->
+          <span v-if="calculatedGoodsPrice === 0" class="ml-2">
+            <VTooltip activator="parent" location="bottom">무료 증정</VTooltip>
+            <VIcon size="x-small">mdi-gift</VIcon>
+          </span>
+
+          <!-- Edited indicator -->
+          <span v-else-if="item.price" class="ml-2">
+            <VTooltip activator="parent" location="bottom">별도 지정 단가 적용</VTooltip>
+            <VIcon size="x-small">mdi-pencil</VIcon>
+          </span>
+        </div>
       </div>
 
       <div>
@@ -38,9 +52,16 @@ export default class POSGoodsOrderListItem extends Vue {
     return useAdminStore().boothGoodsList;
   }
 
-  calculateGoodsPrice(goodsId: number, quantity: number): string {
-    const singlePrice = this.item.price ?? this.boothGoodsDict[goodsId].price;
-    return `${this.currencySymbol}${(singlePrice * quantity).toLocaleString()}`;
+  get currentGoods(): IGoods {
+    return this.boothGoodsDict[this.item.goodsId];
+  }
+
+  get calculatedGoodsPrice(): number {
+    return (this.item.price ?? this.boothGoodsDict[this.item.goodsId].price) * this.item.quantity;
+  }
+
+  get calculatedGoodsPriceString(): string {
+    return `${this.currencySymbol}${this.calculatedGoodsPrice.toLocaleString()}`;
   }
 
   @Emit("quantityChange")
