@@ -1,15 +1,15 @@
 <template>
-  <VSheet class="goods-item no-selection d-flex ma-4"
-          :class="{ 'edit': editable }"
-          width="200"
-          height="250"
+  <VSheet class="goods-item no-selection d-flex ma-2 ma-md-4"
+          :class="{ 'edit': editable, 'sm': !mdAndUp }"
+          :width="width"
+          :height="height"
           rounded="lg"
           v-ripple
           :elevation="elevation"
           @pointerenter="elevation = ELEVATION_HOVER"
           @pointerleave="elevation = ELEVATION_NORMAL"
           @click.stop="onItemClick">
-    <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/250'" aspect-ratio="1/1" />
+    <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/200'" aspect-ratio="1/1" cover />
     <div class="goods-image-overlay"></div>
 
     <div v-if="editable" class="click-to-edit-text">클릭하여 수정</div>
@@ -28,6 +28,8 @@
 <script lang="ts">
 import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
+import { useDisplay } from "vuetify";
+import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 
 @Component({
@@ -41,9 +43,21 @@ export default class GoodsItem extends Vue {
   readonly ELEVATION_HOVER = 6;
   elevation = this.ELEVATION_NORMAL;
 
+  readonly WIDTH_NORMAL = 200;
+  readonly HEIGHT_NORMAL = 250;
+  readonly WIDTH_SMALL = 150;
+  readonly HEIGHT_SMALL = 150;
+
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
+
+  get mdAndUp(): boolean {
+    return unref(useDisplay().mdAndUp);
+  }
+
+  get width(): number { return this.mdAndUp ? this.WIDTH_NORMAL : this.WIDTH_SMALL; }
+  get height(): number { return this.mdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL; }
 
   @Emit("click")
   onItemClick() {
@@ -59,6 +73,10 @@ export default class GoodsItem extends Vue {
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.25s, transform 0.25s ease-in-out;
+
+  &.sm {
+    font-size: 90%;
+  }
 
   &.edit:hover {
     transform: translateY(-5%);

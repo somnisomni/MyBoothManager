@@ -29,7 +29,7 @@
         <VChip v-for="quantity in quickQuantityChips"
                :key="quantity"
                :value="quantity">{{ quantity }}<small>개</small></VChip>
-        <!-- FIXME: chip autoselected by chipgroup model as index value, not actual quantity value-->
+        <!-- FIXME: chip autoselected by chipgroup model as index value, not actual quantity value -->
       </VChipGroup>
 
       <VTextField v-model="orderDataCopied.price"
