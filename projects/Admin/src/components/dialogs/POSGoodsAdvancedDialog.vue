@@ -11,7 +11,7 @@
     <p class="text-h6 text-center mb-4"><strong>{{ goodsItem.name }}</strong></p>
 
     <VForm v-model="formValid">
-      <VTextField v-model="orderDataCopied.quantity"
+      <VTextField v-model.number="orderDataCopied.quantity"
                   type="number"
                   min="1"
                   :max="goodsItem.stockRemaining"
@@ -32,7 +32,7 @@
         <!-- FIXME: chip autoselected by chipgroup model as index value, not actual quantity value -->
       </VChipGroup>
 
-      <VTextField v-model="orderDataCopied.price"
+      <VTextField v-model.number="orderDataCopied.price"
                   type="number"
                   min="0"
                   label="판매 단가 (가격)"
