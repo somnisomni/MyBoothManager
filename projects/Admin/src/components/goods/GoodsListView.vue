@@ -1,13 +1,14 @@
 <template>
   <div v-for="category in goodsCategoryList"
        :key="category.id"
-       class="mt-8">
-    <GoodsCategoryTitle :categoryData="category"
+       class="my-4">
+    <GoodsCategoryTitle class="mb-2"
+                        :categoryData="category"
                         :editable="editable && category.id !== -1"
                         @click="onGoodsCategoryClick"
                         @openEditDialog="onGoodsCategoryEdit" />
 
-    <VRow class="justify-start">
+    <VRow class="ma-0 justify-start">
       <VSlideYReverseTransition group leave-absolute>
           <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
                      :key="goods.id"

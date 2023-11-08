@@ -1,5 +1,5 @@
 <template>
-  <VBtn class="goods-category-title d-flex flex-row align-center justify-start text-left text-2xl mb-4 pl-2"
+  <VBtn class="goods-category-title d-flex flex-row align-center justify-start text-left text-2xl pl-2"
         variant="text"
         size="large"
         :class="{ 'edit': editable }"

@@ -118,9 +118,11 @@ export default class BoothPOSPage extends Vue {
 </style>
 
 <style lang="scss" scoped>
-.pos-item-area {
+.pos-page {
+  .pos-item-area {
   width: 100%;
   margin: 0;
-  padding-left: calc(var(--drawer-width) + 1rem);
+  padding: 1rem 1rem 1rem calc(var(--drawer-width) + 1rem);
+}
 }
 </style>
