@@ -1,52 +1,12 @@
 <template>
-  <VMain class="bg-background">
-    <div class="order-drawer">
-      <VList nav class="flex-shrink-0">
-        <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }" />
-        <VListItem class="text-center">
-          <div class="appname text-grey">{{ APP_NAME }}</div>
-          <div class="boothname text-darken-2">{{ boothName }}</div>
-          <div class="mt-1 text-h4 font-weight-bold">주문 목록</div>
-        </VListItem>
-      </VList>
-
-      <VList class="overflow-auto overflow-x-hidden flex-grow-1">
-        <VSlideXReverseTransition group leave-absolute>
-          <VListItem v-for="item in goodsInOrder"
-                     :key="item.goodsId"
-                     class="pa-0"
-                     height="72px">
-            <POSGoodsOrderListItem :item="item"
-                                   :currencySymbol="currencySymbol"
-                                   @click="onGoodsOrderItemClick"
-                                   @quantityChange="updateGoodsInOrderQuantity" />
-          </VListItem>
-        </VSlideXReverseTransition>
-      </VList>
-
-      <VList nav class="flex-shrink-0 pa-0 pb-2">
-        <VListItem class="px-2 py-1">
-          <VBtn prepend-icon="mdi-playlist-remove"
-                class="w-100"
-                variant="text"
-                :disabled="isGoodsInOrderEmpty || orderCreationInProgress"
-                @click="showListResetConfirmDialog = true">목록 초기화</VBtn>
-        </VListItem>
-        <VListItem class="px-2 py-1">
-          <div class="text-body-2 text-center mb-2">총 가격: <strong>{{ totalOrderWorthString }}</strong></div>
-          <VBtn prepend-icon="mdi-cart-heart"
-                color="primary"
-                size="x-large"
-                class="w-100"
-                :loading="orderCreationInProgress"
-                :disabled="isGoodsInOrderEmpty || orderCreationInProgress"
-                @click="showOrderConfirmDialog = true">판매 확인</VBtn>
-        </VListItem>
-      </VList>
-    </div>
+  <VMain class="pos-page bg-background">
+    <POSOrderDrawer :orderList="orderList"
+                    @goodsOrderQuantityUpdateRequest="updateOrderListQuantity"
+                    @orderCreationSuccess="onOrderCreationSuccess"
+                    @orderCreationFailed="onOrderCreationFailed" />
 
     <VLayout class="pos-item-area d-flex flex-column flex-wrap">
-      <GoodsListView :onGoodsClick="(goodsId: number) => updateGoodsInOrderQuantity({ goodsId, delta: 1 })" />
+      <GoodsListView :onGoodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -61,62 +21,33 @@
       <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
     </VSnackbar>
   </VMain>
-
-  <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
-                         :orders="goodsInOrder"
-                         @confirm="onOrderConfirm" />
-  <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
-                             @confirm="onListResetConfirm" />
-  <POSGoodsAdvancedDialog v-model="showOrderAdvancedDialog"
-                          :goodsId="orderAdvancedDialogGoodsId"
-                          :orderData="orderAdvancedDialogOrderData"
-                          @deleteRequest="(goodsId: number) => delete goodsInOrder[goodsId]"
-                          @confirm="onOrderItemAdvancedConfirm" />
 </template>
 
 <script lang="ts">
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { APP_NAME, BoothStatus, emptyNumberKeyObject, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
-import POSOrderConfirmDialog from "@/components/dialogs/POSOrderConfirmDialog.vue";
-import POSListResetConfirmDialog from "@/components/dialogs/POSListResetConfirmDialog.vue";
-import POSGoodsOrderListItem from "@/components/pos/POSGoodsOrderListItem.vue";
-import POSGoodsAdvancedDialog from "@/components/dialogs/POSGoodsAdvancedDialog.vue";
+import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 
 @Component({
   components: {
     GoodsListView,
-    POSGoodsOrderListItem,
-    POSOrderConfirmDialog,
-    POSListResetConfirmDialog,
-    POSGoodsAdvancedDialog,
+    POSOrderDrawer,
   },
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  readonly goodsInOrder: Record<number, IGoodsOrderInternal> = {};
-
-  showOrderConfirmDialog: boolean = false;
-  showListResetConfirmDialog: boolean = false;
-  showOrderItemEditDialog: boolean = false;
-  showOrderAdvancedDialog: boolean = false;
-  orderAdvancedDialogGoodsId: number | null = null;
-  orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
+  readonly orderList: Record<number, IGoodsOrderInternal> = {};
 
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
-  orderCreationInProgress: boolean = false;
 
   get currentBooth(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
-  }
-
-  get boothName(): string {
-    return this.currentBooth.name;
   }
 
   get currencySymbol(): string {
@@ -127,67 +58,39 @@ export default class BoothPOSPage extends Vue {
     return useAdminStore().boothGoodsList;
   }
 
-  get isGoodsInOrderEmpty(): boolean {
-    return Object.keys(this.goodsInOrder).length <= 0;
-  }
-
-  get totalOrderWorth(): number {
-    let total = 0;
-
-    for(const goodsId in this.goodsInOrder) {
-      total += (this.goodsInOrder[goodsId].price ?? this.boothGoodsDict[goodsId].price) * this.goodsInOrder[goodsId].quantity;
-    }
-
-    return total;
-  }
-
-  get totalOrderWorthString(): string {
-    return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`;
-  }
-
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
     }
   }
 
-  resetOrderList(): void {
-    emptyNumberKeyObject(this.goodsInOrder);
-  }
-
   onGoodsItemClick(goodsId: number) {
-    if(this.goodsInOrder[goodsId]) {
-      if(this.goodsInOrder[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
-        this.goodsInOrder[goodsId].quantity++;
+    if(this.orderList[goodsId]) {
+      if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
+        this.orderList[goodsId].quantity++;
       } else {
         this.showStockNotEnoughSnackbar = true;
       }
     } else {
-      this.goodsInOrder[goodsId] = {
+      this.orderList[goodsId] = {
         goodsId,
         quantity: 1,
       };
     }
   }
 
-  onGoodsOrderItemClick(orderData: IGoodsOrderInternal) {
-    this.showOrderAdvancedDialog = true;
-    this.orderAdvancedDialogGoodsId = orderData.goodsId;
-    this.orderAdvancedDialogOrderData = orderData;
-  }
-
-  updateGoodsInOrderQuantity(eventData: { goodsId: number, delta: number }) {
+  updateOrderListQuantity(eventData: { goodsId: number, delta: number }) {
     const { goodsId, delta } = eventData;
 
-    if(this.goodsInOrder[goodsId]) {
-      if(this.goodsInOrder[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
-        this.goodsInOrder[goodsId].quantity += delta;
+    if(this.orderList[goodsId]) {
+      if(this.orderList[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
+        this.orderList[goodsId].quantity += delta;
       } else {
         this.showStockNotEnoughSnackbar = true;
       }
 
-      if(this.goodsInOrder[goodsId].quantity <= 0) {
-        delete this.goodsInOrder[goodsId];
+      if(this.orderList[goodsId].quantity <= 0) {
+        delete this.orderList[goodsId];
       }
     } else {
       if(delta <= 0) return;
@@ -196,96 +99,28 @@ export default class BoothPOSPage extends Vue {
         return;
       }
 
-      this.goodsInOrder[goodsId] = {
+      this.orderList[goodsId] = {
         goodsId,
         quantity: delta,
       };
     }
   }
 
-  onOrderItemAdvancedConfirm(eventData: { goodsId: number, newOrderData: IGoodsOrderInternal }) {
-    this.goodsInOrder[eventData.goodsId] = {
-      ...eventData.newOrderData,
-      quantity: this.goodsInOrder[eventData.goodsId].quantity,
-    };
-
-    this.updateGoodsInOrderQuantity({
-      goodsId: eventData.goodsId,
-      delta: eventData.newOrderData.quantity - this.goodsInOrder[eventData.goodsId].quantity,
-    });
-  }
-
-  async onOrderConfirm() {
-    this.orderCreationInProgress = true;
-
-    const data: IGoodsOrderCreateRequest = {
-      boothId: this.currentBooth.id,
-      totalPrice: this.totalOrderWorth,
-      order: [],
-    };
-
-    for(const goodsId in this.goodsInOrder) {
-      data.order.push({
-        gId: Number(goodsId),
-        price: this.goodsInOrder[goodsId].price ?? this.boothGoodsDict[goodsId].price,
-        quantity: this.goodsInOrder[goodsId].quantity,
-      });
-    }
-
-    // API call
-    const results = [await useAdminStore().createGoodsOrder(data), await useAdminStore().fetchGoodsOfCurrentBooth(true)];
-    if(results.every((res) => typeof res !== "string")) {
-      // If API call success, empty the order list
-      this.resetOrderList();
-      this.showOrderSuccessSnackbar = true;
-    } else {
-      this.showOrderFailedSnackbar = true;
-    }
-
-    this.orderCreationInProgress = false;
-  }
-
-  onListResetConfirm(): void {
-    this.resetOrderList();
-  }
+  onOrderCreationSuccess(): void { this.showOrderSuccessSnackbar = true; }
+  onOrderCreationFailed(): void { this.showOrderFailedSnackbar = true; }
 }
 </script>
 
-<style lang="scss" scoped>
-$drawer-width: 250px;
-
-.order-drawer {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 1000;
-  border-right: thin solid #CCC;
-
-  display: flex;
-  flex-direction: column;
-  width: $drawer-width;
-  max-width: 100%;
-  height: 100%;
-
-  .appname {
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.125rem;
-    line-height: 1.33;
-  }
-
-  .boothname {
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.125rem;
-    line-height: 1.33;
-  }
+<style lang="scss">
+.pos-page {
+  --drawer-width: 250px;
 }
+</style>
 
+<style lang="scss" scoped>
 .pos-item-area {
   width: 100%;
   margin: 0;
-  padding-left: calc($drawer-width + 1rem);
+  padding-left: calc(var(--drawer-width) + 1rem);
 }
 </style>
