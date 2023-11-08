@@ -1,11 +1,20 @@
 <template>
   <VMain class="pos-page bg-background">
+    <VList v-show="!mdAndUp" nav class="sm-back-link bg-background">
+      <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }"
+                 density="compact" />
+    </VList>
+
     <POSOrderDrawer :orderList="orderList"
+                    :sm="!mdAndUp"
+                    @smDrawerHeightChanged="onSMDrawerHeightChanged"
                     @goodsOrderQuantityUpdateRequest="updateOrderListQuantity"
                     @orderCreationSuccess="onOrderCreationSuccess"
                     @orderCreationFailed="onOrderCreationFailed" />
 
-    <VLayout class="pos-item-area d-flex flex-column flex-wrap">
+    <VLayout class="pos-item-area d-flex flex-column flex-wrap mt-8 mt-md-0"
+             :class="{ 'sm': !mdAndUp }"
+             :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
       <GoodsListView :onGoodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
 
@@ -27,6 +36,8 @@
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
+import { unref } from "vue";
+import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
@@ -42,26 +53,23 @@ export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly orderList: Record<number, IGoodsOrderInternal> = {};
 
+  smDrawerHeight: number = 0;
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
 
-  get currentBooth(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
-  }
-
-  get currencySymbol(): string {
-    return this.currentBooth.currencySymbol;
-  }
-
-  get boothGoodsDict(): Record<number, IGoods> {
-    return useAdminStore().boothGoodsList;
-  }
+  get mdAndUp(): boolean { return unref(useDisplay().mdAndUp); }
+  get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
+  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
     }
+  }
+
+  onSMDrawerHeightChanged(height: number) {
+    this.smDrawerHeight = height;
   }
 
   onGoodsItemClick(goodsId: number) {
@@ -113,16 +121,29 @@ export default class BoothPOSPage extends Vue {
 
 <style lang="scss">
 .pos-page {
-  --drawer-width: 250px;
+  --drawer-width: 300px;
 }
 </style>
 
 <style lang="scss" scoped>
 .pos-page {
+  .sm-back-link {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+  }
+
   .pos-item-area {
-  width: 100%;
-  margin: 0;
-  padding: 1rem 1rem 1rem calc(var(--drawer-width) + 1rem);
-}
+    width: 100%;
+    margin: 0;
+    padding: 1rem 1rem 1rem calc(var(--drawer-width) + 1rem);
+
+    &.sm {
+      padding-left: 1rem;
+    }
+  }
 }
 </style>

@@ -3,12 +3,14 @@
         :src="'https://picsum.photos/seed/' + item.goodsId + '/200/250'"
         v-ripple
         cover
-        height="72px"
+        :height="singleLine ? '48px' : '72px'"
         @click.stop="onOrderItemClick">
     <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
-      <div class="d-flex flex-column flex-grow-1 flex-shrink-1" style="min-width: 0;">
-        <div class="text-body-1 font-weight-bold">{{ boothGoodsDict[item.goodsId].name }}</div>
-        <div class="text-body-2 d-flex flex-row align-center">
+      <div class="d-flex flex-grow-1 flex-shrink-1" style="min-width: 0;"
+           :class="{ 'flex-column': !singleLine, 'flex-row': singleLine }">
+        <div class="overflow-hidden text-body-1 font-weight-bold mr-2" style="text-overflow: ellipsis">{{ boothGoodsDict[item.goodsId].name }}</div>
+        <div class="text-body-2 d-flex flex-row align-center"
+             :style="{ 'font-size': singleLine ? '80% !important' : '' }">
           <span><strong>{{ item.quantity }} 개</strong> · {{ calculatedGoodsPriceString }}</span>
 
           <!-- Free gift indicator -->
@@ -44,6 +46,7 @@ import { useAdminStore } from "@/stores/admin";
 })
 export default class POSGoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) item!: IGoodsOrderInternal;
+  @Prop({ type: Boolean, default: false }) singleLine!: boolean;
 
   showAdvancedDialog: boolean = false;
 
