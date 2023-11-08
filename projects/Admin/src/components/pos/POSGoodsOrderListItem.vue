@@ -44,12 +44,15 @@ import { useAdminStore } from "@/stores/admin";
 })
 export default class POSGoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) item!: IGoodsOrderInternal;
-  @Prop({ type: String, required: true }) currencySymbol!: string;
 
   showAdvancedDialog: boolean = false;
 
   get boothGoodsDict(): Record<number, IGoods> {
     return useAdminStore().boothGoodsList;
+  }
+
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
   get currentGoods(): IGoods {

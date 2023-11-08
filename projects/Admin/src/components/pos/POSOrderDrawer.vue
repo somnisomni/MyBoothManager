@@ -16,7 +16,6 @@
                     class="pa-0"
                     height="72px">
           <POSGoodsOrderListItem :item="item"
-                                 :currencySymbol="currencySymbol"
                                  @click="onGoodsOrderItemClick"
                                  @quantityChange="onGoodsOrderQuantityUpdateRequest" />
         </VListItem>
