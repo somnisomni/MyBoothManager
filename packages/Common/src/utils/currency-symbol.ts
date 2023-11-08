@@ -1,6 +1,6 @@
 import getSymbolFromCurrency from "currency-symbol-map";
 
-const currencySymbolInfo: Record<string, Record<string, string>> = {
+const currencySymbolInfo: Record<string, { name: string, symbol: string }> = {
   KRW: {
     name: "대한민국 원",
     symbol: getSymbolFromCurrency("KRW")!,

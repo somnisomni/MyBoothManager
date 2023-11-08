@@ -35,6 +35,7 @@
       <VTextField v-model.number="orderDataCopied.price"
                   type="number"
                   min="0"
+                  :step="priceStep"
                   label="판매 단가 (가격)"
                   hint="비워두면 굿즈의 기본 가격 사용"
                   persistent-hint
@@ -54,8 +55,8 @@
 </template>
 
 <script lang="ts">
-import type { IGoods } from "@myboothmanager/common";
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
+import { currencySymbolInfo, type IGoods } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
@@ -83,6 +84,17 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get priceStep(): number {
+    switch(this.currencySymbol) {
+      case currencySymbolInfo["KRW"].symbol:
+        return 1000;
+      case currencySymbolInfo["JPY"].symbol:
+        return 100;
+      default:
+        return 1;
+    }
   }
 
   @Watch("orderDataCopied.price", { immediate: true })
