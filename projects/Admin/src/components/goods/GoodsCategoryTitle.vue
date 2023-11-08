@@ -23,7 +23,7 @@ import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
   emits: ["click", "openEditDialog"],
 })
 export default class GoodsCategoryTitle extends Vue {
-  @Prop({ type: String, required: true }) categoryData!: IGoodsCategory;
+  @Prop({ type: Object, required: true }) categoryData!: IGoodsCategory;
   @Prop({ type: Boolean, default: false }) editable!: boolean;
 
   hasPointerEntered = false;
