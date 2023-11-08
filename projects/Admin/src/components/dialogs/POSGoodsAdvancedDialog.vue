@@ -1,7 +1,7 @@
 <template>
   <CommonDialog v-model="open"
                 width="400px"
-                dialogTitle="굿즈 판매 정보 세부 설정"
+                dialogTitle="굿즈 판매 정보 수정"
                 dialogCancelText="취소"
                 dialogLeftButtonText="삭제"
                 dialogPrimaryText="확인"
@@ -20,16 +20,17 @@
                   suffix="개"
                   variant="outlined"
                   :hide-details="formValid"
-                  class="mx-2"
+                  class="mx-2 text-right"
                   :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"/>
-      <VChipGroup v-model="orderDataCopied.quantity"
+      <VChipGroup v-model.number="orderDataCopied.quantity"
                   class="d-flex flex-row justify-start"
                   selected-class="text-primary"
                   mandatory>
-        <VChip v-for="quantity in quickQuantityChips"
+        <VChip v-for="quantity in [1, 2, 3, 4, 5, 10]"
                :key="quantity"
-               :value="quantity">{{ quantity }}<small>개</small></VChip>
-        <!-- FIXME: chip autoselected by chipgroup model as index value, not actual quantity value -->
+               :value="quantity">
+          <span>{{ quantity }}<small>개</small></span>
+        </VChip>
       </VChipGroup>
 
       <VTextField v-model.number="orderDataCopied.price"
@@ -40,7 +41,7 @@
                   hint="비워두면 굿즈의 기본 가격 사용"
                   persistent-hint
                   clearable
-                  :placeholder="goodsItem.price"
+                  :placeholder="goodsItem.price.toString()"
                   :prefix="currencySymbol"
                   variant="outlined"
                   class="mx-2 mt-6"
@@ -67,8 +68,6 @@ export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: Number, required: true }) goodsId!: number;
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrderInternal;
-
-  readonly quickQuantityChips: Array<number> = [ 1, 2, 3, 5, 10, 20 ];
 
   formValid: boolean = false;
   orderDataCopied: IGoodsOrderInternal = { ...this.orderData };

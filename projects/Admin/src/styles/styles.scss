@@ -29,3 +29,8 @@ html {
   display: flex;
   flex-direction: column;
 }
+
+/* VInput text align right */
+.v-input.text-right input {
+  text-align: right;
+}

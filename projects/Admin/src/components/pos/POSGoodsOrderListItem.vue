@@ -21,7 +21,7 @@
 
           <!-- Edited indicator -->
           <span v-else-if="item.price" class="ml-2">
-            <VTooltip activator="parent" location="bottom">별도 지정 단가 적용</VTooltip>
+            <VTooltip activator="parent" location="bottom">지정 단가 적용</VTooltip>
             <VIcon size="x-small">mdi-pencil</VIcon>
           </span>
         </div>
