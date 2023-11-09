@@ -1703,6 +1703,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@kurkle/color", [\
+      ["npm:0.3.2", {\
+        "packageLocation": "./.yarn/cache/@kurkle-color-npm-0.3.2-98f2086013-079c4b7688.zip/node_modules/@kurkle/color/",\
+        "packageDependencies": [\
+          ["@kurkle/color", "npm:0.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@lukeed/csprng", [\
       ["npm:1.1.0", {\
         "packageLocation": "./.yarn/cache/@lukeed-csprng-npm-1.1.0-d28ed78cc2-926f5f7fc6.zip/node_modules/@lukeed/csprng/",\
@@ -1752,6 +1761,7 @@ const RAW_RUNTIME_STATE =
           ["@vitejs/plugin-vue", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.4.0"],\
           ["@vue/eslint-config-typescript", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:12.0.0"],\
           ["@vue/tsconfig", "npm:0.4.0"],\
+          ["chart.js", "npm:4.4.0"],\
           ["eslint", "npm:8.52.0"],\
           ["eslint-import-resolver-typescript", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.6.1"],\
           ["eslint-plugin-import", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.29.0"],\
@@ -1764,6 +1774,7 @@ const RAW_RUNTIME_STATE =
           ["vite", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.5.0"],\
           ["vite-plugin-vuetify", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.2"],\
           ["vue", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.3.7"],\
+          ["vue-chartjs", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:5.2.0"],\
           ["vue-facing-decorator", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.0.4"],\
           ["vue-router", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.2.5"],\
           ["vue-tsc", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.8.22"],\
@@ -4168,6 +4179,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/chardet-npm-0.7.0-27933dd6c7-b0ec668fba.zip/node_modules/chardet/",\
         "packageDependencies": [\
           ["chardet", "npm:0.7.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["chart.js", [\
+      ["npm:4.4.0", {\
+        "packageLocation": "./.yarn/cache/chart.js-npm-4.4.0-ccf7d4ad14-5d60ae67e2.zip/node_modules/chart.js/",\
+        "packageDependencies": [\
+          ["chart.js", "npm:4.4.0"],\
+          ["@kurkle/color", "npm:0.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -11156,6 +11177,32 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/typescript",\
           "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["vue-chartjs", [\
+      ["npm:5.2.0", {\
+        "packageLocation": "./.yarn/cache/vue-chartjs-npm-5.2.0-ca4b106330-f6a9befc38.zip/node_modules/vue-chartjs/",\
+        "packageDependencies": [\
+          ["vue-chartjs", "npm:5.2.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:5.2.0", {\
+        "packageLocation": "./.yarn/__virtual__/vue-chartjs-virtual-391ba5cbfe/0/cache/vue-chartjs-npm-5.2.0-ca4b106330-f6a9befc38.zip/node_modules/vue-chartjs/",\
+        "packageDependencies": [\
+          ["vue-chartjs", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:5.2.0"],\
+          ["@types/chart.js", null],\
+          ["@types/vue", null],\
+          ["chart.js", "npm:4.4.0"],\
+          ["vue", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.3.7"]\
+        ],\
+        "packagePeers": [\
+          "@types/chart.js",\
+          "@types/vue",\
+          "chart.js",\
+          "vue"\
         ],\
         "linkType": "HARD"\
       }]\
