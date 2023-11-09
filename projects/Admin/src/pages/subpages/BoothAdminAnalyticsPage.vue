@@ -5,18 +5,19 @@
       {{ info.price }} / {{ info.sellStock }}
     </span> -->
 
-    <VChipGroup v-model="currentSelectedDay" column class="justify-center">
-      <VChip class="h-auto" rounded="lg" value="all">
+    <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center mb-4">
+      <VChip class="h-auto" rounded="lg" value="all" color="primary">
         <div class="d-flex flex-column align-center justify-center pa-1">
-          <div class="text-h5 font-weight-bold">전체 보기</div>
-          <div class="text-caption">블라블라</div>
+          <div class="text-h5 font-weight-bold">전체 표시</div>
+          <div class="text-caption"></div>
         </div>
       </VChip>
       <VChip v-for="day in orderHistoryDays.asArray()"
              :key="day"
              :value="day"
              class="h-auto"
-             rounded="lg">
+             rounded="lg"
+             color="primary">
         <div class="d-flex flex-column align-center justify-center pa-1">
           <div class="text-h5 font-weight-bold">{{ day.day }}일</div>
           <div class="text-caption">{{ day.year }}년 {{ day.month }}월</div>
@@ -29,23 +30,23 @@
       {{ item.totalPrice }} / {{ item.order.reduce((acc, cur) => acc + cur.quantity, 0) }}
     </span> -->
 
-    <Line class="bg-background" :options="CHART_SELL_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
+    <Chart class="bg-background" type="line" :options="CHART_SELL_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
   </VContainer>
 </template>
 
 <script lang="ts">
 import type { IGoodsOrder } from "@myboothmanager/common";
-import { type ChartOptions, type ChartData, Chart, Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
+import { type ChartOptions, type ChartData, Chart as ChartJS, Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, BarElement } from "chart.js";
 import { Component, Vue } from "vue-facing-decorator";
-import { Line } from "vue-chartjs";
+import { Chart } from "vue-chartjs";
 import { useAdminStore } from "@/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
 
-Chart.register(Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(BarElement, Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 @Component({
   components: {
-    Line,
+    Chart,
   },
 })
 export default class BoothAdminAnalyticsPage extends Vue {
@@ -77,14 +78,12 @@ export default class BoothAdminAnalyticsPage extends Vue {
   };
 
   dataLoading: boolean = true;
-  currentSelectedDay: Dateonly | "all" = Dateonly.fromDate(new Date());
+  currentSelectedDay: Dateonly | "all" = "all";
 
   async mounted() {
     await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
 
     this.dataLoading = false;
-
-    this.currentSelectedDay = this.orderHistoryDays.asArray()[0];
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
@@ -156,23 +155,26 @@ export default class BoothAdminAnalyticsPage extends Vue {
       }).filter((item) => item) as Array<string>,
       datasets: [{
         label: "판매 굿즈 수량",
+        type: "bar",
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
           else return item[1].quantity;
         }).filter((item) => typeof item !== "undefined") as Array<number>,
-        borderColor: "#7986CB",
-        backgroundColor :"#3F51B5",
+        borderColor: "#FFD54F",
+        backgroundColor :"#FFC107",
+        order: 1,
         yAxisID: "quantity",
       }, {
         label: "판매 금액",
+        type: "line",
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
           else return item[1].price;
         }).filter((item) => typeof item !== "undefined") as Array<number>,
-        borderColor: "#FFB74D",
-        backgroundColor :"#FF9800",
+        borderColor: "#7986CB",
+        backgroundColor :"#3F51B5",
         yAxisID: "price",
       }],
     };

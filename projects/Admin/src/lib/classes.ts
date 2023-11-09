@@ -25,6 +25,8 @@ export class Dateonly {
   }
 
   public equals(other: Dateonly): boolean {
+    if(!other) return false;
+
     return this._year === other._year
       && this._month === other._month
       && this._day === other._day;
