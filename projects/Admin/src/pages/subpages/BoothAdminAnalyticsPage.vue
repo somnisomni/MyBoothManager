@@ -36,13 +36,14 @@
 
 <script lang="ts">
 import type { IGoodsOrder } from "@myboothmanager/common";
-import { type ChartOptions, type ChartData, Chart as ChartJS, Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, BarElement } from "chart.js";
+import type { ChartOptions, ChartData } from "chart.js";
+import ChartJS from "chart.js/auto";
 import { Component, Vue } from "vue-facing-decorator";
 import { Chart } from "vue-chartjs";
 import { useAdminStore } from "@/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
 
-ChartJS.register(BarElement, Title, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register();
 
 @Component({
   components: {
