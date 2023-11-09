@@ -7,9 +7,7 @@ import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
 import BoothAdminGoodsOrdersPage from "@/pages/subpages/BoothAdminGoodsOrdersPage.vue";
-import LoginPage from "@/pages/LoginPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
-import SuperAdminPage from "@/pages/superadmin/SuperAdminPage.vue";
 import { useAdminStore } from "@/stores/admin";
 import { useAuthStore } from "@/stores/auth";
 import BoothAdminAnalyticsPage from "@/pages/subpages/BoothAdminAnalyticsPage.vue";
@@ -36,7 +34,7 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: LoginPage,
+      component: () => import("@/pages/LoginPage.vue"),
     },
     {
       path: "/logout",
@@ -48,7 +46,7 @@ const router = createRouter({
     {
       path: "/superadmin",
       name: "superadmin",
-      component: SuperAdminPage,
+      component: () => import("@/pages/superadmin/SuperAdminPage.vue"),
     },
 
     /* Admin Routes */
