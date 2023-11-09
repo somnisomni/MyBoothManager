@@ -222,7 +222,11 @@ export default class POSOrderDrawer extends Vue {
     max-height: 95%;
     top: unset;
     right: 0;
-    margin: 0 auto;
+    margin: 0 1rem 0 auto;
+
+    @media screen and (max-width: 600px) {
+      margin: 0 auto;
+    }
   }
 
   .appname {
