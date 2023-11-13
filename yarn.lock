@@ -1227,19 +1227,28 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=82af5b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=b17dfc&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a04e067c562c8c15483be9a9927e639d32070abf459db51040b47c4b169b7479478546507f9fad1eff07e3ec4a2890007448f6869e93ba12e512569f83addbe1
+  checksum: d162db6dad9232b498c202e22e4e00bc5bb5e9d1c055950c1cba196cc76d9424ab45d961063709e7aaf2a4c8a6fbfe121b597d6f5021927b681010d1e1d2fcad
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=82af5b&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=b17dfc&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a04e067c562c8c15483be9a9927e639d32070abf459db51040b47c4b169b7479478546507f9fad1eff07e3ec4a2890007448f6869e93ba12e512569f83addbe1
+  checksum: d162db6dad9232b498c202e22e4e00bc5bb5e9d1c055950c1cba196cc76d9424ab45d961063709e7aaf2a4c8a6fbfe121b597d6f5021927b681010d1e1d2fcad
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
+  version: 0.0.0
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=b17dfc&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  dependencies:
+    currency-symbol-map: "npm:^5.1.0"
+  checksum: d162db6dad9232b498c202e22e4e00bc5bb5e9d1c055950c1cba196cc76d9424ab45d961063709e7aaf2a4c8a6fbfe121b597d6f5021927b681010d1e1d2fcad
   languageName: node
   linkType: hard
 
@@ -1267,6 +1276,36 @@ __metadata:
 "@myboothmanager/i18n@workspace:packages/I18n":
   version: 0.0.0-use.local
   resolution: "@myboothmanager/i18n@workspace:packages/I18n"
+  languageName: unknown
+  linkType: soft
+
+"@myboothmanager/public@workspace:projects/Public":
+  version: 0.0.0-use.local
+  resolution: "@myboothmanager/public@workspace:projects/Public"
+  dependencies:
+    "@mdi/font": "npm:^7.3.67"
+    "@myboothmanager/common": ../../packages/Common
+    "@rushstack/eslint-patch": "npm:^1.5.1"
+    "@tsconfig/node18": "npm:^18.2.2"
+    "@types/node": "npm:^18.18.8"
+    "@vitejs/plugin-vue": "npm:^4.4.0"
+    "@vue/eslint-config-typescript": "npm:^12.0.0"
+    "@vue/tsconfig": "npm:^0.4.0"
+    eslint: "npm:^8.52.0"
+    eslint-import-resolver-typescript: "npm:^3.6.1"
+    eslint-plugin-import: "npm:^2.29.0"
+    eslint-plugin-vue: "npm:^9.18.1"
+    npm-run-all: "npm:^4.1.5"
+    pinia: "npm:^2.1.7"
+    sass: "npm:^1.69.5"
+    typescript: "npm:^5.2.2"
+    vite: "npm:^4.5.0"
+    vite-plugin-vuetify: "npm:^1.0.2"
+    vue: "npm:^3.3.6"
+    vue-facing-decorator: "npm:^3.0.4"
+    vue-router: "npm:^4.2.5"
+    vue-tsc: "npm:^1.8.22"
+    vuetify: "npm:^3.3.22"
   languageName: unknown
   linkType: soft
 

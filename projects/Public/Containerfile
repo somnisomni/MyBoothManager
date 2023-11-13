@@ -1,0 +1,43 @@
+### BUILD STAGE ###
+FROM node:lts-alpine as build
+
+# Build arguments
+ARG GIT_HASH
+ARG API_SERVER_URL=http://localhost:31111
+ARG BASE_PATH=/
+ENV GIT_HASH=${GIT_HASH}
+ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
+ENV VITE_BASE_PATH=${BASE_PATH}
+
+# Copy files
+WORKDIR /build
+COPY packages/      packages/
+COPY projects/Public projects/Public
+
+# Build common package
+WORKDIR /build/packages/Common
+# Workaround
+RUN rm .containerignore
+RUN yarn set version berry
+RUN yarn install
+RUN yarn build
+
+# Build public frontend
+WORKDIR /build/projects/Public
+RUN yarn set version berry
+RUN yarn install
+RUN yarn build
+
+### PRODUCTION STAGE ###
+FROM node:lts-alpine as production
+
+# Copy files
+WORKDIR /app
+COPY --from=build /build/projects/Public/dist .
+
+# Expose port
+EXPOSE 31113
+
+# Start server
+RUN npm install -g http-server
+ENTRYPOINT ["npx", "http-server", "--proxy", "http://localhost:31113?", "--port", "31113"]

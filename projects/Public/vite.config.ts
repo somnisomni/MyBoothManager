@@ -15,7 +15,7 @@ const defines: Record<string, string> = Object.fromEntries(Object.entries({
 
 // Debug logging
 console.debug();
-console.debug(" *** ADMIN *** ");
+console.debug(" *** PUBLIC *** ");
 console.debug("Starting Vite for " + process.env.NODE_ENV + " environment");
 Object.entries(defines).forEach(([key, value]) => console.debug(key + ": " + value));
 console.debug();

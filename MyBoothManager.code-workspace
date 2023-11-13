@@ -16,6 +16,10 @@
 			"path": "projects/Admin",
       "name": "[projects] Admin"
 		},
+    {
+      "path": "projects/Public",
+      "name": "[projects] Public"
+    },
 		{
 			"path": "projects/Backend",
       "name": "[projects] Backend"
@@ -28,6 +32,7 @@
       "./packages/Common",
       "./packages/I18n",
       "./projects/Admin",
+      "./projects/Public",
       "./projects/Backend"
 		],
     "eslint.nodePath": "../../.yarn/sdks",

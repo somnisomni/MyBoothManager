@@ -8,10 +8,11 @@
     "common": "yarn workspace @myboothmanager/common",
     "common:build": "yarn common build && yarn install",
     "admin": "yarn workspace @myboothmanager/admin",
+    "public": "yarn workspace @myboothmanager/public",
     "backend": "yarn workspace @myboothmanager/backend",
     "pre": "yarn install && yarn common:build",
-    "dev": "concurrently -n \"ADMIN,BACKEND\" -c \"bgRed.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin dev\" \"yarn workspace @myboothmanager/backend start:dev\"",
-    "preview": "concurrently -n \"ADMIN,BACKEND\" -c \"bgRed.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin preview\" \"yarn workspace @myboothmanager/backend start:prod\"",
+    "dev": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin dev\" \"yarn workspace @myboothmanager/public dev\" \"yarn workspace @myboothmanager/backend start:dev\"",
+    "preview": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"yarn workspace @myboothmanager/admin preview\" \"yarn workspace @myboothmanager/public preview\" \"yarn workspace @myboothmanager/backend start:prod\"",
     "test": "yarn node --experimental-vm-modules \"$(yarn bin jest)\"",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"

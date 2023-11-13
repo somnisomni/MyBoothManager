@@ -9,11 +9,24 @@ services:
         BASE_PATH: "/admin"
     ports:
       - "31112:31112"
-    environment:
     depends_on:
       - backend
     network_mode: host    # Should ditch host network mode and use bridge mode instead
                           # But I have to find a way to get rid of errors of CNI network automatically created by podman-compose
+
+  public:
+    build:
+      context: .
+      dockerfile: ./projects/Public/Containerfile
+      args:
+        GIT_HASH: ${GIT_COMMIT_HASH}
+        API_SERVER_URL: "http://localhost:31111"
+        BASE_PATH: "/"
+    ports:
+      - "31113:31113"
+    depends_on:
+      - backend
+    network_mode: host
 
   backend:
     build:
