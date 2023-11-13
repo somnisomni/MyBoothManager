@@ -30,23 +30,29 @@
       <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
     </VSnackbar>
   </VMain>
+
+  <POSPageLeaveConfirmDialog v-model="showPageLeaveConfirmDialog"
+                             @confirm="onPageLeaveConfirm" />
 </template>
 
 <script lang="ts">
+import type { RouteLocationRaw } from "vue-router";
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Hook, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
+import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
 
 @Component({
   components: {
     GoodsListView,
     POSOrderDrawer,
+    POSPageLeaveConfirmDialog,
   },
 })
 export default class BoothPOSPage extends Vue {
@@ -57,6 +63,9 @@ export default class BoothPOSPage extends Vue {
   showStockNotEnoughSnackbar: boolean = false;
   showOrderSuccessSnackbar: boolean = false;
   showOrderFailedSnackbar: boolean = false;
+  showPageLeaveConfirmDialog: boolean = false;
+  pageLeaveConfirmed: boolean = false;
+  private pageLeaveTarget: RouteLocationRaw | null = null;
 
   get mdAndUp(): boolean { return unref(useDisplay().mdAndUp); }
   get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
@@ -66,6 +75,22 @@ export default class BoothPOSPage extends Vue {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
     }
+  }
+
+  @Hook()
+  beforeRouteLeave(to: RouteLocationRaw, from: never, next: (to?: RouteLocationRaw | false | void) => void): void {
+    if(!this.pageLeaveConfirmed) {
+      next(false);
+      this.showPageLeaveConfirmDialog = true;
+      this.pageLeaveTarget = to;
+    } else {
+      next();
+    }
+  }
+
+  onPageLeaveConfirm(): void {
+    this.pageLeaveConfirmed = true;
+    router.replace(this.pageLeaveTarget ?? { name: "admin" });
   }
 
   onSMDrawerHeightChanged(height: number) {

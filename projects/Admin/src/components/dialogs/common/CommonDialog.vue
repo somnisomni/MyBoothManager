@@ -95,7 +95,9 @@ export interface DialogButtonParams {
   onClick: () => void;
 }
 
-@Component({})
+@Component({
+  emits: ["close", "primary", "secondary", "leftbutton", "cancel"],
+})
 export default class CommonDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
