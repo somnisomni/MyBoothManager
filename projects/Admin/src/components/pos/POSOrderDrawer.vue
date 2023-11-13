@@ -65,7 +65,6 @@
   </div>
 
   <POSGoodsAdvancedDialog v-model="showOrderAdvancedDialog"
-                          :goodsId="orderAdvancedDialogGoodsId"
                           :orderData="orderAdvancedDialogOrderData"
                           @deleteRequest="(goodsId: number) => delete orderList[goodsId]"
                           @confirm="onOrderItemAdvancedConfirm" />
@@ -115,7 +114,6 @@ export default class POSOrderDrawer extends Vue {
   showOrderConfirmDialog: boolean = false;
   showListResetConfirmDialog: boolean = false;
   showOrderAdvancedDialog: boolean = false;
-  orderAdvancedDialogGoodsId: number | null = null;
   orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
 
   get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
@@ -140,7 +138,6 @@ export default class POSOrderDrawer extends Vue {
 
   onGoodsOrderItemClick(item: IGoodsOrderInternal) {
     this.showOrderAdvancedDialog = true;
-    this.orderAdvancedDialogGoodsId = item.goodsId;
     this.orderAdvancedDialogOrderData = item;
   }
 

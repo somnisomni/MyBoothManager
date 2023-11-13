@@ -66,7 +66,6 @@ import { useAdminStore } from "@/stores/admin";
 })
 export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
-  @Prop({ type: Number, required: true }) goodsId!: number;
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrderInternal;
 
   formValid: boolean = false;
@@ -78,7 +77,7 @@ export default class POSGoodsAdvancedDialog extends Vue {
   @Watch("open", { immediate: true }) onDialogOpen() { this.orderDataCopied = { ...this.orderData }; }
 
   get goodsItem(): IGoods {
-    return useAdminStore().boothGoodsList[this.goodsId];
+    return useAdminStore().boothGoodsList[this.orderData.goodsId];
   }
 
   get currencySymbol(): string {
@@ -106,13 +105,13 @@ export default class POSGoodsAdvancedDialog extends Vue {
   @Emit("deleteRequest")
   onDialogLeftButton(): number {
     this.open = false;
-    return this.goodsId;
+    return this.orderData.goodsId;
   }
 
   @Emit("confirm")
   onDialogPrimary(): { goodsId: number, newOrderData: IGoodsOrderInternal } {
     this.open = false;
-    return { goodsId: this.goodsId, newOrderData: this.orderDataCopied };
+    return { goodsId: this.orderData.goodsId, newOrderData: this.orderDataCopied };
   }
 }
 </script>
