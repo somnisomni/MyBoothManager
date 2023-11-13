@@ -7,7 +7,7 @@ import "@/styles/styles.scss";
 import CommonDialog from "@/components/dialogs/common/CommonDialog.vue";
 
 import App from "./App.vue";
-import router from "./router";
+import router from "./plugins/router";
 import vuetify from "./plugins/vuetify";
 
 

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import router from "@/router";
+import router from "@/plugins/router";
 
 @Component({})
 export default class NotFoundErrorPage extends Vue {

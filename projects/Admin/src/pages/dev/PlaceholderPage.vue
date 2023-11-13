@@ -17,7 +17,7 @@
 <script lang="ts">
 import { unref } from "vue";
 import { Component, Vue } from "vue-facing-decorator";
-import router from "@/router";
+import router from "@/plugins/router";
 
 @Component({})
 export default class PlaceholderPage extends Vue {

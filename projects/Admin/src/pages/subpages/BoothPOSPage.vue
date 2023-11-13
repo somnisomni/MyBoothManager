@@ -39,7 +39,7 @@ import { Component, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
-import router from "@/router";
+import router from "@/plugins/router";
 import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 

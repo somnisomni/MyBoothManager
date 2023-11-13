@@ -18,7 +18,7 @@
 <script lang="ts">
 import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
-import router from "@/router";
+import router from "@/plugins/router";
 
 @Component({})
 export default class ServerDataLoadErrorDialog extends Vue {

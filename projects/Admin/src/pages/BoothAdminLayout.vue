@@ -72,7 +72,7 @@ import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
-import router from "@/router";
+import router from "@/plugins/router";
 import { Const } from "@/lib/const";
 
 @Component({

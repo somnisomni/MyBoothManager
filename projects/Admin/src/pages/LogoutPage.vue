@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import router from "@/router";
+import router from "@/plugins/router";
 import { useAuthStore } from "@/stores/auth";
 
 @Component({})

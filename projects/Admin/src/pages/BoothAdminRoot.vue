@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import router from "@/router";
+import router from "@/plugins/router";
 import BoothAdminLoadDataOverlay from "./BoothAdminLoadDataOverlay.vue";
 import NoBoothAvailableOverlay from "./NoBoothAvailableOverlay.vue";
 
