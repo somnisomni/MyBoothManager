@@ -7,12 +7,16 @@
                 :onDialogPrimary="onDialogPrimary">
     <p><strong>다음 굿즈들의 판매 내역을 기록합니다.</strong></p>
 
-    <div class="mt-2">
+    <div class="my-4">
       <ul style="list-style-position: inside;">
         <li v-for="order in orders"
             :key="order.goodsId">
           <span class="font-weight-medium">{{ getGoodsInfo(order.goodsId).name }}</span>
           <span class="ml-2">{{ order.quantity }}개</span>
+          <span v-if="typeof order.price === 'number'" class="ml-2">
+            <small><span v-if="order.price === 0">무료 증정</span><span v-else>단가 {{ currencySymbol }}{{ order.price.toLocaleString() }}</span>
+            <small> ← <s>{{ currencySymbol }}{{ getGoodsInfo(order.goodsId).price.toLocaleString() }}</s></small></small>
+          </span>
         </li>
       </ul>
     </div>
@@ -29,6 +33,10 @@ import { useAdminStore } from "@/stores/admin";
 export default class POSOrderConfirmDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Object, required: true }) orders!: Record<number, IGoodsOrderInternal>;
+
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
 
   getGoodsInfo(goodsId: number): IGoods {
     return useAdminStore().boothGoodsList[goodsId];
