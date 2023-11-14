@@ -1209,6 +1209,7 @@ __metadata:
   dependencies:
     "@mdi/font": "npm:^7.3.67"
     "@myboothmanager/common": ../../packages/Common
+    "@myboothmanager/common-ui": ../../packages/CommonUI
     "@rushstack/eslint-patch": "npm:^1.5.1"
     "@tsconfig/node18": "npm:^18.2.2"
     "@types/node": "npm:^18.18.8"
@@ -1277,6 +1278,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
+  version: 0.0.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  dependencies:
+    currency-symbol-map: "npm:^5.1.0"
+  peerDependencies:
+    vue: ">=3"
+    vue-facing-decorator: ">=3"
+    vuetify: ">=3"
+  checksum: c7defd622bfb40ad4b9c8f8dc8c21a59002c0a7e50c3e6ea34811bb4d2753d0ef8452642d0303d420f0ae17a7e381b2bcbe421f75b05c714f232927d78373598
+  languageName: node
+  linkType: hard
+
 "@myboothmanager/common-ui@workspace:packages/CommonUI":
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common-ui@workspace:packages/CommonUI"
@@ -1299,6 +1313,7 @@ __metadata:
     typescript: "npm:~5.2.0"
     vite: "npm:^4.4.11"
     vite-plugin-dts: "npm:^3.6.3"
+    vite-plugin-vuetify: "npm:^1.0.2"
     vite-tsconfig-paths: "npm:^4.2.1"
     vue: "npm:^3.3.6"
     vue-facing-decorator: "npm:^3.0.4"
@@ -1306,34 +1321,35 @@ __metadata:
     vuetify: "npm:^3.3.22"
   peerDependencies:
     vue: ">=3"
+    vue-facing-decorator: ">=3"
     vuetify: ">=3"
   languageName: unknown
   linkType: soft
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=865635&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 23287c7cce05586d0392357a2f8f31e7be458e8098945d1501b75fdc2719bc63e3d44ed2dd05a0a58d00063140700ef044b98b8e3e412191294b08e1f51ba660
+  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=865635&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 23287c7cce05586d0392357a2f8f31e7be458e8098945d1501b75fdc2719bc63e3d44ed2dd05a0a58d00063140700ef044b98b8e3e412191294b08e1f51ba660
+  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=865635&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 23287c7cce05586d0392357a2f8f31e7be458e8098945d1501b75fdc2719bc63e3d44ed2dd05a0a58d00063140700ef044b98b8e3e412191294b08e1f51ba660
+  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
   languageName: node
   linkType: hard
 

@@ -3,13 +3,15 @@ import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
+import vuetify from "vite-plugin-vuetify";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ insertTypesEntry: true, rollupTypes: true }),
+    vuetify({ autoImport: true }),
+    dts({ insertTypesEntry: true, pathsToAliases: true /*, rollupTypes: true */ }),
     tsconfigPaths(),
   ],
   resolve: {
