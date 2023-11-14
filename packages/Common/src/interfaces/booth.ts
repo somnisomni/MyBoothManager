@@ -1,4 +1,4 @@
-import { IDataModelBase } from "./base";
+import type { IDataModelBase } from "./base";
 
 export enum BoothStatus {
   OPEN = "open",

@@ -1,4 +1,4 @@
-import { IDataModelBase } from "./base";
+import type { IDataModelBase } from "./base";
 
 export interface IGoodsOrderDetailItem {
   gId: number;

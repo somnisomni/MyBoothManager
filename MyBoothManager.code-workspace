@@ -8,6 +8,10 @@
 			"path": "packages/Common",
       "name": "[packages] Common"
 		},
+    {
+      "path": "packages/CommonUI",
+      "name": "[packages] Common UI"
+    },
 		{
 			"path": "packages/I18n",
       "name": "[packages] I18n"
@@ -30,6 +34,7 @@
 		"typescript.enablePromptUseWorkspaceTsdk": true,
     "jest.disabledWorkspaceFolders": [
       "./packages/Common",
+      "./packages/CommonUI",
       "./packages/I18n",
       "./projects/Admin",
       "./projects/Public",

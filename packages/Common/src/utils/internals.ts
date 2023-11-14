@@ -1,4 +1,4 @@
-import { IDataModelBase } from "../interfaces";
+import type { IDataModelBase } from "../interfaces";
 
 interface ISequelizeInternals {
   createdAt: Date,
