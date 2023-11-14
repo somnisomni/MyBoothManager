@@ -1820,7 +1820,7 @@ const RAW_RUNTIME_STATE =
           ["@myboothmanager/admin", "workspace:projects/Admin"],\
           ["@mdi/font", "npm:7.3.67"],\
           ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
-          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=dcb2ce&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["@rushstack/eslint-patch", "npm:1.5.1"],\
           ["@tsconfig/node18", "npm:18.2.2"],\
           ["@types/node", "npm:18.18.9"],\
@@ -1940,17 +1940,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@myboothmanager/common-ui", [\
-      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-bb66bd46e0-c7defd622b.zip/node_modules/@myboothmanager/common-ui/",\
+      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=dcb2ce&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-6f3e78e7a5-d9483ab2c1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"]\
+          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=dcb2ce&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-f08077b0f8/0/cache/@myboothmanager-common-ui-file-bb66bd46e0-c7defd622b.zip/node_modules/@myboothmanager/common-ui/",\
+      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=dcb2ce&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-3966bfb1f2/0/cache/@myboothmanager-common-ui-file-6f3e78e7a5-d9483ab2c1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=6131a4&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=dcb2ce&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["@types/vue", null],\
           ["@types/vue-facing-decorator", null],\
           ["@types/vuetify", null],\

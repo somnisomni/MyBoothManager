@@ -166,6 +166,7 @@ export default class CommonDialog extends Vue {
 </script>
 
 <style lang="scss">
-/* Workaround */
+/* Workarounds */
 .dialog-common > .v-overlay__content { overflow: initial !important; }
+// .dialog-common ~ .v-overlay.v-menu { z-index: 2401 !important; }
 </style>
