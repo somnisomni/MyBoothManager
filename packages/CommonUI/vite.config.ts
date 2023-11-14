@@ -20,6 +20,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: "esnext",
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "CommonUI",
@@ -30,8 +31,9 @@ export default defineConfig({
       external: ["vue", "vuetify", "vue-facing-decorator"],
       output: {
         globals: {
-          vue: "Vue",
-          vuetify: "Vuetify",
+          "vue": "Vue",
+          "vuetify": "Vuetify",
+          "vue-facing-decorator": "VueFacingDecorator",
         },
       },
     },
