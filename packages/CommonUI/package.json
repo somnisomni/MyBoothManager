@@ -38,6 +38,7 @@
     "typescript": "~5.2.0",
     "vite": "^4.4.11",
     "vite-plugin-dts": "^3.6.3",
+    "vite-plugin-vuetify": "^1.0.2",
     "vite-tsconfig-paths": "^4.2.1",
     "vue": "^3.3.6",
     "vue-facing-decorator": "^3.0.4",
@@ -46,6 +47,7 @@
   },
   "peerDependencies": {
     "vue": ">=3",
+    "vue-facing-decorator": ">=3",
     "vuetify": ">=3"
   }
 }
