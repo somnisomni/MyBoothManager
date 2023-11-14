@@ -7,6 +7,8 @@
     "all:build": "yarn all build",
     "common": "yarn workspace @myboothmanager/common",
     "common:build": "yarn common build && yarn install",
+    "commonui": "yarn workspace @myboothmanager/common-ui",
+    "commonui:build": "yarn commonui build && yarn install",
     "admin": "yarn workspace @myboothmanager/admin",
     "public": "yarn workspace @myboothmanager/public",
     "backend": "yarn workspace @myboothmanager/backend",

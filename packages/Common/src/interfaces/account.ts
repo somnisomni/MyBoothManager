@@ -1,4 +1,4 @@
-import { IDataModelBase } from "./base";
+import type { IDataModelBase } from "./base";
 
 export interface IAccount extends IDataModelBase {
   id: number;
