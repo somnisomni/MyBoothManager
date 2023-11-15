@@ -20,4 +20,7 @@ app.use(router);
 app.use(vuetify);
 app.use(CommonUI);
 
+// import CommonDialog from "./components/dialogs/common/CommonDialog.vue";
+// app.component("CommonDialog", CommonDialog);
+
 app.mount("#app");
