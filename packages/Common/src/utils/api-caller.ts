@@ -7,7 +7,7 @@ export default class APICaller {
     redirect: "error",
   };
 
-  constructor(private readonly apiHost: string, private readonly apiGroup: string = "", private readonly getAuthorizationToken: (() => string) | null | undefined, private readonly teapotPath: string = "teapot") {}
+  constructor(private readonly apiHost: string, private readonly apiGroup: string = "", private readonly getAuthorizationToken: (() => string) | null | undefined = null, private readonly teapotPath: string = "teapot") {}
 
   /* Basic fetch function */
   public async callAPI(method: HTTPMethodString, path: string, payload?: Record<string, unknown>, containAuthCredential: boolean = true): Promise<Record<string, unknown>> {
