@@ -31,7 +31,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["vue", /^vuetify(\/.*)?$/, "vue-facing-decorator"],
+      external: ["vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", "@myboothmanager/common"],
       output: {
         globals: {
           "vue": "Vue",
