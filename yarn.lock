@@ -1280,12 +1280,25 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=ec9108&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=ccf3c0&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
+    "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 21ee19ccc92857213cfd8a28c9ebef25ea3d0abb3bc7ccfddb0628a9a460be50d76ac67ac3158acd2dc1b0bf7afb0758e8460c9baa62910e473f4ea6449e82de
+  checksum: 6507db59ab448d28dacb633784d6d0050cc6844c6c879763d094c1b343d6e6540019cd67aa17177109485f0c8ec7ddc262554e71a64a2ebd076188e818a5d72c
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
+  version: 0.0.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=ccf3c0&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  peerDependencies:
+    "@myboothmanager/common": "*"
+    vue: ">=3"
+    vue-facing-decorator: ">=3"
+    vuetify: ">=3"
+  checksum: 6507db59ab448d28dacb633784d6d0050cc6844c6c879763d094c1b343d6e6540019cd67aa17177109485f0c8ec7ddc262554e71a64a2ebd076188e818a5d72c
   languageName: node
   linkType: hard
 
@@ -1293,9 +1306,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common-ui@workspace:packages/CommonUI"
   dependencies:
+    "@myboothmanager/common": ../Common
     "@rushstack/eslint-patch": "npm:^1.3.3"
     "@tsconfig/node18": "npm:^18.2.2"
-    "@types/node": "npm:^18.18.5"
+    "@types/node": "npm:^18.18.8"
     "@vitejs/plugin-vue": "npm:^4.4.0"
     "@vue/eslint-config-typescript": "npm:^12.0.0"
     "@vue/tsconfig": "npm:^0.4.0"
@@ -1314,6 +1328,7 @@ __metadata:
     vue-tsc: "npm:^1.8.19"
     vuetify: "npm:^3.3.22"
   peerDependencies:
+    "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
@@ -1322,28 +1337,37 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=943cba&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
+  checksum: 63cec1419439710173bf0b09818fbeece0c3b684b380db8a4e17e37cf4eb75dbad6771873e727fcea52959f8ffb9d867120e67ccb8edd95cc561d094ca978e45
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=943cba&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
+  checksum: 63cec1419439710173bf0b09818fbeece0c3b684b380db8a4e17e37cf4eb75dbad6771873e727fcea52959f8ffb9d867120e67ccb8edd95cc561d094ca978e45
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=c591b1&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=943cba&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 827273de21e67a66d0f426ccf25bbd41828197000a32f33d83326ec9977d85e4270b54e90c091671dd232d85bf63e7f26849d5e59a95603da921ba17c7f72f66
+  checksum: 63cec1419439710173bf0b09818fbeece0c3b684b380db8a4e17e37cf4eb75dbad6771873e727fcea52959f8ffb9d867120e67ccb8edd95cc561d094ca978e45
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common@file:../Common::locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI":
+  version: 0.0.0
+  resolution: "@myboothmanager/common@file:../Common#../Common::hash=943cba&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
+  dependencies:
+    currency-symbol-map: "npm:^5.1.0"
+  checksum: 63cec1419439710173bf0b09818fbeece0c3b684b380db8a4e17e37cf4eb75dbad6771873e727fcea52959f8ffb9d867120e67ccb8edd95cc561d094ca978e45
   languageName: node
   linkType: hard
 
@@ -1354,6 +1378,7 @@ __metadata:
     "@rushstack/eslint-patch": "npm:^1.5.1"
     "@tsconfig/node18": "npm:^18.2.2"
     "@types/jest": "npm:^29.5.7"
+    "@types/node": "npm:^18.18.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.9.1"
     "@typescript-eslint/parser": "npm:^6.9.1"
     currency-symbol-map: "npm:^5.1.0"
@@ -1380,6 +1405,7 @@ __metadata:
   dependencies:
     "@mdi/font": "npm:^7.3.67"
     "@myboothmanager/common": ../../packages/Common
+    "@myboothmanager/common-ui": ../../packages/CommonUI
     "@rushstack/eslint-patch": "npm:^1.5.1"
     "@tsconfig/node18": "npm:^18.2.2"
     "@types/node": "npm:^18.18.8"
@@ -1973,7 +1999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.18.5, @types/node@npm:^18.18.8":
+"@types/node@npm:^18.18.8":
   version: 18.18.9
   resolution: "@types/node@npm:18.18.9"
   dependencies:

@@ -55,7 +55,7 @@
 
       <!-- Dialog action -->
       <VCardActions v-if="isAnyDialogActionAvailable">
-        <VBtn v-if="dialogLeftButtonText && onDialogLeftButton"
+        <VBtn v-if="dialogLeftButtonText"
               :disabled="progressActive || disableLeftButton"
               :color="leftButtonColor"
               variant="text"
@@ -63,17 +63,17 @@
 
         <VSpacer />
 
-        <VBtn v-if="dialogCancelText && (onDialogCancel || closeOnCancel)"
+        <VBtn v-if="dialogCancelText && closeOnCancel"
               :disabled="progressActive || disableCancel"
               variant="text"
               @click="onDialogCancelButtonClick">{{ dialogCancelText }}</VBtn>
 
-        <VBtn v-if="dialogSecondaryText && onDialogSecondary"
+        <VBtn v-if="dialogSecondaryText"
               :disabled="progressActive || disableSecondary"
               variant="text"
               @click="onDialogSecondaryButtonClick">{{ dialogSecondaryText }}</VBtn>
 
-        <VBtn v-if="dialogPrimaryText && onDialogPrimary"
+        <VBtn v-if="dialogPrimaryText"
               :disabled="progressActive || disablePrimary"
               :color="accentColor"
               variant="text"
@@ -88,7 +88,7 @@ import { unref } from "vue";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
-export interface DialogButtonParams {
+export interface CommonDialogButtonParams {
   title: string;
   icon: string;
   disabled?: boolean;
@@ -107,12 +107,12 @@ export default class CommonDialog extends Vue {
   @Prop({ type: String, default: "700px" }) width!: string | number;
   @Prop({ type: String, default: "100%" }) maxWidth!: string | number;
   @Prop({ type: Boolean, default: false }) hideCloseButton!: boolean;
-  @Prop({ type: Object }) titleExtraButtons!: DialogButtonParams[];
+  @Prop({ type: Object }) titleExtraButtons!: CommonDialogButtonParams[];
   @Prop({ type: Boolean, default: false }) titleExtraMargin!: boolean;
   @Prop({ type: Boolean, default: false }) contentNoPadding!: boolean;
   @Prop({ type: String, default: "알림" }) dialogTitle!: string;
-  @Prop({ type: String, default: "닫기" }) dialogCancelText!: string;
-  @Prop({ type: String, default: "확인" }) dialogPrimaryText!: string;
+  @Prop({ type: String, default: "닫기" }) dialogCancelText!: string | null;
+  @Prop({ type: String, default: null }) dialogPrimaryText!: string | null;
   @Prop({ type: String, default: null }) dialogSecondaryText!: string | null;
   @Prop({ type: String, default: null }) dialogLeftButtonText!: string | null;
   @Prop({ type: String, default: "warning" }) leftButtonColor!: string;
@@ -120,17 +120,13 @@ export default class CommonDialog extends Vue {
   @Prop({ type: Boolean, default: false }) disablePrimary!: boolean;
   @Prop({ type: Boolean, default: false }) disableSecondary!: boolean;
   @Prop({ type: Boolean, default: false }) disableLeftButton!: boolean;
-  @Prop({ type: Function, default: null }) onDialogCancel!: (() => void) | null;
-  @Prop({ type: Function, default: null }) onDialogPrimary!: (() => void) | null;
-  @Prop({ type: Function, default: null }) onDialogSecondary!: (() => void) | null;
-  @Prop({ type: Function, default: null }) onDialogLeftButton!: (() => void) | null;
   @Prop({ type: Boolean, default: true }) closeOnCancel!: boolean;
   @Prop({ type: Boolean, default: false }) progressActive!: boolean;
 
   get isAnyDialogActionAvailable(): boolean {
-    return (!!this.dialogPrimaryText && !!this.onDialogPrimary) ||
-           (!!this.dialogSecondaryText && !!this.onDialogSecondary) ||
-           (!!this.dialogCancelText && ((this.onDialogCancel && !this.closeOnCancel) || (!this.onDialogCancel && this.closeOnCancel)));
+    return (!!this.dialogPrimaryText) ||
+           (!!this.dialogSecondaryText) ||
+           (!!this.dialogCancelText && !this.closeOnCancel);
   }
 
   get isFullScreenOnSmallScreenEligable(): boolean {
@@ -143,30 +139,22 @@ export default class CommonDialog extends Vue {
   }
 
   @Emit("primary")
-  onDialogPrimaryButtonClick() {
-    if(this.onDialogPrimary) this.onDialogPrimary();
-  }
+  onDialogPrimaryButtonClick() { }
 
   @Emit("secondary")
-  onDialogSecondaryButtonClick() {
-    if(this.onDialogSecondary) this.onDialogSecondary();
-  }
+  onDialogSecondaryButtonClick() { }
 
   @Emit("leftbutton")
-  onDialogLeftButtonClick() {
-    if(this.onDialogLeftButton) this.onDialogLeftButton();
-  }
+  onDialogLeftButtonClick() { }
 
   @Emit("cancel")
   onDialogCancelButtonClick() {
-    if(this.onDialogCancel) this.onDialogCancel();
     if(this.closeOnCancel) this.open = false;
   }
 }
 </script>
 
 <style lang="scss">
-/* Workarounds */
+/* Workaround */
 .dialog-common > .v-overlay__content { overflow: initial !important; }
-// .dialog-common ~ .v-overlay.v-menu { z-index: 2401 !important; }
 </style>
