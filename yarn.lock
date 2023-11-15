@@ -1280,12 +1280,12 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=8350d8&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=ec9108&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: f2dc716eb9106a680d065eecbbe59beca8d6027ecf9c8cb22a10e74cd8d533097f7fa751161808f5a4eb06394f64a443c79b2042b0f92398634df0a96d0f64ba
+  checksum: 21ee19ccc92857213cfd8a28c9ebef25ea3d0abb3bc7ccfddb0628a9a460be50d76ac67ac3158acd2dc1b0bf7afb0758e8460c9baa62910e473f4ea6449e82de
   languageName: node
   linkType: hard
 
