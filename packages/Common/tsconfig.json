@@ -7,7 +7,6 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["node"],
     "baseUrl": "./",
     "outDir": "./dist",
     "strict": true,
