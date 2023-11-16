@@ -55,7 +55,7 @@
           <div v-if="isDevEnv" class="text-subtitle-2 text-disabled text-center">개발 환경에서 실행 중</div>
           <div class="text-subtitle-2 text-disabled text-center">{{ APP_VERSION }} <small>({{ GIT_HASH }})</small></div>
         </VListItem>
-        <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" value="booth_view_page" />
+        <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" :href="boothPublicPageHref" target="_blank" />
       </VList>
     </VNavigationDrawer>
 
@@ -104,6 +104,10 @@ export default class BoothAdminLayout extends Vue {
 
   get boothList(): IBooth[] {
     return Object.values(useAdminStore().boothList);
+  }
+
+  get boothPublicPageHref(): string {
+    return `${import.meta.env.VITE_MBM_PUBLIC_URL}/booth/${useAdminStore().currentBoothId}`;
   }
 
   get currentAccount() {
