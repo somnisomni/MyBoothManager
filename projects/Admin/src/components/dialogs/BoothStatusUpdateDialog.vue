@@ -5,8 +5,8 @@
                 :dialogTitle="dialogTitle"
                 dialogCancelText="취소"
                 dialogPrimaryText="변경하기"
-                @cacnel="onDialogCancel"
-                @primary="onDialogConfirm">
+                :onDialogCancel="onDialogCancel"
+                :onDialogPrimary="onDialogConfirm">
       <!-- Description -->
       <div v-if="targetStatusIsPreparing">
         <p>부스가 운영 준비(행사 개최 대기) 상태인 경우,</p><br />

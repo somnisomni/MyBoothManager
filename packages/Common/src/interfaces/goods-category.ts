@@ -1,4 +1,4 @@
-import type { IDataModelBase } from "./base";
+import { IDataModelBase } from "./base";
 
 export interface IGoodsCategory extends IDataModelBase {
   id: number;

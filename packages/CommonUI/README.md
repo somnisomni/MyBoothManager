@@ -1,1 +1,0 @@
-# MyBoothManager-CommonUI

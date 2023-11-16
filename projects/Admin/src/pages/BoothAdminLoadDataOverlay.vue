@@ -12,9 +12,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import ServerDataLoadErrorDialog from "@/components/dialogs/common/ServerDataLoadErrorDialog.vue";
 
 @Component({
   emits: ["completed"],
+  components: {
+    ServerDataLoadErrorDialog,
+  },
 })
 export default class BoothAdminLoadDataOverlay extends Vue {
   errorDialogShown = false;

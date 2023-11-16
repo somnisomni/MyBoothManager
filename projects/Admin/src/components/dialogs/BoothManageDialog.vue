@@ -8,10 +8,10 @@
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @cancel="onDialogCancel"
-                @secondary="resetForm"
-                @primary="onDialogConfirm"
-                @leftbutton="onDialogDeleteClick"
+                :onDialogCancel="onDialogCancel"
+                :onDialogSecondary="resetForm"
+                :onDialogPrimary="onDialogConfirm"
+                :onDialogLeftButton="onDialogDeleteClick"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -46,7 +46,7 @@
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                               @primary="() => { open = false; }" />
+                               @confirm="() => { open = false; }" />
   </CommonDialog>
 </template>
 

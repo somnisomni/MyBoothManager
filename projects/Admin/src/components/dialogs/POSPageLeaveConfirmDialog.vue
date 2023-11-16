@@ -3,7 +3,7 @@
                 width="300"
                 dialogCancelText="취소"
                 dialogPrimaryText="확인"
-                @primary="onDialogPrimary">
+                :onDialogPrimary="onDialogPrimary">
     <p>POS 페이지를 떠나시겠습니까?</p>
   </CommonDialog>
 </template>

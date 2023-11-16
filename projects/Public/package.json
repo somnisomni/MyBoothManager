@@ -16,7 +16,6 @@
   "dependencies": {
     "@mdi/font": "^7.3.67",
     "@myboothmanager/common": "../../packages/Common",
-    "@myboothmanager/common-ui": "../../packages/CommonUI",
     "pinia": "^2.1.7",
     "vue": "^3.3.6",
     "vue-router": "^4.2.5",

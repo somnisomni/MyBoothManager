@@ -35,8 +35,8 @@
 <script lang="ts">
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
-import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { useAdminStore } from "@/stores/admin";
+import { type DialogButtonParams } from "./common/CommonDialog.vue";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
@@ -49,7 +49,7 @@ export default class BoothSelectionDialog extends Vue {
 
   boothListFetching = false;
   boothAddDialogShown = false;
-  titleButtons: CommonDialogButtonParams[] = [
+  titleButtons: DialogButtonParams[] = [
     {
       title: "목록 새로고침",
       icon: "mdi-refresh",

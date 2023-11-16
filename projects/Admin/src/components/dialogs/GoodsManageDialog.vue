@@ -8,10 +8,10 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @cancel="onDialogCancel"
-                @primary="onDialogConfirm"
-                @secondary="resetForm"
-                @leftbutton="onDialogDeleteClick"
+                :onDialogCancel="onDialogCancel"
+                :onDialogPrimary="onDialogConfirm"
+                :onDialogSecondary="resetForm"
+                :onDialogLeftButton="onDialogDeleteClick"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -84,7 +84,7 @@
 
     <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                               @primary="() => { open = false; }" />
+                               @confirm="() => { open = false; }" />
   </CommonDialog>
 </template>
 
