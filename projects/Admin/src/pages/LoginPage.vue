@@ -9,16 +9,20 @@
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
 
-        <VForm style="width: 400px; max-width: 100%;">
+        <VForm v-model="formValid" style="width: 400px; max-width: 100%;">
           <VTextField v-model="loginData.loginId"
+                      class="my-2"
                       label="로그인 ID"
                       type="text"
                       required
-                      autofocus />
+                      autofocus
+                      :rules="[ () => loginData.loginId.length <= 0 ? 'ID를 입력하세요.' : true ]"/>
           <VTextField v-model="loginData.loginPass"
+                      class="my-2"
                       label="패스워드"
                       type="password"
-                      required />
+                      required
+                      :rules="[ () => loginData.loginPass.length <= 0 ? '패스워드를 입력하세요.' : true ]"/>
 
           <VExpandTransition>
             <VSheet v-if="errorMessage">
@@ -32,7 +36,7 @@
                   color="primary"
                   size="large"
                   :loading="loginProgress"
-                  :disabled="loginProgress"
+                  :disabled="loginProgress || !formValid"
                   @click.prevent="doLogin">로그인</VBtn>
           </VLayout>
         </VForm>
@@ -60,6 +64,7 @@ export default class LoginPage extends Vue {
   readonly APP_VERSION = Const.APP_VERSION;
   readonly APP_GIT_HASH = Const.APP_GIT_HASH;
 
+  formValid = false;
   loginProgress = false;
   loginData: IAccountLoginRequest = {
     loginId: "",
