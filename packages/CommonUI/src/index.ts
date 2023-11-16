@@ -1,4 +1,5 @@
 import type { App } from "vue";
+import colors from "vuetify/util/colors";
 import * as C from "./components";
 
 export default {
@@ -10,3 +11,6 @@ export default {
     app.component("ServerNotRespondErrorDialog", C.ServerNotRespondErrorDialog);
   },
 };
+
+export const APP_PRIMARY_COLOR: string = colors.teal.darken1;
+export const APP_SECONDARY_COLOR: string = colors.teal.lighten3;

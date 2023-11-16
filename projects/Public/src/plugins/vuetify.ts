@@ -1,8 +1,8 @@
 import "@mdi/font/css/materialdesignicons.css";
 import "@/styles/vuetify.scss";
 import { createVuetify } from "vuetify";
-import colors from "vuetify/util/colors";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
+import { APP_PRIMARY_COLOR, APP_SECONDARY_COLOR } from "@myboothmanager/common-ui";
 
 export default createVuetify({
   icons: {
@@ -14,8 +14,8 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: colors.teal.darken1,
-          secondary: colors.teal.lighten3,
+          primary: APP_PRIMARY_COLOR,
+          secondary: APP_SECONDARY_COLOR,
         },
       },
     },
