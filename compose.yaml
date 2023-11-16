@@ -6,6 +6,7 @@ services:
       args:
         GIT_HASH: ${GIT_COMMIT_HASH}
         API_SERVER_URL: "http://localhost:31111"
+        PUBLIC_APP_URL: "http://localhost:31113"
         BASE_PATH: "/admin"
     ports:
       - "31112:31112"
