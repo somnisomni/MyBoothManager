@@ -40,6 +40,8 @@
                   @click.prevent="doLogin">로그인</VBtn>
           </VLayout>
         </VForm>
+
+        <p class="text-caption mt-4 text-disabled">현재 회원가입 및 패스워드 변경 등은 선별적으로 처리하고 있습니다.<br />개발자에게 문의해주세요.</p>
       </VCardText>
     </VCard>
 
