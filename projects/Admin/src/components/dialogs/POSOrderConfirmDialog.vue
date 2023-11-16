@@ -4,7 +4,7 @@
                 dialogTitle="판매 내역 확인"
                 dialogPrimaryText="확인"
                 dialogCancelText="취소"
-                :onDialogPrimary="onDialogPrimary">
+                @primary="onDialogPrimary">
     <p><strong>다음 굿즈들의 판매 내역을 기록합니다.</strong></p>
 
     <div class="my-4">

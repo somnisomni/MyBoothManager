@@ -9,10 +9,10 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                :onDialogCancel="onDialogCancel"
-                :onDialogPrimary="onDialogConfirm"
-                :onDialogSecondary="resetForm"
-                :onDialogLeftButton="() => { deleteWarningDialogShown = true; }"
+                @cancel="onDialogCancel"
+                @primary="onDialogConfirm"
+                @secondary="resetForm"
+                @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -27,9 +27,9 @@
   </CommonDialog>
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                             @confirm="() => { open = false; }" />
+                             @primary="() => { open = false; }" />
   <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                             @confirm="onDeleteConfirm" />
+                             @primary="onDeleteConfirm" />
 </template>
 
 <script lang="ts">

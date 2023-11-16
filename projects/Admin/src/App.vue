@@ -8,16 +8,11 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import ServerNotRespondErrorDialog from "./components/dialogs/common/ServerNotRespondErrorDialog.vue";
-import AdminAPI from "./lib/api-admin";
+import AdminAPI from "@/lib/api-admin";
 
-@Component({
-  components: {
-    ServerNotRespondErrorDialog,
-  },
-})
+@Component({})
 export default class App extends Vue {
-  isServerNotAvailable = false;
+  isServerNotAvailable: boolean = false;
 
   async mounted() {
     this.isServerNotAvailable = !(await AdminAPI.checkAPIServerAlive());
