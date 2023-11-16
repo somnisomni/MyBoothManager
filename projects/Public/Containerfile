@@ -22,6 +22,14 @@ RUN yarn set version berry
 RUN yarn install
 RUN yarn build
 
+# Build common UI package
+WORKDIR /build/packages/CommonUI
+# Workaround
+RUN rm .containerignore
+RUN yarn set version berry
+RUN yarn install
+RUN yarn build
+
 # Build public frontend
 WORKDIR /build/projects/Public
 RUN yarn set version berry
