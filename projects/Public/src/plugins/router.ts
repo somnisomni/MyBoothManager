@@ -15,8 +15,14 @@ const router = createRouter({
 
     {
       path: "/",
-      name: "landing",
-      component: LandingPage,
+      name: "root",
+      children: [
+        {
+          path: "",
+          name: "landing",
+          component: LandingPage,
+        },
+      ],
     },
     {
       path: "/booth/:boothId",
