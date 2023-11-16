@@ -5,8 +5,8 @@
                 dialogCancelText="취소"
                 dialogLeftButtonText="삭제"
                 dialogPrimaryText="확인"
-                :onDialogLeftButton="onDialogLeftButton"
-                :onDialogPrimary="onDialogPrimary"
+                @leftbutton="onDialogLeftButton"
+                @primary="onDialogPrimary"
                 :disablePrimary="!formValid">
     <p class="text-h6 text-center mb-4"><strong>{{ goodsItem.name }}</strong></p>
 

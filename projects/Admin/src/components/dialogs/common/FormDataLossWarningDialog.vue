@@ -4,7 +4,7 @@
                 dialogTitle="경고"
                 dialogCancelText="돌아가기"
                 dialogPrimaryText="닫기"
-                :onDialogPrimary="onDialogPrimary"
+                @primary="onDialogPrimary"
                 accentColor="red">
     <p><span class="text-red"><strong>아직 반영되지 않은 변경된 정보가 있습니다.</strong></span></p>
     <p>변경한 내용을 취소하고 창을 닫으시겠습니까?</p>

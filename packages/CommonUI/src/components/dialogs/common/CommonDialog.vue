@@ -63,7 +63,7 @@
 
         <VSpacer />
 
-        <VBtn v-if="dialogCancelText && closeOnCancel"
+        <VBtn v-if="dialogCancelText"
               :disabled="progressActive || disableCancel"
               variant="text"
               @click="onDialogCancelButtonClick">{{ dialogCancelText }}</VBtn>
