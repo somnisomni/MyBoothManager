@@ -4,7 +4,7 @@
                 dialogTitle="경고"
                 dialogCancelText="취소"
                 dialogPrimaryText="초기화"
-                :onDialogPrimary="onDialogPrimary"
+                @primary="onDialogPrimary"
                 accentColor="red">
     <p><span class="text-red"><strong>주문 목록이 초기화됩니다.</strong></span></p>
     <p>진행하시겠습니까?</p>

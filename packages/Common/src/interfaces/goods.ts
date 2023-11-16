@@ -1,4 +1,4 @@
-import { IDataModelBase } from "./base";
+import type { IDataModelBase } from "./base";
 
 export enum GoodsStatus {
   ON_SALE ="on_sale",
