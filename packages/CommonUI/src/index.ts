@@ -5,6 +5,7 @@ export default {
   install(app: App) {
     app.component("CommonDialog", C.CommonDialog);
     app.component("CommonErrorDialog", C.CommonErrorDialog);
+    app.component("CommonWarningDialog", C.CommonWarningDialog);
     app.component("ServerDataLoadErrorDialog", C.ServerDataLoadErrorDialog);
     app.component("ServerNotRespondErrorDialog", C.ServerNotRespondErrorDialog);
   },

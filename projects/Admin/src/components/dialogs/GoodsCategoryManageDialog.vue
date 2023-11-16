@@ -27,9 +27,9 @@
   </CommonDialog>
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
-                             @confirm="() => { open = false; }" />
+                             @primary="() => { open = false; }" />
   <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                             @confirm="onDeleteConfirm" />
+                             @primary="onDeleteConfirm" />
 </template>
 
 <script lang="ts">
