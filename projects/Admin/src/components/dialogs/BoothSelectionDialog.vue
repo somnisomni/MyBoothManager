@@ -4,6 +4,7 @@
                 :contentNoPadding="true"
                 :titleExtraButtons="titleButtons"
                 :titleExtraMargin="true"
+                :dialogCancelText="null"
                 :closeOnCancel="false"
                 :fullscreenOnSmallScreen="true"
                 dialogTitle="관리할 부스 선택">
