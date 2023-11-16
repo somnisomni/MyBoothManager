@@ -4,7 +4,7 @@
                 dialogTitle="삭제 경고"
                 dialogCancelText="취소"
                 dialogPrimaryText="삭제"
-                :onDialogPrimary="onDialogPrimary"
+                @primary="onDialogPrimary"
                 accentColor="red">
     <p><span class="text-red"><strong>해당 항목을 삭제하면 복구할 수 없습니다.</strong></span></p>
     <p>정말로 삭제하시겠습니까?</p>
