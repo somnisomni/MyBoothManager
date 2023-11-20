@@ -10,7 +10,6 @@ import BoothAdminGoodsOrdersPage from "@/pages/subpages/BoothAdminGoodsOrdersPag
 import LogoutPage from "@/pages/LogoutPage.vue";
 import { useAdminStore } from "@/stores/admin";
 import { useAuthStore } from "@/stores/auth";
-import BoothAdminAnalyticsPage from "@/pages/subpages/BoothAdminAnalyticsPage.vue";
 
 const isProd: boolean = import.meta.env.PROD;
 const placeholderRoute: RouteRecordRaw = {
@@ -83,7 +82,7 @@ const router = createRouter({
             {
               path: "analytics",
               name: "admin-analytics",
-              component: BoothAdminAnalyticsPage,
+              component: () => import("@/pages/subpages/BoothAdminAnalyticsPage.vue"),
             },
             {
               path: "utility/price-calculator",
