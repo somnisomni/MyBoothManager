@@ -1,27 +1,31 @@
 <template>
   <VContainer class="mt-4 px-0 px-sm-2 py-2 pa-md-6 d-flex flex-column">
+    <div v-if="Object.keys(orderHistory).length > 0">
+      <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center px-2 mb-4">
+        <VChip class="h-auto" rounded="lg" value="all" color="primary">
+          <div class="d-flex flex-column align-center justify-center pa-1">
+            <div class="text-h5 font-weight-bold">전체 표시</div>
+            <div class="text-caption"></div>
+          </div>
+        </VChip>
+        <VChip v-for="day in orderHistoryDays.asArray()"
+               :key="day"
+               :value="day"
+               class="h-auto"
+               rounded="lg"
+               color="primary">
+          <div class="d-flex flex-column align-center justify-center pa-1">
+            <div class="text-h5 font-weight-bold">{{ day.day }}일</div>
+            <div class="text-caption">{{ day.year }}년 {{ day.month }}월</div>
+          </div>
+        </VChip>
+      </VChipGroup>
 
-    <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center px-2 mb-4">
-      <VChip class="h-auto" rounded="lg" value="all" color="primary">
-        <div class="d-flex flex-column align-center justify-center pa-1">
-          <div class="text-h5 font-weight-bold">전체 표시</div>
-          <div class="text-caption"></div>
-        </div>
-      </VChip>
-      <VChip v-for="day in orderHistoryDays.asArray()"
-             :key="day"
-             :value="day"
-             class="h-auto"
-             rounded="lg"
-             color="primary">
-        <div class="d-flex flex-column align-center justify-center pa-1">
-          <div class="text-h5 font-weight-bold">{{ day.day }}일</div>
-          <div class="text-caption">{{ day.year }}년 {{ day.month }}월</div>
-        </div>
-      </VChip>
-    </VChipGroup>
-
-    <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
+      <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
+    </div>
+    <div v-else>
+      <h2 class="text-center">등록된 판매 기록이 없습니다.</h2>
+    </div>
   </VContainer>
 </template>
 
