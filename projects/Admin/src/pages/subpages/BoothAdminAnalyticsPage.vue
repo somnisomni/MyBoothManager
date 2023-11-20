@@ -1,11 +1,7 @@
 <template>
-  <VContainer class="mt-4 pa-2 pa-md-6 d-flex flex-column">
-    <!-- <span v-for="(info, idx) in orderHistoryInfoMergedByMinute" :key="idx">
-      {{ idx }}:
-      {{ info.price }} / {{ info.sellStock }}
-    </span> -->
+  <VContainer class="mt-4 px-0 px-sm-2 py-2 pa-md-6 d-flex flex-column">
 
-    <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center mb-4">
+    <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center px-2 mb-4">
       <VChip class="h-auto" rounded="lg" value="all" color="primary">
         <div class="d-flex flex-column align-center justify-center pa-1">
           <div class="text-h5 font-weight-bold">전체 표시</div>
@@ -25,21 +21,18 @@
       </VChip>
     </VChipGroup>
 
-    <!-- <span v-for="item in orderHistoryOfCurrentSelectedDay" :key="item.id">
-      {{ item.id }}:
-      {{ item.totalPrice }} / {{ item.order.reduce((acc, cur) => acc + cur.quantity, 0) }}
-    </span> -->
-
-    <Chart class="bg-background" type="line" :options="CHART_SELL_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
+    <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
   </VContainer>
 </template>
 
 <script lang="ts">
-import type { IGoodsOrder } from "@myboothmanager/common";
-import type { ChartOptions, ChartData } from "chart.js";
+import type { ChartOptions, ChartData, Point } from "chart.js";
+import { currencySymbolInfo, type IGoodsOrder } from "@myboothmanager/common";
 import ChartJS from "chart.js/auto";
+import "chartjs-adapter-moment";
 import { Component, Vue } from "vue-facing-decorator";
 import { Chart } from "vue-chartjs";
+import colors from "vuetify/util/colors";
 import { useAdminStore } from "@/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
 
@@ -51,28 +44,84 @@ ChartJS.register();
   },
 })
 export default class BoothAdminAnalyticsPage extends Vue {
-  readonly CHART_SELL_OPTIONS: ChartOptions = {
+  readonly CHART_ANALYTICS_OPTIONS: ChartOptions = {
     responsive: true,
+    plugins: {
+      tooltip: {
+        mode: "index",
+        intersect: false,
+      },
+      title: {
+        display: true,
+        text: "분 단위 굿즈 판매 기록",
+      },
+      legend: {
+        onClick(e, legendItem) {
+          const index = legendItem.datasetIndex!;
+          this.chart.data.datasets[index].hidden = !this.chart.data.datasets[index].hidden;
+          this.chart.scales[this.chart.data.datasets[index].stack!].options.display = !this.chart.data.datasets[index].hidden;
+          this.chart.update();
+        },
+      },
+    },
+    hover: {
+      mode: "index",
+      intersect: false,
+    },
     scales: {
+      x: {
+        type: "timeseries",
+        time: {
+          unit: "minute",
+          round: "minute",
+          tooltipFormat: "YYYY년 MM월 DD일 / HH시 mm분",
+          displayFormats: {
+            hour: "DD일 HH시",
+            minute: "DD일 HH:mm",
+          },
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 0,
+          major: { enabled: true },
+          font: {
+            weight(context) {
+              if(context.tick.major) return "bold";
+            },
+          },
+        },
+      },
       quantity: {
         type: "linear",
         display: true,
         position: "left",
+        grid: {
+          drawOnChartArea: false,
+        },
         title: {
           display: true,
           text: "판매 굿즈 수량",
+        },
+        min: 0,
+        ticks: {
+          autoSkip: true,
+          autoSkipPadding: 10,
         },
       },
       price: {
         type: "linear",
         display: true,
         position: "right",
-        grid: {
-          drawOnChartArea: false,
-        },
         title: {
           display: true,
           text: "판매 금액",
+        },
+        min: 0,
+        ticks: {
+          autoSkip: true,
+          autoSkipPadding: 10,
+          callback: (value) => `${this.currencySymbol}${value.toLocaleString()}`,
+          stepSize: (this.currencySymbol === currencySymbolInfo["KRW"].symbol) ? 10000 : 10,
         },
       },
     },
@@ -85,6 +134,10 @@ export default class BoothAdminAnalyticsPage extends Vue {
     await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
 
     this.dataLoading = false;
+  }
+
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId]?.currencySymbol ?? "";
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
@@ -147,24 +200,22 @@ export default class BoothAdminAnalyticsPage extends Vue {
 
   get chartOrderHistoryDataOfSelectedDay(): ChartData {
     return {
-      labels: Object.keys(this.orderHistoryInfoMergedByMinute).map((item) => {
-        const date = new Date(parseInt(item));
-        if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
-
-        const format = "HH:mm";
-        return format.replace("HH", date.getHours().toString().padStart(2, "0")).replace("mm", date.getMinutes().toString().padStart(2, "0"));
-      }).filter((item) => item) as Array<string>,
       datasets: [{
         label: "판매 굿즈 수량",
         type: "bar",
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
-          else return item[1].quantity;
-        }).filter((item) => typeof item !== "undefined") as Array<number>,
-        borderColor: "#FFD54F",
-        backgroundColor :"#FFC107",
+
+          return {
+            x: parseInt(item[0]),
+            y: item[1].quantity,
+          } as Point;
+        }).filter((item) => typeof item !== "undefined") as Array<Point>,
+        borderColor: colors.amber.lighten1,
+        backgroundColor: colors.amber.lighten1,
         order: 1,
+        stack: "quantity",
         yAxisID: "quantity",
       }, {
         label: "판매 금액",
@@ -172,10 +223,17 @@ export default class BoothAdminAnalyticsPage extends Vue {
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
-          else return item[1].price;
-        }).filter((item) => typeof item !== "undefined") as Array<number>,
-        borderColor: "#7986CB",
-        backgroundColor :"#3F51B5",
+
+          return {
+            x: parseInt(item[0]),
+            y: item[1].price,
+          } as Point;
+        }).filter((item) => typeof item !== "undefined") as Array<Point>,
+        borderWidth: 1.5,
+        borderColor: colors.indigo.darken1,
+        backgroundColor: colors.indigo.darken1,
+        order: 0,
+        stack: "price",
         yAxisID: "price",
       }],
     };

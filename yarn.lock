@@ -1217,10 +1217,12 @@ __metadata:
     "@vue/eslint-config-typescript": "npm:^12.0.0"
     "@vue/tsconfig": "npm:^0.4.0"
     chart.js: "npm:^4.4.0"
+    chartjs-adapter-moment: "npm:^1.0.1"
     eslint: "npm:^8.53.0"
     eslint-import-resolver-typescript: "npm:^3.6.1"
     eslint-plugin-import: "npm:^2.29.0"
     eslint-plugin-vue: "npm:^9.18.1"
+    moment: "npm:^2.29.4"
     npm-run-all: "npm:^4.1.5"
     pinia: "npm:^2.1.7"
     pinia-plugin-persistedstate: "npm:^3.2.0"
@@ -3277,6 +3279,16 @@ __metadata:
   dependencies:
     "@kurkle/color": "npm:^0.3.0"
   checksum: 5d60ae67e2ad7ba1026531be3c965a83f4b4213146b131aa041fcac846bd98bdfc38aeadc0d19c58f3a3ef689fb6acc014b8687665d38d4776b38351bf991de1
+  languageName: node
+  linkType: hard
+
+"chartjs-adapter-moment@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "chartjs-adapter-moment@npm:1.0.1"
+  peerDependencies:
+    chart.js: ">=3.0.0"
+    moment: ^2.10.2
+  checksum: 98e3726e3d049d1e206e20adbf22da86ba16bd69a7570b8ea8ea945bba3645c44a012b638b06d765e1a6564121cb8bb3fd0b233014b5a40ca4910b79985ee180
   languageName: node
   linkType: hard
 

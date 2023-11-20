@@ -1828,10 +1828,12 @@ const RAW_RUNTIME_STATE =
           ["@vue/eslint-config-typescript", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:12.0.0"],\
           ["@vue/tsconfig", "npm:0.4.0"],\
           ["chart.js", "npm:4.4.0"],\
+          ["chartjs-adapter-moment", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.1"],\
           ["eslint", "npm:8.53.0"],\
           ["eslint-import-resolver-typescript", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.6.1"],\
           ["eslint-plugin-import", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.29.0"],\
           ["eslint-plugin-vue", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:9.18.1"],\
+          ["moment", "npm:2.29.4"],\
           ["npm-run-all", "npm:4.1.5"],\
           ["pinia", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.1.7"],\
           ["pinia-plugin-persistedstate", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.2.0"],\
@@ -4543,6 +4545,32 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["chart.js", "npm:4.4.0"],\
           ["@kurkle/color", "npm:0.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["chartjs-adapter-moment", [\
+      ["npm:1.0.1", {\
+        "packageLocation": "./.yarn/cache/chartjs-adapter-moment-npm-1.0.1-20f777e31d-98e3726e3d.zip/node_modules/chartjs-adapter-moment/",\
+        "packageDependencies": [\
+          ["chartjs-adapter-moment", "npm:1.0.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.1", {\
+        "packageLocation": "./.yarn/__virtual__/chartjs-adapter-moment-virtual-1257ea9076/0/cache/chartjs-adapter-moment-npm-1.0.1-20f777e31d-98e3726e3d.zip/node_modules/chartjs-adapter-moment/",\
+        "packageDependencies": [\
+          ["chartjs-adapter-moment", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.1"],\
+          ["@types/chart.js", null],\
+          ["@types/moment", null],\
+          ["chart.js", "npm:4.4.0"],\
+          ["moment", "npm:2.29.4"]\
+        ],\
+        "packagePeers": [\
+          "@types/chart.js",\
+          "@types/moment",\
+          "chart.js",\
+          "moment"\
         ],\
         "linkType": "HARD"\
       }]\
