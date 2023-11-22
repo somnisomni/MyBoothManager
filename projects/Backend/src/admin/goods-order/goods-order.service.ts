@@ -34,13 +34,22 @@ export class GoodsOrderService {
       throw new GoodsOrderParentBoothNotFoundException();
     }
 
-    // Check goods availability
+    // Check goods availability & build goods order entry
     if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new GoodsOrderCreateOrderEmptyException();
+
     for(const order of createGoodsOrderDto.order) {
+      // Check if goods exists
       const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
       if(!goods) throw new GoodsOrderCreateGoodsNotFoundException();
 
+      // Validate goods stock
       if(goods.stockRemaining < order.quantity) throw new GoodsOrderCreateInvalidGoodsAmountException();
+
+      // Set price if not provided
+      if(typeof order.price !== "number" && !order.price) order.price = goods.price;
+
+      // Set goods name if not provided
+      if(typeof order.name !== "string" && !order.name) order.name = goods.name;
 
       // If all good, update remaining stock count of the goods
       await goods.update({ stockRemaining: goods.stockRemaining - order.quantity });

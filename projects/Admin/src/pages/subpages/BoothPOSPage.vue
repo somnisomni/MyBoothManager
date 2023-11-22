@@ -32,7 +32,7 @@
   </VMain>
 
   <POSPageLeaveConfirmDialog v-model="showPageLeaveConfirmDialog"
-                             @confirm="onPageLeaveConfirm" />
+                             @primary="onPageLeaveConfirm" />
 </template>
 
 <script lang="ts">
