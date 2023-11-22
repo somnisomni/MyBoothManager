@@ -1,5 +1,5 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { IGoodsOrder, IGoodsOrderDetailItem } from "@myboothmanager/common";
+import { GoodsOrderStatus, IGoodsOrder, IGoodsOrderDetailItem } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
 import { boothModelName } from "./booth";
 
@@ -8,6 +8,7 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
   declare id: number;
   declare boothId: number;
   declare order: Array<IGoodsOrderDetailItem>;
+  declare status: GoodsOrderStatus;
   declare totalPrice: number;
 }
 
@@ -28,12 +29,17 @@ export const goodsOrderModelAttrib: ModelAttributes<GoodsOrder> = {
       key: "id",
     },
   },
-  totalPrice: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-  },
   order: {
     type: DataTypes.JSON,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM(...Object.values(GoodsOrderStatus)),
+    allowNull: false,
+    defaultValue: GoodsOrderStatus.RECORDED,
+  },
+  totalPrice: {
+    type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
 };
