@@ -1,6 +1,7 @@
 import type { App } from "vue";
 import colors from "vuetify/util/colors";
 import * as C from "./components";
+import "@/styles/styles.scss";
 
 export default {
   install(app: App) {

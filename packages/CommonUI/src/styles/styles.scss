@@ -1,0 +1,11 @@
+.dialog-common {
+  & > .v-overlay__content { overflow: initial !important; }
+
+  .title-area {
+    .button-close {
+      &.v-btn--disabled > .v-btn__overlay {
+        opacity: 0 !important;
+      }
+    }
+  }
+}

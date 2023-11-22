@@ -19,7 +19,7 @@
       <VLayout class="d-flex flex-row flex-grow-0 flex-shrink-0 flex-wrap justify-end align-center pa-2" :class="{ 'py-4': titleExtraMargin }">
         <VCardTitle class="flex-grow-1">{{ dialogTitle }}</VCardTitle>
 
-        <div class="d-flex flex-row flex-nowrap">
+        <div class="title-area d-flex flex-row flex-nowrap">
           <VBtn v-for="btn in titleExtraButtons"
                 :key="btn.icon"
                 :disabled="progressActive || btn.disabled"
@@ -36,7 +36,7 @@
                 title="닫기"
                 icon
                 variant="flat"
-                class="mr-2"
+                class="button-close mr-2"
                 @click.stop="onCloseButtonClick">
             <VTooltip activator="parent" location="bottom">닫기</VTooltip>
             <VIcon>mdi-close</VIcon>
@@ -153,8 +153,3 @@ export default class CommonDialog extends Vue {
   }
 }
 </script>
-
-<style lang="scss">
-/* Workaround */
-.dialog-common > .v-overlay__content { overflow: initial !important; }
-</style>
