@@ -22,7 +22,7 @@ import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
     GoodsOrderListView,
   },
 })
-export default class BoothAdminGoodsOrdersPage extends Vue {
+export default class BoothAdminGoodsOrdersListPage extends Vue {
   dataLoading: boolean = true;
 
   async mounted() {
