@@ -29,7 +29,9 @@ import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
-@Component({})
+@Component({
+  emits: ["confirm"],
+})
 export default class POSOrderConfirmDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Object, required: true }) orders!: Record<number, IGoodsOrderInternal>;
@@ -43,7 +45,7 @@ export default class POSOrderConfirmDialog extends Vue {
   }
 
   @Emit("confirm")
-  onDialogPrimary() {
+  onDialogPrimary(): void {
     this.open = false;
   }
 }

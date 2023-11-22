@@ -4,12 +4,18 @@
           :class="{ 'border-s-0': !smAndUp, 'border-e-0': !smAndUp }"
           @click.stop="onItemClick">
     <div v-if="smAndUp" class="status-area position-relative overflow-hidden">
-      <VIcon class="icon position-absolute" color="green" style="font-size: var(--order-item-height)">mdi-check</VIcon>
+      <VIcon class="icon position-absolute"
+             :class="statusIcon.class"
+             :icon="statusIcon.icon"
+             :color="statusIcon.color" />
     </div>
 
     <div class="flex-grow-1 pa-2 border-s-sm">
       <div class="text-h6 text-sm-h5">
-        <VIcon v-if="!smAndUp" color="green" class="mr-2">mdi-check</VIcon>
+        <VIcon v-if="!smAndUp"
+               :icon="statusIcon.icon"
+               :color="statusIcon.color"
+               class="mr-2" />
         <span v-if="orderData.createdAt"><strong>{{ createdTimeString }}</strong> <small class="d-inline-block">{{ createdDateString }}</small></span>
       </div>
       <div class="text-sm-h6">판매 금액: <strong>{{ totalPriceFormatted }}</strong></div>
@@ -23,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
@@ -32,6 +38,29 @@ import { useAdminStore } from "@/stores/admin";
 @Component({})
 export default class GoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
+
+  get statusIcon(): { icon: string; color: string; class: string } {
+    switch(this.orderData.status) {
+      case GoodsOrderStatus.RECORDED:
+        return {
+          icon: "mdi-check",
+          color: "green",
+          class: "",
+        };
+      case GoodsOrderStatus.CANCELED:
+        return {
+          icon: "mdi-undo-variant",
+          color: "pink-lighten-2",
+          class: "small",
+        };
+      default:
+        return {
+          icon: "mdi-help",
+          color: "grey-lighten-2",
+          class: "small",
+        };
+    }
+  }
 
   get smAndUp(): boolean {
     return unref(useDisplay().smAndUp);
@@ -75,11 +104,19 @@ export default class GoodsOrderListItem extends Vue {
   cursor: pointer;
 
   .status-area {
+    display: flex;
+    align-items: center;
     width: calc(var(--order-item-height) - var(--order-item-height) / 4);
     height: var(--order-item-height);
 
     .icon {
+      font-size: var(--order-item-height);
       right: calc(var(--order-item-height) / -4);
+
+      &.small {
+        font-size: calc(var(--order-item-height) - 20px);
+        right: calc(var(--order-item-height) / -4 + 10px);
+      }
     }
   }
 }
