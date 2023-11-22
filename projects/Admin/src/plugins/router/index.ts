@@ -6,7 +6,9 @@ import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
 import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
 import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
 import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
-import BoothAdminGoodsOrdersPage from "@/pages/subpages/BoothAdminGoodsOrdersPage.vue";
+import BoothAdminGoodsOrdersRootPage from "@/pages/subpages/orders/BoothAdminGoodsOrdersRootPage.vue";
+import BoothAdminGoodsOrdersListPage from "@/pages/subpages/orders/BoothAdminGoodsOrdersListPage.vue";
+import BoothAdminGoodsOrderDetailPage from "@/pages/subpages/orders/BoothAdminGoodsOrderDetailPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
 import { useAdminStore } from "@/stores/admin";
 import { useAuthStore } from "@/stores/auth";
@@ -76,8 +78,20 @@ const router = createRouter({
             },
             {
               path: "orders",
-              name: "admin-orders",
-              component: BoothAdminGoodsOrdersPage,
+              name: "admin-orders-root",
+              component: BoothAdminGoodsOrdersRootPage,
+              children: [
+                {
+                  path: "",
+                  name: "admin-orders",
+                  component: BoothAdminGoodsOrdersListPage,
+                },
+                {
+                  path: ":id",
+                  name: "admin-order-detail",
+                  component: BoothAdminGoodsOrderDetailPage,
+                },
+              ],
             },
             {
               path: "analytics",
