@@ -1,9 +1,11 @@
 <template>
-  <RouterView v-slot="{ Component }">
-    <VSlideXReverseTransition leave-absolute>
-      <component :is="Component" />
-    </VSlideXReverseTransition>
-  </RouterView>
+  <div class="mt-4">
+    <RouterView v-slot="{ Component }">
+      <VSlideXReverseTransition leave-absolute>
+        <component :is="Component" />
+      </VSlideXReverseTransition>
+    </RouterView>
+  </div>
 </template>
 
 <script lang="ts">
