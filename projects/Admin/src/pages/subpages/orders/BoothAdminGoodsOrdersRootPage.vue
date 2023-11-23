@@ -1,8 +1,8 @@
 <template>
   <RouterView v-slot="{ Component }">
-    <VScrollXReverseTransition leave-absolute>
+    <VSlideXReverseTransition leave-absolute>
       <component :is="Component" />
-    </VScrollXReverseTransition>
+    </VSlideXReverseTransition>
   </RouterView>
 </template>
 
