@@ -10,6 +10,7 @@
     "start:dev": "NODE_ENV=development nest start --watch --preserveWatchOutput",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
+    "migrate": "ts-node scripts/db-migrator/migrate",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
@@ -30,7 +31,8 @@
     "mysql2": "^3.6.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "sequelize": "^6.35.0"
+    "sequelize": "^6.35.0",
+    "umzug": "^3.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.2.1",
