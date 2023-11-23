@@ -35,7 +35,9 @@ import { unref } from "vue";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 
-@Component({})
+@Component({
+  emits: ["click"],
+})
 export default class GoodsOrderListItem extends Vue {
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
 

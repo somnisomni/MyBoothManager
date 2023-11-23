@@ -1,11 +1,14 @@
 <template>
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <VScrollXReverseTransition leave-absolute>
+      <component :is="Component" />
+    </VScrollXReverseTransition>
+  </RouterView>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 
 @Component({})
-export default class BoothAdminGoodsOrdersRootPage extends Vue {
-}
+export default class BoothAdminGoodsOrdersRootPage extends Vue { }
 </script>

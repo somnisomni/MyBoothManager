@@ -14,7 +14,7 @@ import { useRoute } from "vue-router";
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
   get orderId(): number {
-    return parseInt(useRoute().params.orderId as string);
+    return parseInt(useRoute().params.id as string);
   }
 }
 </script>
