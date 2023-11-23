@@ -15,6 +15,7 @@
 import type { IGoodsOrder } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 
 @Component({
@@ -30,7 +31,12 @@ export default class GoodsOrderListView extends Vue {
   }
 
   onGoodsOrderItemClick(data: IGoodsOrder) {
-    // TO BE IMPLEMENTED
+    router.push({
+      name: "admin-order-detail",
+      params: {
+        id: data.id,
+      },
+    });
   }
 }
 </script>

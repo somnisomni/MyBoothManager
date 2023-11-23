@@ -30,10 +30,8 @@ const useAdminStore = defineStore("admin", () => {
         // Try to refresh auth token and retry API call
         const refreshResult = await $authStore.adminAuthRefresh();
 
-        if(typeof refreshResult === "boolean") {
-          if(refreshResult === true) {
-            return await func();
-          }
+        if(typeof refreshResult === "boolean" && refreshResult === true) {
+          return await func();
         }
       } else if(result === ErrorCodes.INVALID_AUTH_TOKEN) {
         // Logout
