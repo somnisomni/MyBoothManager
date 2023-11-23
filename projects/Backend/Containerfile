@@ -37,6 +37,11 @@ RUN yarn set version berry
 # Install production dependencies
 RUN yarn workspaces focus @myboothmanager/backend --production
 
+# DB migration notice
+RUN printf "\n\n  *** DB MIGRATION WILL BE EXECUTED DURING CONTAINER STARTUP ***  \n"; \
+  printf " - You can undo migration manually by running 'yarn workspace @myboothmanager/backend migrate:prod down' if there's any issue. \n"; \
+  printf " - After undoing migration, Use 'start:prod:no-migration' package.json script to run production without DB migration. \n\n\n";
+
 # Expose port
 EXPOSE 31111
 

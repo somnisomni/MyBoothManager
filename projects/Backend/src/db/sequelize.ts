@@ -44,7 +44,7 @@ export default class MBMSequelize {
     GoodsCategory.hasMany(Goods, { foreignKey: "categoryId", sourceKey: "id" });
     Goods.belongsTo(GoodsCategory, { foreignKey: "categoryId", targetKey: "id" });
 
-    /* == Model sync == */
+    /* == Sync model == */
     await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });
 
     /* == End == */
