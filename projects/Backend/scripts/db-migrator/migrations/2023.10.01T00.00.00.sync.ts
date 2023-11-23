@@ -1,5 +1,9 @@
 /* eslint-disable arrow-body-style */
 
+/* *** First-time database table synchronization *** */
+/* ***       apply changes before commit 12013ed *** */
+/* *** Timestamp of this file is bogus; not reflects actual time of change *** */
+
 import { DataTypes } from "sequelize";
 import { BoothStatus, GoodsStatus } from "@myboothmanager/common";
 import { accountModelName } from "@/db/models/account";
