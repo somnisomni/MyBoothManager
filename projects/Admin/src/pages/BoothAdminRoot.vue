@@ -33,16 +33,16 @@ export default class BoothAdminRoot extends Vue {
     return useAdminStore().isBoothDataLoaded;
   }
 
+  set loaded(value: boolean) {
+    useAdminStore().isBoothDataLoaded = value;
+  }
+
   get boothAvailable(): boolean {
     return Object.keys(useAdminStore().boothList).length > 0;
   }
 
   get needCreateBooth(): boolean {
     return !this.boothAvailable && this.loaded;
-  }
-
-  set loaded(value: boolean) {
-    useAdminStore().isBoothDataLoaded = value;
   }
 
   @Watch("needCreateBooth")
