@@ -1,7 +1,8 @@
 <template>
   <VContainer class="mt-4 px-0 px-sm-2 py-2 pa-md-6 d-flex flex-column">
     <div v-if="Object.keys(orderHistory).length > 0">
-      <VSlideGroup v-model="currentSelectedDay" class="justify-center px-2 mb-4" show-arrows center-active mandatory>
+      <div class="text-h5 text-center text-grey-darken-2 mb-2">날짜 선택</div>
+      <VSlideGroup v-model="currentSelectedDay" class="justify-center px-2 mb-6" show-arrows center-active mandatory>
         <VSlideGroupItem value="all" v-slot="{ isSelected, toggle }">
           <VChip class="h-auto mx-1" rounded="lg" :color="isSelected ? 'primary' : ''" @click="toggle">
             <div class="d-flex flex-column align-center justify-center pa-1">
@@ -26,6 +27,8 @@
           </VChip>
         </VSlideGroupItem>
       </VSlideGroup>
+
+      <VDivider class="mb-6" />
 
       <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
     </div>
@@ -56,6 +59,7 @@ ChartJS.register();
 export default class BoothAdminAnalyticsPage extends Vue {
   readonly CHART_ANALYTICS_OPTIONS: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       tooltip: {
         mode: "index",
