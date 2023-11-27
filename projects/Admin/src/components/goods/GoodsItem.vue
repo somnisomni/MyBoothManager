@@ -9,7 +9,7 @@
           @pointerenter="isHovering = true"
           @pointerleave="isHovering = false"
           @click.stop="onItemClick">
-    <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/200'" aspect-ratio="1/1" cover />
+    <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/200'" cover />
     <div class="goods-image-overlay"></div>
 
     <div v-if="editable" class="click-to-edit-text">클릭하여 수정</div>
@@ -105,9 +105,11 @@ export default class GoodsItem extends Vue {
   .goods-image {
     position: absolute;
     width: 100%;
+    height: 100%;
     left: 0;
     right: 0;
     top: 0;
+    bottom: 0;
   }
 
   .goods-image-overlay {
