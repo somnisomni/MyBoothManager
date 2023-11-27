@@ -32,6 +32,7 @@
 	"settings": {
 		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
 		"typescript.enablePromptUseWorkspaceTsdk": true,
+    "jest.autoRevealOutput": "off",
     "jest.disabledWorkspaceFolders": [
       "./packages/Common",
       "./packages/CommonUI",
