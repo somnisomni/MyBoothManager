@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
-import { create as createTarget, removeTarget } from "@/lib/common-functions";
-import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
+import { create as createTarget, findOneByPk, removeTarget } from "@/lib/common-functions";
+import { NoAccessException } from "@/lib/exceptions";
 import { GoodsService } from "../goods/goods.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
 import { GoodsOrderCreateGoodsNotFoundException, GoodsOrderCreateInvalidGoodsAmountException, GoodsOrderCreateOrderEmptyException, GoodsOrderParentBoothNotFoundException } from "./goods-order.exception";
@@ -13,8 +13,7 @@ export class GoodsOrderService {
   constructor(private goodsService: GoodsService) {}
 
   private async getGoodsOrderAndParentBooth(orderId: number, boothId: number, callerAccountId: number): Promise<{ order: GoodsOrder, booth: Booth }> {
-    const order = await GoodsOrder.findByPk(orderId);
-    if(!order) throw new EntityNotFoundException();
+    const order = await findOneByPk(GoodsOrder, orderId, false);
     if(order.boothId !== boothId) throw new NoAccessException();
 
     const booth = await Booth.findByPk(boothId);

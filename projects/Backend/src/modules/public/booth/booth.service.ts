@@ -3,7 +3,7 @@ import type GoodsCategory from "@/db/models/goods-category";
 import { Injectable } from "@nestjs/common";
 import { IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
-import { EntityNotFoundException } from "@/lib/exceptions";
+import { findOneByPk } from "@/lib/common-functions";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
 
@@ -14,14 +14,7 @@ export class PublicBoothService {
     private publicGoodsCategoryService: PublicGoodsCategoryService) {}
 
   async findOne(boothId: number): Promise<Booth> {
-    const booth = await Booth.findByPk(boothId, {
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
-
-    if(!booth) throw new EntityNotFoundException();
-    else return booth;
+    return await findOneByPk(Booth, boothId);
   }
 
   async findAll(accountId?: number): Promise<Array<Booth>> {

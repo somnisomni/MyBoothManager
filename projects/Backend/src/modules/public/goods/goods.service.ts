@@ -1,21 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
-import { EntityNotFoundException } from "@/lib/exceptions";
+import { findOneByPk } from "@/lib/common-functions";
 
 @Injectable()
 export class PublicGoodsService {
-  constructor() {}
-
   async findOne(goodsId: number): Promise<Goods> {
-    const goods = await Goods.findByPk(goodsId, {
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
-
-    if(!goods) throw new EntityNotFoundException();
-    else return goods;
+    return await findOneByPk(Goods, goodsId);
   }
 
   async findAll(boothId?: number): Promise<Array<Goods>> {
