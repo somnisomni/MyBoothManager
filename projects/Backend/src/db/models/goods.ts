@@ -1,5 +1,5 @@
 import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { GoodsStatus, type IGoods } from "@myboothmanager/common";
+import { GoodsStatus, GoodsStockVisibility, type IGoods } from "@myboothmanager/common";
 import { type InternalKeysWithId } from "@/lib/types";
 import { boothModelName } from "./booth";
 import { goodsCategoryModelName } from "./goods-category";
@@ -18,6 +18,7 @@ export default class Goods extends Model<IGoods, GoodsCreationAttributes> implem
   declare price: number;
   declare stockInitial: number;
   declare stockRemaining: number;
+  declare stockVisibility: GoodsStockVisibility;
 }
 
 export const goodsModelName = "Goods";
@@ -84,5 +85,10 @@ export const goodsModelAttrib: ModelAttributes<Goods> = {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
     defaultValue: 0,
+  },
+  stockVisibility: {
+    type: DataTypes.ENUM(...Object.values(GoodsStockVisibility)),
+    allowNull: false,
+    defaultValue: GoodsStockVisibility.SHOW_ALL,
   },
 };

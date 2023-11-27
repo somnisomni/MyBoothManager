@@ -6,6 +6,12 @@ export enum GoodsStatus {
   SOLD_OUT = "sold_out",
 }
 
+export enum GoodsStockVisibility {
+  HIDE_ALL = "hide_all",
+  SHOW_REMAINING_ONLY = "show_remaining_only",
+  SHOW_ALL = "show_all",
+}
+
 export interface IGoods extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
@@ -18,11 +24,12 @@ export interface IGoods extends IDataModelBase {
   price: number;
   stockInitial: number;
   stockRemaining: number;
+  stockVisibility: GoodsStockVisibility;
 }
 export type IGoodsResponse = IGoods;
 
 export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-export type GoodsUpdateRequestKey = "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason";
+export type GoodsUpdateRequestKey = "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason" | "stockVisibility";
 export type IGoodsUpdateRequest = Pick<IGoods, "boothId"> & Partial<Pick<IGoods, GoodsUpdateRequestKey>>;
