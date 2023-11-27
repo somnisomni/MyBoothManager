@@ -14,6 +14,8 @@
     </VBtn>
   </VSheet>
 
+  <VSnackbar v-model="showURLCopiedSnackbar" location="top" timeout="2000">부스 페이지 URL이 복사되었습니다.</VSnackbar>
+  <VSnackbar v-model="showURLCopyFailedSnackbar" location="top" timeout="2000">부스 페이지 URL을 복사할 수 없습니다.</VSnackbar>
   <BoothQRCodeDialog v-model="showBoothQRCodeDialog"
                      :boothId="boothId" />
 </template>
@@ -29,6 +31,8 @@ import BoothQRCodeDialog from "../dialogs/BoothQRCodeDialog.vue";
   },
 })
 export default class SharePanel extends Vue {
+  showURLCopiedSnackbar: boolean = false;
+  showURLCopyFailedSnackbar: boolean = false;
   showBoothQRCodeDialog: boolean = false;
 
   get boothId(): number {
@@ -37,12 +41,20 @@ export default class SharePanel extends Vue {
 
   shareTwitter(): void {
     const content = encodeURIComponent("부스 정보 확인하기");
-    const url = `https://twitter.com/intent/tweet?text=${content}&url=${encodeURIComponent(window.location.href)}`;
+    const href = encodeURIComponent(window.location.href);
+    const url = `https://twitter.com/intent/tweet?text=${content}&url=${href}`;
     window.open(url, "_blank");
   }
 
-  shareURL(): void {
-    navigator.clipboard.writeText(window.location.href);
+  async shareURL() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+    } catch(e) {
+      this.showURLCopyFailedSnackbar = true;
+      return;
+    }
+
+    this.showURLCopiedSnackbar = true;
   }
 }
 </script>
