@@ -37,7 +37,7 @@ export class GoodsCategoryService {
     return await create(GoodsCategory, createGoodsCategoryDto);
   }
 
-  async findAll(boothId: number): Promise<Array<GoodsCategory>> {
+  async findAll(boothId?: number): Promise<Array<GoodsCategory>> {
     const where = boothId ? { boothId } : undefined;
 
     return await GoodsCategory.findAll({
@@ -45,6 +45,14 @@ export class GoodsCategoryService {
       attributes: {
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },
+    });
+  }
+
+  async countAll(boothId?: number): Promise<number> {
+    const where = boothId ? { boothId } : undefined;
+
+    return await GoodsCategory.count({
+      where,
     });
   }
 
