@@ -1,13 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
-import Goods from "@/db/models/goods";
-import GoodsCategory from "@/db/models/goods-category";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { GoodsService } from "../goods/goods.service";
-import { GoodsCategoryService } from "../goods-category/goods-category.service";
+import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
@@ -17,16 +14,12 @@ import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from
 @Injectable()
 export class BoothService {
   constructor(
-    private goodsService: GoodsService,
-    private goodsCategoryService: GoodsCategoryService,
-    private goodsOrderService: GoodsOrderService) {}
+    private readonly goodsOrderService: GoodsOrderService,
+    private readonly publicBoothService: PublicBoothService,
+  ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await Booth.findByPk(boothId, {
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
+    const booth = await this.publicBoothService.findOne(boothId);
 
     if(!booth) throw new EntityNotFoundException();
     else if(booth.ownerId !== accountId) throw new NoAccessException();
@@ -35,38 +28,6 @@ export class BoothService {
 
   async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
     return await create(Booth, createBoothDto, { ownerId });
-  }
-
-  async findAll(ownerId?: number): Promise<Array<Booth>> {
-    const where = ownerId ? { ownerId } : undefined;
-
-    return await Booth.findAll({
-      where,
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
-  }
-
-  async findAllGoodsOfBooth(boothId: number, callerAccountId: number): Promise<Array<Goods>> {
-    // Throws error if the booth not found or not belongs to the account
-    await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-    return await this.goodsService.findAll(boothId);
-  }
-
-  async countAllGoodsOfBooth(boothId: number, callerAccountId: number): Promise<IValueResponse> {
-    // Throws error if the booth not found or not belongs to the account
-    await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-    return await this.goodsService.countAll(boothId);
-  }
-
-  async findAllGoodsCategoryOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsCategory>> {
-    // Throws error if the booth not found or not belongs to the account
-    await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-    return await this.goodsCategoryService.findAll(boothId);
   }
 
   async findAllGoodsOrderOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsOrder>> {

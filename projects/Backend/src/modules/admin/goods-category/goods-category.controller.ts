@@ -10,7 +10,8 @@ import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
 export class GoodsCategoryController {
   constructor(
     private readonly goodsCategoryService: GoodsCategoryService,
-    private readonly publicGoodsCategoryService: PublicGoodsCategoryService) {}
+    private readonly publicGoodsCategoryService: PublicGoodsCategoryService,
+  ) {}
 
   @Post()
   create(@Body() createGoodsCategoryDto: CreateGoodsCategoryDTO) {
@@ -27,23 +28,16 @@ export class GoodsCategoryController {
     return this.goodsCategoryService.remove(+id);
   }
 
-  /* === Will be replaced with public routes === */
-  @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return await this.publicGoodsCategoryService.findOne(+id);
-  }
-  /* === === */
-
   /* SuperAdmin routes */
   @SuperAdmin()
   @Get()
   async findAll() {
-    return await this.goodsCategoryService.findAll();
+    return await this.publicGoodsCategoryService.findAll();
   }
 
   @SuperAdmin()
   @Get("count")
   async countAll() {
-    return await this.goodsCategoryService.countAll();
+    return await this.publicGoodsCategoryService.countAll();
   }
 }

@@ -28,23 +28,16 @@ export class GoodsController {
     return await this.goodsService.remove(+id, parseInt(boothId), authData.id);
   }
 
-  /* === Will be replaced with public routes === */
-  @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return await this.publicGoodsService.findOne(+id);
-  }
-  /* === === */
-
   /* SuperAdmin routes */
   @SuperAdmin()
   @Get()
   async findAll() {
-    return await this.goodsService.findAll();
+    return await this.publicGoodsService.findAll();
   }
 
   @SuperAdmin()
   @Get("count")
   async countAll() {
-    return await this.goodsService.countAll();
+    return await this.publicGoodsService.countAll();
   }
 }

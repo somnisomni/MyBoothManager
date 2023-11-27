@@ -1,19 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { ISuccessResponse, IValueResponse } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
 import { create, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
+import { PublicGoodsService } from "@/modules/public/goods/goods.service";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
 import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
 
 @Injectable()
 export class GoodsService {
-  // constructor(private boothService: BoothService) {}
+  constructor(private publicGoodsService: PublicGoodsService) { }
 
   private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
-    const goods = await Goods.findByPk(goodsId);
+    const goods = await this.publicGoodsService.findOne(goodsId);
     if(!goods) throw new EntityNotFoundException();
     if(goods.boothId !== boothId) throw new NoAccessException();
 
@@ -49,17 +50,6 @@ export class GoodsService {
     }
 
     return await create(Goods, createGoodsDto);
-  }
-
-  async findAll(boothId?: number): Promise<Array<Goods>> {
-    const where = boothId ? { boothId } : undefined;
-
-    return await Goods.findAll({
-      where,
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
   }
 
   async countAll(boothId?: number): Promise<IValueResponse> {

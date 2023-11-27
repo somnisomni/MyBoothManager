@@ -24,8 +24,11 @@ export class PublicBoothService {
     else return booth;
   }
 
-  async findAll(): Promise<Array<Booth>> {
+  async findAll(accountId?: number): Promise<Array<Booth>> {
+    const where = accountId ? { ownerId: accountId } : undefined;
+
     return await Booth.findAll({
+      where,
       attributes: {
         exclude: SEQUELIZE_INTERNAL_KEYS,
       },
