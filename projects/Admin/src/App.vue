@@ -1,8 +1,8 @@
 <template>
   <VApp class="bg-transparent">
-    <RouterView v-if="!isServerNotAvailable" />
+    <RouterView v-if="isServerAvailable" />
 
-    <ServerNotRespondErrorDialog v-model="isServerNotAvailable" />
+    <ServerNotRespondErrorDialog v-model="showServerNotRespondErrorDialog" />
   </VApp>
 </template>
 
@@ -12,10 +12,15 @@ import AdminAPI from "@/lib/api-admin";
 
 @Component({})
 export default class App extends Vue {
-  isServerNotAvailable: boolean = false;
+  isServerAvailable: boolean = false;
+  showServerNotRespondErrorDialog: boolean = false;
 
   async mounted() {
-    this.isServerNotAvailable = !(await AdminAPI.checkAPIServerAlive());
+    this.isServerAvailable = await AdminAPI.checkAPIServerAlive();
+
+    if(!this.isServerAvailable) {
+      this.showServerNotRespondErrorDialog = true;
+    }
   }
 }
 </script>
