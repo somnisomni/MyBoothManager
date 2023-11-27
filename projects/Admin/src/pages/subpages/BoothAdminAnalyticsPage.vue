@@ -1,25 +1,31 @@
 <template>
   <VContainer class="mt-4 px-0 px-sm-2 py-2 pa-md-6 d-flex flex-column">
     <div v-if="Object.keys(orderHistory).length > 0">
-      <VChipGroup v-model="currentSelectedDay" column mandatory class="justify-center px-2 mb-4">
-        <VChip class="h-auto" rounded="lg" value="all" color="primary">
-          <div class="d-flex flex-column align-center justify-center pa-1">
-            <div class="text-h5 font-weight-bold">전체 표시</div>
-            <div class="text-caption"></div>
-          </div>
-        </VChip>
-        <VChip v-for="day in orderHistoryDays.asArray()"
-               :key="day"
-               :value="day"
-               class="h-auto"
-               rounded="lg"
-               color="primary">
-          <div class="d-flex flex-column align-center justify-center pa-1">
-            <div class="text-h5 font-weight-bold">{{ day.day }}일</div>
-            <div class="text-caption">{{ day.year }}년 {{ day.month }}월</div>
-          </div>
-        </VChip>
-      </VChipGroup>
+      <VSlideGroup v-model="currentSelectedDay" class="justify-center px-2 mb-4" show-arrows center-active mandatory>
+        <VSlideGroupItem value="all" v-slot="{ isSelected, toggle }">
+          <VChip class="h-auto mx-1" rounded="lg" :color="isSelected ? 'primary' : ''" @click="toggle">
+            <div class="d-flex flex-column align-center justify-center pa-1">
+              <div class="text-h5 font-weight-bold">전체 표시</div>
+              <div class="text-caption"></div>
+            </div>
+          </VChip>
+        </VSlideGroupItem>
+
+        <VSlideGroupItem v-for="day in orderHistoryDays.asArray()"
+                         :key="day"
+                         :value="day"
+                         v-slot="{ isSelected, toggle }">
+          <VChip class="h-auto mx-1"
+                 rounded="lg"
+                 :color="isSelected ? 'primary' : ''"
+                 @click="toggle">
+            <div class="d-flex flex-column align-center justify-center pa-1">
+              <div class="text-h5 font-weight-bold">{{ day.day }}일</div>
+              <div class="text-caption">{{ day.year }}년 {{ day.month }}월</div>
+            </div>
+          </VChip>
+        </VSlideGroupItem>
+      </VSlideGroup>
 
       <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
     </div>
