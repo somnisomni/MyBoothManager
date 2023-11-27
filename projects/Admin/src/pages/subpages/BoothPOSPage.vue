@@ -15,7 +15,10 @@
     <VLayout class="pos-item-area d-flex flex-column flex-wrap mt-8 mt-md-0"
              :class="{ 'sm': !mdAndUp }"
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
-      <GoodsListView @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
+      <GoodsListView :currencySymbol="currencySymbol"
+                     :goodsList="Object.values(boothGoodsDict)"
+                     :goodsCategoryList="boothGoodsCategoryList"
+                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -38,19 +41,17 @@
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { APP_NAME, BoothStatus, type IBooth, type IGoods } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
 import { Component, Hook, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
-import GoodsListView from "@/components/goods/GoodsListView.vue";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
 
 @Component({
   components: {
-    GoodsListView,
     POSOrderDrawer,
     POSPageLeaveConfirmDialog,
   },
@@ -69,7 +70,9 @@ export default class BoothPOSPage extends Vue {
 
   get mdAndUp(): boolean { return unref(useDisplay().mdAndUp); }
   get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
+  get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
+  get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().boothGoodsCategoryList); }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {

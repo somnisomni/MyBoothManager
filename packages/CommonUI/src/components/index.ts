@@ -7,3 +7,4 @@ export { default as ServerNotRespondErrorDialog } from "./dialogs/errors/ServerN
 
 export { default as GoodsItem } from "./goods/GoodsItem.vue";
 export { default as GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";
+export { default as GoodsListView } from "./goods/GoodsListView.vue";

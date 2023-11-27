@@ -1,5 +1,5 @@
 <template>
-  <VSheet class="position-fixed d-flex flex-column pa-2">
+  <VSheet class="position-fixed d-flex flex-column pa-2" style="right: 0">
     <VBtn class="my-1" variant="outlined" icon @click.stop="shareTwitter">
       <VIcon>mdi-twitter</VIcon>
       <VTooltip activator="parent" location="bottom">X <small>(트위터)</small></VTooltip>

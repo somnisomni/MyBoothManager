@@ -1,5 +1,5 @@
 <template>
-  <div v-for="category in goodsCategoryList"
+  <div v-for="category in goodsCategoryListAdjusted"
        :key="category.id"
        class="my-4">
     <GoodsCategoryTitle class="mb-2"
@@ -23,28 +23,38 @@
 </template>
 
 <script lang="ts">
+import type { IGoods, IGoodsCategory } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
 
 @Component({
   emits: ["goodsClick", "goodsEditRequest", "goodsCategoryClick", "goodsCategoryEditRequest"],
 })
 export default class GoodsListView extends Vue {
+  @Prop({ type: Object, required: true })  goodsList!: Array<IGoods>;
+  @Prop({ type: Object, required: true })  goodsCategoryList!: Array<IGoodsCategory>;
+  @Prop({ type: Boolean, default: false }) omitEmptyGoodsCategory!: boolean;
+  @Prop({ type: String, required: true })  currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) editable!: boolean;
 
-  get currencySymbol() {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
-  }
+  get goodsCategoryListAdjusted() {
+    const checkFn = (categoryId: number) => !this.omitEmptyGoodsCategory || this.findGoodsInCategory(categoryId).length > 0;
+    const list = [];
 
-  get goodsCategoryList() {
-    const list = Object.values(useAdminStore().boothGoodsCategoryList);
-    list.push({ boothId: -1, id: -1, name: "미분류" });
+    for(const category of this.goodsCategoryList) {
+      if(checkFn(category.id)) {
+        list.push(category);
+      }
+    }
+
+    if(checkFn(-1)) {
+      list.push({ boothId: -1, id: -1, name: "미분류" });
+    }
 
     return list;
   }
 
-  get goodsList() {
-    const list = useAdminStore().boothGoodsList;
+  get goodsListAdjusted() {
+    const list = [...this.goodsList];
     for(const i in list) {
       if(!list[i].categoryId || list[i].categoryId! < 0) {
         list[i].categoryId = -1;
@@ -55,7 +65,7 @@ export default class GoodsListView extends Vue {
   }
 
   findGoodsInCategory(categoryId: number) {
-    return Object.values(this.goodsList).filter((goods) => goods.categoryId === categoryId);
+    return this.goodsListAdjusted.filter((goods) => goods.categoryId === categoryId);
   }
 
   @Emit("goodsClick") onGoodsClick(goodsId: number) { return goodsId; }

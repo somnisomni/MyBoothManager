@@ -3,6 +3,9 @@
     <GoodsManagePanel />
 
     <GoodsListView editable
+                   :currencySymbol="currencySymbol"
+                   :goodsList="goodsList"
+                   :goodsCategoryList="goodsCategoryList"
                    @goodsEditRequest="openGoodsEditDialog"
                    @goodsCategoryEditRequest="openGoodsCategoryEditDialog" />
   </VContainer>
@@ -16,15 +19,15 @@
 </template>
 
 <script lang="ts">
+import type { IGoods, IGoodsCategory } from "@myboothmanager/common";
 import { Vue, Component } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
-import GoodsListView from "@/components/goods/GoodsListView.vue";
+import { useAdminStore } from "@/stores/admin";
 
 @Component({
   components: {
-    GoodsListView,
     GoodsManagePanel,
     GoodsManageDialog,
     GoodsCategoryManageDialog,
@@ -35,6 +38,18 @@ export default class BoothAdminGoodsPage extends Vue {
   goodsCategoryEditDialogOpen = false;
   editDialogGoodsId: number | null = null;
   editDialogCategoryId: number | null = null;
+
+  get currencySymbol(): string {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get goodsList(): Array<IGoods> {
+    return Object.values(useAdminStore().boothGoodsList);
+  }
+
+  get goodsCategoryList(): Array<IGoodsCategory> {
+    return Object.values(useAdminStore().boothGoodsCategoryList);
+  }
 
   openGoodsEditDialog(goodsId: number) {
     this.editDialogGoodsId = goodsId;
