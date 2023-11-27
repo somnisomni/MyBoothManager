@@ -4,3 +4,6 @@ export { default as CommonErrorDialog } from "./dialogs/common/CommonErrorDialog
 export { default as CommonWarningDialog } from "./dialogs/common/CommonWarningDialog.vue";
 export { default as ServerDataLoadErrorDialog } from "./dialogs/errors/ServerDataLoadErrorDialog.vue";
 export { default as ServerNotRespondErrorDialog } from "./dialogs/errors/ServerNotRespondErrorDialog.vue";
+
+export { default as GoodsItem } from "./goods/GoodsItem.vue";
+export { default as GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";

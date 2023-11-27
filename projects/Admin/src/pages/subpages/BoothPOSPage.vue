@@ -15,7 +15,7 @@
     <VLayout class="pos-item-area d-flex flex-column flex-wrap mt-8 mt-md-0"
              :class="{ 'sm': !mdAndUp }"
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
-      <GoodsListView :onGoodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
+      <GoodsListView @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">

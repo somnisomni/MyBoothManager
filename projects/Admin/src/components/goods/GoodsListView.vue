@@ -6,7 +6,7 @@
                         :categoryData="category"
                         :editable="editable && category.id !== -1"
                         @click="onGoodsCategoryClick"
-                        @openEditDialog="onGoodsCategoryEdit" />
+                        @editRequest="onGoodsCategoryEditRequest" />
 
     <VRow class="ma-0 justify-start">
       <VSlideYReverseTransition group leave-absolute>
@@ -14,31 +14,27 @@
                      :key="goods.id"
                      :editable="editable"
                      :goodsData="goods"
+                     :currencySymbol="currencySymbol"
                      @click="onGoodsClick"
-                     @openEditDialog="onGoodsEdit" />
+                     @editRequest="onGoodsEditRequest" />
       </VSlideYReverseTransition>
     </VRow>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-import GoodsCategoryTitle from "./GoodsCategoryTitle.vue";
-import GoodsItem from "./GoodsItem.vue";
 
 @Component({
-  components: {
-    GoodsItem,
-    GoodsCategoryTitle,
-  },
+  emits: ["goodsClick", "goodsEditRequest", "goodsCategoryClick", "goodsCategoryEditRequest"],
 })
 export default class GoodsListView extends Vue {
   @Prop({ type: Boolean, default: false }) editable!: boolean;
-  @Prop({ type: Function }) onGoodsCategoryClick!: (categoryId: number) => void;
-  @Prop({ type: Function }) onGoodsCategoryEdit!: (categoryId: number) => void;
-  @Prop({ type: Function }) onGoodsClick!: (goodsId: number) => void;
-  @Prop({ type: Function }) onGoodsEdit!: (goodsId: number) => void;
+
+  get currencySymbol() {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
 
   get goodsCategoryList() {
     const list = Object.values(useAdminStore().boothGoodsCategoryList);
@@ -61,5 +57,10 @@ export default class GoodsListView extends Vue {
   findGoodsInCategory(categoryId: number) {
     return Object.values(this.goodsList).filter((goods) => goods.categoryId === categoryId);
   }
+
+  @Emit("goodsClick") onGoodsClick(goodsId: number) { return goodsId; }
+  @Emit("goodsEditRequest") onGoodsEditRequest(goodsId: number) { return goodsId; }
+  @Emit("goodsCategoryClick") onGoodsCategoryClick(categoryId: number) { return categoryId; }
+  @Emit("goodsCategoryEditRequest") onGoodsCategoryEditRequest(categoryId: number) { return categoryId; }
 }
 </script>

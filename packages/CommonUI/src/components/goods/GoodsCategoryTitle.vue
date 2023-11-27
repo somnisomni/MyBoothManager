@@ -20,7 +20,7 @@ import type { IGoodsCategory } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
-  emits: ["click", "openEditDialog"],
+  emits: ["click", "editRequest"],
 })
 export default class GoodsCategoryTitle extends Vue {
   @Prop({ type: Object, required: true }) categoryData!: IGoodsCategory;
@@ -30,7 +30,7 @@ export default class GoodsCategoryTitle extends Vue {
 
   @Emit("click")
   onTitleClick() {
-    if(this.editable) this.$emit("openEditDialog", this.categoryData.id);
+    if(this.editable) this.$emit("editRequest", this.categoryData.id);
     return this.categoryData.id;
   }
 }

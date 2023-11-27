@@ -3,8 +3,8 @@
     <GoodsManagePanel />
 
     <GoodsListView editable
-                   :onGoodsEdit="openGoodsEditDialog"
-                   :onGoodsCategoryEdit="openGoodsCategoryEditDialog" />
+                   @goodsEditRequest="openGoodsEditDialog"
+                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog" />
   </VContainer>
 
   <GoodsManageDialog v-model="goodsEditDialogOpen"

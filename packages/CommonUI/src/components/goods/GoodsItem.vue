@@ -30,14 +30,14 @@ import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { unref } from "vue";
-import { useAdminStore } from "@/stores/admin";
 
 @Component({
-  emits: ["click", "openEditDialog"],
+  emits: ["click", "editRequest"],
 })
 export default class GoodsItem extends Vue {
-  @Prop({ required: true }) goodsData!: IGoods;
-  @Prop({ default: true }) editable!: boolean;
+  @Prop({ type: Object, required: true }) goodsData!: IGoods;
+  @Prop({ type: String, required: true }) currencySymbol!: string;
+  @Prop({ type: Boolean, default: true }) editable!: boolean;
 
   readonly ELEVATION_NORMAL = 2;
   readonly ELEVATION_HOVER  = 6;
@@ -47,10 +47,6 @@ export default class GoodsItem extends Vue {
   readonly HEIGHT_SMALL  = 150;
 
   isHovering: boolean = false;
-
-  get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
-  }
 
   get mdAndUp(): boolean {
     return unref(useDisplay().mdAndUp);
@@ -62,7 +58,7 @@ export default class GoodsItem extends Vue {
 
   @Emit("click")
   onItemClick() {
-    if(this.editable) this.$emit("openEditDialog", this.goodsData.id);
+    if(this.editable) this.$emit("editRequest", this.goodsData.id);
     return this.goodsData.id;
   }
 }
