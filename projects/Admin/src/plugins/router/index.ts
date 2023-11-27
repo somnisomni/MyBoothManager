@@ -87,7 +87,7 @@ const router = createRouter({
                   component: BoothAdminGoodsOrdersListPage,
                 },
                 {
-                  path: ":orderId",
+                  path: ":id",
                   name: "admin-order-detail",
                   component: BoothAdminGoodsOrderDetailPage,
                 },
