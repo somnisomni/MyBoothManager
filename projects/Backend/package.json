@@ -11,7 +11,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "NODE_ENV=production yarn migrate:prod up && node dist/src/main",
     "start:prod:no-migrate": "NODE_ENV=production node dist/src/main",
-    "migrate": "ts-node -r tsconfig-paths/register scripts/db-migrator/migrate",
+    "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register scripts/db-migrator/migrate",
     "migrate:prod": "NODE_ENV=production node dist/scripts/db-migrator/migrate",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "yarn lint --fix",

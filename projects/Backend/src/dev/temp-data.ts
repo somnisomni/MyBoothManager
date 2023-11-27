@@ -1,4 +1,6 @@
-import { BoothStatus } from "@myboothmanager/common";
+/* *** This script should be replaced with Sequelize Migration - Seeding *** */
+
+import { BoothStatus, GoodsStockVisibility } from "@myboothmanager/common";
 import * as argon2 from "argon2";
 import Account from "@/db/models/account";
 import Booth, { BoothCreationAttributes } from "@/db/models/booth";
@@ -65,6 +67,7 @@ const goodsList: Array<GoodsCreationAttributes> = [
     price: 1000,
     stockInitial: 100,
     stockRemaining: 50,
+    stockVisibility: GoodsStockVisibility.SHOW_ALL,
   },
   {
     boothId: -1,
@@ -73,6 +76,7 @@ const goodsList: Array<GoodsCreationAttributes> = [
     price: 15000,
     stockInitial: 30,
     stockRemaining: 20,
+    stockVisibility: GoodsStockVisibility.HIDE_ALL,
   },
   {
     boothId: -1,
@@ -81,6 +85,7 @@ const goodsList: Array<GoodsCreationAttributes> = [
     price: 8000,
     stockInitial: 20,
     stockRemaining: 10,
+    stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
   },
   {
     boothId: -1,
@@ -89,6 +94,7 @@ const goodsList: Array<GoodsCreationAttributes> = [
     price: 333333,
     stockInitial: 5,
     stockRemaining: 3,
+    stockVisibility: GoodsStockVisibility.SHOW_ALL,
   },
 ];
 

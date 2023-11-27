@@ -82,7 +82,7 @@ export const up: Migration = async ({ context }) => {
       defaultValue: "₩",
     },
     status: {
-      type: DataTypes.ENUM(...Object.values(BoothStatus)),
+      type: DataTypes.ENUM("open", "pause", "close", "prepare"),
       allowNull: false,
       defaultValue: BoothStatus.PREPARE,
     },
@@ -183,7 +183,7 @@ export const up: Migration = async ({ context }) => {
       defaultValue: null,
     },
     status: {
-      type: DataTypes.ENUM(...Object.values(GoodsStatus)),
+      type: DataTypes.ENUM("on_sale", "pause", "sold_out"),
       allowNull: false,
       defaultValue: GoodsStatus.ON_SALE,
     },
