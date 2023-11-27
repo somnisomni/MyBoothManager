@@ -41,20 +41,16 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<CT.IBoothResponse>>(this.API.GET, "booth");
   }
 
-  static async fetchAllGoods(): Promise<Array<CT.IGoodsResponse> | CT.ErrorCodes> {
-    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(this.API.GET, "goods");
-  }
-
   static async fetchAllGoodsOfBooth(boothId: number): Promise<Array<CT.IGoodsResponse> | CT.ErrorCodes> {
-    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(this.API.GET, `booth/${boothId}/goods`);
+    return await this.API.fetchAllGoodsOfBooth(boothId);
   }
 
   static async countAllGoodsOfBooth(boothId: number): Promise<CT.IValueResponse | CT.ErrorCodes> {
-    return await this.apiCallWrapper<CT.IValueResponse>(this.API.GET, `booth/${boothId}/goods/count`);
+    return await this.API.fetchCountAllGoodsOfBooth(boothId);
   }
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number): Promise<Array<CT.IGoodsCategoryResponse> | CT.ErrorCodes> {
-    return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(this.API.GET, `booth/${boothId}/goods/category`);
+    return await this.API.fetchAllGoodsCategoryOfBooth(boothId);
   }
 
   static async fetchAllGoodsOrdersOfBooth(boothId: number): Promise<Array<CT.IGoodsOrderResponse> | CT.ErrorCodes> {
