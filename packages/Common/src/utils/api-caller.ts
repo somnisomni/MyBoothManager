@@ -1,4 +1,4 @@
-import type { IBoothResponse, IGoodsCategoryResponse, IGoodsResponse, IValueResponse } from "..";
+import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsResponse, IValueResponse } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -12,7 +12,7 @@ export default class APICaller {
   constructor(private readonly apiHost: string, private readonly apiGroup: string = "", private readonly getAuthorizationToken: (() => string) | null | undefined = null, private readonly teapotPath: string = "teapot") {}
 
   /* Basic fetch function */
-  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T> {
+  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
     const url: string = `${this.apiHost}${this.apiGroup.length > 0 ? `/${this.apiGroup}` : ""}/${path}`;
 
     const response = await fetch(url, {
@@ -52,41 +52,50 @@ export default class APICaller {
   }
 
   // Booth
-  public async fetchAllBooths(): Promise<Array<IBoothResponse>> {
+  public async fetchAllBooths() {
     return await this.createPublicAPI().GET<Array<IBoothResponse>>("booth");
   }
 
-  public async fetchCountAllBooths(): Promise<number> {
-    return +((await this.createPublicAPI().GET<IValueResponse>("booth/count")).value);
+  public async fetchCountAllBooths() {
+    const response = await this.createPublicAPI().GET<IValueResponse>("booth/count");
+
+    if("value" in response) return +response.value;
+    else return response;
   }
 
-  public async fetchSingleBooth(boothId: number): Promise<IBoothResponse> {
+  public async fetchSingleBooth(boothId: number) {
     return await this.createPublicAPI().GET<IBoothResponse>(`booth/${boothId}`);
   }
 
-  public async fetchAllGoodsOfBooth(boothId: number): Promise<Array<IGoodsResponse>> {
+  public async fetchAllGoodsOfBooth(boothId: number) {
     return await this.createPublicAPI().GET<Array<IGoodsResponse>>(`booth/${boothId}/goods`);
   }
 
-  public async fetchCountAllGoodsOfBooth(boothId: number): Promise<number> {
-    return +((await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/count`)).value);
+  public async fetchCountAllGoodsOfBooth(boothId: number) {
+    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/count`);
+
+    if("value" in response) return +response.value;
+    else return response;
   }
 
-  public async fetchAllGoodsCategoryOfBooth(boothId: number): Promise<Array<IGoodsCategoryResponse>> {
+  public async fetchAllGoodsCategoryOfBooth(boothId: number) {
     return await this.createPublicAPI().GET<Array<IGoodsCategoryResponse>>(`booth/${boothId}/goods/category`);
   }
 
-  public async fetchCountAllGoodsCategoryOfBooth(boothId: number): Promise<number> {
-    return +((await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/category/count`)).value);
+  public async fetchCountAllGoodsCategoryOfBooth(boothId: number) {
+    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/category/count`);
+
+    if("value" in response) return +response.value;
+    else return response;
   }
 
   // Goods
-  public async fetchSingleGoods(goodsId: number): Promise<IGoodsResponse> {
+  public async fetchSingleGoods(goodsId: number) {
     return await this.createPublicAPI().GET<IGoodsResponse>(`goods/${goodsId}`);
   }
 
   // Goods category
-  public async fetchSingleGoodsCategory(goodsCategoryId: number): Promise<IGoodsCategoryResponse> {
+  public async fetchSingleGoodsCategory(goodsCategoryId: number) {
     return await this.createPublicAPI().GET<IGoodsCategoryResponse>(`goods/category/${goodsCategoryId}`);
   }
 }
