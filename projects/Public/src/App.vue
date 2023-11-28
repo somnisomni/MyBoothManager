@@ -8,14 +8,14 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import PublicAPI from "@/lib/api";
+import { usePublicStore } from "./stores/public";
 
 @Component({})
 export default class App extends Vue {
   isServerNotAvailable: boolean = false;
 
   async mounted() {
-    this.isServerNotAvailable = !(await PublicAPI.checkAPIServerAlive());
+    this.isServerNotAvailable = !(await usePublicStore().apiCaller.checkAPIServerAlive());
   }
 }
 </script>
