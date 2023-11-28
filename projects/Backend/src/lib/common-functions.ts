@@ -6,15 +6,14 @@ import { BaseError, Model, ModelDefined, WhereOptions } from "sequelize";
 import { EntityNotFoundException } from "./exceptions";
 
 export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
+  let target = null;
+
   try {
-    const target = await (model as unknown as ModelDefined<any, any>).findByPk(pk, {
+    target = await (model as unknown as ModelDefined<any, any>).findByPk(pk, {
       attributes: {
         exclude: excludeSequelizeInternalKeys ? SEQUELIZE_INTERNAL_KEYS : [],
       },
     });
-
-    if(!target) throw new EntityNotFoundException();
-    else return target as unknown as T;
   } catch(error) {
     console.error(error);
 
@@ -26,6 +25,9 @@ export async function findOneByPk<T extends Model<any, any>>(model: { new (): T 
       throw new BadRequestException();
     }
   }
+
+  if(!target) throw new EntityNotFoundException();
+  else return target as unknown as T;
 }
 
 export async function create<T extends Model<any, any>>(model: { new (): T }, dto: object, additionalParams?: Record<string, unknown>): Promise<T> {
