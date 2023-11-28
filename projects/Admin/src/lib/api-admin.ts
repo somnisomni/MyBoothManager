@@ -5,7 +5,7 @@ export default class AdminAPI {
   private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthStore().authTokenData!.accessToken);
 
   /* Admin FE specific API call wrapper */
-  private static async apiCallWrapper<T>(callee: () => Promise<T>): Promise<T | CT.ErrorCodes> {
+  private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IBackendErrorResponse>): Promise<T | CT.ErrorCodes> {
     try {
       const response = await callee() as T | CT.IBackendErrorResponse;
 
@@ -43,15 +43,15 @@ export default class AdminAPI {
   }
 
   static async fetchAllGoodsOfBooth(boothId: number) {
-    return await this.API.fetchAllGoodsOfBooth(boothId);
+    return await this.apiCallWrapper(() => this.API.fetchAllGoodsOfBooth(boothId));
   }
 
   static async countAllGoodsOfBooth(boothId: number) {
-    return await this.API.fetchCountAllGoodsOfBooth(boothId);
+    return await this.apiCallWrapper(() => this.API.fetchCountAllGoodsOfBooth(boothId));
   }
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number) {
-    return await this.API.fetchAllGoodsCategoryOfBooth(boothId);
+    return await this.apiCallWrapper(() => this.API.fetchAllGoodsCategoryOfBooth(boothId));
   }
 
   static async fetchAllGoodsOrdersOfBooth(boothId: number) {
