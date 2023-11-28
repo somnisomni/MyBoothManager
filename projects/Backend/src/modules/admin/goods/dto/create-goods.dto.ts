@@ -1,12 +1,12 @@
 import { IGoodsCreateRequest } from "@myboothmanager/common";
 
 export class CreateGoodsDTO implements IGoodsCreateRequest {
-  boothId!: number;
-  categoryId?: number;
-  name!: string;
-  description?: string;
-  type?: string;
-  price!: number;
-  stockInitial!: number;
-  stockRemaining: number = -1;
+  declare boothId: number;
+  declare categoryId?: number;
+  declare name: string;
+  declare description?: string;
+  declare type?: string;
+  declare price: number;
+  declare stockInitial: number;
+  declare stockRemaining: number;
 }

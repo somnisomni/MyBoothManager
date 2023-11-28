@@ -41,7 +41,7 @@ export class GoodsService {
       throw new GoodsParentBoothNotFoundException();
     }
 
-    if(createGoodsDto.stockRemaining === undefined) {
+    if(createGoodsDto.stockRemaining === undefined || createGoodsDto.stockRemaining < 0) {
       createGoodsDto.stockRemaining = createGoodsDto.stockInitial;
     }
 
