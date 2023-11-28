@@ -24,6 +24,11 @@
                   placeholder="예시) 블루아카이브"
                   :rules="stringValidator(formData.name)" />
     </VForm>
+
+    <VAlert v-if="typeof updateErrorCode === 'number'" type="error">
+      <span v-if="updateErrorCode === ErrorCodes.ENTITY_DUPLICATED">같은 이름의 카테고리가 이미 존재합니다.</span>
+      <span v-else>오류가 발생했습니다. ({{ updateErrorCode }})</span>
+    </VAlert>
   </CommonDialog>
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -33,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import type { ErrorCodes, IGoodsCategoryCreateRequest, IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
+import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
@@ -48,6 +53,8 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
   emits: ["error", "updated", "deleted"],
 })
 export default class GoodsCategoryManageDialog extends Vue {
+  readonly ErrorCodes = ErrorCodes;
+
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
   @Prop({ type: Number, default: null }) categoryId!: number | null;
@@ -60,6 +67,7 @@ export default class GoodsCategoryManageDialog extends Vue {
   updateInProgress = false;
   formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBoothId });
   formValid = false;
+  updateErrorCode: ErrorCodes | null = null;
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
 
@@ -101,6 +109,11 @@ export default class GoodsCategoryManageDialog extends Vue {
   mounted() { this.resetForm(); }
   @Watch("open", { immediate: true }) onDialogOpen() { this.resetForm(); }
 
+  @Watch("formData", { deep: true })
+  onFormDataUpdated() {
+    this.updateErrorCode = null;
+  }
+
   resetForm(): void {
     if(this.categoryId && this.editMode) {
       const goodsData = useAdminStore().boothGoodsCategoryList[Number(this.categoryId)];
@@ -129,7 +142,6 @@ export default class GoodsCategoryManageDialog extends Vue {
 
   async onDialogConfirm() {
     let success = false;
-    let errorMsg = "";
 
     this.updateInProgress = true;
 
@@ -145,7 +157,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       if(typeof result === "object" && "id" in result) {
         success = true;
       } else {
-        errorMsg = `오류 (${result})`;
+        this.updateErrorCode = result;
       }
     } else {
       const requestData: IGoodsCategoryCreateRequest = {
@@ -158,7 +170,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       if(typeof result === "object" && "id" in result) {
         success = true;
       } else {
-        errorMsg = `오류 (${result})`;
+        this.updateErrorCode = result;
       }
     }
 
@@ -169,9 +181,6 @@ export default class GoodsCategoryManageDialog extends Vue {
       this.open = false;
     } else {
       this.$emit("error");
-
-      // TODO: error dialog
-      alert(errorMsg);
     }
   }
 
