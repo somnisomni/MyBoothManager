@@ -36,6 +36,12 @@ export class EntityNotFoundException extends BaseHttpException {
   }
 }
 
+export class DuplicatedEntityException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.ENTITY_DUPLICATED, HttpStatus.CONFLICT);
+  }
+}
+
 export class NoAccessException extends BaseHttpException {
   constructor() {
     super(ErrorCodes.NO_ACCESS, HttpStatus.FORBIDDEN);

@@ -10,6 +10,7 @@ export enum ErrorCodes {
   INVALID_REQUEST_QUERY = 5,
   INVALID_HTTP_METHOD   = 6,
   NO_ACCESS             = 7,
+  ENTITY_DUPLICATED     = 8,
 
   // 1XXX: Authentication/Account errors
   UNKNOWN_AUTH_ERROR      = 1000,

@@ -4,7 +4,7 @@ import GoodsCategory from "@/db/models/goods-category";
 import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
-import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
+import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
@@ -32,7 +32,18 @@ export class GoodsCategoryService {
   }
 
   async create(createGoodsCategoryDto: CreateGoodsCategoryDTO): Promise<GoodsCategory> {
-    return await create(GoodsCategory, createGoodsCategoryDto);
+    const existence = await GoodsCategory.findOne({
+      where: {
+        boothId: createGoodsCategoryDto.boothId,
+        name: createGoodsCategoryDto.name,
+      },
+    });
+
+    if(!existence) {
+      return await create(GoodsCategory, createGoodsCategoryDto);
+    } else {
+      throw new DuplicatedEntityException();
+    }
   }
 
   async updateInfo(id: number, updateGoodsCategoryDTO: UpdateGoodsCategoryDTO, callerAccountId: number) {
