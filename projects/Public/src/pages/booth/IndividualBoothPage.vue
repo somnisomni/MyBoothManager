@@ -1,16 +1,14 @@
 <template>
   <VMain>
-    <SharePanel v-if="!dataFetchError" :boothData="boothData" />
-
-    <h6 class="position-fixed text-h6 ma-2 text-grey text-center" style="right: 0; bottom: 0; opacity: 0.5">Work in progress!</h6>
+    <SharePanel v-if="!fetchError" :boothData="boothData" />
 
     <VSlideYReverseTransition leave-absolute>
-      <div v-if="isDataFetched && dataFetchError" class="position-fixed d-flex align-center justify-center w-100 h-100 pa-2 text-center">
+      <div v-if="isDataFetched && fetchError" class="position-fixed d-flex align-center justify-center w-100 h-100 pa-2 text-center">
         <h4 class="text-h4 text-center text-error">
           <VIcon class="mr-2">mdi-alert</VIcon>
 
-          <span v-if="dataFetchError === ErrorCodes.ENTITY_NOT_FOUND">존재하지 않는 부스입니다.</span>
-          <span v-else>데이터를 불러오는 중 오류 발생 ({{ dataFetchError }})</span>
+          <span v-if="fetchError === ErrorCodes.ENTITY_NOT_FOUND">존재하지 않는 부스입니다.</span>
+          <span v-else>데이터를 불러오는 중 오류 발생 ({{ fetchError }})</span>
         </h4>
       </div>
 
@@ -21,8 +19,8 @@
     </VSlideYReverseTransition>
 
     <VSlideYReverseTransition leave-absolute>
-      <VContainer v-if="isDataFetched && !dataFetchError">
-        <h4 class="text-h4 text-left">부스 정보</h4>
+      <VContainer v-if="isDataFetched && !fetchError">
+        <h4 class="text-h4 text-left font-weight-medium">부스 정보</h4>
         <VDivider class="my-2" />
         <div>이름: {{ boothData?.name }}</div>
         <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
@@ -31,13 +29,15 @@
 
         <VSpacer class="my-8" />
 
-        <h4 class="text-h4 text-left">굿즈 목록</h4>
+        <h4 class="text-h4 text-left font-weight-medium">굿즈 목록</h4>
         <VDivider class="my-2" />
-        <GoodsListView :currencySymbol="boothData?.currencySymbol"
-                      :goodsList="boothGoodsList"
-                      :goodsCategoryList="boothCategoryList"
-                      :editable="false"
-                      omitEmptyGoodsCategory />
+        <GoodsListView v-if="boothGoodsList.length > 0"
+                       :currencySymbol="boothData?.currencySymbol"
+                       :goodsList="boothGoodsList"
+                       :goodsCategoryList="boothCategoryList"
+                       :editable="false"
+                       omitEmptyGoodsCategory />
+        <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
       </VContainer>
     </VSlideYReverseTransition>
   </VMain>
@@ -59,7 +59,7 @@ export default class IndividualBoothPage extends Vue {
   readonly ErrorCodes = ErrorCodes;
 
   isDataFetched: boolean = false;
-  dataFetchError: ErrorCodes | null = null;
+  fetchError: ErrorCodes | null = null;
 
   boothData: IBooth | null = null;
   boothGoodsList: Array<IGoods> = [];
@@ -79,7 +79,7 @@ export default class IndividualBoothPage extends Vue {
     const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
 
     if("errorCode" in boothDataResponse) {
-      this.dataFetchError = boothDataResponse.errorCode;
+      this.fetchError = boothDataResponse.errorCode;
       return;
     } else {
       this.boothData = boothDataResponse;
