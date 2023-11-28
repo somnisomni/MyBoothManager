@@ -161,12 +161,12 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function createGoodsCategory(payload: IGoodsCategoryCreateRequest): Promise<boolean | ErrorCodes> {
+  async function createGoodsCategory(payload: IGoodsCategoryCreateRequest): Promise<{ id: number } | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.createGoodsCategory(payload));
 
     if(response && response instanceof Object) {
       boothGoodsCategoryList[response.id] = response;
-      return true;
+      return { id: response.id };
     } else {
       return response;
     }
@@ -197,7 +197,7 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function updateGoodsCategoryInfo(categoryId: number, payload: IGoodsCategoryUpdateRequest): Promise<boolean | ErrorCodes> {
+  async function updateGoodsCategoryInfo(categoryId: number, payload: IGoodsCategoryUpdateRequest): Promise<{ id: number } | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.updateGoodsCategoryInfo(categoryId, payload));
 
     if(response && response instanceof Object) {
@@ -205,7 +205,7 @@ const useAdminStore = defineStore("admin", () => {
         ...boothGoodsCategoryList[categoryId],
         ...response,
       };
-      return true;
+      return { id: response.id };
     } else {
       return response;
     }

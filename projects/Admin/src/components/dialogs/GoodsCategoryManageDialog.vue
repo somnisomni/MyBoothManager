@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsCategoryCreateRequest, IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
+import type { ErrorCodes, IGoodsCategoryCreateRequest, IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
@@ -133,15 +133,16 @@ export default class GoodsCategoryManageDialog extends Vue {
 
     this.updateInProgress = true;
 
+    let result: { id: number } | ErrorCodes;
     if(this.editMode) {
       const requestData: IGoodsCategoryUpdateRequest = {
         ...this.formData as IGoodsCategoryUpdateRequest,
         boothId: useAdminStore().currentBoothId,
         name: this.formData.name?.trim(),
       };
-      const result = await useAdminStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
+      result = await useAdminStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
 
-      if(result === true) {
+      if(typeof result === "object" && "id" in result) {
         success = true;
       } else {
         errorMsg = `오류 (${result})`;
@@ -152,9 +153,9 @@ export default class GoodsCategoryManageDialog extends Vue {
         boothId: useAdminStore().currentBoothId,
         name: this.formData.name!.trim(),
       };
-      const result = await useAdminStore().createGoodsCategory(requestData);
+      result = await useAdminStore().createGoodsCategory(requestData);
 
-      if(result === true) {
+      if(typeof result === "object" && "id" in result) {
         success = true;
       } else {
         errorMsg = `오류 (${result})`;
@@ -163,8 +164,8 @@ export default class GoodsCategoryManageDialog extends Vue {
 
     this.updateInProgress = false;
 
-    if(success) {
-      this.$emit("updated");
+    if(success && typeof result === "object" && "id" in result) {
+      this.$emit("updated", result.id);
       this.open = false;
     } else {
       this.$emit("error");

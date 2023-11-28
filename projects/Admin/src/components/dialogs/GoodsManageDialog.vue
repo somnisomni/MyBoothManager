@@ -82,7 +82,8 @@
       </VRow>
     </VForm>
 
-    <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown" />
+    <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown"
+                               @updated="onGoodsCategoryUpdated" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                                @primary="() => { open = false; }" />
   </CommonDialog>
@@ -216,6 +217,10 @@ export default class GoodsManageDialog extends Vue {
     ];
 
     return rules;
+  }
+
+  onGoodsCategoryUpdated(categoryId: number) {
+    this.formData.categoryId = categoryId;
   }
 
   onDialogCancel() {
