@@ -11,7 +11,7 @@
                 @cancel="onDialogCancel"
                 @primary="onDialogConfirm"
                 @secondary="resetForm"
-                @leftbutton="onDialogDeleteClick"
+                @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
@@ -86,21 +86,25 @@
                                @updated="onGoodsCategoryUpdated" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                                @primary="() => { open = false; }" />
+    <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
+                               @primary="onDeleteConfirm" />
   </CommonDialog>
 </template>
 
 <script lang="ts">
-import type { IGoodsCreateRequest, IGoodsUpdateRequest } from "@myboothmanager/common";
+import type { IBooth, IGoodsCreateRequest, IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { reactive } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
+import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
     GoodsCategoryManageDialog,
     FormDataLossWarningDialog,
+    ItemDeleteWarningDialog,
   },
 })
 export default class GoodsManageDialog extends Vue {
@@ -109,7 +113,7 @@ export default class GoodsManageDialog extends Vue {
   @Prop({ type: Number, default: null }) goodsId!: number | string | null;
 
   readonly GOODS_ADD_DEFAULT_DATA: Partial<IGoodsCreateRequest> = {
-    boothId: useAdminStore().currentBoothId,
+    boothId: this.currentBooth.id,
     name: "",
     description: "",
     type: "",
@@ -124,6 +128,7 @@ export default class GoodsManageDialog extends Vue {
   formValid = false;
   goodsCategoryManageDialogShown = false;
   cancelWarningDialogShown = false;
+  deleteWarningDialogShown = false;
 
   get dynString(): Record<string, string | null> {
     return {
@@ -134,8 +139,12 @@ export default class GoodsManageDialog extends Vue {
     };
   }
 
+  get currentBooth(): IBooth {
+    return useAdminStore().boothList[useAdminStore().currentBoothId];
+  }
+
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return this.currentBooth.currencySymbol;
   }
 
   get allCategoryData() {
@@ -150,12 +159,15 @@ export default class GoodsManageDialog extends Vue {
 
     if(this.goodsId && this.editMode) {
       const currentGoodsData = useAdminStore().boothGoodsList[Number(this.goodsId!)];
-      const formDataTyped = this.formData as IGoodsUpdateRequest;
 
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IGoodsUpdateRequest;
-        return formDataTyped[k] !== currentGoodsData[k];
-      });
+      if(currentGoodsData) {
+        const formDataTyped = this.formData as IGoodsUpdateRequest;
+
+        edited = Object.keys(this.formData).some((key) => {
+          const k = key as keyof IGoodsUpdateRequest;
+          return formDataTyped[k] !== currentGoodsData[k];
+        });
+      }
     } else {
       const formDataTyped = this.formData as IGoodsCreateRequest;
 
@@ -176,13 +188,13 @@ export default class GoodsManageDialog extends Vue {
       const goodsData = useAdminStore().boothGoodsList[Number(this.goodsId)];
 
       this.formData = reactive({
-        name: goodsData.name,
-        description: goodsData.description,
-        type: goodsData.type,
-        price: goodsData.price,
-        categoryId: goodsData.categoryId,
-        stockInitial: goodsData.stockInitial,
-        stockRemaining: goodsData.stockRemaining,
+        name: goodsData?.name,
+        description: goodsData?.description,
+        type: goodsData?.type,
+        price: goodsData?.price,
+        categoryId: goodsData?.categoryId,
+        stockInitial: goodsData?.stockInitial,
+        stockRemaining: goodsData?.stockRemaining,
       } as IGoodsUpdateRequest);
     } else {
       this.formData = reactive({
@@ -281,8 +293,19 @@ export default class GoodsManageDialog extends Vue {
     }
   }
 
-  onDialogDeleteClick() {
-    alert("기능 추가 예정");
+  async onDeleteConfirm() {
+    this.updateInProgress = true;
+
+    if(this.goodsId) {
+      const response = await useAdminStore().deleteGoods(Number(this.goodsId), this.currentBooth.id);
+
+      if(typeof response === "boolean" && response === true) {
+        this.$emit("deleted");
+        this.open = false;
+      }
+    }
+
+    this.updateInProgress = false;
   }
 }
 </script>

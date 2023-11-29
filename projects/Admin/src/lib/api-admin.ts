@@ -99,6 +99,10 @@ export default class AdminAPI {
   }
 
   /* Delete */
+  static async deleteGoods(goodsId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}?bId=${boothId}`));
+  }
+
   static async deleteGoodsCategory(categoryId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/category/${categoryId}`));
   }

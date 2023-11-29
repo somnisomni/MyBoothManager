@@ -239,6 +239,19 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteGoods(goodsId: number, boothId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, boothId));
+
+    if(response && response instanceof Object) {
+      // Force fetch goods
+      const result = await fetchGoodsOfCurrentBooth(true);
+
+      return result;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoodsCategory(categoryId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoodsCategory(categoryId));
 
@@ -309,6 +322,7 @@ const useAdminStore = defineStore("admin", () => {
     createGoods,
     createGoodsCategory,
     createGoodsOrder,
+    deleteGoods,
     deleteGoodsCategory,
     clearAllBoothData,
     fetchAllBoothData,
