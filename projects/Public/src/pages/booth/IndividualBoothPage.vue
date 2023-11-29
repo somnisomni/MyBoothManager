@@ -19,26 +19,23 @@
     </VSlideYReverseTransition>
 
     <VSlideYReverseTransition leave-absolute>
-      <VContainer v-if="isDataFetched && !fetchError">
-        <h4 class="text-h4 text-left font-weight-medium">부스 정보</h4>
-        <VDivider class="my-2" />
-        <div>이름: {{ boothData?.name }}</div>
-        <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
-        <div>위치: {{ boothData?.location }}</div>
-        <div>현재 운영 상태: {{ boothData?.status }}</div>
+      <div v-if="isDataFetched && !fetchError">
+        <BoothInfoSection :boothData="boothData" />
 
-        <VSpacer class="my-8" />
+        <VContainer>
+          <VSpacer class="my-8" />
 
-        <h4 class="text-h4 text-left font-weight-medium">굿즈 목록</h4>
-        <VDivider class="my-2" />
-        <GoodsListView v-if="boothGoodsList.length > 0"
-                       :currencySymbol="boothData?.currencySymbol"
-                       :goodsList="boothGoodsList"
-                       :goodsCategoryList="boothCategoryList"
-                       :editable="false"
-                       omitEmptyGoodsCategory />
-        <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
-      </VContainer>
+          <h4 class="text-h4 text-left font-weight-medium">굿즈 목록</h4>
+          <VDivider class="my-2" />
+          <GoodsListView v-if="boothGoodsList.length > 0"
+                        :currencySymbol="boothData?.currencySymbol"
+                        :goodsList="boothGoodsList"
+                        :goodsCategoryList="boothCategoryList"
+                        :editable="false"
+                        omitEmptyGoodsCategory />
+          <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
+        </VContainer>
+      </div>
     </VSlideYReverseTransition>
   </VMain>
 </template>
@@ -49,9 +46,11 @@ import { useRoute } from "vue-router";
 import { ErrorCodes, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
+import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 
 @Component({
   components: {
+    BoothInfoSection,
     SharePanel,
   },
 })
