@@ -1,24 +1,34 @@
 <template>
-  <VSheet class="booth-info-section">
-    <VParallax class="booth-image" :src="'https://picsum.photos/seed/' + boothData.id + '/800/400'">
-      <div class="booth-image-overlay"></div>
+  <section>
+    <!-- Booth image & info area -->
+    <VSheet class="booth-info-section">
+      <VParallax class="booth-image" :src="'https://picsum.photos/seed/' + boothData.id + '/800/400'">
+        <div class="booth-image-overlay"></div>
 
-      <VLayout class="booth-info-content w-100 h-100 d-flex flex-column justify-end pa-2">
-        <h3>이름: {{ boothData?.name }}</h3>
-        <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
-        <div>위치: {{ boothData?.location }}</div>
-        <div>현재 운영 상태: {{ boothData?.status }}</div>
-      </VLayout>
-    </VParallax>
-  </VSheet>
+        <VLayout class="booth-info-content w-100 h-100 d-flex flex-column justify-end pa-2">
+          <h3>이름: {{ boothData?.name }}</h3>
+          <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
+          <div>위치: {{ boothData?.location }}</div>
+        </VLayout>
+      </VParallax>
+    </VSheet>
+
+    <!-- Booth open status area -->
+    <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="success">정상 운영 중!</VSheet>
+    <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="error"  >운영을 종료한 부스입니다.</VSheet>
+    <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="warning">운영이 일시 중지되었습니다. <span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
+    <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="info"   >준비 중인 부스입니다.</VSheet>
+  </section>
 </template>
 
 <script lang="ts">
-import type { IBooth } from "@myboothmanager/common";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class BoothInfoSection extends Vue {
+  readonly BoothStatus = BoothStatus;
+
   @Prop({ type: Object, required: true }) boothData!: IBooth;
 }
 </script>
@@ -56,5 +66,11 @@ export default class BoothInfoSection extends Vue {
     color: white;
     z-index: 1;
   }
+}
+
+.booth-status-section {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
 }
 </style>
