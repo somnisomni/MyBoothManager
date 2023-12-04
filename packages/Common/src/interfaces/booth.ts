@@ -41,7 +41,7 @@ export type BoothCreateRequestKey = "name" | "description" | "location" | "curre
 export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
 
 export type BoothUpdateRequestKey = "name" | "description" | "location" | "currencySymbol" | "members" | "expenses" | "dateOpen" | "dateClose";
-export type IBoothUpdateReuqest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
+export type IBoothUpdateRequest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
 
 export type BoothStatusUpdateRequestKey = "status" | "statusReason" | "statusPublishContent";
 export type IBoothStatusUpdateRequest = Partial<Pick<IBooth, BoothStatusUpdateRequestKey>>;

@@ -59,7 +59,7 @@ export default class AdminAPI {
   }
 
   /* Update */
-  static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateReuqest) {
+  static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateRequest) {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.PATCH(`booth/${boothId}`, payload));
   }
 
