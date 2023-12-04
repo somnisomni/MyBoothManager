@@ -20,7 +20,7 @@ describe("DB Config", () => {
   it("should throw error when process.env values are missing", () => {
     process.env = {};
 
-    expect(() => generateConfig()).toThrowError(Error);
+    expect(() => generateConfig()).toThrow(Error);
   });
 
   it("should return a valid config with process.env values", () => {

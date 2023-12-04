@@ -6,16 +6,16 @@
 
 import { DataTypes } from "sequelize";
 import { BoothStatus, GoodsStatus } from "@myboothmanager/common";
-import { accountModelName } from "@/db/models/account";
-import { boothModelName } from "@/db/models/booth";
-import { goodsOrderModelName } from "@/db/models/goods-order";
-import { goodsCategoryModelName } from "@/db/models/goods-category";
-import { goodsModelName } from "@/db/models/goods";
+import Account from "@/db/models/account";
+import Booth from "@/db/models/booth";
+import GoodsOrder from "@/db/models/goods-order";
+import GoodsCategory from "@/db/models/goods-category";
+import Goods from "@/db/models/goods";
 import { Migration } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
   /* == Model table creation == */
-  const account = context.createTable(accountModelName, {
+  const account = context.createTable(Account.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       unique: true,
@@ -47,7 +47,7 @@ export const up: Migration = async ({ context }) => {
       defaultValue: DataTypes.NOW,
     },
   });
-  const booth = context.createTable(boothModelName, {
+  const booth = context.createTable(Booth.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       unique: true,
@@ -59,7 +59,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: accountModelName,
+        model: Account.name,
         key: "id",
       },
     },
@@ -97,7 +97,7 @@ export const up: Migration = async ({ context }) => {
       defaultValue: false,
     },
   });
-  const goodsCategory = context.createTable(goodsCategoryModelName, {
+  const goodsCategory = context.createTable(GoodsCategory.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       unique: true,
@@ -109,7 +109,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: boothModelName,
+        model: Booth.name,
         key: "id",
       },
     },
@@ -118,7 +118,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: false,
     },
   });
-  const goodsOrder = context.createTable(goodsOrderModelName, {
+  const goodsOrder = context.createTable(GoodsOrder.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       unique: true,
@@ -130,7 +130,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: boothModelName,
+        model: Booth.name,
         key: "id",
       },
     },
@@ -143,7 +143,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: false,
     },
   });
-  const goods = context.createTable(goodsModelName, {
+  const goods = context.createTable(Goods.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       unique: true,
@@ -155,7 +155,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
-        model: boothModelName,
+        model: Booth.name,
         key: "id",
       },
     },
@@ -164,7 +164,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: true,
       defaultValue: null,
       references: {
-        model: goodsCategoryModelName,
+        model: GoodsCategory.name,
         key: "id",
       },
     },
@@ -216,11 +216,11 @@ export const up: Migration = async ({ context }) => {
 };
 
 export const down: Migration = async ({ context }) => {
-  const account = context.dropTable(accountModelName);
-  const booth = context.dropTable(boothModelName);
-  const goodsCategory = context.dropTable(goodsCategoryModelName);
-  const goodsOrder = context.dropTable(goodsOrderModelName);
-  const goods = context.dropTable(goodsModelName);
+  const account = context.dropTable(Account.name);
+  const booth = context.dropTable(Booth.name);
+  const goodsCategory = context.dropTable(GoodsCategory.name);
+  const goodsOrder = context.dropTable(GoodsOrder.name);
+  const goods = context.dropTable(Goods.name);
 
   return Promise.all([account, booth, goodsCategory, goodsOrder, goods]);
 };

@@ -30,6 +30,11 @@ module.exports = {
       CallExpression: { arguments: "first" },
       ArrayExpression: 1,
       ObjectExpression: 1,
+      ignoredNodes: [
+        "FunctionExpression > .params[decorators.length > 0]",
+        "FunctionExpression > .params > :matches(Decorator, :not(:first-child))",
+        "ClassBody.body > PropertyDefinition[decorators.length > 0] > .key",
+      ],
     }],
     "quotes": [ "error", "double" ],
     "semi": [ "error", "always" ],
