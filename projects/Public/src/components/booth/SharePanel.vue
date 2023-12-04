@@ -64,7 +64,7 @@ export default class SharePanel extends Vue {
 
 <style lang="scss" scoped>
 .share-button {
-  background-color: rgba(var(--v-theme-background), 0.5);
+  background-color: rgba(var(--v-theme-background), 0.66);
 
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
