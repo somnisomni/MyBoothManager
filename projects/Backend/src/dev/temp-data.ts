@@ -15,6 +15,8 @@ const boothList: Array<BoothCreationAttributes> = [
     location: "Somewhere",
     currencySymbol: "₩",
     status: BoothStatus.OPEN,
+    dateOpen: new Date("2022-12-30"),
+    dateClose: new Date("2023-01-01"),
   },
   {
     ownerId: 1,
@@ -24,6 +26,8 @@ const boothList: Array<BoothCreationAttributes> = [
     currencySymbol: "$",
     status: BoothStatus.PAUSE,
     statusReason: "Lunch time ;)",
+    dateOpen: new Date("2023-01-04"),
+    dateClose: new Date("2023-01-05"),
   },
   {
     ownerId: 1,
@@ -33,6 +37,8 @@ const boothList: Array<BoothCreationAttributes> = [
     currencySymbol: "₩",
     status: BoothStatus.PREPARE,
     statusPublishContent: false,
+    dateOpen: new Date("2023-01-20"),
+    dateClose: new Date("2023-01-30"),
   },
   {
     ownerId: 1,
@@ -41,6 +47,8 @@ const boothList: Array<BoothCreationAttributes> = [
     location: "In the middle of Sky",
     currencySymbol: "¥",
     status: BoothStatus.CLOSE,
+    dateOpen: new Date("2023-03-03"),
+    dateClose: new Date("2023-03-05"),
   },
 ];
 

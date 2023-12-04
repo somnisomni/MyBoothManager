@@ -5,4 +5,6 @@ export class CreateBoothDTO implements IBoothCreateRequest {
   description?: string;
   location!: string;
   currencySymbol!: string;
+  dateOpen!: Date;
+  dateClose!: Date;
 }

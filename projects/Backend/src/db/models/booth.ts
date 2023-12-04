@@ -1,13 +1,13 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { BoothStatus, type IBooth } from "@myboothmanager/common";
+import { BoothStatus, IBoothMember, type IBooth, IBoothExpense } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 
-export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent">
-                               & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent">>;
+export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
+                               & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
 
 @Table
 export default class Booth extends Model<IBooth, BoothCreationAttributes> implements IBooth {
@@ -39,6 +39,24 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   @Default("₩")
   @Column(DataTypes.STRING(8))
   declare currencySymbol: string;
+
+  @AllowNull(false)
+  @Default([])
+  @Column(DataTypes.JSON)
+  declare members: IBoothMember[];
+
+  @AllowNull(false)
+  @Default([])
+  @Column(DataTypes.JSON)
+  declare expenses: IBoothExpense[];
+
+  @AllowNull(false)
+  @Column(DataTypes.DATEONLY)
+  declare dateOpen: Date;
+
+  @AllowNull(false)
+  @Column(DataTypes.DATEONLY)
+  declare dateClose: Date;
 
   @AllowNull(false)
   @Default(BoothStatus.PREPARE)
