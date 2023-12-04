@@ -43,6 +43,12 @@
                label="통화 기호"
                hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
                persistent-hint />
+      <VDatePicker v-model="formData.dateOpen"
+                   :min="new Date()"
+                   hide-header />
+      <VDatePicker v-model="formData.dateClose"
+                   :min="new Date()"
+                   hide-header />
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -53,7 +59,7 @@
 <script lang="ts">
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
-import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateReuqest } from "@myboothmanager/common";
+import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
@@ -62,6 +68,8 @@ const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
   description: "",
   location: "",
   currencySymbol: "₩",
+  dateOpen: new Date(),
+  dateClose: new Date(),
 };
 
 @Component({
@@ -75,7 +83,7 @@ export default class BoothManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
 
   updateInProgress = false;
-  formData: IBoothUpdateReuqest | IBoothCreateRequest = reactive({});
+  formData: IBoothUpdateRequest | IBoothCreateRequest = reactive({});
   formValid = false;
   cancelWarningDialogShown = false;
 
@@ -101,7 +109,7 @@ export default class BoothManageDialog extends Vue {
     if(this.editMode) {
       const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
       edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IBoothUpdateReuqest;
+        const k = key as keyof IBoothUpdateRequest;
         return this.formData[k] !== currentBoothData[k];
       });
     } else {
@@ -126,7 +134,9 @@ export default class BoothManageDialog extends Vue {
         location: boothData.location,
         description: boothData.description,
         currencySymbol: boothData.currencySymbol,
-      } as IBoothUpdateReuqest);
+        dateOpen: new Date(boothData.dateOpen),
+        dateClose: new Date(boothData.dateClose),
+      } as IBoothUpdateRequest);
     } else {
       this.formData = reactive({
         ...BOOTH_ADD_DEFAULT_DATA,
@@ -156,7 +166,7 @@ export default class BoothManageDialog extends Vue {
 
     this.updateInProgress = true;
 
-    const requestData: IBoothUpdateReuqest | IBoothCreateRequest = {
+    const requestData: IBoothUpdateRequest | IBoothCreateRequest = {
       ...this.formData,
       name: this.formData.name?.trim(),
       description: this.formData.description?.trim(),
@@ -164,7 +174,7 @@ export default class BoothManageDialog extends Vue {
     };
 
     if(this.editMode) {
-      const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateReuqest);
+      const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
 
       if(result === true) {
         success = true;

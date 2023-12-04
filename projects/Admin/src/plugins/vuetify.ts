@@ -1,7 +1,8 @@
 import "@mdi/font/css/materialdesignicons.css";
 import "@/styles/vuetify.scss";
-import { createVuetify } from "vuetify";
+import { createVuetify, type VuetifyOptions } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
+import { ko, en } from "vuetify/locale";
 import { APP_PRIMARY_COLOR, APP_SECONDARY_COLOR } from "@myboothmanager/common-ui";
 
 export default createVuetify({
@@ -20,4 +21,9 @@ export default createVuetify({
       },
     },
   },
-});
+  locale: {
+    locale: "ko",
+    fallback: "en",
+    messages: { ko, en },
+  },
+} as VuetifyOptions);
