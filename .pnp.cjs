@@ -1885,6 +1885,7 @@ const RAW_RUNTIME_STATE =
           ["reflect-metadata", "npm:0.1.13"],\
           ["rxjs", "npm:7.8.1"],\
           ["sequelize", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:6.35.0"],\
+          ["sequelize-typescript", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:2.1.6"],\
           ["source-map-support", "npm:0.5.21"],\
           ["ts-jest", "virtual:aabdadd0858a4fc8ec6db926a5a83ad28517ab289164965f094df5ea9054afe3875d8210058507b6d927da45ac6e29e3efba37d4d99f52e617fa05c94069c609#npm:29.1.1"],\
           ["ts-node", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.9.1"],\
@@ -6667,6 +6668,19 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:7.2.0", {\
+        "packageLocation": "./.yarn/cache/glob-npm-7.2.0-bb4644d239-bc78b6ea07.zip/node_modules/glob/",\
+        "packageDependencies": [\
+          ["glob", "npm:7.2.0"],\
+          ["fs.realpath", "npm:1.0.0"],\
+          ["inflight", "npm:1.0.6"],\
+          ["inherits", "npm:2.0.4"],\
+          ["minimatch", "npm:3.1.2"],\
+          ["once", "npm:1.4.0"],\
+          ["path-is-absolute", "npm:1.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:7.2.3", {\
         "packageLocation": "./.yarn/cache/glob-npm-7.2.3-2d866d17a5-59452a9202.zip/node_modules/glob/",\
         "packageDependencies": [\
@@ -10589,6 +10603,37 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/sequelize-pool-npm-7.1.0-670df81ecb-eeb0837451.zip/node_modules/sequelize-pool/",\
         "packageDependencies": [\
           ["sequelize-pool", "npm:7.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["sequelize-typescript", [\
+      ["npm:2.1.6", {\
+        "packageLocation": "./.yarn/cache/sequelize-typescript-npm-2.1.6-6cf9e2c703-ec85d6262b.zip/node_modules/sequelize-typescript/",\
+        "packageDependencies": [\
+          ["sequelize-typescript", "npm:2.1.6"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:2.1.6", {\
+        "packageLocation": "./.yarn/__virtual__/sequelize-typescript-virtual-3218ce5cb1/0/cache/sequelize-typescript-npm-2.1.6-6cf9e2c703-ec85d6262b.zip/node_modules/sequelize-typescript/",\
+        "packageDependencies": [\
+          ["sequelize-typescript", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:2.1.6"],\
+          ["@types/node", "npm:18.18.9"],\
+          ["@types/reflect-metadata", null],\
+          ["@types/sequelize", "npm:4.28.18"],\
+          ["@types/validator", null],\
+          ["glob", "npm:7.2.0"],\
+          ["reflect-metadata", "npm:0.1.13"],\
+          ["sequelize", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:6.35.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/node",\
+          "@types/reflect-metadata",\
+          "@types/sequelize",\
+          "@types/validator",\
+          "reflect-metadata",\
+          "sequelize"\
         ],\
         "linkType": "HARD"\
       }]\

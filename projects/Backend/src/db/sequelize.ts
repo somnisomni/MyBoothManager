@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
-import Account, { accountModelAttrib, accountModelName } from "./models/account";
+import { Sequelize } from "sequelize-typescript";
 import generateConfig from "./config";
-import Booth, { boothModelAttrib, boothModelName } from "./models/booth";
-import Goods, { goodsModelAttrib, goodsModelName } from "./models/goods";
-import GoodsCategory, { goodsCategoryAdditionalUniqueIndex, goodsCategoryModelAttrib, goodsCategoryModelName } from "./models/goods-category";
-import GoodsOrder, { goodsOrderModelAttrib, goodsOrderModelName } from "./models/goods-order";
+import Account from "./models/account";
+import Booth from "./models/booth";
+import Goods from "./models/goods";
+import GoodsCategory from "./models/goods-category";
+import GoodsOrder from "./models/goods-order";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
@@ -17,32 +17,7 @@ export default class MBMSequelize {
 
   private static async setupModels(): Promise<void> {
     /* == Model initialization == */
-    Account.init(accountModelAttrib, { sequelize: MBMSequelize.instance, modelName: accountModelName });
-    Booth.init(boothModelAttrib, { sequelize: MBMSequelize.instance, modelName: boothModelName });
-    Goods.init(goodsModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsModelName });
-    GoodsCategory.init(goodsCategoryModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsCategoryModelName, indexes: [goodsCategoryAdditionalUniqueIndex] });
-    GoodsOrder.init(goodsOrderModelAttrib, { sequelize: MBMSequelize.instance, modelName: goodsOrderModelName });
-
-    /* == Model relationship setup == */
-    // Account `id` <-> Booth `ownerId`
-    Account.hasMany(Booth, { foreignKey: "ownerId", sourceKey: "id" });
-    Booth.belongsTo(Account, { foreignKey: "ownerId", targetKey: "id" });
-
-    // Booth `id` <-> Goods `boothId`
-    Booth.hasMany(Goods, { foreignKey: "boothId", sourceKey: "id" });
-    Goods.belongsTo(Booth, { foreignKey: "boothId", targetKey: "id" });
-
-    // Booth `id` <-> Goods Category `boothId`
-    Booth.hasMany(GoodsCategory, { foreignKey: "boothId", sourceKey: "id" });
-    GoodsCategory.belongsTo(Booth, { foreignKey: "boothId", targetKey: "id" });
-
-    // Booth `id` <-> Goods Order `boothId`
-    Booth.hasMany(GoodsOrder, { foreignKey: "boothId", sourceKey: "id" });
-    GoodsOrder.belongsTo(Booth, { foreignKey: "boothId", targetKey: "id" });
-
-    // Goods Category `id` <-> Goods `categoryId`
-    GoodsCategory.hasMany(Goods, { foreignKey: "categoryId", sourceKey: "id" });
-    Goods.belongsTo(GoodsCategory, { foreignKey: "categoryId", targetKey: "id" });
+    MBMSequelize.instance.addModels([Account, Booth, Goods, GoodsCategory, GoodsOrder]);
 
     /* == Sync model == */
     await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });

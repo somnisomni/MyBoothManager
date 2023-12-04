@@ -1,6 +1,6 @@
-import { Options } from "sequelize";
+import { SequelizeOptions } from "sequelize-typescript";
 
-export default function generateConfig(): Options {
+export default function generateConfig(): SequelizeOptions {
   if(!process.env.MYSQL_HOST ||
      !process.env.MYSQL_PORT ||
      !process.env.MYSQL_USER ||
@@ -9,7 +9,7 @@ export default function generateConfig(): Options {
     throw new Error("Missing crucial parameters for MySQL connection!");
   }
 
-  const sequelizeConfig: Options = {
+  const sequelizeConfig: SequelizeOptions = {
     dialect: "mysql",
     host: process.env.MYSQL_HOST || "localhost",
     port: Number(process.env.MYSQL_PORT) || 3306,
@@ -17,8 +17,10 @@ export default function generateConfig(): Options {
     password: process.env.MYSQL_PASSWORD || "",
     database: process.env.MYSQL_DATABASE || "myboothmanager",
     timezone: process.env.SEQUELIZE_TIMEZONE || "+09:00",
-    logging: (...msg) => console.debug("[DB]", msg[0]),
+    logging: (...msg: unknown[]) => console.debug("[DB]", msg[0]),
     define: {
+      charset: "utf8mb4",
+      collate: "utf8mb4_general_ci",
       paranoid: true,
       freezeTableName: true,
       timestamps: true,

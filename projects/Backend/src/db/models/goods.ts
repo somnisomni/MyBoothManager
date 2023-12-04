@@ -1,94 +1,79 @@
-import { ModelAttributes, Model, DataTypes } from "sequelize";
-import { GoodsStatus, GoodsStockVisibility, type IGoods } from "@myboothmanager/common";
-import { type InternalKeysWithId } from "@/lib/types";
-import { boothModelName } from "./booth";
-import { goodsCategoryModelName } from "./goods-category";
+import type { InternalKeysWithId } from "@/lib/types";
+import { type IGoods, GoodsStatus, GoodsStockVisibility } from "@myboothmanager/common";
+import { DataTypes } from "sequelize";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import Booth from "./booth";
+import GoodsCategory from "./goods-category";
 
 export type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
                                & Partial<Pick<IGoods, "description" | "type" | "status" | "statusReason">>;
-export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
-  declare id: number;
-  declare boothId: number;
-  declare categoryId?: number | null;
-  declare name: string;
-  declare description?: string;
-  declare type?: string;
-  declare status: GoodsStatus;
-  declare statusReason?: string;
-  declare price: number;
-  declare stockInitial: number;
-  declare stockRemaining: number;
-  declare stockVisibility: GoodsStockVisibility;
-}
 
-export const goodsModelName = "Goods";
-export const goodsModelAttrib: ModelAttributes<Goods> = {
-  id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    unique: true,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  boothId: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    references: {
-      model: boothModelName,
-      key: "id",
-    },
-  },
-  categoryId: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    defaultValue: null,
-    references: {
-      model: goodsCategoryModelName,
-      key: "id",
-    },
-  },
-  name: {
-    type: DataTypes.STRING(128),
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING(1024),
-    allowNull: true,
-    defaultValue: null,
-  },
-  type: {
-    type: DataTypes.STRING(128),
-    allowNull: true,
-    defaultValue: null,
-  },
-  status: {
-    type: DataTypes.ENUM(...Object.values(GoodsStatus)),
-    allowNull: false,
-    defaultValue: GoodsStatus.ON_SALE,
-  },
-  statusReason: {
-    type: DataTypes.STRING(1024),
-    allowNull: true,
-    defaultValue: null,
-  },
-  price: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  stockInitial: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  stockRemaining: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  stockVisibility: {
-    type: DataTypes.ENUM(...Object.values(GoodsStockVisibility)),
-    allowNull: false,
-    defaultValue: GoodsStockVisibility.SHOW_ALL,
-  },
-};
+@Table
+export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
+  @PrimaryKey
+  @Unique
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare id: number;
+
+  @AllowNull(false)
+  @ForeignKey(() => Booth)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare boothId: number;
+
+  @AllowNull
+  @Default(null)
+  @ForeignKey(() => GoodsCategory)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare categoryId?: number | null;
+
+  @AllowNull(false)
+  @Column(DataTypes.STRING(128))
+  declare name: string;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(1024))
+  declare description?: string;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(128))
+  declare type?: string;
+
+  @AllowNull(false)
+  @Default(GoodsStatus.ON_SALE)
+  @Column(DataTypes.ENUM(...Object.values(GoodsStatus)))
+  declare status: GoodsStatus;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(1024))
+  declare statusReason?: string;
+
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare price: number;
+
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare stockInitial: number;
+
+  @AllowNull(false)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare stockRemaining: number;
+
+  @AllowNull(false)
+  @Default(GoodsStockVisibility.SHOW_ALL)
+  @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
+  declare stockVisibility: GoodsStockVisibility;
+
+
+  /* === Relations === */
+  @BelongsTo(() => Booth)
+  declare ownerBooth: Booth;
+
+  @BelongsTo(() => GoodsCategory)
+  declare assignedGoodsCategory?: GoodsCategory;
+}
