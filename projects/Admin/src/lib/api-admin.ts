@@ -29,8 +29,12 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/login", payload, false));
   }
 
+  static async logout(payload: { id: number }) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.POST("auth/logout", payload, false));
+  }
+
   static async refreshAuth(payload: { id: number, refreshToken: string }) {
-    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/refresh", payload, false));
+    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/refresh", payload));
   }
 
   /* Fetch */

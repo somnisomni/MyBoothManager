@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
-import { IAccount, IAccountLoginResponse } from "@myboothmanager/common";
+import { IAccount, IAccountLoginResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { JwtService } from "@nestjs/jwt";
 import { InvalidRequestBodyException } from "@/lib/exceptions";
 import { AccountService } from "../account/account.service";
@@ -23,6 +23,7 @@ export class AuthService {
     const generatedToken = await generateAuthToken(this.jwtService, account);
     const generatedRefreshToken = await generateRefreshToken(this.jwtService, account);
 
+    AuthStorage.AUTH_TOKEN_STORE.set(account.id, generatedToken);
     AuthStorage.REFRESH_UUID_STORE.set(account.id, generatedRefreshToken.refreshUUID);
 
     return {
@@ -67,31 +68,34 @@ export class AuthService {
     };
   }
 
-  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse> {
+  logout(logoutDto: { id: number }): ISuccessResponse {
+    AuthStorage.REFRESH_UUID_STORE.delete(logoutDto.id);
+    return SUCCESS_RESPONSE;
+  }
+
+  async refresh(refreshDto: RefreshDTO, authData: IAuthPayload): Promise<IAccountLoginResponse> {
     if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
+    if(refreshDto.id !== authData.id) throw new InvalidRequestBodyException();
 
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
-    if(typeof verifyResult === "string" && verifyResult === "expired") {
-      // Refresh token expired, require login
-      AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
-
-      throw new RefreshTokenExpiredException();
-    } else if(!verifyResult) {
-      // Invalid token
-      throw new InvalidRefreshTokenException();
-    } else {
-      // Refresh authorization
+    if(typeof verifyResult === "object" && verifyResult?.id) {
       const refreshUuid = AuthStorage.REFRESH_UUID_STORE.get(refreshDto.id);
 
       if(refreshUuid === verifyResult.refreshUUID) {
         // All OK
-        return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(refreshDto.id));
-      } else {
-        // Refresh token is not matched, require login
-        AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
-
-        throw new NeedReloginException();
+        return await this.generateTokenAndLoginResponse(await this.accountService.findOneById(verifyResult.id));
       }
+    }
+
+    // Refresh failed processes
+    AuthStorage.REFRESH_UUID_STORE.delete(refreshDto.id);
+
+    if(typeof verifyResult === "string" && verifyResult === "expired") {
+      throw new RefreshTokenExpiredException();
+    } else if(!verifyResult) {
+      throw new InvalidRefreshTokenException();
+    } else {
+      throw new NeedReloginException();
     }
   }
 }
