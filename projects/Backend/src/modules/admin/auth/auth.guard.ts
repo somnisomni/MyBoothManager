@@ -5,6 +5,7 @@ import { Reflector } from "@nestjs/core";
 import { NoAccessException } from "@/lib/exceptions";
 import { IAuthPayload, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt";
 import { AuthTokenNeedRefreshException, InvalidAuthTokenException, UnauthorizedNoTokenException } from "./auth.exception";
+import AuthStorage from "./auth.storage";
 
 export const IS_PUBLIC_KEY = "isPublic";
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -61,9 +62,14 @@ export class AuthGuard implements CanActivate {
       // TokenExpiredError
       if(typeof error === "object" && (error as Record<string, unknown>).expiredAt) {
         throw new AuthTokenNeedRefreshException();
-      }
+      } else {
+        const decodedAccountId = this.jwtService.decode<IAuthPayload>(token)?.id;
+        if(decodedAccountId) {
+          AuthStorage.REFRESH_UUID_STORE.delete(decodedAccountId);
+        }
 
-      throw new InvalidAuthTokenException();
+        throw new InvalidAuthTokenException();
+      }
     }
 
     return true;
