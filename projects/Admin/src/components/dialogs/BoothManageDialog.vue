@@ -7,35 +7,33 @@
                 dialogCancelText="취소"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogPrimaryText="dynString.primaryText"
-                :dialogLeftButtonText="dynString.leftButtonText"
                 @cancel="onDialogCancel"
                 @secondary="resetForm"
                 @primary="onDialogConfirm"
-                @leftbutton="onDialogDeleteClick"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
     <VForm v-model="formValid" @submit.prevent>
-      <VTextField v-model="formData.name"
+      <VTextField v-model.trim="formData.name"
                   class="my-1"
                   density="compact"
                   label="부스명"
                   placeholder="예시) 없을 거 빼곤 다 있는 부스"
                   :rules="stringValidator(formData.name!)" />
-      <VTextField v-model="formData.description"
+      <VTextField v-model.trim="formData.description"
                   class="my-1"
                   density="compact"
                   label="부스 한 줄 설명"
                   placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다"
                   :rules="stringValidator(formData.description!)" />
-      <VTextField v-model="formData.location"
+      <VTextField v-model.trim="formData.location"
                   class="my-1"
                   density="compact"
                   label="부스 위치"
                   placeholder="예시) 일산 킨텍스 5관 / 키보토스존 Kg99"
                   :rules="stringValidator(formData.location!)" />
       <VSelect v-model="formData.currencySymbol"
-               class="my-1"
+               class="my-1 mb-4"
                density="compact"
                :items="currencySymbols"
                item-title="name"
@@ -43,12 +41,16 @@
                label="통화 기호"
                hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
                persistent-hint />
-      <VDatePicker v-model="formData.dateOpen"
-                   :min="new Date()"
-                   hide-header />
-      <VDatePicker v-model="formData.dateClose"
-                   :min="new Date()"
-                   hide-header />
+      <VTextField v-model.lazy="formDateOpenModel"
+                  class="my-1"
+                  type="date"
+                  label="운영 시작 일자"
+                  density="compact" />
+      <VTextField v-model.lazy="formDateCloseModel"
+                  class="my-1"
+                  type="date"
+                  label="운영 종료 일자"
+                  density="compact" />
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -59,6 +61,7 @@
 <script lang="ts">
 import { reactive } from "vue";
 import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
+import { useDate } from "vuetify";
 import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
@@ -87,12 +90,12 @@ export default class BoothManageDialog extends Vue {
   formValid = false;
   cancelWarningDialogShown = false;
 
+
   get dynString(): Record<string, string | null> {
     return {
       title: this.editMode ? "부스 정보 수정" : "부스 추가",
       primaryText: this.editMode ? "업데이트" : "추가",
       secondaryText: this.editMode ? "되돌리기" : "초기화",
-      leftButtonText: this.editMode ? "삭제" : null,
     };
   }
 
@@ -124,6 +127,11 @@ export default class BoothManageDialog extends Vue {
 
     return edited;
   }
+
+  get formDateOpenModel(): string | undefined { return useDate().toISO(this.formData.dateOpen); }
+  get formDateCloseModel(): string | undefined { return useDate().toISO(this.formData.dateClose); }
+  set formDateOpenModel(value: string) { this.formData.dateOpen = new Date(value); }
+  set formDateCloseModel(value: string) { this.formData.dateClose = new Date(value); }
 
   mounted() { this.resetForm(); }
   @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
@@ -205,10 +213,6 @@ export default class BoothManageDialog extends Vue {
       // TODO: error dialog
       alert(errorMsg);
     }
-  }
-
-  onDialogDeleteClick() {
-    alert("기능 추가 예정");
   }
 }
 </script>
