@@ -10,6 +10,7 @@ export default {
     app.component("CommonWarningDialog", C.CommonWarningDialog);
     app.component("ServerDataLoadErrorDialog", C.ServerDataLoadErrorDialog);
     app.component("ServerNotRespondErrorDialog", C.ServerNotRespondErrorDialog);
+    app.component("DatePickerDialog", C.DatePickerDialog);
 
     app.component("GoodsItem", C.GoodsItem);
     app.component("GoodsCategoryTitle", C.GoodsCategoryTitle);
