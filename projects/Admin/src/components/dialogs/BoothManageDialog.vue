@@ -107,11 +107,14 @@ export default class BoothManageDialog extends Vue {
     let edited = false;
 
     if(this.editMode) {
-      const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IBoothUpdateRequest;
-        return this.formData[k] !== currentBoothData[k];
-      });
+      // const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+      // edited = Object.keys(this.formData).some((key) => {
+      //   const k = key as keyof IBoothUpdateRequest;
+      //   return this.formData[k] !== currentBoothData[k];
+      // });
+
+      /* *** FIXME: Need to find more robust way for checking whether the form is edited *** */
+      return true;
     } else {
       edited = Object.keys(this.formData).some((key) => {
         const k = key as keyof IBoothCreateRequest;
