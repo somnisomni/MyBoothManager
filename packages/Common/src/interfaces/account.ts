@@ -19,6 +19,7 @@ export type IAccountLoginResponse = IAccountUserland & IAccountLoginTokenData;
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;
+  confirmLogoutExistingSession?: boolean;
 }
 
 export interface IAccountCreateRequest extends Pick<IAccount, "name" | "loginId"> {

@@ -16,10 +16,11 @@
 
 <script lang="ts">
 import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
-import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import CommonDialog from "./CommonDialog.vue";
 
 @Component({
+  emits: ["primary"],
   components: {
     CommonDialog,
   },
@@ -41,8 +42,6 @@ export default class CommonErrorDialog extends Vue {
     return `https://twitter.com/${DEVELOPER_TWITTER_HANDLE}`;
   }
 
-  reloadWindow() {
-    window.location.reload();
-  }
+  @Emit("primary") reloadWindow() { window.location.reload(); }
 }
 </script>

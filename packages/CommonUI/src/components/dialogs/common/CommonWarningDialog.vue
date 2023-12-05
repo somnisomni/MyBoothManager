@@ -6,17 +6,19 @@
                 :dialogPrimaryText="primaryText"
                 :dialogCancelText="cancelText"
                 :accentColor="accentColor"
-                @primary="closeDialog">
+                @primary="onDialogPrimary"
+                @cancel="onDialogCancel">
     <p v-if="headlineText"><span class="text-warning font-weight-bold">{{ headlineText }}</span></p>
     <slot></slot>
   </CommonDialog>
 </template>
 
 <script lang="ts">
-import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import CommonDialog from "./CommonDialog.vue";
 
 @Component({
+  emits: ["primary", "cancel"],
   components: {
     CommonDialog,
   },
@@ -30,6 +32,7 @@ export default class CommonWarningDialog extends Vue {
   @Prop({ type: String, default: "warning" }) accentColor!: string;
   @Prop({ type: Boolean, default: true }) closeOnPrimary!: boolean;
 
-  closeDialog() { if(this.closeOnPrimary) this.open = false; }
+  @Emit("primary") onDialogPrimary() { if(this.closeOnPrimary) this.open = false; }
+  @Emit("cancel") onDialogCancel() { }
 }
 </script>
