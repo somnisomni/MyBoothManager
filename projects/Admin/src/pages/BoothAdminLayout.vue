@@ -59,7 +59,7 @@
       </VList>
     </VNavigationDrawer>
 
-    <VMain style="overflow: hidden">
+    <VMain class="pb-4" style="overflow: hidden">
       <RouterView />
     </VMain>
   </div>
