@@ -8,7 +8,7 @@ import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshTo
 import { LoginDTO } from "./dto/login.dto";
 import { RefreshDTO } from "./dto/refresh.dto";
 import AuthStorage from "./auth.storage";
-import { InvalidRefreshTokenException, LoginAccountNotFoundException, NeedReloginException, RefreshTokenExpiredException } from "./auth.exception";
+import { InvalidRefreshTokenException, LoginAccountNotFoundException, LoginSessionAlreadyExistsException, NeedReloginException, RefreshTokenExpiredException } from "./auth.exception";
 
 const SA_LOGIN_DATA: IAuthPayload = {
   id: -1,
@@ -39,13 +39,15 @@ export class AuthService {
 
     if(!account || !(await argon2.verify(account.loginPassHash, loginDto.loginPass))) {
       throw new LoginAccountNotFoundException();
+    } else if(account && AuthStorage.REFRESH_UUID_STORE.has(account.id) && !loginDto.confirmLogoutExistingSession) {
+      throw new LoginSessionAlreadyExistsException();
     } else {
       // Update last login time and count
       if(updateLoginCount) {
-        account.update({
+        await (await account.update({
           lastLoginAt: new Date(),
           loginCount: account.loginCount + 1,
-        });
+        })).save();
       }
 
       return await this.generateTokenAndLoginResponse(account);
@@ -57,8 +59,7 @@ export class AuthService {
     const generatedRefreshToken = await generateRefreshToken(this.jwtService, SA_LOGIN_DATA);
 
     return {
-      id: -1,
-      name: "YOUFOUNDME",
+      ...SA_LOGIN_DATA,
       loginId: process.env.SUPERADMIN_ID!,
       accessToken: generatedToken,
       refreshToken: generatedRefreshToken.refreshToken,

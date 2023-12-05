@@ -43,3 +43,9 @@ export class NeedReloginException extends BaseHttpException {
     super(ErrorCodes.NEED_RELOGIN, HttpStatus.UNAUTHORIZED);
   }
 }
+
+export class LoginSessionAlreadyExistsException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.SESSION_ALREADY_EXISTS, HttpStatus.CONFLICT);
+  }
+}

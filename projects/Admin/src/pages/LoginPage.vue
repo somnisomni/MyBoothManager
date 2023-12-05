@@ -37,11 +37,11 @@
                   size="large"
                   :loading="loginProgress"
                   :disabled="loginProgress || !formValid"
-                  @click.prevent="doLogin">로그인</VBtn>
+                  @click.prevent="doLogin(false)">로그인</VBtn>
           </VLayout>
         </VForm>
 
-        <p class="text-caption mt-4 text-disabled">현재 회원가입 및 패스워드 변경 등은 신청을 받아 직접 처리하고 있습니다.<br />개발자에게 문의해주세요.</p>
+        <p class="text-caption mt-4 text-disabled">현재 계정 생성 및 패스워드 변경 등은 신청을 받아 직접 처리하고 있습니다.<br />개발자에게 문의해주세요.</p>
       </VCardText>
     </VCard>
 
@@ -49,6 +49,16 @@
       <span><strong>{{ APP_NAME }}</strong> {{ APP_VERSION }} <small>({{ APP_GIT_HASH }})</small></span><br />
       <span>Copyright © 2023- <a href="https://somni.one/" target="_blank" style="color: currentColor;">somni</a>, All rights reserved.</span>
     </div>
+
+    <CommonWarningDialog v-model="confirmLoginDialogShown"
+                         dialogTitle="로그인 확인"
+                         headlineText="이미 다른 곳에서 로그인되어 있습니다."
+                         primaryText="로그인"
+                         cancelText="취소"
+                         @primary="doLogin(true)"
+                         @cancel="confirmLoginDialogShown = false">
+      <p>기존 세션을 끊고 로그인하시겠습니까?</p>
+    </CommonWarningDialog>
   </VContainer>
 </template>
 
@@ -76,15 +86,19 @@ export default class LoginPage extends Vue {
   errorMessage = "";
   hasLogout = window.history.state?.logout ?? false;
   hasLogoutByInvalidAuthToken = window.history.state?.authTokenInvalid ?? false;
+  confirmLoginDialogShown = false;
 
   mounted() {
     window.history.state.logout = false;
   }
 
-  async doLogin() {
+  async doLogin(confirm?: boolean) {
     this.loginProgress = true;
 
-    const result = await useAuthStore().adminLogin(this.loginData);
+    const result = await useAuthStore().adminLogin({
+      ...this.loginData,
+      confirmLogoutExistingSession: confirm,
+    });
 
     if(result === true) {
       if(useAdminStore().currentAccount?.superAdmin) {
@@ -102,6 +116,9 @@ export default class LoginPage extends Vue {
           break;
         case ErrorCodes.ACCOUNT_DISABLED:
           this.errorMessage = "비활성화된 계정입니다.";
+          break;
+        case ErrorCodes.SESSION_ALREADY_EXISTS:
+          this.confirmLoginDialogShown = true;
           break;
         default:
           this.errorMessage = `로그인 중 알 수 없는 오류가 발생했습니다. (${result})`;
