@@ -31,6 +31,7 @@
       <VDivider class="mb-6" />
 
       <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
+      <p class="text-disabled text-body-2 text-right">취소된 판매 기록은 통계에 포함되지 않습니다.</p>
     </div>
     <div v-else>
       <h2 class="text-center">등록된 판매 기록이 없습니다.</h2>
