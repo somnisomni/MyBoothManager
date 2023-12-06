@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import type { ChartOptions, ChartData, Point } from "chart.js";
-import { currencySymbolInfo, type IGoodsOrder } from "@myboothmanager/common";
+import { currencySymbolInfo, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import ChartJS from "chart.js/auto";
 import "chartjs-adapter-moment";
 import { Component, Vue } from "vue-facing-decorator";
@@ -158,10 +158,14 @@ export default class BoothAdminAnalyticsPage extends Vue {
     return useAdminStore().boothGoodsOrderList;
   }
 
+  get orderHistoryFilteredArray(): Array<IGoodsOrder> {
+    return Object.values(this.orderHistory).filter((item) => item.status === GoodsOrderStatus.RECORDED);
+  }
+
   get orderHistoryDays(): OrderedDateonlySet {
     const set = new OrderedDateonlySet(true);
 
-    Object.values(this.orderHistory).forEach((item) => {
+    this.orderHistoryFilteredArray.forEach((item) => {
       if(item.createdAt) set.add(Dateonly.fromDate(item.createdAt));
     });
 
@@ -171,7 +175,7 @@ export default class BoothAdminAnalyticsPage extends Vue {
   get orderHistoryByDay(): Record<number, Array<IGoodsOrder>> {
     const merged: Record<number, Array<IGoodsOrder>> = { };
 
-    Object.values(this.orderHistory).forEach((item) => {
+    this.orderHistoryFilteredArray.forEach((item) => {
       if(!item.createdAt) return;
 
       const targetDate = new Date(item.createdAt);
@@ -189,14 +193,14 @@ export default class BoothAdminAnalyticsPage extends Vue {
   }
 
   get orderHistoryOfCurrentSelectedDay(): Array<IGoodsOrder> {
-    if(this.currentSelectedDay === "all") return Object.values(this.orderHistory);
+    if(this.currentSelectedDay === "all") return this.orderHistoryFilteredArray;
     else return this.orderHistoryByDay[this.currentSelectedDay.getTimestamp()] ?? [];
   }
 
   get orderHistoryInfoMergedByMinute(): Record<number, { quantity: number, price: number }> {
     const merged: Record<any, { quantity: number, price: number }> = {};
 
-    Object.values(this.orderHistory).forEach((item) => {
+    this.orderHistoryFilteredArray.forEach((item) => {
       if(!item.createdAt) return;
 
       const targetDate = new Date(item.createdAt);
