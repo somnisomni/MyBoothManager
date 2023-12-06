@@ -74,7 +74,7 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   function invalidateLoginData(): void {
-    $adminStore.currentAccount = null;
+    $adminStore.invalidateAllStates();
     id.value = null;
     authTokenData.value = null;
   }

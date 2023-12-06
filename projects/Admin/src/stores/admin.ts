@@ -44,6 +44,19 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   /* Actions */
+  function invalidateAllStates(): void {
+    currentAccount.value = null;
+    currentBoothId.value = -1;
+
+    isBoothDataLoaded.value = false;
+    isChangingBooth.value = false;
+
+    emptyNumberKeyObject(boothList);
+    emptyNumberKeyObject(boothGoodsCategoryList);
+    emptyNumberKeyObject(boothGoodsList);
+    emptyNumberKeyObject(boothGoodsOrderList);
+  }
+
   function changeBooth(boothId: number): void {
     isChangingBooth.value = true;
     currentBoothId.value = boothId;
@@ -324,6 +337,7 @@ const useAdminStore = defineStore("admin", () => {
     boothGoodsList,
     boothGoodsOrderList,
 
+    invalidateAllStates,
     changeBooth,
     changeBoothToFirst,
     fetchCurrentAccountInfo,
