@@ -8,12 +8,15 @@ export enum BoothStatus {
 }
 
 export interface IBoothMember extends IDataModelBase {
+  id: number;
   name: string;
   descriptionShort?: string;
   role: string;
   primaryColor: string;
   url?: string;
 }
+export type IBoothMemberAddRequest = Omit<IBoothMember, "id"> & { boothId: number };
+export type IBoothMemberRemoveRequest = Pick<IBoothMember, "id"> & { boothId: number };
 
 export interface IBoothExpense extends IDataModelBase {
   name: string;
@@ -40,7 +43,7 @@ export type IBoothResponse = IBooth;
 export type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol" | "dateOpen" | "dateClose";
 export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
 
-export type BoothUpdateRequestKey = "name" | "description" | "location" | "currencySymbol" | "members" | "expenses" | "dateOpen" | "dateClose";
+export type BoothUpdateRequestKey = "name" | "description" | "location" | "currencySymbol" | "expenses" | "dateOpen" | "dateClose";
 export type IBoothUpdateRequest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
 
 export type BoothStatusUpdateRequestKey = "status" | "statusReason" | "statusPublishContent";
