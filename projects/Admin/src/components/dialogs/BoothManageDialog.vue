@@ -41,16 +41,23 @@
                label="통화 기호"
                hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
                persistent-hint />
-      <VTextField v-model.lazy="formDateOpenModel"
-                  class="my-1"
-                  type="date"
-                  label="운영 시작 일자"
-                  density="compact" />
-      <VTextField v-model.lazy="formDateCloseModel"
-                  class="my-1"
-                  type="date"
-                  label="운영 종료 일자"
-                  density="compact" />
+      <VLayout class="d-flex flex-row">
+        <VTextField v-model="formDateOpenModel"
+                    class="my-1 pr-2"
+                    type="date"
+                    label="운영 시작 일자"
+                    density="compact"
+                    :min="today"
+                    :rules="[() => formData.dateOpen! <= formData.dateClose! ? true : '운영 종료 일자 이전으로 지정해야 합니다.']" />
+        <span class="pa-2 text-h5">~</span>
+        <VTextField v-model="formDateCloseModel"
+                    class="my-1 pl-2"
+                    type="date"
+                    label="운영 종료 일자"
+                    density="compact"
+                    :min="today"
+                    :rules="[() => formData.dateClose! >= formData.dateOpen! ? true : '운영 시작 일자 이후로 지정해야 합니다.']" />
+      </VLayout>
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -90,6 +97,10 @@ export default class BoothManageDialog extends Vue {
   formValid = false;
   cancelWarningDialogShown = false;
 
+  get today(): string {
+    const today = new Date();
+    return useDate().toISO(today);
+  }
 
   get dynString(): Record<string, string | null> {
     return {
