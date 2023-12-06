@@ -30,9 +30,19 @@
         </li>
       </ul>
 
-      <VBtn class="mt-4" @click="cancelOrder">판매 기록 취소</VBtn>
+      <VBtn class="mt-4" @click="cancelOrderWarningDialogShown = true">판매 기록 취소</VBtn>
     </div>
     <h2 v-else>유효하지 않은 판매 기록입니다.</h2>
+
+    <CommonWarningDialog v-model="cancelOrderWarningDialogShown"
+                         dialogTitle="판매 기록 취소 확인"
+                         headlineText="판매 기록을 취소 처리하면 다시 기록 상태로 복원할 수 없습니다."
+                         cancelText="취소"
+                         primaryText="확인"
+                         @primary="cancelOrder">
+      <p>취소 처리하면 기록된 굿즈들의 재고 수량이 복구됩니다.</p>
+      <p>계속하시겠습니까?</p>
+    </CommonWarningDialog>
   </VContainer>
 </template>
 
@@ -44,6 +54,8 @@ import { useAdminStore } from "@/stores/admin";
 
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
+  cancelOrderWarningDialogShown = false;
+
   async mounted() {
     if(!this.orderData) {
       // If order data is not fetched yet, try to fetch it
