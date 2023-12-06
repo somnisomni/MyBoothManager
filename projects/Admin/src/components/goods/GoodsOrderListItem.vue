@@ -1,7 +1,7 @@
 <template>
   <VSheet v-ripple
           class="order-item d-flex flex-row align-center border-md w-100"
-          :class="{ 'border-s-0': !smAndUp, 'border-e-0': !smAndUp }"
+          :class="{ 'border-s-0': !smAndUp, 'border-e-0': !smAndUp, 'canceled': orderData.status === GoodsOrderStatus.CANCELED }"
           @click.stop="onItemClick">
     <div v-if="smAndUp" class="status-area position-relative overflow-hidden">
       <VIcon class="icon position-absolute"
@@ -39,6 +39,8 @@ import { useAdminStore } from "@/stores/admin";
   emits: ["click"],
 })
 export default class GoodsOrderListItem extends Vue {
+  readonly GoodsOrderStatus = GoodsOrderStatus;
+
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
 
   get statusIcon(): { icon: string; color: string; class: string } {
@@ -104,6 +106,10 @@ export default class GoodsOrderListItem extends Vue {
   --order-item-height: 120px;
   height: var(--order-item-height);
   cursor: pointer;
+
+  &.canceled > * {
+    opacity: 0.5 !important;
+  }
 
   .status-area {
     display: flex;
