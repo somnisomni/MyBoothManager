@@ -79,6 +79,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(() => this.API.PATCH(`goods/category/${categoryId}`, payload));
   }
 
+  static async updateGoodsOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`goods/order/${orderId}/status?bId=${boothId}`, payload));
+  }
+
   /* Create */
   static async createAccount(currentUserData: CT.IAccountUserland, payload: CT.IAccountCreateRequest) {
     if(currentUserData.superAdmin)

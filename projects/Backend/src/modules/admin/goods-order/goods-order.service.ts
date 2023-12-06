@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { GoodsOrderStatus, ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create as createTarget, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { NoAccessException } from "@/lib/exceptions";
 import { GoodsService } from "../goods/goods.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
-import { GoodsOrderCreateGoodsNotFoundException, GoodsOrderCreateInvalidGoodsAmountException, GoodsOrderCreateOrderEmptyException, GoodsOrderParentBoothNotFoundException } from "./goods-order.exception";
+import { GoodsOrderCreateGoodsNotFoundException, GoodsOrderCreateInvalidGoodsAmountException, GoodsOrderCreateOrderEmptyException, GoodsOrderParentBoothNotFoundException, GoodsOrderStatusUpdateFailedException, GoodsOrderStatusUpdateProhibitedException } from "./goods-order.exception";
+import { UpdateGoodsOrderStatusDTO } from "./dto/update-goods-order-status.dto";
 
 @Injectable()
 export class GoodsOrderService {
@@ -55,6 +56,44 @@ export class GoodsOrderService {
     }
 
     return await createTarget(GoodsOrder, createGoodsOrderDto);
+  }
+
+  async updateStatus(orderId: number, boothId: number, updateGoodsOrderStatusDto: UpdateGoodsOrderStatusDTO, callerAccountId: number): Promise<ISuccessResponse> {
+    const order = await this.findGoodsOrderBelongsToBooth(orderId, boothId, callerAccountId);
+
+    /* Prohibit status update in some conditions */
+    if(order.status === updateGoodsOrderStatusDto.status) {
+      // If status is not changed, just return success response
+      return SUCCESS_RESPONSE;
+    }
+
+    if(order.status === GoodsOrderStatus.CANCELED && updateGoodsOrderStatusDto.status === GoodsOrderStatus.RECORDED) {
+      // Canceled -> Recorded is not allowed
+      throw new GoodsOrderStatusUpdateProhibitedException();
+    }
+
+    /* Update order status */
+    try {
+      await order.update(updateGoodsOrderStatusDto);
+      await order.save();
+    } catch(err) {
+      throw new GoodsOrderStatusUpdateFailedException();
+    }
+
+    /* Revert goods stock if canceled */
+    if(updateGoodsOrderStatusDto.status === GoodsOrderStatus.CANCELED) {
+      for(const orderItem of order.order) {
+        try {
+          const goods = await this.goodsService.findGoodsBelongsToBooth(orderItem.gId, boothId, callerAccountId);
+          await goods.update({ stockRemaining: goods.stockRemaining + orderItem.quantity });
+        } catch(e) {
+          // Just ignore any goods-related exceptions and continue processing
+          continue;
+        }
+      }
+    }
+
+    return SUCCESS_RESPONSE;
   }
 
   async findAll(boothId?: number): Promise<Array<GoodsOrder>> {

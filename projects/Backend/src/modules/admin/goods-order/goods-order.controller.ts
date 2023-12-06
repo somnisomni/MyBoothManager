@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Delete, Query } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, Query, Patch } from "@nestjs/common";
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { GoodsOrderService } from "./goods-order.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
+import { UpdateGoodsOrderStatusDTO } from "./dto/update-goods-order-status.dto";
 
 @Controller("/admin/goods/order")
 export class GoodsOrderController {
@@ -16,7 +17,12 @@ export class GoodsOrderController {
 
   @Get(":id")
   async findOne(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
-    return await this.goodsOrderService.findGoodsOrderBelongsToBooth(+id, parseInt(boothId), authData.id);
+    return await this.goodsOrderService.findGoodsOrderBelongsToBooth(+id, +boothId, authData.id);
+  }
+
+  @Patch(":id/status")
+  async updateStatus(@Param("id") id: string, @Query("bId") boothId: string, @Body() updateGoodsOrderStatusDto: UpdateGoodsOrderStatusDTO, @AuthData() authData: IAuthPayload) {
+    return await this.goodsOrderService.updateStatus(+id, +boothId, updateGoodsOrderStatusDto, authData.id);
   }
 
   /* Super admin routes */

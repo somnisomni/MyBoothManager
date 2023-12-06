@@ -25,3 +25,15 @@ export class GoodsOrderCreateInvalidGoodsAmountException extends BaseHttpExcepti
     super(ErrorCodes.GOODS_ORDER_INVALID_CREATE_REQUEST_INVALID_GOODS_AMOUNT, HttpStatus.BAD_REQUEST);
   }
 }
+
+export class GoodsOrderStatusUpdateFailedException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.GOODS_ORDER_STATUS_UPDATE_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export class GoodsOrderStatusUpdateProhibitedException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.GOODS_ORDER_STATUS_UPDATE_PROHIBITED, HttpStatus.FORBIDDEN);
+  }
+}

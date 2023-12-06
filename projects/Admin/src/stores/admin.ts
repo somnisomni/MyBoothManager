@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 import router from "@/plugins/router";
 import { useAuthStore } from "./auth";
@@ -239,6 +239,23 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function updateGoodsOrderStatus(orderId: number, payload: IGoodsOrderStatusUpdateRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.updateGoodsOrderStatus(orderId, currentBoothId.value, payload));
+
+    if(response && response instanceof Object) {
+      boothGoodsOrderList[orderId] = {
+        ...boothGoodsOrderList[orderId],
+        ...payload,
+      };
+
+      await fetchGoodsOfCurrentBooth(true);
+
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoods(goodsId: number, boothId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, boothId));
 
@@ -318,6 +335,7 @@ const useAdminStore = defineStore("admin", () => {
     updateGoodsCategoryInfo,
     updateCurrentBoothInfo,
     updateCurrentBoothStatus,
+    updateGoodsOrderStatus,
     createBooth,
     createGoods,
     createGoodsCategory,

@@ -29,13 +29,15 @@
           <span>{{ order.quantity.toLocaleString() }}개</span>
         </li>
       </ul>
+
+      <VBtn class="mt-4" @click="cancelOrder">판매 기록 취소</VBtn>
     </div>
     <h2 v-else>유효하지 않은 판매 기록입니다.</h2>
   </VContainer>
 </template>
 
 <script lang="ts">
-import type { IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
@@ -60,6 +62,18 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
   get currencySymbol(): string {
     // TODO: Use currency symbol from orderData, after backend is updated
     return useAdminStore().boothList[this.orderData.boothId].currencySymbol;
+  }
+
+  async cancelOrder() {
+    const response = await useAdminStore().updateGoodsOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
+
+    if(response === true) {
+      // TODO: further process
+      alert("OK");
+    } else {
+      // TODO: show dialog?
+      alert(response);
+    }
   }
 }
 </script>

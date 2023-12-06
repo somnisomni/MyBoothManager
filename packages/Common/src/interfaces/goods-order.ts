@@ -26,3 +26,6 @@ export type IGoodsOrderResponse = IGoodsOrder;
 
 export type GoodsOrderCreateRequestKey = "boothId" | "order" | "totalPrice";
 export type IGoodsOrderCreateRequest = Pick<IGoodsOrder, GoodsOrderCreateRequestKey>;
+
+export type GoodsOrderStatusUpdateRequestKey = "status";
+export type IGoodsOrderStatusUpdateRequest = Pick<IGoodsOrder, GoodsOrderStatusUpdateRequestKey>;
