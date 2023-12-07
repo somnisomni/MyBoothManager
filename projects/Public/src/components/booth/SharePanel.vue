@@ -1,8 +1,12 @@
 <template>
   <VSheet class="bg-transparent position-fixed d-flex flex-column pa-2" style="top: 0; right: 0; z-index: 10">
+    <VBtn v-if="showHomeButton" class="share-button my-1" variant="outlined" icon :to="{ name: 'landing' }">
+      <VIcon>mdi-home</VIcon>
+      <VTooltip activator="parent" location="bottom">메인 페이지로</VTooltip>
+    </VBtn>
     <VBtn class="share-button my-1" variant="outlined" icon @click.stop="shareTwitter">
       <VIcon>mdi-twitter</VIcon>
-      <VTooltip activator="parent" location="bottom">X <small>(트위터)</small></VTooltip>
+      <VTooltip activator="parent" location="bottom">X<small>(트위터)</small>에 공유</VTooltip>
     </VBtn>
     <VBtn class="share-button my-1" variant="outlined" icon @click.stop="shareURL">
       <VIcon>mdi-clipboard-text</VIcon>
@@ -33,6 +37,7 @@ import BoothQRCodeDialog from "../dialogs/BoothQRCodeDialog.vue";
 })
 export default class SharePanel extends Vue {
   @Prop({ type: Object, required: true }) boothData!: IBooth;
+  @Prop({ type: Boolean, default: false }) showHomeButton!: boolean;
 
   showURLCopiedSnackbar: boolean = false;
   showURLCopyFailedSnackbar: boolean = false;

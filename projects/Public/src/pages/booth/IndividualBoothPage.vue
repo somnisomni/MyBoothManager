@@ -1,6 +1,6 @@
 <template>
   <VMain>
-    <SharePanel v-if="!fetchError" :boothData="boothData" />
+    <SharePanel v-if="!fetchError" :boothData="boothData" showHomeButton />
 
     <VSlideYReverseTransition leave-absolute>
       <div v-if="isDataFetched && fetchError" class="position-fixed d-flex align-center justify-center w-100 h-100 pa-2 text-center">
@@ -8,6 +8,7 @@
           <VIcon class="mr-2">mdi-alert</VIcon>
 
           <span v-if="fetchError === ErrorCodes.ENTITY_NOT_FOUND">존재하지 않는 부스입니다.</span>
+          <span v-else-if="fetchError === ErrorCodes.INVALID_REQUEST_BODY">잘못된 요청입니다.</span>
           <span v-else>데이터를 불러오는 중 오류 발생 ({{ fetchError }})</span>
         </h4>
       </div>
@@ -65,7 +66,7 @@ export default class IndividualBoothPage extends Vue {
   boothCategoryList: Array<IGoodsCategory> = [];
 
   get boothId(): number {
-    return parseInt(useRoute().params["boothId"] as string);
+    return new Number(useRoute().params["boothId"] as string).valueOf();
   }
 
   async mounted() {
@@ -74,6 +75,11 @@ export default class IndividualBoothPage extends Vue {
   }
 
   async fetchData() {
+    if(!this.boothId) {
+      this.fetchError = ErrorCodes.INVALID_REQUEST_BODY;
+      return;
+    }
+
     /* Fetch booth data first */
     const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
 
