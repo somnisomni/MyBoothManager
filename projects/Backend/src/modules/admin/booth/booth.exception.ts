@@ -13,3 +13,9 @@ export class BoothInfoUpdateFailedException extends BaseHttpException {
     super(ErrorCodes.BOOTH_INFO_UPDATE_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+export class BoothMemberManipulationFailedException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.BOOTH_MEMBER_MANIPULATION_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}

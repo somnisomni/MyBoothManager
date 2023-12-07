@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothMemberAddRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 import router from "@/plugins/router";
 import { useAuthStore } from "./auth";
@@ -157,6 +157,17 @@ const useAdminStore = defineStore("admin", () => {
 
     if(response && response instanceof Object) {
       boothList[response.id] = response;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
+  async function addBoothMember(payload: IBoothMemberAddRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.addBoothMember(payload));
+
+    if(response && response instanceof Object) {
+      boothList[response.boothId].members.splice(0, boothList[response.boothId].members.length, ...response.members);
       return true;
     } else {
       return response;
@@ -351,6 +362,7 @@ const useAdminStore = defineStore("admin", () => {
     updateCurrentBoothStatus,
     updateGoodsOrderStatus,
     createBooth,
+    addBoothMember,
     createGoods,
     createGoodsCategory,
     createGoodsOrder,

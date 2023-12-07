@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
@@ -6,6 +6,7 @@ import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
+import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
 
 @Controller("/admin/booth")
 export class BoothController {
@@ -17,6 +18,11 @@ export class BoothController {
   @Post()
   async create(@Body() createAdminDto: CreateBoothDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.create(createAdminDto, authData.id);
+  }
+
+  @Put(":id/member")
+  async addMember(@Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.addMember(addBoothMemberDto, authData.id);
   }
 
   @Get()

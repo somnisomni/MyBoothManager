@@ -94,6 +94,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.POST("booth", payload));
   }
 
+  static async addBoothMember(payload: CT.IBoothMemberAddRequest) {
+    return await this.apiCallWrapper<CT.IBoothMemberManipulationResponse>(() => this.API.PUT(`booth/${payload.boothId}/member`, payload));
+  }
+
   static async createGoods(payload: CT.IGoodsCreateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.POST("goods", payload));
   }

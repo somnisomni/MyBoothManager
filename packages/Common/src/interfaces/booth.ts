@@ -8,15 +8,16 @@ export enum BoothStatus {
 }
 
 export interface IBoothMember extends IDataModelBase {
-  id: number;
+  uuid: string;
   name: string;
   descriptionShort?: string;
   role: string;
   primaryColor: string;
   url?: string;
 }
-export type IBoothMemberAddRequest = Omit<IBoothMember, "id"> & { boothId: number };
-export type IBoothMemberRemoveRequest = Pick<IBoothMember, "id"> & { boothId: number };
+export type IBoothMemberAddRequest = Omit<IBoothMember, "uuid"> & { boothId: number };
+export type IBoothMemberRemoveRequest = Pick<IBoothMember, "uuid"> & { boothId: number };
+export type IBoothMemberManipulationResponse = { boothId: number, members: Array<IBoothMember> };
 
 export interface IBoothExpense extends IDataModelBase {
   name: string;

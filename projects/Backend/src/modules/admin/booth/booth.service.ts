@@ -1,5 +1,6 @@
+import { randomUUID } from "crypto";
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, removeTarget } from "@/lib/common-functions";
@@ -9,7 +10,8 @@ import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
-import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
+import { BoothInfoUpdateFailedException, BoothMemberManipulationFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
+import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
 
 @Injectable()
 export class BoothService {
@@ -35,6 +37,31 @@ export class BoothService {
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     return await this.goodsOrderService.findAll(boothId);
+  }
+
+  async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {
+    const booth = await this.findBoothBelongsToAccount(addBoothMemberDto.boothId, callerAccountId);
+
+    try {
+      if(!booth.members) booth.members = [];
+
+      booth.members.push({
+        uuid: randomUUID(),
+        name: addBoothMemberDto.name,
+        descriptionShort: addBoothMemberDto.descriptionShort,
+        role: addBoothMemberDto.role,
+        primaryColor: addBoothMemberDto.primaryColor,
+        url: addBoothMemberDto.url,
+      });
+      booth.changed("members", true);
+
+      return {
+        boothId: booth.id,
+        members: (await booth.save({ fields: ["members"] })).members,
+      };
+    } catch(err) {
+      throw new BoothMemberManipulationFailedException();
+    }
   }
 
   async updateBoothInfo(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {

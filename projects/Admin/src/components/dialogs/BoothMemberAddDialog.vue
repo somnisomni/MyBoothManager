@@ -14,7 +14,8 @@
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
     <VForm v-model="formValid" @submit.prevent>
-      TO BE ADDED
+      구현 예정
+      <VBtn @click="onDialogConfirm">테스트 데이터 추가</VBtn>
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -42,7 +43,7 @@ const BOOTH_MEMBER_ADD_DEFAULT_DATA: IBoothMemberAddRequest = {
   components: {
     FormDataLossWarningDialog,
   },
-  emits: ["created", "error"],
+  emits: ["added", "error"],
 })
 export default class BoothMemberAddDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -93,16 +94,26 @@ export default class BoothMemberAddDialog extends Vue {
 
     this.updateInProgress = true;
 
+    // const requestData: IBoothMemberAddRequest = {
+    //   ...this.formData,
+    //   name: this.formData.name.trim(),
+    //   primaryColor: this.formData.primaryColor.trim(),
+    //   role: this.formData.role.trim(),
+    //   descriptionShort: this.formData.descriptionShort?.trim(),
+    //   url: this.formData.url?.trim(),
+    // };
+
     const requestData: IBoothMemberAddRequest = {
       ...this.formData,
-      name: this.formData.name.trim(),
-      primaryColor: this.formData.primaryColor.trim(),
-      role: this.formData.role.trim(),
-      descriptionShort: this.formData.descriptionShort?.trim(),
-      url: this.formData.url?.trim(),
+      boothId: useAdminStore().currentBoothId,
+      name: "테스트 멤버",
+      primaryColor: "#123456",
+      role: "허수아비",
+      descriptionShort: "언제나 배고픈 멤버",
+      url: "https://twitter.com/nasa",
     };
 
-    const result = true; // TODO: await useAdminStore().addBoothMember(requestData);
+    const result = await useAdminStore().addBoothMember(requestData);
 
     if(result === true) {
       success = true;
@@ -113,7 +124,7 @@ export default class BoothMemberAddDialog extends Vue {
     this.updateInProgress = false;
 
     if(success) {
-      this.$emit("created");
+      this.$emit("added");
       this.open = false;
     } else {
       this.$emit("error");

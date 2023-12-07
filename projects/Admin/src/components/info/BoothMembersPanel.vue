@@ -11,7 +11,8 @@
       <VBtn icon="mdi-plus" variant="outlined" title="멤버 추가" @click="addDialogShown = true" />
     </VLayout>
 
-    <BoothMemberAddDialog v-model="addDialogShown" />
+    <BoothMemberAddDialog v-model="addDialogShown"
+                          @added="$forceUpdate()" />
   </DashboardPanel>
 </template>
 
@@ -29,12 +30,10 @@ import BoothMemberAddDialog from "../dialogs/BoothMemberAddDialog.vue";
   },
 })
 export default class BoothMembersPanel extends Vue {
-  membersList: Array<IBoothMember> = [];
-
   addDialogShown = false;
 
-  mounted() {
-    this.membersList = [...(useAdminStore().boothList[useAdminStore().currentBoothId].members ?? [])];
+  get membersList(): Array<IBoothMember> {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].members ?? [];
   }
 }
 </script>
