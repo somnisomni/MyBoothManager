@@ -16,10 +16,10 @@
                :icon="statusIcon.icon"
                :color="statusIcon.color"
                class="mr-2" />
-        <span v-if="orderData.createdAt"><strong>{{ createdTimeString }}</strong> <small class="d-inline-block">{{ createdDateString }}</small></span>
+        <span v-if="orderData.createdAt"><strong>{{ createdTimeHourMinuteString }}<small>{{ createdTimeSecondsString }}</small></strong> <small class="d-inline-block ml-2">{{ createdDateString }}</small></span>
       </div>
       <div class="text-sm-h6">판매 금액: <strong>{{ totalPriceFormatted }}</strong></div>
-      <div class="text-body-2 text-sm-body-1">굿즈 총 <strong>{{ totalItemCount }}종</strong> / 재고 총 <strong>{{ totalStockQuantity }}개</strong> 판매</div>
+      <div class="text-body-2 text-sm-body-1">굿즈 <strong>{{ totalItemCount.toLocaleString() }}종</strong> / 재고 <strong>{{ totalStockQuantity.toLocaleString() }}개</strong> 판매</div>
     </div>
 
     <div class="px-2">
@@ -74,12 +74,20 @@ export default class GoodsOrderListItem extends Vue {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
-  get createdTimeString(): string | undefined {
-    return new Date(this.orderData.createdAt as Date).toLocaleTimeString();
+  get createdTime(): Date | undefined {
+    return new Date(this.orderData.createdAt!);
+  }
+
+  get createdTimeHourMinuteString(): string | undefined {
+    return this.createdTime?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  get createdTimeSecondsString(): string | undefined {
+    return ":" + this.createdTime?.toLocaleTimeString([], { second: "2-digit" }).padStart(2, "0");
   }
 
   get createdDateString(): string | undefined {
-    return new Date(this.orderData.createdAt as Date).toLocaleDateString();
+    return new Date(this.orderData.createdAt!).toLocaleDateString();
   }
 
   get totalPriceFormatted(): string {
