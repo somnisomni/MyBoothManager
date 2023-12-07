@@ -1,6 +1,6 @@
 <template>
   <div class="root">
-    <img class="bgimage no-interaction" src="@/res/images/bgimage_jeomo.png" />
+    <img hidden class="bgimage no-interaction" src="@/res/images/bgimage_jeomo.png" />
 
     <VAppBar class="pr-6"
              :class="{ 'pl-6': navPersistent }">
