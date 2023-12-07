@@ -9,7 +9,7 @@
                  variant="outlined"
                  @click.prevent>
             <VLayout class="px-2 d-inline-flex flex-column align-center">
-              <small>기록된 총 재고 수량</small>
+              <small>소진된 총 재고 수량</small>
               <span class="text-h5 font-weight-bold">{{ totalSaleCount.toLocaleString() }}개</span>
             </VLayout>
           </VSheet>
