@@ -3,7 +3,7 @@
     <SharePanel v-if="!fetchError" :boothData="boothData" showHomeButton />
 
     <VSlideYReverseTransition leave-absolute>
-      <div v-if="isDataFetched && fetchError" class="position-fixed d-flex align-center justify-center w-100 h-100 pa-2 text-center">
+      <div v-if="isDataFetched && fetchError" class="position-fixed d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
         <h4 class="text-h4 text-center text-error">
           <VIcon class="mr-2">mdi-alert</VIcon>
 
@@ -11,6 +11,8 @@
           <span v-else-if="fetchError === ErrorCodes.INVALID_REQUEST_BODY">잘못된 요청입니다.</span>
           <span v-else>데이터를 불러오는 중 오류 발생 ({{ fetchError }})</span>
         </h4>
+
+        <VBtn class="mt-4" size="large" color="primary" variant="outlined" prepend-icon="mdi-home" :to="{ name: 'landing' }" replace>메인 페이지로 이동</VBtn>
       </div>
 
       <div v-else-if="!isDataFetched" class="position-fixed d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
@@ -75,7 +77,7 @@ export default class IndividualBoothPage extends Vue {
   }
 
   async fetchData() {
-    if(!this.boothId) {
+    if(!this.boothId || this.boothId <= 0) {
       this.fetchError = ErrorCodes.INVALID_REQUEST_BODY;
       return;
     }
