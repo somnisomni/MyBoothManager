@@ -1,9 +1,8 @@
 import { Controller, Post, HttpCode, Body } from "@nestjs/common";
 import { LoginDTO } from "./dto/login.dto";
 import { AuthService } from "./auth.service";
-import { AuthData, Public } from "./auth.guard";
+import { Public } from "./auth.guard";
 import { RefreshDTO } from "./dto/refresh.dto";
-import { IAuthPayload } from "./jwt";
 
 @Controller("/admin/auth")
 export class AuthController {
@@ -30,9 +29,10 @@ export class AuthController {
     return this.authService.logout(logoutDto);
   }
 
+  @Public()
   @Post("refresh")
   @HttpCode(200)
-  async refresh(@Body() refreshDto: RefreshDTO, @AuthData() authData: IAuthPayload) {
-    return await this.authService.refresh(refreshDto, authData);
+  async refresh(@Body() refreshDto: RefreshDTO) {
+    return await this.authService.refresh(refreshDto);
   }
 }

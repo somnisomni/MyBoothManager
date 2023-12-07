@@ -73,9 +73,8 @@ export class AuthService {
     return SUCCESS_RESPONSE;
   }
 
-  async refresh(refreshDto: RefreshDTO, authData: IAuthPayload): Promise<IAccountLoginResponse> {
+  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse> {
     if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
-    if(refreshDto.id !== authData.id) throw new InvalidRequestBodyException();
 
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
     if(typeof verifyResult === "object" && verifyResult?.id) {
