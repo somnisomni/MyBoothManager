@@ -15,10 +15,10 @@
 
     <!-- Booth open status area -->
     <VScrollXTransition leave-absolute>
-      <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="success">정상 운영 중!</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="error"  >운영을 종료한 부스입니다.</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="warning">운영이 일시 중지되었습니다.<br /><span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="info"   >준비 중인 부스입니다.</VSheet>
+      <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="blue"           >정상 운영 중!</VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="red-darken-1"   >운영을 종료한 부스입니다.</VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="orange-darken-1">운영이 일시 중지되었습니다.<br /><span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="green"          >준비 중인 부스입니다.</VSheet>
     </VScrollXTransition>
   </section>
 </template>
