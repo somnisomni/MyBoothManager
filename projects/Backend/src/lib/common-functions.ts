@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { createHash } from "crypto";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
 import { BaseError, Model, ModelDefined, WhereOptions } from "sequelize";
 import { EntityNotFoundException } from "./exceptions";
 
+/* === Sequelize model util functions === */
 export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
   let target = null;
 
@@ -79,4 +81,13 @@ export async function removeOne<T extends Model<any, any>>(model: { new (): T },
       throw new BadRequestException();
     }
   }
+}
+
+/* === Common util functions === */
+export type UploadFileNameFormat = `${string}-${string}_${string}.${string}`;
+export function generateUploadFileName(usage: string, accountId: number, usageId: number, modifier: string, fileExtension: string): { formatted: UploadFileNameFormat, fileName: string } {
+  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${+usageId}.${modifier}`;
+  const fileName: string = `${createHash("sha1").update(formatted).digest("base64url")}.${fileExtension}`;
+
+  return { formatted, fileName };
 }
