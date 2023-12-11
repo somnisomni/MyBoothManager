@@ -162,10 +162,7 @@ export default class BoothManageDialog extends Vue {
       const boothData = useAdminStore().boothList[useAdminStore().currentBoothId];
 
       this.formData = reactive({
-        name: boothData.name,
-        location: boothData.location,
-        description: boothData.description,
-        currencySymbol: boothData.currencySymbol,
+        ...boothData,
         dateOpen: new Date(boothData.dateOpen),
         dateClose: new Date(boothData.dateClose),
       } as IBoothUpdateRequest);
