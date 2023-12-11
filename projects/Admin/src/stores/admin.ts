@@ -167,6 +167,8 @@ const useAdminStore = defineStore("admin", () => {
     const response = await apiWrapper(() => AdminAPI.addBoothMember(payload));
 
     if(response && response instanceof Object) {
+      if(!boothList[response.boothId].members) boothList[response.boothId].members = [];
+
       boothList[response.boothId].members.splice(0, boothList[response.boothId].members.length, ...response.members);
       return true;
     } else {

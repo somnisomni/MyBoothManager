@@ -8,6 +8,7 @@
           <VIcon class="mr-2">mdi-alert</VIcon>
 
           <span v-if="fetchError === ErrorCodes.ENTITY_NOT_FOUND">존재하지 않는 부스입니다.</span>
+          <span v-else-if="fetchError === ErrorCodes.BOOTH_NOT_PUBLISHED">아직 공개되지 않은 부스입니다.</span>
           <span v-else-if="fetchError === ErrorCodes.INVALID_REQUEST_BODY">잘못된 요청입니다.</span>
           <span v-else>데이터를 불러오는 중 오류 발생 ({{ fetchError }})</span>
         </h4>

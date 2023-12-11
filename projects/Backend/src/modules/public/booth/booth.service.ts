@@ -1,24 +1,47 @@
 import type Goods from "@/db/models/goods";
 import type GoodsCategory from "@/db/models/goods-category";
 import { Injectable } from "@nestjs/common";
-import { IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { WhereOptions , Op } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
+import { BoothNotPublishedException } from "./booth.exception";
 
 @Injectable()
 export class PublicBoothService {
   constructor(
     private publicGoodsService: PublicGoodsService,
-    private publicGoodsCategoryService: PublicGoodsCategoryService) {}
+    private publicGoodsCategoryService: PublicGoodsCategoryService) { }
+
+  private readonly PUBLIC_WHERE_OPTIONS: WhereOptions<IBooth> = {
+    [Op.not]: {
+      [Op.and]: {
+        status: BoothStatus.PREPARE,
+        statusPublishContent: false,
+      },
+    },
+  };
 
   async findOne(boothId: number): Promise<Booth> {
-    return await findOneByPk(Booth, boothId);
+    const booth = await findOneByPk(Booth, boothId);
+
+    if(booth.status === BoothStatus.PREPARE && !booth.statusPublishContent) {
+      throw new BoothNotPublishedException();
+    }
+
+    return booth;
   }
 
   async findAll(accountId?: number): Promise<Array<Booth>> {
-    const where = accountId ? { ownerId: accountId } : undefined;
+    const where: WhereOptions<IBooth> = {
+      ...(accountId ? {
+        ownerId: accountId,
+      } : {
+        ...this.PUBLIC_WHERE_OPTIONS,
+      }),
+    };
 
     return await Booth.findAll({
       where,
