@@ -1,5 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import fastifyMultipart from "@fastify/multipart";
 // import { fastifyHelmet } from "@fastify/helmet";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
@@ -40,6 +41,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  /* Fastify plugins */
+  await app.register(fastifyMultipart);
 
   // dev
   if(process.env.NODE_ENV === "development") await dev();
