@@ -6,8 +6,8 @@ import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 
-export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
-                               & Partial<Pick<IBooth, "description" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
+export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
+                               & Partial<Pick<IBooth, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
 
 @Table
 export default class Booth extends Model<IBooth, BoothCreationAttributes> implements IBooth {
@@ -34,6 +34,10 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   @AllowNull(false)
   @Column(DataTypes.STRING(512))
   declare location: string;
+
+  @AllowNull
+  @Column({ type: DataTypes.STRING(16), defaultValue: null })
+  declare boothNumber?: string;
 
   @AllowNull(false)
   @Default("₩")
