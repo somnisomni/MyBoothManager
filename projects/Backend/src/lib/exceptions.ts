@@ -53,3 +53,9 @@ export class InvalidRequestBodyException extends BaseHttpException {
     super(ErrorCodes.INVALID_REQUEST_BODY, HttpStatus.BAD_REQUEST);
   }
 }
+
+export class RequestMaxSizeExceededException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.REQUEST_MAX_SIZE_EXCEEDED, HttpStatus.PAYLOAD_TOO_LARGE);
+  }
+}

@@ -4,7 +4,7 @@ import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } 
 import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
-import { create, removeTarget } from "@/lib/common-functions";
+import { create, generateUploadFileName, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
@@ -44,6 +44,7 @@ export class BoothService {
 
   async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<ISuccessResponse> {
     console.debug("uploadBannerImage", boothId, file, callerAccountId);
+    console.debug(generateUploadFileName("boothbanner", callerAccountId, boothId, "test", "png"));
     throw new NotImplementedException();
   }
 
