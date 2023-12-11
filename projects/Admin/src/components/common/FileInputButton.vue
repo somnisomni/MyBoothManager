@@ -9,11 +9,16 @@
 
     <VBtn @click="onFileInputButtonClick">{{ label }}</VBtn>
     <span v-if="!hideFileName" class="ml-2">{{ fileName }}</span>
+
+    <VSnackbar v-model="fileSizeExceededWarningShown" :timeout="3000" location="bottom" color="warning">
+      <span class="text-body-2"><VIcon class="mr-1">mdi-alert</VIcon> {{ maxFileSizeString }}를 초과하는 파일은 선택할 수 없습니다.</span>
+    </VSnackbar>
   </VLayout>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Model, Prop, Ref, Vue } from "vue-facing-decorator";
+import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 
 // eslint-disable-next-line import/exports-last
 export enum FileInputAccepts {
@@ -42,8 +47,11 @@ export default class FileInputButton extends Vue {
   @Prop({ default: FileInputAccepts.ALL }) accepts!: FileInputAccepts;
   @Prop({ type: String, default: null }) acceptsCustom!: string | null;
   @Prop({ type: Boolean, default: false }) multiple!: boolean;
+  @Prop({ type: Number, default: MAX_UPLOAD_FILE_BYTES }) maxFileSize!: number;  // bytes
 
   @Ref("fileInput") fileInput!: HTMLInputElement;
+
+  fileSizeExceededWarningShown: boolean = false;
 
   async mounted() {
     if(!this.fileInput) {
@@ -53,6 +61,10 @@ export default class FileInputButton extends Vue {
 
   get fileName(): string {
     return this.value?.name ?? "파일이 선택되지 않음";
+  }
+
+  get maxFileSizeString(): string {
+    return `${this.maxFileSize / 1024 / 1024}MB`;
   }
 
   get acceptsString(): string {
@@ -82,11 +94,22 @@ export default class FileInputButton extends Vue {
   }
 
   onFileInputButtonClick(): void {
+    this.fileSizeExceededWarningShown = false;
+
     this.fileInput.click();
   }
 
   @Emit("change")
   onFileInputChange(): void {
+    const file = this.fileInput.files?.item(0) ?? null;
+
+    if(file && file.size > this.maxFileSize) {
+      this.fileSizeExceededWarningShown = true;
+      this.fileInput.value = "";
+      this.value = null;
+      return;
+    }
+
     this.value = this.fileInput.files?.item(0) ?? null;
     this.$forceUpdate();
   }
