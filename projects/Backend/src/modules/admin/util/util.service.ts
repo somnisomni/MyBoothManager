@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 import { MultipartFile } from "@fastify/multipart";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { type FastifyRequest } from "fastify";
+import { path as APP_ROOT_PATH } from "app-root-path";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 
@@ -20,7 +21,7 @@ export class UtilService {
     if(!folderName || folderName.length <= 0) folderName = "uploads";
 
     // FIXME: __dirname resolves to this folder (the folder containing this util.service.ts/js), not the project root
-    const resolvedPath = path.resolve(__dirname, folderName);
+    const resolvedPath = path.resolve(APP_ROOT_PATH, folderName);
 
     // Create folder, ignore if already exists
     await fs.mkdir(resolvedPath, { recursive: true });

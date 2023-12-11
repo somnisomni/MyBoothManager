@@ -1976,6 +1976,7 @@ const RAW_RUNTIME_STATE =
           ["@types/sequelize", "npm:4.28.19"],\
           ["@typescript-eslint/eslint-plugin", "virtual:aabdadd0858a4fc8ec6db926a5a83ad28517ab289164965f094df5ea9054afe3875d8210058507b6d927da45ac6e29e3efba37d4d99f52e617fa05c94069c609#npm:6.13.2"],\
           ["@typescript-eslint/parser", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:6.13.2"],\
+          ["app-root-path", "npm:3.1.0"],\
           ["argon2", "npm:0.31.2"],\
           ["dotenv", "npm:16.3.1"],\
           ["eslint", "npm:8.55.0"],\
@@ -4072,6 +4073,15 @@ const RAW_RUNTIME_STATE =
           ["anymatch", "npm:3.1.3"],\
           ["normalize-path", "npm:3.0.0"],\
           ["picomatch", "npm:2.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["app-root-path", [\
+      ["npm:3.1.0", {\
+        "packageLocation": "./.yarn/cache/app-root-path-npm-3.1.0-9822bb2a96-b4cdab5f7e.zip/node_modules/app-root-path/",\
+        "packageDependencies": [\
+          ["app-root-path", "npm:3.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
