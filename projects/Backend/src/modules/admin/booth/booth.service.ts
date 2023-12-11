@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { createWriteStream } from "fs";
 import { Injectable, NotImplementedException } from "@nestjs/common";
 import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
@@ -14,7 +15,6 @@ import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 import { BoothInfoUpdateFailedException, BoothMemberManipulationFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
-import { createWriteStream } from "fs";
 
 @Injectable()
 export class BoothService {
