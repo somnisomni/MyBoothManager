@@ -3,13 +3,14 @@ import { PublicBoothModule } from "@/modules/public/booth/booth.module";
 import { GoodsOrderModule } from "../goods-order/goods-order.module";
 import { BoothController } from "./booth.controller";
 import { BoothService } from "./booth.service";
+import { UtilModule } from "../util/util.module";
 
 describe("BoothController", () => {
   let controller: BoothController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PublicBoothModule, GoodsOrderModule],
+      imports: [PublicBoothModule, GoodsOrderModule, UtilModule],
       controllers: [BoothController],
       providers: [BoothService],
     }).compile();
