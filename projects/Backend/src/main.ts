@@ -1,7 +1,8 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import fastifyMultipart from "@fastify/multipart";
+import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/multipart";
 // import { fastifyHelmet } from "@fastify/helmet";
+import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
@@ -43,7 +44,11 @@ async function bootstrap() {
   );
 
   /* Fastify plugins */
-  await app.register(fastifyMultipart);
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: MAX_UPLOAD_FILE_BYTES,
+    },
+  } as FastifyMultipartOptions);
 
   // dev
   if(process.env.NODE_ENV === "development") await dev();

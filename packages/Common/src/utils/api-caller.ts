@@ -2,6 +2,8 @@ import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGo
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
+export const MAX_UPLOAD_FILE_BYTES = (1024 * 1024) * 5;  // 5MB
+
 export default class APICaller {
   private static readonly FETCH_COMMON_OPTIONS: Partial<RequestInit> = {
     headers: { "Content-Type": "application/json" },
