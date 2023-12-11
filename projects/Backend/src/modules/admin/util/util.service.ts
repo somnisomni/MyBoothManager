@@ -4,7 +4,7 @@ import { type FastifyRequest } from "fastify";
 import { InvalidRequestBodyException } from "@/lib/exceptions";
 
 @Injectable()
-export class CommonService {
+export class UtilService {
   constructor() { }
 
   async getFileFromRequest(req: FastifyRequest) {

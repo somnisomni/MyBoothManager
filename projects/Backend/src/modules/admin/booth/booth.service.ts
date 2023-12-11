@@ -1,12 +1,14 @@
 import { randomUUID } from "crypto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotImplementedException } from "@nestjs/common";
 import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
+import { UtilService } from "../util/util.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
@@ -18,6 +20,7 @@ export class BoothService {
   constructor(
     private readonly goodsOrderService: GoodsOrderService,
     private readonly publicBoothService: PublicBoothService,
+    private readonly utilService: UtilService,
   ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
@@ -37,6 +40,11 @@ export class BoothService {
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     return await this.goodsOrderService.findAll(boothId);
+  }
+
+  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<ISuccessResponse> {
+    console.debug("uploadBannerImage", boothId, file, callerAccountId);
+    throw new NotImplementedException();
   }
 
   async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {
