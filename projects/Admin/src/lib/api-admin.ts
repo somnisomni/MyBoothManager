@@ -110,6 +110,13 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST("goods/order", payload));
   }
 
+  /* Upload */
+  static async uploadBoothBannerImage(boothId: number, image: Blob) {
+    const formData = new FormData();
+    formData.set("0", image);
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+  }
+
   /* Delete */
   static async deleteGoods(goodsId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}?bId=${boothId}`));

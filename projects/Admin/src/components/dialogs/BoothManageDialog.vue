@@ -58,6 +58,9 @@
                     :min="today"
                     :rules="[() => formData.dateClose! >= formData.dateOpen! ? true : '운영 시작 일자 이후로 지정해야 합니다.']" />
       </VLayout>
+
+      <FileInputButton v-model="testImage" :accepts="FileInputAccepts.IMAGE" />
+      <VBtn @click="testUpload">TestUpload</VBtn>
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -71,6 +74,8 @@ import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
 import { useDate } from "vuetify";
 import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
+import AdminAPI from "@/lib/api-admin";
+import FileInputButton, { FileInputAccepts } from "../common/FileInputButton.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
@@ -84,11 +89,14 @@ const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
 
 @Component({
   components: {
+    FileInputButton,
     FormDataLossWarningDialog,
   },
   emits: ["updated", "error"],
 })
 export default class BoothManageDialog extends Vue {
+  readonly FileInputAccepts = FileInputAccepts;
+
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
 
@@ -96,6 +104,10 @@ export default class BoothManageDialog extends Vue {
   formData: IBoothUpdateRequest | IBoothCreateRequest = reactive({});
   formValid = false;
   cancelWarningDialogShown = false;
+
+  testImage: File | null = null;
+  @Watch("testImage") onTestImageChange() { console.log(this.testImage); }
+  async testUpload() { if(this.testImage) await AdminAPI.uploadBoothBannerImage(useAdminStore().currentBoothId, this.testImage); }
 
   get today(): string {
     const today = new Date();
