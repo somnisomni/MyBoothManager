@@ -31,6 +31,7 @@ export enum ErrorCodes {
   BOOTH_STATUS_UPDATE_FAILED       = 2001,
   BOOTH_INFO_UPDATE_FAILED         = 2002,
   BOOTH_MEMBER_MANIPULATION_FAILED = 2003,
+  BOOTH_NOT_PUBLISHED              = 2004,
 
   // 3XXX: Goods errors
   UNKNOWN_GOODS_ERROR          = 3000,

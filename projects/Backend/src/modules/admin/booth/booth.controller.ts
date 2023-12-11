@@ -15,6 +15,16 @@ export class BoothController {
     private readonly publicBoothService: PublicBoothService) {}
 
   /* Normal routes */
+  @Get()
+  async findAllForCurrentAccount(@AuthData() authData: IAuthPayload) {
+    return await this.publicBoothService.findAll(authData.id);
+  }
+
+  @Get(":id")
+  async findOne(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findOne(+id, authData.id);
+  }
+
   @Post()
   async create(@Body() createAdminDto: CreateBoothDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.create(createAdminDto, authData.id);
@@ -23,11 +33,6 @@ export class BoothController {
   @Put(":id/member")
   async addMember(@Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.addMember(addBoothMemberDto, authData.id);
-  }
-
-  @Get()
-  async findAllForCurrentAccount(@AuthData() authData: IAuthPayload) {
-    return await this.publicBoothService.findAll(authData.id);
   }
 
   @Patch(":id")

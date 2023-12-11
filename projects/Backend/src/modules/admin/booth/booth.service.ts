@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
-import { create, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
@@ -21,11 +21,15 @@ export class BoothService {
   ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await this.publicBoothService.findOne(boothId);
+    const booth = await findOneByPk(Booth, boothId);
 
     if(!booth) throw new EntityNotFoundException();
     else if(booth.ownerId !== accountId) throw new NoAccessException();
     else return booth;
+  }
+
+  async findOne(id: number, callerAccountId: number): Promise<Booth> {
+    return await this.findBoothBelongsToAccount(id, callerAccountId);
   }
 
   async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
