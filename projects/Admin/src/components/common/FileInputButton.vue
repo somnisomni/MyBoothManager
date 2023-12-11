@@ -7,7 +7,9 @@
            class="w-0 h-0"
            style="opacity: 0" @change="onFileInputChange" />
 
-    <VBtn @click="onFileInputButtonClick">{{ label }}</VBtn>
+    <slot name="button">
+      <VBtn @click="onFileInputButtonClick">{{ label }}</VBtn>
+    </slot>
     <span v-if="!hideFileName" class="ml-2">{{ fileName }}</span>
 
     <VSnackbar v-model="fileSizeExceededWarningShown" :timeout="3000" location="bottom" color="warning">
