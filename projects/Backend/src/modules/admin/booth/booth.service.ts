@@ -14,6 +14,7 @@ import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 import { BoothInfoUpdateFailedException, BoothMemberManipulationFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
+import { createWriteStream } from "fs";
 
 @Injectable()
 export class BoothService {
@@ -44,7 +45,12 @@ export class BoothService {
 
   async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<ISuccessResponse> {
     console.debug("uploadBannerImage", boothId, file, callerAccountId);
-    console.debug(generateUploadFileName("boothbanner", callerAccountId, boothId, "test", "png"));
+
+    const { fileName } = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!);
+    const filePath = await this.utilService.getFileUploadPath(fileName);
+    console.debug(filePath);
+    file.file.pipe(createWriteStream(filePath, { flags: "w", autoClose: true }));
+
     throw new NotImplementedException();
   }
 

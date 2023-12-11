@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
-  "include": ["./src/**/*.ts", "./scripts/**/*.ts"],
+  "include": ["env.d.ts", "./src/**/*.ts", "./scripts/**/*.ts"],
   "exclude": ["./dist"],
   "compilerOptions": {
     "composite": true,
