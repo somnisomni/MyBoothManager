@@ -17,35 +17,44 @@
       <VTextField v-model.trim="formData.name"
                   class="my-1"
                   density="compact"
-                  label="부스명"
+                  label="부스명 *"
                   placeholder="예시) 없을 거 빼곤 다 있는 부스"
                   :rules="stringValidator(formData.name!)" />
       <VTextField v-model.trim="formData.description"
                   class="my-1"
                   density="compact"
                   label="부스 한 줄 설명"
-                  placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다"
-                  :rules="stringValidator(formData.description!)" />
-      <VTextField v-model.trim="formData.location"
-                  class="my-1"
-                  density="compact"
-                  label="부스 위치"
-                  placeholder="예시) 일산 킨텍스 5관 / 키보토스존 Kg99"
-                  :rules="stringValidator(formData.location!)" />
+                  placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다" />
+      <VLayout class="d-flex flex-row">
+        <VTextField v-model.trim="formData.location"
+                    class="my-1"
+                    density="compact"
+                    label="부스 위치 *"
+                    placeholder="예시) 일산 킨텍스 5관 / 키보토스존"
+                    :rules="stringValidator(formData.location!)" />
+        <VTextField v-model.trim="formData.boothNumber"
+                    class="flex-0-0 my-1 ml-2"
+                    style="width: 200px"
+                    density="compact"
+                    label="부스 번호"
+                    placeholder="Kg99"
+                    hint="부스 공개 페이지에서 부스 번호가 강조 표시됩니다."
+                    persistent-hint />
+      </VLayout>
       <VSelect v-model="formData.currencySymbol"
                class="my-1 mb-4"
                density="compact"
                :items="currencySymbols"
                item-title="name"
                item-value="symbol"
-               label="통화 기호"
+               label="통화 기호 *"
                hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
                persistent-hint />
       <VLayout class="d-flex flex-row">
         <VTextField v-model="formDateOpenModel"
                     class="my-1 pr-2"
                     type="date"
-                    label="운영 시작 일자"
+                    label="운영 시작 일자 *"
                     density="compact"
                     :min="today"
                     :rules="[() => formData.dateOpen! <= formData.dateClose! ? true : '운영 종료 일자 이전으로 지정해야 합니다.']" />
@@ -53,7 +62,7 @@
         <VTextField v-model="formDateCloseModel"
                     class="my-1 pl-2"
                     type="date"
-                    label="운영 종료 일자"
+                    label="운영 종료 일자 *"
                     density="compact"
                     :min="today"
                     :rules="[() => formData.dateClose! >= formData.dateOpen! ? true : '운영 시작 일자 이후로 지정해야 합니다.']" />
@@ -77,6 +86,7 @@ const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
   name: "",
   description: "",
   location: "",
+  boothNumber: "",
   currencySymbol: "₩",
   dateOpen: new Date(),
   dateClose: new Date(),
