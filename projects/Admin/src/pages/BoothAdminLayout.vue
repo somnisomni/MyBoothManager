@@ -17,8 +17,8 @@
       <VList nav class="overflow-y-auto">
         <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="pos"
                    :to="{ name: 'admin-pos' }" exact
-                   :disabled="currentBooth.status !== BoothStatus.OPEN"
-                   :subtitle="currentBooth.status !== BoothStatus.OPEN ? '부스가 운영 중이어야 사용 가능합니다.' : undefined" />
+                   :disabled="!currentBoothIsOpened"
+                   :subtitle="!currentBoothIsOpened ? '부스가 운영 중이어야 합니다.' : undefined" />
 
         <VListSubheader>관리</VListSubheader>
         <VListItem prepend-icon="mdi-view-dashboard" title="대시보드" value="dashboard"
@@ -55,7 +55,9 @@
           <div v-if="isDevEnv" class="text-subtitle-2 text-disabled text-center">개발 환경에서 실행 중</div>
           <div class="text-subtitle-2 text-disabled text-center">{{ APP_VERSION }} <small>({{ GIT_HASH }})</small></div>
         </VListItem>
-        <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" :href="boothPublicPageHref" target="_blank" />
+        <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" :href="boothPublicPageHref" target="_blank"
+                   :disabled="currentBoothIsNotPublished"
+                   :subtitle="currentBoothIsNotPublished ? '부스가 공개 상태이어야 합니다.' : undefined" />
       </VList>
     </VNavigationDrawer>
 
@@ -100,6 +102,14 @@ export default class BoothAdminLayout extends Vue {
 
   get currentBooth(): IBooth {
     return useAdminStore().boothList[useAdminStore().currentBoothId];
+  }
+
+  get currentBoothIsOpened(): boolean {
+    return this.currentBooth.status === BoothStatus.OPEN;
+  }
+
+  get currentBoothIsNotPublished(): boolean {
+    return this.currentBooth.status === BoothStatus.PREPARE && !this.currentBooth.statusPublishContent;
   }
 
   get boothList(): IBooth[] {
