@@ -6,9 +6,9 @@
         <div class="booth-image-overlay"></div>
 
         <VLayout class="booth-info-content w-100 h-100 d-flex flex-column justify-end pa-2">
-          <h3>이름: {{ boothData?.name }}</h3>
-          <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
-          <div>위치: {{ boothData?.location }}</div>
+          <h3 class="text-h3 font-weight-bold mb-2">{{ boothData?.name }}</h3>
+          <div v-if="boothData?.description" class="text-subtitle-1" style="font-size: 1.125rem !important;">{{ boothData?.description }}</div>
+          <div class="text-overline">@ {{ boothData?.location }}</div>
         </VLayout>
       </VParallax>
     </VSheet>
