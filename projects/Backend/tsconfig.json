@@ -27,7 +27,7 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["src/*"]
-    },
+    }
   },
   "ts-node": {
     "compilerOptions": {
