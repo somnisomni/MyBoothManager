@@ -30,6 +30,7 @@ export interface IBooth extends IDataModelBase {
   name: string;
   description?: string;
   location: string;
+  boothNumber?: string;
   currencySymbol: string;
   members: Array<IBoothMember>;
   expenses: Array<IBoothExpense>;  // 부대비용 (경비)
@@ -41,10 +42,10 @@ export interface IBooth extends IDataModelBase {
 }
 export type IBoothResponse = IBooth;
 
-export type BoothCreateRequestKey = "name" | "description" | "location" | "currencySymbol" | "dateOpen" | "dateClose";
+export type BoothCreateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "dateOpen" | "dateClose";
 export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
 
-export type BoothUpdateRequestKey = "name" | "description" | "location" | "currencySymbol" | "expenses" | "dateOpen" | "dateClose";
+export type BoothUpdateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "expenses" | "dateOpen" | "dateClose";
 export type IBoothUpdateRequest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
 
 export type BoothStatusUpdateRequestKey = "status" | "statusReason" | "statusPublishContent";

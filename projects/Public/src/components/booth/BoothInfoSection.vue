@@ -2,23 +2,30 @@
   <section>
     <!-- Booth image & info area -->
     <VSheet class="booth-info-section">
-      <VParallax class="booth-image" :src="'https://picsum.photos/seed/' + boothData.id + '/800/400'">
+      <VParallax class="booth-image d-flex align-end" :src="'https://picsum.photos/seed/' + boothData.id + '/800/400'">
         <div class="booth-image-overlay"></div>
 
-        <VLayout class="booth-info-content w-100 h-100 d-flex flex-column justify-end pa-2">
-          <h3>이름: {{ boothData?.name }}</h3>
-          <div v-if="boothData?.description">설명: {{ boothData?.description }}</div>
-          <div>위치: {{ boothData?.location }}</div>
+        <VLayout class="booth-info-content w-100 d-flex flex-row align-end pa-2 pa-sm-4">
+          <VLayout class="d-flex flex-column flex-1-0" style="max-width: 100%">
+            <h4 v-if="boothData.boothNumber" class="d-sm-none text-h4 mb-2">{{ boothData.boothNumber }}</h4>
+            <h3 class="text-h3 font-weight-bold mb-2">{{ boothData?.name }}</h3>
+            <div v-if="boothData?.description" class="text-subtitle-1" style="font-size: 1.125rem !important;">{{ boothData?.description }}</div>
+            <div class="text-overline">@ {{ boothData?.location }}</div>
+          </VLayout>
+          <VLayout v-if="boothData.boothNumber" class="d-none d-sm-flex flex-column flex-0-1 text-center">
+            <div class="text-subtitle-1">부스 번호</div>
+            <h2 class="text-h2 pa-2">{{ boothData.boothNumber }}</h2>
+          </VLayout>
         </VLayout>
       </VParallax>
     </VSheet>
 
     <!-- Booth open status area -->
     <VScrollXTransition leave-absolute>
-      <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="success">정상 운영 중!</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="error"  >운영을 종료한 부스입니다.</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="warning">운영이 일시 중지되었습니다.<br /><span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="info"   >준비 중인 부스입니다.</VSheet>
+      <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="blue"           >정상 운영 중!</VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="red-darken-1"   >운영을 종료한 부스입니다.</VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="orange-darken-1">운영이 일시 중지되었습니다.<br /><span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
+      <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="green"          >준비 중인 부스입니다.</VSheet>
     </VScrollXTransition>
   </section>
 </template>
