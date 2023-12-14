@@ -34,6 +34,7 @@
           <GoodsListView v-if="boothGoodsList.length > 0"
                         :currencySymbol="boothData?.currencySymbol"
                         :goodsList="boothGoodsList"
+                        :goodsImageUrlResolver="getUploadFilePath"
                         :goodsCategoryList="boothCategoryList"
                         :editable="false"
                         omitEmptyGoodsCategory />
@@ -51,6 +52,7 @@ import { ErrorCodes, type IBooth, type IGoods, type IGoodsCategory } from "@mybo
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
+import { getUploadFilePath } from "@/lib/common-functions";
 
 @Component({
   components: {
@@ -60,6 +62,7 @@ import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 })
 export default class IndividualBoothPage extends Vue {
   readonly ErrorCodes = ErrorCodes;
+  readonly getUploadFilePath = getUploadFilePath;
 
   isDataFetched: boolean = false;
   fetchError: ErrorCodes | null = null;

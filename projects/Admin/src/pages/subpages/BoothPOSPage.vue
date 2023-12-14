@@ -17,6 +17,7 @@
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
       <GoodsListView :currencySymbol="currencySymbol"
                      :goodsList="Object.values(boothGoodsDict)"
+                     :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
                      @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
@@ -49,6 +50,7 @@ import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
+import { getUploadFilePath } from "@/lib/functions";
 
 @Component({
   components: {
@@ -58,6 +60,7 @@ import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmD
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
+  readonly getUploadFilePath = getUploadFilePath;
   readonly orderList: Record<number, IGoodsOrderInternal> = {};
 
   smDrawerHeight: number = 0;

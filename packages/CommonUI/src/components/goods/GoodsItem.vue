@@ -9,10 +9,10 @@
           @pointerenter="isHovering = true"
           @pointerleave="isHovering = false"
           @click.stop="onItemClick">
-    <VImg class="goods-image" :src="'https://picsum.photos/seed/' + goodsData.id + '/200/200'" cover />
+    <VImg class="goods-image" :src="goodsImageUrlComputed" cover />
     <div class="goods-image-overlay"></div>
 
-    <div v-if="editable" class="click-to-edit-text">클릭하여 수정</div>
+    <div v-if="editable" class="click-to-edit-text"><VIcon>mdi-pencil</VIcon> 클릭하여 수정</div>
 
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name">{{ goodsData.name }}</div>
@@ -37,11 +37,12 @@ import { isDisplayXXS } from "@/plugins/vuetify";
 })
 export default class GoodsItem extends Vue {
   @Prop({ type: Object, required: true }) goodsData!: IGoods;
+  @Prop({ type: String, default: null  }) goodsImageUrl!: string | null;
   @Prop({ type: String, required: true }) currencySymbol!: string;
   @Prop({ type: Boolean, default: true }) editable!: boolean;
 
-  readonly ELEVATION_NORMAL = 2;
-  readonly ELEVATION_HOVER  = 6;
+  readonly ELEVATION_NORMAL = 4;
+  readonly ELEVATION_HOVER  = 8;
   readonly WIDTH_NORMAL  = 200;
   readonly HEIGHT_NORMAL = 250;
   readonly WIDTH_SMALL   = 150;
@@ -59,6 +60,10 @@ export default class GoodsItem extends Vue {
   }
   get height(): number { return this.mdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL; }
 
+  get goodsImageUrlComputed(): string {
+    return this.goodsImageUrl ?? (this.goodsData.goodsImageUrl ?? `https://picsum.photos/seed/${this.goodsData.id}/200/200`);
+  }
+
   @Emit("click")
   onItemClick() {
     if(this.editable) this.$emit("editRequest", this.goodsData.id);
@@ -69,36 +74,40 @@ export default class GoodsItem extends Vue {
 
 <style lang="scss" scoped>
 .goods-item {
+  $transition-duration: 0.33s;
+
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: box-shadow 0.25s, transform 0.25s ease-in-out;
+  transition: box-shadow $transition-duration, transform $transition-duration cubic-bezier(0, 0, 0, 1);
+
+  &:hover {
+    transform: translateY(-3.3%);
+  }
 
   &.sm {
     font-size: 90%;
   }
 
-  &.edit:hover {
-    transform: translateY(-5%);
-  }
-
   .click-to-edit-text {
-    $top-position: 16px;
-
     position: absolute;
     color: white;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(0.5em);
     width: 100%;
     text-align: center;
     left: 0;
     right: 0;
-    top: $top-position;
+    top: 0;
+    padding: 0.5em 0;
     font-size: 1.25em;
-    transform: translateY($top-position * -4);
-    transition: transform 0.25s ease-in-out;
+    font-weight: 500;
+    transform: translateY(-4rem);
+    transition: transform $transition-duration cubic-bezier(0, 0, 0, 1);
   }
 
   &.edit:hover .click-to-edit-text {
-    transform: translateY(0);
+    transform: translateY(-0.05rem);
   }
 
   .goods-image {
@@ -119,7 +128,7 @@ export default class GoodsItem extends Vue {
     right: 0;
     top: 0;
     bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.33) 33%, rgba(0, 0, 0, 1));
+    background: linear-gradient(transparent 33%, rgba(0, 0, 0, 0.8));
   }
 
   .goods-info {

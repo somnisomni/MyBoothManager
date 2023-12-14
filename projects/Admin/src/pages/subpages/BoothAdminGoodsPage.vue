@@ -5,6 +5,7 @@
     <GoodsListView editable
                    :currencySymbol="currencySymbol"
                    :goodsList="goodsList"
+                   :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    @goodsEditRequest="openGoodsEditDialog"
                    @goodsCategoryEditRequest="openGoodsCategoryEditDialog" />
@@ -25,6 +26,7 @@ import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 import { useAdminStore } from "@/stores/admin";
+import { getUploadFilePath } from "@/lib/functions";
 
 @Component({
   components: {
@@ -34,6 +36,8 @@ import { useAdminStore } from "@/stores/admin";
   },
 })
 export default class BoothAdminGoodsPage extends Vue {
+  readonly getUploadFilePath = getUploadFilePath;
+
   goodsEditDialogOpen = false;
   goodsCategoryEditDialogOpen = false;
   editDialogGoodsId: number | null = null;
