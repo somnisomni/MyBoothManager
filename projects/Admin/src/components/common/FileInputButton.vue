@@ -1,5 +1,5 @@
 <template>
-  <VLayout class="d-flex align-center pa-2">
+  <VLayout class="d-inline-flex align-center pa-2">
     <input ref="fileInput"
            type="file"
            :accept="acceptsString"
@@ -8,7 +8,8 @@
            style="opacity: 0" @change="onFileInputChange" />
 
     <slot name="button">
-      <VBtn @click="onFileInputButtonClick">{{ label }}</VBtn>
+      <VBtn :disabled="disabled"
+            @click="onFileInputButtonClick">{{ label }}</VBtn>
     </slot>
     <span v-if="!hideFileName" class="ml-2">{{ fileName }}</span>
 
@@ -45,6 +46,7 @@ const ACCEPTS_MIMES: Record<FileInputAccepts, Array<string>> = {
 export default class FileInputButton extends Vue {
   @Model({ type: File, default: null }) value!: File | null;
   @Prop({ type: String, default: "파일 선택" }) label!: string;
+  @Prop({ type: Boolean, default: false }) disabled!: boolean;
   @Prop({ type: Boolean, default: false }) hideFileName!: boolean;
   @Prop({ default: FileInputAccepts.ALL }) accepts!: FileInputAccepts;
   @Prop({ type: String, default: null }) acceptsCustom!: string | null;

@@ -114,7 +114,7 @@ export default class AdminAPI {
   static async uploadBoothBannerImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
   }
 
   /* Delete */

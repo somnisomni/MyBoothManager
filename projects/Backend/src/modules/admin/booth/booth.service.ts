@@ -1,13 +1,13 @@
 import { randomUUID } from "crypto";
-import { createWriteStream } from "fs";
-import { Injectable, InternalServerErrorException, NotImplementedException } from "@nestjs/common";
-import { IBoothMemberManipulationResponse, IBoothResponse, ISuccessResponse, IUploadStorage, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { IBoothMemberManipulationResponse, ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, findOneByPk, generateUploadFileName, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
+import UploadStorage from "@/db/models/uploadstorage";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UtilService } from "../util/util.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -15,8 +15,6 @@ import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 import { BoothInfoUpdateFailedException, BoothMemberManipulationFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
-import UploadStorage from "@/db/models/uploadstorage";
-import { Includeable } from "sequelize";
 
 @Injectable()
 export class BoothService {
@@ -49,17 +47,15 @@ export class BoothService {
     return await this.goodsOrderService.findAll(boothId);
   }
 
-  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<ISuccessResponse> {
+  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
     const uploadSubpath = "booth/banner";
 
     // TODO: file validation
 
     let fileName: string;
-    let writtenFilePath: string;
-
     try {
       fileName = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
-      writtenFilePath = await this.utilService.writeFileTo(file, fileName, uploadSubpath);
+      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
     } catch(err) {
       console.error(err);
       throw new InternalServerErrorException();  // TODO: custom exception
@@ -84,12 +80,14 @@ export class BoothService {
       await upload.save();
 
       await booth.update({ bannerImageId: upload.id });
+
+      return {
+        value: upload.filePath,
+      };
     } catch(err) {
       console.error(err);
       throw new InternalServerErrorException();  // TODO: custom exception
     }
-
-    return SUCCESS_RESPONSE;
   }
 
   async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {

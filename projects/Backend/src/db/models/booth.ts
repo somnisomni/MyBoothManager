@@ -1,12 +1,11 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import { BoothStatus, IBoothMember, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, HasOne } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 import UploadStorage from "./uploadstorage";
-import path from "path";
 
 export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">
                                & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">>;

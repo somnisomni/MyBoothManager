@@ -176,6 +176,21 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function uploadBoothBannerImage(payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadBoothBannerImage(currentBoothId.value, payload));
+
+    if(response && response instanceof Object) {
+      if(typeof response.value === "string") {
+        boothList[currentBoothId.value].bannerImageUrl = response.value;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return response;
+    }
+  }
+
   async function createGoods(payload: IGoodsCreateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.createGoods(payload));
 
@@ -368,6 +383,7 @@ const useAdminStore = defineStore("admin", () => {
     createGoods,
     createGoodsCategory,
     createGoodsOrder,
+    uploadBoothBannerImage,
     deleteGoods,
     deleteGoodsCategory,
     clearAllBoothData,
