@@ -297,8 +297,19 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function deleteGoods(goodsId: number, boothId: number): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, boothId));
+  async function deleteBoothBannerImage(): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothBannerImage(currentBoothId.value));
+
+    if(response && response instanceof Object) {
+      delete boothList[currentBoothId.value].bannerImageUrl;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
+  async function deleteGoods(goodsId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, currentBoothId.value));
 
     if(response && response instanceof Object) {
       // Force fetch goods
@@ -384,6 +395,7 @@ const useAdminStore = defineStore("admin", () => {
     createGoodsCategory,
     createGoodsOrder,
     uploadBoothBannerImage,
+    deleteBoothBannerImage,
     deleteGoods,
     deleteGoodsCategory,
     clearAllBoothData,

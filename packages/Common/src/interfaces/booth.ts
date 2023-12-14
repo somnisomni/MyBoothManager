@@ -44,7 +44,7 @@ export interface IBooth extends IDataModelBase {
 export type IBoothResponse = IBooth;
 
 export interface IBoothModel extends Omit<IBooth, "bannerImageUrl"> {
-  bannerImageId?: number;
+  bannerImageId?: number | null;
 }
 
 export type BoothCreateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "dateOpen" | "dateClose";

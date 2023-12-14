@@ -57,9 +57,10 @@ export default class BoothAdminInfoPage extends Vue {
   bannerImageUpdateInProgress: boolean = false;
   bannerImageUpdateOK: boolean = false;
   bannerImageFileSelection: File | Blob | null = null;
-  bannerImageWillBeDeleted: boolean = !(useAdminStore().boothList[useAdminStore().currentBoothId].bannerImageUrl);
+  bannerImageWillBeDeleted: boolean = false;
   bannerImageNeedUpdate: boolean = false;
   bannerImageFilePickedObjectURL: string | null = null;
+
   onBannerImageFileChange() {
     this.bannerImageWillBeDeleted = false;
 
@@ -71,31 +72,30 @@ export default class BoothAdminInfoPage extends Vue {
       this.bannerImageFilePickedObjectURL = null;
     }
   }
+
   onBannerImageRequestDelete() {
     this.bannerImageWillBeDeleted = true;
     this.bannerImageNeedUpdate = true;
   }
+
   async uploadBannerImage() {
-    if(this.bannerImageFileSelection) {
-      this.bannerImageUpdateInProgress = true;
+    this.bannerImageUpdateInProgress = true;
 
-      const response = await useAdminStore().uploadBoothBannerImage(this.bannerImageFileSelection);
+    const response = this.bannerImageFileSelection ? await useAdminStore().uploadBoothBannerImage(this.bannerImageFileSelection) : await useAdminStore().deleteBoothBannerImage();
 
-      if(response === true) {
-        this.bannerImageFileSelection = null;
-        this.onBannerImageFileChange();
+    if(response === true) {
+      this.bannerImageFileSelection = null;
+      this.onBannerImageFileChange();
 
-        this.bannerImageUpdateOK = true;
-        setTimeout(() => { this.bannerImageUpdateOK = false; }, 3000);
-      } else {
-        alert("error " + response);
-      }
-
-      this.bannerImageUpdateInProgress = false;
+      this.bannerImageUpdateOK = true;
+      setTimeout(() => { this.bannerImageUpdateOK = false; }, 3000);
     } else {
-      alert("delete");
+      alert("error " + response);
     }
+
+    this.bannerImageUpdateInProgress = false;
   }
+
   get bannerImageSource(): string | null {
     if(this.bannerImageWillBeDeleted) return null;
 

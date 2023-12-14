@@ -90,6 +90,28 @@ export class BoothService {
     }
   }
 
+  async deleteBannerImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.bannerImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      booth.set("bannerImageId", null);
+      await booth.save();
+
+      return SUCCESS_RESPONSE;
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
   async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {
     const booth = await this.findBoothBelongsToAccount(addBoothMemberDto.boothId, callerAccountId);
 

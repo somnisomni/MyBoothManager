@@ -84,7 +84,7 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @Default(null)
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare bannerImageId?: number;
+  declare bannerImageId?: number | null;
 
   @Column(DataTypes.VIRTUAL)
   get bannerImageUrl(): string | null {

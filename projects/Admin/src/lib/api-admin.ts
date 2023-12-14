@@ -118,6 +118,10 @@ export default class AdminAPI {
   }
 
   /* Delete */
+  static async deleteBoothBannerImage(boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/banner`));
+  }
+
   static async deleteGoods(goodsId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}?bId=${boothId}`));
   }

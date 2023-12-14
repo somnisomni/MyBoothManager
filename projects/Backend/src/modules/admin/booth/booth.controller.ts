@@ -38,6 +38,11 @@ export class BoothController {
     return await this.boothService.uploadBannerImage(+id, await this.utilService.getFileFromRequest(req), authData.id);
   }
 
+  @Delete(":id/banner")
+  async removeBannerImage(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.deleteBannerImage(+id, authData.id);
+  }
+
   @Put(":id/member")
   async addMember(@Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.addMember(addBoothMemberDto, authData.id);

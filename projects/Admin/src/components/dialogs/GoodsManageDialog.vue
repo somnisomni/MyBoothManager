@@ -297,7 +297,7 @@ export default class GoodsManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.goodsId) {
-      const response = await useAdminStore().deleteGoods(Number(this.goodsId), this.currentBooth.id);
+      const response = await useAdminStore().deleteGoods(Number(this.goodsId));
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
