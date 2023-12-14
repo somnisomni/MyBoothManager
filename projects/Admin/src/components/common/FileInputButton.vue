@@ -92,7 +92,6 @@ export default class FileInputButton extends Vue {
         acc = acc.concat(ACCEPTS_MIMES[FileInputAccepts.TEXT]);
       }
     }
-    console.log(this.accepts, acc);
 
     return acc.join(",");
   }
