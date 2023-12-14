@@ -29,7 +29,6 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.4",
     "@nestjs/platform-fastify": "^10.2.10",
-    "@nestjs/serve-static": "^4.0.0",
     "app-root-path": "^3.1.0",
     "argon2": "=0.31.2",
     "dotenv": "^16.3.1",
