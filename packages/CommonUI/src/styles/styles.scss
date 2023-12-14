@@ -9,3 +9,14 @@
     }
   }
 }
+
+/* Lower minimum width for Vuetify snackbar component */
+.v-snackbar {
+  & &__wrapper {
+    min-width: 250px !important;
+  }
+
+  & &__content {
+    word-break: keep-all;
+  }
+}
