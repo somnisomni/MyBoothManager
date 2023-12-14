@@ -44,9 +44,8 @@ export default class BoothInfoSection extends Vue {
   @Prop({ type: Object, required: true }) boothData!: IBooth;
 
   get bannerImageUrl(): string {
-    return this.boothData.bannerImageUrl
-      ? getUploadFilePath(this.boothData.bannerImageUrl)
-      : `https://picsum.photos/seed/${this.boothData.id}/800/400`;
+    return  getUploadFilePath(this.boothData.bannerImageUrl)
+      ?? `https://picsum.photos/seed/${this.boothData.id}/800/400`;
   }
 }
 </script>

@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PublicBoothModule } from "@/modules/public/booth/booth.module";
 import { GoodsOrderModule } from "../goods-order/goods-order.module";
+import { UtilModule } from "../util/util.module";
 import { BoothController } from "./booth.controller";
 import { BoothService } from "./booth.service";
-import { UtilModule } from "../util/util.module";
 
 describe("BoothController", () => {
   let controller: BoothController;

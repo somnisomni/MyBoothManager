@@ -3,11 +3,11 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/multipart";
 // import { fastifyHelmet } from "@fastify/helmet";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
+import { default as fastifyStatic, FastifyStaticOptions } from "@fastify/static";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
-import fastifyStatic, { FastifyStaticOptions } from "@fastify/static";
 import { UtilService } from "./modules/admin/util/util.service";
 
 let app: NestFastifyApplication;
