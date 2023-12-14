@@ -16,24 +16,25 @@
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
-    <p v-if="!editMode" class="mb-2 text-warning">※ 굿즈 이미지는 먼저 굿즈를 추가 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.</p>
-    <VLayout class="d-flex flex-column flex-md-row align-center">
+    <p v-if="!editMode" class="mb-2 text-warning">※ 굿즈 이미지는 먼저 굿즈를 추가한 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.</p>
+    <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
-                       class="flex-0-1 mr-4"
+                       class="flex-0-1 mr-4 align-self-center"
                        :existingSrc="goodsImageUrl"
                        contextName="굿즈"
-                       width="auto"
+                       width="200px"
                        height="250px"
                        aspectRatio="4/5"
                        hideSubtitle
+                       controlsColumn
                        :uploadCallback="goodsImageUploadCallback"
                        :deleteCallback="goodsImageDeleteCallback" />
 
-      <VForm v-model="formValid" @submit.prevent class="flex-1-0 w-100">
+      <VForm v-model="formValid" @submit.prevent class="flex-1-0-100">
         <VTextField v-model="formData.name"
                     tabindex="1"
                     density="compact"
-                    label="굿즈 이름"
+                    label="굿즈 이름 *"
                     placeholder="예시) 겁나 귀여운 코하루 아크릴 스탠드"
                     :rules="stringValidator(formData.name)" />
         <VRow class="ma-0 d-flex flex-row">
@@ -43,7 +44,7 @@
                   :items="allCategoryData"
                   item-title="name"
                   item-value="id"
-                  label="카테고리"
+                  label="카테고리 *"
                   :rules="[!formData.categoryId ? '카테고리를 선택해주세요.' : true]" />
           <VBtn icon variant="flat" class="mt-1 ml-2"
                 title="굿즈 카테고리 추가"
@@ -56,21 +57,19 @@
                     tabindex="3"
                     density="compact"
                     label="굿즈 설명"
-                    placeholder="예시) 1/10 비율 등신대 아크릴 스탠드"
-                    :rules="stringValidator(formData.description)" />
+                    placeholder="예시) 1/10 비율 등신대 아크릴 스탠드" />
         <VTextField v-model="formData.type"
                     tabindex="4"
                     density="compact"
                     label="굿즈 종류"
-                    placeholder="예시) 아크릴 스탠드"
-                    :rules="stringValidator(formData.type)" />
+                    placeholder="예시) 아크릴 스탠드" />
         <VTextField v-model="formData.price"
                     tabindex="5"
                     density="compact"
                     type="number"
                     min="0"
                     :prefix="currencySymbol"
-                    label="가격 (단가)"
+                    label="가격 (단가) *"
                     :rules="numberValidator(formData.price)" />
         <VRow class="ma-0 d-flex flex-row">
           <VTextField v-model="formData.stockRemaining"
@@ -80,7 +79,7 @@
                       :max="formData.stockInitial"
                       min="0"
                       suffix="개"
-                      label="현재 재고"
+                      label="현재 재고 *"
                       :rules="numberValidatorStockRemaining(formData.stockRemaining)"
                       @focus="!formData.stockRemaining ? formData.stockRemaining = formData.stockInitial : undefined" />
           <span class="mx-2 mt-1" style="font-size: 1.5em"> / </span>
@@ -91,7 +90,7 @@
                       max="10000"
                       min="0"
                       suffix="개"
-                      label="초기 재고"
+                      label="초기 재고 *"
                       :rules="numberValidator(formData.stockInitial)" />
         </VRow>
       </VForm>

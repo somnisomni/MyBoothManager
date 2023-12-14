@@ -1,7 +1,6 @@
 <template>
   <div class="mb-2">
     <VLayout class="d-flex flex-column align-center justify-center text-center rounded-lg"
-             :width="width"
              :style="{ 'min-height': height }">
       <VImg v-if="imageSource" :src="imageSource" cover class="no-interaction" :style="imageDynamicStyle" />
       <span v-else class="text-body-1 text-disabled"><VIcon>mdi-image-remove</VIcon> {{ contextName }} 이미지가 없습니다.</span>
@@ -9,10 +8,14 @@
         <VProgressLinear v-if="imageUpdateInProgress" indeterminate />
       </VExpandTransition>
     </VLayout>
-    <VContainer class="d-flex flex-wrap align-center justify-space-between overflow-visible py-0 my-2">
-      <VLayout class="d-flex flex-0-0 align-center justify-start pa-2 pl-0 overflow-visible" style="max-width: 100%;">
-        <h6 v-if="!hideSubtitle" class="text-h6 font-weight-bold mr-2">{{ contextName }} 이미지</h6>
-        <VBtn v-if="imageSource" :disabled="imageUpdateInProgress" class="mr-2" color="red-darken-1" @click="onImageRequestDelete"><VIcon>mdi-delete</VIcon></VBtn>
+
+    <VContainer class="d-flex flex-wrap align-center overflow-visible py-0 my-2"
+                :class="{ 'flex-column justify-center': controlsColumn, 'justify-space-between': !controlsColumn }">
+      <VLayout class="d-flex flex-0-0 align-center justify-start pa-2 overflow-visible"
+               :class="{ 'flex-column': controlsColumn, 'pl-0': !controlsColumn }"
+               style="max-width: 100%;">
+        <h6 v-if="!hideSubtitle" class="text-h6 font-weight-bold" :class="{ 'my-1': controlsColumn, 'mr-2': !controlsColumn }">{{ contextName }} 이미지</h6>
+        <VBtn v-if="imageSource" :disabled="imageUpdateInProgress" :class="{ 'my-1': controlsColumn, 'mr-2': !controlsColumn }" color="red-darken-1" @click="onImageRequestDelete"><VIcon>mdi-delete</VIcon></VBtn>
 
         <span v-if="imageNeedUpdate" class="text-body-2 text-warning"><VIcon>mdi-alert</VIcon> 변경 사항이 아직 적용되지 않았습니다.</span>
         <VFadeTransition leave-absolute>
@@ -20,9 +23,10 @@
         </VFadeTransition>
       </VLayout>
 
-      <VLayout class="d-flex flex-0-0 align-center justify-end pa-2 pr-0 overflow-visible" style="max-width: 100%;">
+      <VLayout class="d-flex flex-0-0 align-center justify-end pa-2 overflow-visible" style="max-width: 100%;"
+               :class="{ 'pr-0': !controlsColumn }">
         <FileInputButton v-model="imageFileSelection" :accepts="FileInputAccepts.IMAGE" :disabled="imageUpdateInProgress" class="flex-grow-0" hideFileName @change="onImageFileChange" />
-        <VBtn :disabled="!imageNeedUpdate || imageUpdateInProgress" @click="onUpdateRequest" :color="imageWillBeDeleted ? 'red-darken-1' : 'primary'">
+        <VBtn class="ma-2" :disabled="!imageNeedUpdate || imageUpdateInProgress" @click="onUpdateRequest" :color="imageWillBeDeleted ? 'red-darken-1' : 'primary'">
           <span v-if="imageWillBeDeleted">이미지 삭제</span>
           <span v-else>업로드</span>
         </VBtn>
@@ -48,6 +52,7 @@ export default class ImageWithUpload extends Vue {
   @Prop({ type: String, required: true, default: null }) existingSrc!: string | null;
   @Prop({ type: String, default: "" }) contextName!: string;
   @Prop({ type: Boolean, default: false }) hideSubtitle!: boolean;
+  @Prop({ type: Boolean, default: false }) controlsColumn!: boolean;
   @Prop({ type: String, default: "auto" }) width!: string;
   @Prop({ type: String, default: "300px" }) height!: string;
   @Prop({ type: String, default: "1/1" }) aspectRatio!: string;
