@@ -30,6 +30,7 @@ import type { IGoods } from "@myboothmanager/common";
 import { Vue, Component, Prop, Emit } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { unref } from "vue";
+import { isDisplayXXS } from "@/plugins/vuetify";
 
 @Component({
   emits: ["click", "editRequest"],
@@ -53,7 +54,9 @@ export default class GoodsItem extends Vue {
   }
 
   get elevation(): number { return this.isHovering ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL; }
-  get width(): number { return this.mdAndUp ? this.WIDTH_NORMAL : this.WIDTH_SMALL; }
+  get width(): number | string {
+    return this.mdAndUp ? this.WIDTH_NORMAL : (!isDisplayXXS() ? this.WIDTH_SMALL : "100%");
+  }
   get height(): number { return this.mdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL; }
 
   @Emit("click")

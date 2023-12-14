@@ -1,5 +1,4 @@
-import type { App } from "vue";
-import colors from "vuetify/util/colors";
+import { type App } from "vue";
 import * as C from "./components";
 import "@/styles/styles.scss";
 
@@ -18,5 +17,10 @@ export default {
   },
 };
 
-export const APP_PRIMARY_COLOR: string = colors.teal.darken1;
-export const APP_SECONDARY_COLOR: string = colors.teal.lighten3;
+export {
+  VUETIFY_COMMON_OPTIONS,
+  APP_PRIMARY_COLOR,
+  APP_SECONDARY_COLOR,
+  BREAKPOINT_XXS,
+  isDisplayXXS,
+} from "./plugins/vuetify";

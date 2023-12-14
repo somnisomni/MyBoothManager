@@ -1258,6 +1258,7 @@ __metadata:
     "@types/jest": "npm:^29.5.8"
     "@types/node": "npm:^18.18.9"
     "@types/sequelize": "npm:^4.28.18"
+    "@types/validator": "npm:^13.11.7"
     "@typescript-eslint/eslint-plugin": "npm:^6.11.0"
     "@typescript-eslint/parser": "npm:^6.11.0"
     argon2: "npm:=0.31.2"
@@ -1284,25 +1285,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=83cf38&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=280cfb&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 2107adb1fec4eeb6c546bed8f900e075b18a46f070179989fc5ca9b0fbc6beb33a70f79882ecbcb3708759990982a8c937b83bf5c1f963977872927934ca6f55
+  checksum: 89a6ff849eabef317fe9b70b6a6f240dfe8768a1d45fdaf27b36b934dd890629c48ebc19ad815ce5a8563ce32565dc741c37de60a34142f11e743fc589ee7dee
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=83cf38&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=280cfb&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 2107adb1fec4eeb6c546bed8f900e075b18a46f070179989fc5ca9b0fbc6beb33a70f79882ecbcb3708759990982a8c937b83bf5c1f963977872927934ca6f55
+  checksum: 89a6ff849eabef317fe9b70b6a6f240dfe8768a1d45fdaf27b36b934dd890629c48ebc19ad815ce5a8563ce32565dc741c37de60a34142f11e743fc589ee7dee
   languageName: node
   linkType: hard
 
@@ -1332,6 +1335,7 @@ __metadata:
     vue-tsc: "npm:^1.8.22"
     vuetify: "npm:^3.4.1"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
@@ -2060,6 +2064,13 @@ __metadata:
   version: 13.11.6
   resolution: "@types/validator@npm:13.11.6"
   checksum: 65991ba60029361b279009efb16cf08a576002742c3a5b84e50e19f74083dafb51cdc697ad54e94befb298c46a468b554844552b9ce78663a4cf7e2030a907f6
+  languageName: node
+  linkType: hard
+
+"@types/validator@npm:^13.11.7":
+  version: 13.11.7
+  resolution: "@types/validator@npm:13.11.7"
+  checksum: 5935d363a9a6099ee6a2100ae3be46d9d1f113dbea16e03b627b48b2f746f01100535febc564d215a7054dd9a632ec0cda10ecd6a75d088e3e38834290fb76f6
   languageName: node
   linkType: hard
 
