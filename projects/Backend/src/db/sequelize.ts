@@ -5,6 +5,7 @@ import Booth from "./models/booth";
 import Goods from "./models/goods";
 import GoodsCategory from "./models/goods-category";
 import GoodsOrder from "./models/goods-order";
+import UploadStorage from "./models/uploadstorage";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
@@ -17,7 +18,7 @@ export default class MBMSequelize {
 
   private static async setupModels(): Promise<void> {
     /* == Model initialization == */
-    MBMSequelize.instance.addModels([Account, Booth, Goods, GoodsCategory, GoodsOrder]);
+    MBMSequelize.instance.addModels([Account, Booth, Goods, GoodsCategory, GoodsOrder, UploadStorage]);
 
     /* == Sync model == */
     await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });

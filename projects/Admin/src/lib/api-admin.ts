@@ -110,7 +110,28 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST("goods/order", payload));
   }
 
+  /* Upload */
+  static async uploadBoothBannerImage(boothId: number, image: Blob) {
+    const formData = new FormData();
+    formData.set("0", image);
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+  }
+
+  static async uploadGoodsImage(goodsId: number, boothId: number, image: Blob) {
+    const formData = new FormData();
+    formData.set("0", image);
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
+  }
+
   /* Delete */
+  static async deleteBoothBannerImage(boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/banner`));
+  }
+
+  static async deleteGoodsImage(goodsId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
+  }
+
   static async deleteGoods(goodsId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}?bId=${boothId}`));
   }

@@ -3,14 +3,15 @@ export enum ErrorCodes {
   UNKNOWN_ERROR = 0,
 
   // XXX: Generic errors
-  INTERNAL_ERROR        = 1,
-  ROUTE_NOT_FOUND       = 2,
-  ENTITY_NOT_FOUND      = 3,
-  INVALID_REQUEST_BODY  = 4,
-  INVALID_REQUEST_QUERY = 5,
-  INVALID_HTTP_METHOD   = 6,
-  NO_ACCESS             = 7,
-  ENTITY_DUPLICATED     = 8,
+  INTERNAL_ERROR            = 1,
+  ROUTE_NOT_FOUND           = 2,
+  ENTITY_NOT_FOUND          = 3,
+  INVALID_REQUEST_BODY      = 4,
+  INVALID_REQUEST_QUERY     = 5,
+  INVALID_HTTP_METHOD       = 6,
+  NO_ACCESS                 = 7,
+  ENTITY_DUPLICATED         = 8,
+  REQUEST_MAX_SIZE_EXCEEDED = 9,
 
   // 1XXX: Authentication/Account errors
   UNKNOWN_AUTH_ERROR      = 1000,

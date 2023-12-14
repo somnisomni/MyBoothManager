@@ -67,6 +67,7 @@
                     :min="today"
                     :rules="[() => formData.dateClose! >= formData.dateOpen! ? true : '운영 시작 일자 이후로 지정해야 합니다.']" />
       </VLayout>
+
     </VForm>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -106,6 +107,8 @@ export default class BoothManageDialog extends Vue {
   formData: IBoothUpdateRequest | IBoothCreateRequest = reactive({});
   formValid = false;
   cancelWarningDialogShown = false;
+
+
 
   get today(): string {
     const today = new Date();

@@ -1,10 +1,14 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/multipart";
 // import { fastifyHelmet } from "@fastify/helmet";
+import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
+import fastifyStatic, { FastifyStaticOptions } from "@fastify/static";
+import { UtilService } from "./modules/admin/util/util.service";
 
 let app: NestFastifyApplication;
 
@@ -40,6 +44,21 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  /* Fastify plugins */
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: MAX_UPLOAD_FILE_BYTES,
+    },
+  } as FastifyMultipartOptions);
+  await app.register(fastifyStatic, {
+    root: UtilService.RESOLVED_UPLOAD_PATH || "uploads",
+    prefix: "/uploads/",
+    etag: true,
+    cacheControl: true,
+    dotfiles: "deny",
+    index: false,
+  } as FastifyStaticOptions);
 
   // dev
   if(process.env.NODE_ENV === "development") await dev();

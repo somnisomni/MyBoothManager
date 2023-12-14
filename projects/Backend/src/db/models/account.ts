@@ -3,6 +3,7 @@ import type { IAccount } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
+import UploadStorage from "./uploadstorage";
 
 export type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
 
@@ -42,4 +43,7 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   /* === Relations === */
   @HasMany(() => Booth)
   declare booths: Booth[];
+
+  @HasMany(() => UploadStorage)
+  declare uploads: UploadStorage[];
 }

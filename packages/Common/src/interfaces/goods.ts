@@ -25,8 +25,13 @@ export interface IGoods extends IDataModelBase {
   stockInitial: number;
   stockRemaining: number;
   stockVisibility: GoodsStockVisibility;
+  goodsImageUrl?: string;
 }
 export type IGoodsResponse = IGoods;
+
+export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
+  goodsImageId?: number | null;
+}
 
 export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;

@@ -2,6 +2,9 @@
 .DS_Store
 Thumbs.db
 
+# Uploads
+uploads/
+
 # Compile output
 dist/
 node_modules/

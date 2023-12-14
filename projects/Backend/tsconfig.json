@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
-  "include": ["./src/**/*.ts", "./scripts/**/*.ts"],
-  "exclude": ["./dist", "node_modules"],
+  "include": ["env.d.ts", "./src/**/*.ts", "./scripts/**/*.ts"],
+  "exclude": ["./dist"],
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
@@ -12,6 +12,7 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "strict": true,
+    "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

@@ -1,12 +1,15 @@
 import { randomUUID } from "crypto";
-import { Injectable } from "@nestjs/common";
-import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { IBoothMemberManipulationResponse, ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
-import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, generateUploadFileName, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
+import UploadStorage from "@/db/models/uploadstorage";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
+import { UtilService } from "../util/util.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
@@ -18,10 +21,11 @@ export class BoothService {
   constructor(
     private readonly goodsOrderService: GoodsOrderService,
     private readonly publicBoothService: PublicBoothService,
+    private readonly utilService: UtilService,
   ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await findOneByPk(Booth, boothId);
+    const booth = await findOneByPk(Booth, boothId, [ UploadStorage ]);
 
     if(!booth) throw new EntityNotFoundException();
     else if(booth.ownerId !== accountId) throw new NoAccessException();
@@ -41,6 +45,71 @@ export class BoothService {
     await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     return await this.goodsOrderService.findAll(boothId);
+  }
+
+  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+    const uploadSubpath = "booth/banner";
+
+    // TODO: file validation
+
+    let fileName: string;
+    try {
+      fileName = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
+      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.bannerImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      const upload = await create(UploadStorage, {
+        ownerId: callerAccountId,
+        savePath: uploadSubpath,
+        fileName,
+      } as Omit<IUploadStorage, "id">);
+      await upload.save();
+
+      await booth.update({ bannerImageId: upload.id });
+
+      return {
+        value: upload.filePath,
+      };
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
+  async deleteBannerImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.bannerImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      booth.set("bannerImageId", null);
+      await booth.save();
+
+      return SUCCESS_RESPONSE;
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
   }
 
   async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {

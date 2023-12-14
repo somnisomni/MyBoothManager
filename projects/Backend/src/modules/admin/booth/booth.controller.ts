@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from "@nestjs/common";
+import type { FastifyRequest } from "fastify";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
+import { UtilService } from "../util/util.service";
 import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -12,7 +14,8 @@ import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
 export class BoothController {
   constructor(
     private readonly boothService: BoothService,
-    private readonly publicBoothService: PublicBoothService) {}
+    private readonly publicBoothService: PublicBoothService,
+    private readonly utilService: UtilService) {}
 
   /* Normal routes */
   @Get()
@@ -28,6 +31,16 @@ export class BoothController {
   @Post()
   async create(@Body() createAdminDto: CreateBoothDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.create(createAdminDto, authData.id);
+  }
+
+  @Post(":id/banner")
+  async uploadBannerImage(@Param("id") id: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.uploadBannerImage(+id, await this.utilService.getFileFromRequest(req), authData.id);
+  }
+
+  @Delete(":id/banner")
+  async removeBannerImage(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.deleteBannerImage(+id, authData.id);
   }
 
   @Put(":id/member")

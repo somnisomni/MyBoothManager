@@ -14,6 +14,7 @@
                      :key="goods.id"
                      :editable="editable"
                      :goodsData="goods"
+                     :goodsImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
                      :currencySymbol="currencySymbol"
                      @click="onGoodsClick"
                      @editRequest="onGoodsEditRequest" />
@@ -32,6 +33,7 @@ import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 export default class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  goodsList!: Array<IGoods>;
   @Prop({ type: Object, required: true })  goodsCategoryList!: Array<IGoodsCategory>;
+  @Prop({ type: Function, default: (s: any) => s }) goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
   @Prop({ type: Boolean, default: false }) omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) editable!: boolean;

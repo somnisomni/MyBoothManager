@@ -2,6 +2,8 @@ import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGo
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
+export const MAX_UPLOAD_FILE_BYTES = (1024 * 1024) * 5;  // 5MB
+
 export default class APICaller {
   private static readonly FETCH_COMMON_OPTIONS: Partial<RequestInit> = {
     headers: { "Content-Type": "application/json" },
@@ -12,20 +14,24 @@ export default class APICaller {
   constructor(private readonly apiHost: string, private readonly apiGroup: string = "", private readonly getAuthorizationToken: (() => string) | null | undefined = null, private readonly teapotPath: string = "teapot") {}
 
   /* Basic fetch function */
-  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
+  private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
     const url: string = `${this.apiHost}${this.apiGroup.length > 0 ? `/${this.apiGroup}` : ""}/${path}`;
 
     const response = await fetch(url, {
-      ...APICaller.FETCH_COMMON_OPTIONS,
+      ...additionalInitOptions,
       method,
-      body: payload ? JSON.stringify(payload) : undefined,
+      body: payload,
       headers: {
-        ...APICaller.FETCH_COMMON_OPTIONS.headers,
+        ...additionalInitOptions?.headers ?? { },
         ...containAuthCredential && this.getAuthorizationToken ? { Authorization: `Bearer ${this.getAuthorizationToken()}` } : { },
       },
     });
 
     return await response.json() as T;
+  }
+
+  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
+    return this.callAPIInternal<T>(method, path, payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS, containAuthCredential);
   }
 
   /* Fetch function shortcuts */
@@ -34,6 +40,10 @@ export default class APICaller {
   public async PUT<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("PUT", path, payload, containAuthCredential); }
   public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("PATCH", path, payload, containAuthCredential); }
   public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("DELETE", path, payload, containAuthCredential); }
+
+  public async POSTMultipart<T>(path: string, payload: FormData): Promise<T | IBackendErrorResponse> {
+    return this.callAPIInternal<T>("POST", path, payload, undefined, true);
+  }
 
   /* Public APIs */
   private readonly createPublicAPI = () => new APICaller(this.apiHost, "public");
