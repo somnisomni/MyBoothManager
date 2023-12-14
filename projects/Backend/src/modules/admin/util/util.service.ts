@@ -11,17 +11,20 @@ import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/
 export class UtilService {
   constructor() { }
 
+  // NOTE: App root path resolves monorepo root, not the project root
+  /**
+   * Use `UtilService.safeResolveUploadFolder()` or `UtilService.getFileUploadPath()` instead for normal usage
+   */
+  public static RESOLVED_UPLOAD_PATH: string = path.resolve(APP_ROOT_PATH, process.env.FILE_UPLOAD_FOLDER || "uploads");
+
   private validateFileSize(file: MultipartFile, maxSize: number = MAX_UPLOAD_FILE_BYTES): boolean {
     if(file.file.readableLength > maxSize) throw new RequestMaxSizeExceededException();
 
     return true;
   }
 
-  private async getFileUploadFolder(folderName: string | undefined = process.env.FILE_UPLOAD_FOLDER): Promise<string> {
-    if(!folderName || folderName.length <= 0) folderName = "uploads";
-
-    // FIXME: __dirname resolves to this folder (the folder containing this util.service.ts/js), not the project root
-    const resolvedPath = path.resolve(APP_ROOT_PATH, folderName);
+  private async safeResolveUploadFolder(subpath?: string): Promise<string> {
+    const resolvedPath = path.resolve(UtilService.RESOLVED_UPLOAD_PATH, subpath || "");
 
     // Create folder, ignore if already exists
     await fs.mkdir(resolvedPath, { recursive: true });
@@ -37,8 +40,8 @@ export class UtilService {
     return resolvedPath;
   }
 
-  async getFileUploadPath(fileName: string) {
-    return path.resolve(await this.getFileUploadFolder(), fileName);
+  async getFileUploadPath(fileName: string, subpath?: string) {
+    return path.resolve(await this.safeResolveUploadFolder(subpath), fileName);
   }
 
   async getFileFromRequest(req: FastifyRequest, validate: boolean = true) {
