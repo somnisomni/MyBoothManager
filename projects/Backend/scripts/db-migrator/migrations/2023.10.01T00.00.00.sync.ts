@@ -11,7 +11,7 @@ import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import GoodsCategory from "@/db/models/goods-category";
 import Goods from "@/db/models/goods";
-import { Migration } from "../umzug";
+import { Migration, SEQUELIZE_TIMESTAMP_ATTRIBUTES } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
   /* == Model table creation == */
@@ -46,6 +46,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
   const booth = context.createTable(Booth.name, {
     id: {
@@ -96,6 +97,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: false,
       defaultValue: false,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
   const goodsCategory = context.createTable(GoodsCategory.name, {
     id: {
@@ -117,6 +119,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.STRING(256),
       allowNull: false,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
   const goodsOrder = context.createTable(GoodsOrder.name, {
     id: {
@@ -142,6 +145,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
   const goods = context.createTable(Goods.name, {
     id: {
@@ -207,6 +211,7 @@ export const up: Migration = async ({ context }) => {
       allowNull: false,
       defaultValue: 0,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
 
   /* == Relationship setup will be occured in the backend runtime == */

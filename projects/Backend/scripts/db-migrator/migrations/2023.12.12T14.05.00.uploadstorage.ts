@@ -5,7 +5,7 @@
 
 import { DataTypes } from "sequelize";
 import UploadStorage from "@/db/models/uploadstorage";
-import { Migration } from "../umzug";
+import { Migration, SEQUELIZE_TIMESTAMP_ATTRIBUTES } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
   return await context.createTable(UploadStorage.name, {
@@ -29,6 +29,7 @@ export const up: Migration = async ({ context }) => {
       type: DataTypes.STRING(128),
       allowNull: false,
     },
+    ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
 };
 
