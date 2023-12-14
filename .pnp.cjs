@@ -1960,6 +1960,7 @@ const RAW_RUNTIME_STATE =
           ["@myboothmanager/backend", "workspace:projects/Backend"],\
           ["@fastify/helmet", "npm:11.1.1"],\
           ["@fastify/multipart", "npm:8.0.0"],\
+          ["@fastify/static", "npm:6.12.0"],\
           ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=04eb57&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
           ["@nestjs/cli", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.1"],\
           ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
@@ -2411,7 +2412,7 @@ const RAW_RUNTIME_STATE =
           ["@fastify/cors", "npm:8.4.1"],\
           ["@fastify/formbody", "npm:7.4.0"],\
           ["@fastify/middie", "npm:8.3.0"],\
-          ["@fastify/static", null],\
+          ["@fastify/static", "npm:6.12.0"],\
           ["@fastify/view", null],\
           ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
           ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
@@ -2494,7 +2495,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@nestjs-serve-static-virtual-d63a0b2c05/0/cache/@nestjs-serve-static-npm-4.0.0-fddc9b35d3-f9dde33701.zip/node_modules/@nestjs/serve-static/",\
         "packageDependencies": [\
           ["@nestjs/serve-static", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:4.0.0"],\
-          ["@fastify/static", null],\
+          ["@fastify/static", "npm:6.12.0"],\
           ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
           ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
           ["@types/express", null],\

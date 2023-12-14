@@ -6,9 +6,13 @@ import { UtilService } from "../admin/util/util.service";
   imports: [
     ServeStaticModule.forRoot({
       rootPath: UtilService.RESOLVED_UPLOAD_PATH,
+      serveRoot: "/uploads",
+      serveStaticOptions: {
+        etag: true,
+        index: false,
+        cacheControl: true,
+      },
     }),
   ],
-  providers: [],
-  exports: [],
 })
 export class UploadModule { }
