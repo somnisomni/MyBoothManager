@@ -1345,6 +1345,7 @@ __metadata:
     "@nestjs/mapped-types": "npm:^2.0.4"
     "@nestjs/platform-fastify": "npm:^10.2.10"
     "@nestjs/schematics": "npm:^10.0.3"
+    "@nestjs/serve-static": "npm:^4.0.0"
     "@nestjs/testing": "npm:^10.2.10"
     "@rushstack/eslint-patch": "npm:^1.6.0"
     "@tsconfig/node18": "npm:^18.2.2"
@@ -1439,37 +1440,37 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=aa4a11&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=04eb57&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: bbed1c361eb60d58d627304eccb87430ade9ae0100c7963913d3bff38d9ae03a7768ec3e714394508a1bf39ea19a1526a6e2db5bff878eaf9c3e8a64d696b50b
+  checksum: a9c6f8d4302396e6542228545dc093d9b28dec3f80a57b5eb6d9975934a82b8e929eff9ab4ecff43cc7abf0ed56e684a957223f1b451490644890368f344f8cd
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=aa4a11&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=04eb57&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: bbed1c361eb60d58d627304eccb87430ade9ae0100c7963913d3bff38d9ae03a7768ec3e714394508a1bf39ea19a1526a6e2db5bff878eaf9c3e8a64d696b50b
+  checksum: a9c6f8d4302396e6542228545dc093d9b28dec3f80a57b5eb6d9975934a82b8e929eff9ab4ecff43cc7abf0ed56e684a957223f1b451490644890368f344f8cd
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=aa4a11&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=04eb57&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: bbed1c361eb60d58d627304eccb87430ade9ae0100c7963913d3bff38d9ae03a7768ec3e714394508a1bf39ea19a1526a6e2db5bff878eaf9c3e8a64d696b50b
+  checksum: a9c6f8d4302396e6542228545dc093d9b28dec3f80a57b5eb6d9975934a82b8e929eff9ab4ecff43cc7abf0ed56e684a957223f1b451490644890368f344f8cd
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../Common::locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../Common#../Common::hash=aa4a11&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
+  resolution: "@myboothmanager/common@file:../Common#../Common::hash=04eb57&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: bbed1c361eb60d58d627304eccb87430ade9ae0100c7963913d3bff38d9ae03a7768ec3e714394508a1bf39ea19a1526a6e2db5bff878eaf9c3e8a64d696b50b
+  checksum: a9c6f8d4302396e6542228545dc093d9b28dec3f80a57b5eb6d9975934a82b8e929eff9ab4ecff43cc7abf0ed56e684a957223f1b451490644890368f344f8cd
   languageName: node
   linkType: hard
 
@@ -1690,6 +1691,28 @@ __metadata:
   peerDependencies:
     typescript: ">=4.8.2"
   checksum: b0592112f6a014b8e3cd44765edd0032500af67b6b3a7dc92a64670d11de084649806fee60720483d286320605b805632f4968db772371d28e1ebf43f272ead9
+  languageName: node
+  linkType: hard
+
+"@nestjs/serve-static@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@nestjs/serve-static@npm:4.0.0"
+  dependencies:
+    path-to-regexp: "npm:0.2.5"
+  peerDependencies:
+    "@fastify/static": ^6.5.0
+    "@nestjs/common": ^9.0.0 || ^10.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0
+    express: ^4.18.1
+    fastify: ^4.7.0
+  peerDependenciesMeta:
+    "@fastify/static":
+      optional: true
+    express:
+      optional: true
+    fastify:
+      optional: true
+  checksum: f9dde33701d05fe0309ecc4912c00b6ed81945dbeb17af13562b33406656ae6574b14397523e21c90b78292b073a510426409c08e5f6a2b88b46d73dc51faa9c
   languageName: node
   linkType: hard
 
@@ -7824,6 +7847,13 @@ __metadata:
     lru-cache: "npm:^9.1.1 || ^10.0.0"
     minipass: "npm:^5.0.0 || ^6.0.2 || ^7.0.0"
   checksum: eebfb8304fef1d4f7e1486df987e4fd77413de4fce16508dea69fcf8eb318c09a6b15a7a2f4c22877cec1cb7ecbd3071d18ca9de79eeece0df874a00f1f0bdc8
+  languageName: node
+  linkType: hard
+
+"path-to-regexp@npm:0.2.5":
+  version: 0.2.5
+  resolution: "path-to-regexp@npm:0.2.5"
+  checksum: 9652fd2b74ec932a0df8a868478478565da81e7445a8dde1e65ca80553ad03062336b1f79234068551ecc01f3b76ad774e34f784cc3a34a97c4646cb5cfcbea9
   languageName: node
   linkType: hard
 

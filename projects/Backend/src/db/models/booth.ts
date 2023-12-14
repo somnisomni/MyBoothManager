@@ -1,16 +1,17 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { BoothStatus, IBoothMember, type IBooth, IBoothExpense } from "@myboothmanager/common";
+import { BoothStatus, IBoothMember, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, HasOne } from "sequelize-typescript";
 import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
+import UploadStorage from "./uploadstorage";
 
-export type BoothCreationAttributes = Omit<IBooth, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
-                               & Partial<Pick<IBooth, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
+export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
+                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
 
 @Table
-export default class Booth extends Model<IBooth, BoothCreationAttributes> implements IBooth {
+export default class Booth extends Model<IBoothModel, BoothCreationAttributes> implements IBoothModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -28,7 +29,8 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   declare name: string;
 
   @AllowNull
-  @Column({ type: DataTypes.STRING(1024), defaultValue: null })
+  @Default(null)
+  @Column(DataTypes.STRING(1024))
   declare description?: string;
 
   @AllowNull(false)
@@ -36,7 +38,8 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   declare location: string;
 
   @AllowNull
-  @Column({ type: DataTypes.STRING(16), defaultValue: null })
+  @Default(null)
+  @Column(DataTypes.STRING(1024))
   declare boothNumber?: string;
 
   @AllowNull(false)
@@ -77,6 +80,12 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
   @Column(DataTypes.BOOLEAN)
   declare statusPublishContent?: boolean;
 
+  @AllowNull
+  @Default(null)
+  @ForeignKey(() => UploadStorage)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare bannerImageId?: number;
+
 
   /* === Relations === */
   @BelongsTo(() => Account)
@@ -87,4 +96,7 @@ export default class Booth extends Model<IBooth, BoothCreationAttributes> implem
 
   @HasMany(() => GoodsOrder)
   declare goodsOrders: GoodsOrder[];
+
+  @BelongsTo(() => UploadStorage)
+  declare bannerImage: UploadStorage;
 }
