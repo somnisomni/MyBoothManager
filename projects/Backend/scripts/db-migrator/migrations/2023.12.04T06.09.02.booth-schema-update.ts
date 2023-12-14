@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 
-/* *** Apply goods order model changes made in c58d7be *** */
+/* *** Apply model changes made in c58d7be *** */
 /* *** See https://github.com/somnisomni/MyBoothManager/commit/c58d7be467346b1590603eca4c24a71c9d560365 *** */
 
 import { DataTypes } from "sequelize";
