@@ -1351,6 +1351,7 @@ __metadata:
     "@types/jest": "npm:^29.5.11"
     "@types/node": "npm:^18.19.3"
     "@types/sequelize": "npm:^4.28.19"
+    "@types/validator": "npm:^13.11.7"
     "@typescript-eslint/eslint-plugin": "npm:^6.13.2"
     "@typescript-eslint/parser": "npm:^6.13.2"
     app-root-path: "npm:^3.1.0"
@@ -1378,25 +1379,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=31c102&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=aa87ff&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 57b482c5d7a376999cdab889160d76a25f247075f7c29fef2dea28c118adc5ee702f5dc3bbfebab86e1544085ee681b0801b03989563b2e8d967da2cc6c70534
+  checksum: 162cdb721e8f19a90f027163a1fd638f9591d7e48ea31a5f4e25645718ac3754290708887be6d1d217082dab890da58a2ef7e01623ece568a3bbca0d13c9f4ba
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=31c102&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=aa87ff&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 57b482c5d7a376999cdab889160d76a25f247075f7c29fef2dea28c118adc5ee702f5dc3bbfebab86e1544085ee681b0801b03989563b2e8d967da2cc6c70534
+  checksum: 162cdb721e8f19a90f027163a1fd638f9591d7e48ea31a5f4e25645718ac3754290708887be6d1d217082dab890da58a2ef7e01623ece568a3bbca0d13c9f4ba
   languageName: node
   linkType: hard
 
@@ -1426,6 +1429,7 @@ __metadata:
     vue-tsc: "npm:^1.8.25"
     vuetify: "npm:^3.4.6"
   peerDependencies:
+    "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
@@ -1993,12 +1997,12 @@ __metadata:
   linkType: hard
 
 "@types/eslint@npm:*":
-  version: 8.44.8
-  resolution: "@types/eslint@npm:8.44.8"
+  version: 8.44.9
+  resolution: "@types/eslint@npm:8.44.9"
   dependencies:
     "@types/estree": "npm:*"
     "@types/json-schema": "npm:*"
-  checksum: d6e0788eb7bff90e5f5435b0babe057e76a7d3eed1e36080bacd7b749098eddae499ddb3c0ce6438addce98cc6020d9653b5012dec54e47ca96faa7b8e25d068
+  checksum: dd78831339267c2010af9485f15f68c3353f086157527442f0ce8a561b1ef01bc3a8d8dd9f9943b347a80a9a7bff7aa7b5ad1c6d664bcfb80cb6b41933c97981
   languageName: node
   linkType: hard
 
@@ -2150,7 +2154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:*, @types/validator@npm:^13.7.17":
+"@types/validator@npm:*, @types/validator@npm:^13.11.7, @types/validator@npm:^13.7.17":
   version: 13.11.7
   resolution: "@types/validator@npm:13.11.7"
   checksum: 5935d363a9a6099ee6a2100ae3be46d9d1f113dbea16e03b627b48b2f746f01100535febc564d215a7054dd9a632ec0cda10ecd6a75d088e3e38834290fb76f6
@@ -3336,9 +3340,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001565":
-  version: 1.0.30001568
-  resolution: "caniuse-lite@npm:1.0.30001568"
-  checksum: 27aa9697e8fccf61702962a3cc48ec2355940e94872e4f0dab108d8a88adb0250e5b96572bef08b90a67a8183d1c704448b2fc69d600d7b6405b3f74dc5dbcb6
+  version: 1.0.30001570
+  resolution: "caniuse-lite@npm:1.0.30001570"
+  checksum: a9b939e003dd70580cc18bce54627af84f298af7c774415c8d6c99871e7cee13bd8278b67955a979cd338369c73e8821a10b37e607d1fff2fbc8ff92fc489653
   languageName: node
   linkType: hard
 
@@ -3999,9 +4003,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.610
-  resolution: "electron-to-chromium@npm:1.4.610"
-  checksum: 62e7218db74102dd12572b35f223884c4b55b8a19e77a0886d1c47a4041a7b2e1462b52c9350a2eee9fcdf10ac1c3b2734eb0045310e1f92bea096dc1c6f3394
+  version: 1.4.612
+  resolution: "electron-to-chromium@npm:1.4.612"
+  checksum: 3c7c09d778e68aa161637a934dc1466fb87385ab3b964fd96399dfb8701c7fbe1ab1576cc25f02a2f8c618b2c4d8800379fdd29f121735e59277e67a4e783fab
   languageName: node
   linkType: hard
 
@@ -4718,7 +4722,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:4.24.3, fastify@npm:^4.24.3":
+"fastify@npm:4.24.3":
   version: 4.24.3
   resolution: "fastify@npm:4.24.3"
   dependencies:
@@ -4739,6 +4743,30 @@ __metadata:
     semver: "npm:^7.5.4"
     toad-cache: "npm:^3.3.0"
   checksum: 3d324f804eee36661283200cf66cd42a80932e1ea8c363d208759be38a65fbbc021cbc3c60e828e018b6f570aba7b685b0cfb579022bd85905855128e6196df0
+  languageName: node
+  linkType: hard
+
+"fastify@npm:^4.24.3":
+  version: 4.25.0
+  resolution: "fastify@npm:4.25.0"
+  dependencies:
+    "@fastify/ajv-compiler": "npm:^3.5.0"
+    "@fastify/error": "npm:^3.4.0"
+    "@fastify/fast-json-stringify-compiler": "npm:^4.3.0"
+    abstract-logging: "npm:^2.0.1"
+    avvio: "npm:^8.2.1"
+    fast-content-type-parse: "npm:^1.1.0"
+    fast-json-stringify: "npm:^5.8.0"
+    find-my-way: "npm:^7.7.0"
+    light-my-request: "npm:^5.11.0"
+    pino: "npm:^8.17.0"
+    process-warning: "npm:^3.0.0"
+    proxy-addr: "npm:^2.0.7"
+    rfdc: "npm:^1.3.0"
+    secure-json-parse: "npm:^2.7.0"
+    semver: "npm:^7.5.4"
+    toad-cache: "npm:^3.3.0"
+  checksum: 853d75e9c22c8340400f0f1c6521120cb1e6ed1d18e89e11009f4bd9b8ae52c15a011a89a0438121bbb3a34b00e24de9c18b319d194c7ef21f66e603fea07186
   languageName: node
   linkType: hard
 
@@ -7920,9 +7948,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.16.0":
-  version: 8.16.2
-  resolution: "pino@npm:8.16.2"
+"pino@npm:^8.16.0, pino@npm:^8.17.0":
+  version: 8.17.0
+  resolution: "pino@npm:8.17.0"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
@@ -7937,7 +7965,7 @@ __metadata:
     thread-stream: "npm:^2.0.0"
   bin:
     pino: bin.js
-  checksum: d2860167dd5ce3322d5c007b6e88c4ef672316b193677dc637ba11d6af6ad57475380d2abdbc940a7a9f57c4fa1e5776ee7e43cb1b2c2ffcf9fa42e3af41da0f
+  checksum: e1b559b00d4d4f010529dfff7bec4292e6e4c5f5ce6cd272acab91496fc620c29613e71d321aad39c21c22060167488408f10f51d0dda6334cfcab299d0f0acd
   languageName: node
   linkType: hard
 
@@ -8028,6 +8056,13 @@ __metadata:
   version: 2.3.2
   resolution: "process-warning@npm:2.3.2"
   checksum: 64cea6878a60e5d1d3648c1736c127b46d5830092bc189ff65b90abbbf746d69ca91eaeec3284f95b0a58965bb016813da787004b556f764ba439addf2eabdb0
+  languageName: node
+  linkType: hard
+
+"process-warning@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "process-warning@npm:3.0.0"
+  checksum: 2d82fa641e50a5789eaf0f2b33453760996e373d4591aac576a22d696186ab7e240a0592db86c264d4f28a46c2abbe9b94689752017db7dadc90f169f12b0924
   languageName: node
   linkType: hard
 
@@ -9966,14 +10001,14 @@ __metadata:
   linkType: hard
 
 "vuetify@npm:^3.4.6":
-  version: 3.4.6
-  resolution: "vuetify@npm:3.4.6"
+  version: 3.4.7
+  resolution: "vuetify@npm:3.4.7"
   peerDependencies:
     typescript: ">=4.7"
-    vite-plugin-vuetify: ^1.0.0-alpha.12
+    vite-plugin-vuetify: ">=1.0.0-alpha.12"
     vue: ^3.3.0
     vue-i18n: ^9.0.0
-    webpack-plugin-vuetify: ^2.0.0-alpha.11
+    webpack-plugin-vuetify: ">=2.0.0-alpha.11"
   peerDependenciesMeta:
     typescript:
       optional: true
@@ -9983,7 +10018,7 @@ __metadata:
       optional: true
     webpack-plugin-vuetify:
       optional: true
-  checksum: 25920cc3613e0b390da25fa7276662579c26048c9b068b95f66b00285f7e5f324dec1b04d56b2910e42a5974352de760aff67ab84a0055e3a9c490a1833296ee
+  checksum: c63c98ba8d42471c042edcd8c7e4d550dc2910396713866df21e1c44d10531a19219fa0715ee01c6df3e083be402cb0ec03ce609e69fbda72a173ac5f14a5870
   languageName: node
   linkType: hard
 

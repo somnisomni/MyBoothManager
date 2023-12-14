@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column">
+  <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column" style="word-break: keep-all">
     <VSnackbar v-model="hasLogout" timeout="5000" class="mb-8">
       <span v-if="hasLogoutByInvalidAuthToken">로그인 정보가 유효하지 않아 다시 로그인해야 합니다.</span>
       <span v-else>로그아웃 되었습니다.</span>

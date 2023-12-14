@@ -40,6 +40,7 @@
     "vuetify": "^3.4.6"
   },
   "peerDependencies": {
+    "@mdi/font": ">=7",
     "@myboothmanager/common": "*",
     "vue": ">=3",
     "vue-facing-decorator": ">=3",

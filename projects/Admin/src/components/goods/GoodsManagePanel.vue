@@ -14,11 +14,19 @@
         <VTooltip activator="parent" location="bottom">목록 새로고침</VTooltip>
         <VIcon>mdi-refresh</VIcon>
       </VBtn>
-      <VBtn class="my-1 flex-grow-1 order-first order-sm-0"
-            variant="outlined"
-            size="x-large"
-            :width="smAndUp ? 'auto' : '100%'"
-            @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen"><VIcon>mdi-plus</VIcon> 굿즈 추가</VBtn>
+      <VLayout class="d-flex flex-column flex-grow-1 order-first flex-sm-row order-sm-0"
+               :style="{ 'width': smAndUp ? 'auto' : '100%' }">
+        <VBtn class="my-1 mx-sm-1 flex-grow-1"
+              variant="outlined"
+              size="x-large"
+              prepend-icon="mdi-plus"
+              @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen">굿즈 추가</VBtn>
+        <VBtn class="my-1 mx-sm-1"
+              variant="outlined"
+              size="x-large"
+              prepend-icon="mdi-set-all"
+              @click.stop="setConfigurationAddDialogOpen = !setConfigurationAddDialogOpen">세트 구성 추가</VBtn>
+      </VLayout>
       <VBtn class="ml-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
             min-width="64px"
@@ -34,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component, Watch } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
@@ -49,6 +57,8 @@ import DashboardPanel from "../dashboard/DashboardPanel.vue";
 })
 export default class GoodsManagePanel extends Vue {
   goodsAddDialogOpen = false;
+  setConfigurationAddDialogOpen = false;
+  @Watch("setConfigurationAddDialogOpen") temp() { alert("기능 구현 예정"); }
 
   goodsListRefreshing = false;
 
