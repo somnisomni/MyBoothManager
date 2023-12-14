@@ -1,15 +1,16 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { type IGoods, GoodsStatus, GoodsStockVisibility } from "@myboothmanager/common";
+import { GoodsStatus, GoodsStockVisibility, IGoodsModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
+import UploadStorage from "./uploadstorage";
 
-export type GoodsCreationAttributes = Omit<IGoods, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
-                               & Partial<Pick<IGoods, "description" | "type" | "status" | "statusReason">>;
+export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
+                               & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
 
 @Table
-export default class Goods extends Model<IGoods, GoodsCreationAttributes> implements IGoods {
+export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> implements IGoodsModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -69,6 +70,21 @@ export default class Goods extends Model<IGoods, GoodsCreationAttributes> implem
   @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
   declare stockVisibility: GoodsStockVisibility;
 
+  @AllowNull
+  @Default(null)
+  @ForeignKey(() => UploadStorage)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare goodsImageId?: number | null;
+
+  @Column(DataTypes.VIRTUAL)
+  get goodsImageUrl(): string | null {
+    if(this.goodsImage) {
+      return this.goodsImage.filePath;
+    } else {
+      return null;
+    }
+  }
+
 
   /* === Relations === */
   @BelongsTo(() => Booth)
@@ -76,4 +92,7 @@ export default class Goods extends Model<IGoods, GoodsCreationAttributes> implem
 
   @BelongsTo(() => GoodsCategory)
   declare assignedGoodsCategory?: GoodsCategory;
+
+  @BelongsTo(() => UploadStorage, "goodsImageId")
+  declare goodsImage?: UploadStorage;
 }
