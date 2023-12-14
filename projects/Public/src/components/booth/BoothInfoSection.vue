@@ -2,7 +2,7 @@
   <section>
     <!-- Booth image & info area -->
     <VSheet class="booth-info-section">
-      <VParallax class="booth-image d-flex align-end" :src="'https://picsum.photos/seed/' + boothData.id + '/800/400'">
+      <VParallax class="booth-image d-flex align-end" :src="bannerImageUrl">
         <div class="booth-image-overlay"></div>
 
         <VLayout class="booth-info-content w-100 d-flex flex-row align-end pa-2 pa-sm-4">
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import { getUploadFilePath } from "@/lib/common-functions";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Component, Prop, Vue } from "vue-facing-decorator";
 
@@ -39,6 +40,12 @@ export default class BoothInfoSection extends Vue {
   readonly BoothStatus = BoothStatus;
 
   @Prop({ type: Object, required: true }) boothData!: IBooth;
+
+  get bannerImageUrl(): string {
+    return this.boothData.bannerImageUrl
+      ? getUploadFilePath(this.boothData.bannerImageUrl)
+      : `https://picsum.photos/seed/${this.boothData.id}/800/400`;
+  }
 }
 </script>
 

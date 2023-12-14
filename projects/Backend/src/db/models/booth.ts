@@ -6,9 +6,10 @@ import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 import UploadStorage from "./uploadstorage";
+import path from "path";
 
-export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">
-                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses">>;
+export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">
+                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">>;
 
 @Table
 export default class Booth extends Model<IBoothModel, BoothCreationAttributes> implements IBoothModel {
@@ -86,6 +87,14 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare bannerImageId?: number;
 
+  @Column(DataTypes.VIRTUAL)
+  get bannerImageUrl(): string | null {
+    if(this.bannerImage) {
+      return this.bannerImage.filePath;
+    } else {
+      return null;
+    }
+  }
 
   /* === Relations === */
   @BelongsTo(() => Account)
@@ -97,6 +106,6 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @HasMany(() => GoodsOrder)
   declare goodsOrders: GoodsOrder[];
 
-  @BelongsTo(() => UploadStorage)
-  declare bannerImage: UploadStorage;
+  @BelongsTo(() => UploadStorage, "bannerImageId")
+  declare bannerImage?: UploadStorage;
 }

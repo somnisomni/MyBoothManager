@@ -8,6 +8,7 @@ import { findOneByPk } from "@/lib/common-functions";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
 import { BoothNotPublishedException } from "./booth.exception";
+import UploadStorage from "@/db/models/uploadstorage";
 
 @Injectable()
 export class PublicBoothService {
@@ -25,7 +26,7 @@ export class PublicBoothService {
   };
 
   async findOne(boothId: number): Promise<Booth> {
-    const booth = await findOneByPk(Booth, boothId);
+    const booth = await findOneByPk(Booth, boothId, [ UploadStorage ]);
 
     if(booth.status === BoothStatus.PREPARE && !booth.statusPublishContent) {
       throw new BoothNotPublishedException();
@@ -44,6 +45,7 @@ export class PublicBoothService {
     };
 
     return await Booth.findAll({
+      include: [ UploadStorage ],
       where,
       attributes: {
         exclude: SEQUELIZE_INTERNAL_KEYS,

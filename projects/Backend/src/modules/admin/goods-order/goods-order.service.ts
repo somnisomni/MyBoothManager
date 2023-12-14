@@ -14,7 +14,7 @@ export class GoodsOrderService {
   constructor(private goodsService: GoodsService) {}
 
   private async getGoodsOrderAndParentBooth(orderId: number, boothId: number, callerAccountId: number): Promise<{ order: GoodsOrder, booth: Booth }> {
-    const order = await findOneByPk(GoodsOrder, orderId, false);
+    const order = await findOneByPk(GoodsOrder, orderId, [], false);
     if(order.boothId !== boothId) throw new NoAccessException();
 
     const booth = await Booth.findByPk(boothId);

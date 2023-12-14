@@ -3,15 +3,16 @@
 import { createHash } from "crypto";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
-import { BaseError, Model, ModelDefined, WhereOptions } from "sequelize";
+import { BaseError, Includeable, Model, ModelDefined, WhereOptions } from "sequelize";
 import { EntityNotFoundException } from "./exceptions";
 
 /* === Sequelize model util functions === */
-export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
+export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, includeModels?: Includeable[], excludeSequelizeInternalKeys: boolean = true): Promise<T> {
   let target = null;
 
   try {
     target = await (model as unknown as ModelDefined<any, any>).findByPk(pk, {
+      include: includeModels,
       attributes: {
         exclude: excludeSequelizeInternalKeys ? SEQUELIZE_INTERNAL_KEYS : [],
       },
@@ -84,9 +85,9 @@ export async function removeOne<T extends Model<any, any>>(model: { new (): T },
 }
 
 /* === Common util functions === */
-export type UploadFileNameFormat = `${string}-${string}_${string}.${string}`;
+export type UploadFileNameFormat = `${string}-${string}_${string}.${string}.${string}`;
 export function generateUploadFileName(usage: string, accountId: number, usageId: number, modifier: string, fileExtension: string): { formatted: UploadFileNameFormat, fileName: string } {
-  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${+usageId}.${modifier}`;
+  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${+usageId}.${modifier}.${new Date().getTime()}`;
   const fileName: string = `${createHash("sha1").update(formatted).digest("base64url")}.${fileExtension}`;
 
   return { formatted, fileName };

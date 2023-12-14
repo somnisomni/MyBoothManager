@@ -117,7 +117,13 @@ export default class BoothManageDialog extends Vue {
 
   testImage: File | null = null;
   @Watch("testImage") onTestImageChange() { console.log(this.testImage); }
-  async testUpload() { if(this.testImage) await AdminAPI.uploadBoothBannerImage(useAdminStore().currentBoothId, this.testImage); }
+  async testUpload() { if(this.testImage) {
+    this.updateInProgress = true;
+    if(!(typeof (await AdminAPI.uploadBoothBannerImage(useAdminStore().currentBoothId, this.testImage)) === "number")) {
+      alert("OK");
+    };
+    this.updateInProgress = false;
+  } }
 
   get today(): string {
     const today = new Date();

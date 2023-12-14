@@ -1,4 +1,5 @@
 import path from "path";
+import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
 import { MultipartFile } from "@fastify/multipart";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
@@ -23,7 +24,7 @@ export class UtilService {
     return true;
   }
 
-  private async safeResolveUploadFolder(subpath?: string): Promise<string> {
+  async safeResolveUploadFolder(subpath?: string): Promise<string> {
     const resolvedPath = path.resolve(UtilService.RESOLVED_UPLOAD_PATH, subpath || "");
 
     // Create folder, ignore if already exists
@@ -90,5 +91,30 @@ export class UtilService {
     }
 
     return files;
+  }
+
+  async writeFileTo(file: MultipartFile, fileName: string, subpath?: string): Promise<string> {
+    const filePath = await this.getFileUploadPath(fileName, subpath);
+    return new Promise<string>((resolve, reject) => {
+      try {
+        file.file.pipe(createWriteStream(filePath, { flags: "w", autoClose: true }));
+        resolve(filePath);
+      } catch(err) {
+        reject(err);
+        throw new InternalServerErrorException();
+      }
+    });
+  }
+
+  async removeFile(fileName: string, subpath?: string): Promise<boolean> {
+    const filePath = await this.getFileUploadPath(fileName, subpath);
+
+    try {
+      await fs.rm(filePath);
+      return true;
+    } catch(err) {
+      console.error(err);
+      return false;
+    }
   }
 }

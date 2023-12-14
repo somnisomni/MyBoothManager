@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { createWriteStream } from "fs";
-import { Injectable, NotImplementedException } from "@nestjs/common";
-import { IBoothMemberManipulationResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable, InternalServerErrorException, NotImplementedException } from "@nestjs/common";
+import { IBoothMemberManipulationResponse, IBoothResponse, ISuccessResponse, IUploadStorage, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
@@ -15,6 +15,8 @@ import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 import { BoothInfoUpdateFailedException, BoothMemberManipulationFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
+import UploadStorage from "@/db/models/uploadstorage";
+import { Includeable } from "sequelize";
 
 @Injectable()
 export class BoothService {
@@ -25,7 +27,7 @@ export class BoothService {
   ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await findOneByPk(Booth, boothId);
+    const booth = await findOneByPk(Booth, boothId, [ UploadStorage ]);
 
     if(!booth) throw new EntityNotFoundException();
     else if(booth.ownerId !== accountId) throw new NoAccessException();
@@ -48,14 +50,46 @@ export class BoothService {
   }
 
   async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<ISuccessResponse> {
-    console.debug("uploadBannerImage", boothId, file, callerAccountId);
+    const uploadSubpath = "booth/banner";
 
-    const { fileName } = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!);
-    const filePath = await this.utilService.getFileUploadPath(fileName);
-    console.debug(filePath);
-    file.file.pipe(createWriteStream(filePath, { flags: "w", autoClose: true }));
+    // TODO: file validation
 
-    throw new NotImplementedException();
+    let fileName: string;
+    let writtenFilePath: string;
+
+    try {
+      fileName = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
+      writtenFilePath = await this.utilService.writeFileTo(file, fileName, uploadSubpath);
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.bannerImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      const upload = await create(UploadStorage, {
+        ownerId: callerAccountId,
+        savePath: uploadSubpath,
+        fileName,
+      } as Omit<IUploadStorage, "id">);
+      await upload.save();
+
+      await booth.update({ bannerImageId: upload.id });
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    return SUCCESS_RESPONSE;
   }
 
   async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {

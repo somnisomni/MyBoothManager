@@ -1,8 +1,10 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import type { IUploadStorage } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, AllowNull, Default } from "sequelize-typescript";
+import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, AllowNull, Default, HasOne } from "sequelize-typescript";
 import Account from "./account";
+import Booth from "./booth";
+import path from "path";
 
 export type UploadStorageCreationAttributes = Omit<IUploadStorage, InternalKeysWithId>;
 
@@ -29,8 +31,16 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
   @Column(DataTypes.STRING(128))
   declare fileName: string;
 
+  @Column(DataTypes.VIRTUAL)
+  get filePath(): string {
+    return path.join(this.savePath!, this.fileName);
+  }
+
 
   /* === Relations === */
   @BelongsTo(() => Account)
   declare ownerAccount: Account;
+
+  @HasOne(() => Booth, "bannerImageId")
+  declare boothBannerImage?: Booth;
 }
