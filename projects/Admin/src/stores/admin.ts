@@ -327,7 +327,7 @@ const useAdminStore = defineStore("admin", () => {
     const response = await apiWrapper(() => AdminAPI.deleteGoodsImage(goodsId, currentBoothId.value));
 
     if(response && response instanceof Object) {
-      delete boothGoodsList[currentBoothId.value].goodsImageUrl;
+      delete boothGoodsList[goodsId].goodsImageUrl;
       return true;
     } else {
       return response;
