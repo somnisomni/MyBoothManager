@@ -3,7 +3,7 @@
     <VLayout class="d-flex flex-column align-center justify-center text-center rounded-lg"
              :width="width"
              :style="{ 'min-height': height }">
-      <VImg v-if="imageSource" :src="imageSource" cover :style="imageDynamicStyle" />
+      <VImg v-if="imageSource" :src="imageSource" cover class="no-interaction" :style="imageDynamicStyle" />
       <span v-else class="text-body-1 text-disabled"><VIcon>mdi-image-remove</VIcon> {{ contextName }} 이미지가 없습니다.</span>
       <VExpandTransition>
         <VProgressLinear v-if="imageUpdateInProgress" indeterminate />

@@ -111,6 +111,16 @@ export default class GoodsItem extends Vue {
   }
 
   .goods-image {
+    pointer-events: none;
+
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    -webkit-user-drag: none;
+            user-drag: none;
+
     position: absolute;
     width: 100%;
     height: 100%;
