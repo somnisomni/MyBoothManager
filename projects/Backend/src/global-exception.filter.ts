@@ -26,6 +26,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const exc = exception instanceof BaseHttpException ? exception : new ApplicationUncaughtedException();
     const statusCode = exc.getStatus();
 
+    console.debug(exc);
+
     response.status(statusCode).send({
       ...exc.getResponse(),
       path: request.url,
