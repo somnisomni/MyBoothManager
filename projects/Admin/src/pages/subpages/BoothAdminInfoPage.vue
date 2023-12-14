@@ -8,7 +8,7 @@
           <VProgressLinear v-if="bannerImageUpdateInProgress" indeterminate />
         </VExpandTransition>
       </VLayout>
-      <VLayout class="d-flex flex-wrap align-center justify-space-between overflow-visible px-4">
+      <VContainer class="d-flex flex-wrap align-center justify-space-between overflow-visible py-0 my-2">
         <VLayout class="d-flex flex-0-0 align-center justify-start pa-2 pl-0 overflow-visible">
           <h6 class="text-h6 font-weight-bold mr-2">배너 이미지</h6>
           <VBtn v-if="bannerImageSource" :disabled="bannerImageUpdateInProgress" class="mr-2" color="red-darken-1" @click="onBannerImageRequestDelete"><VIcon>mdi-delete</VIcon></VBtn>
@@ -26,7 +26,7 @@
             <span v-else>업로드</span>
           </VBtn>
         </VLayout>
-      </VLayout>
+      </VContainer>
     </div>
 
     <VContainer class="mt-2 pa-2 pa-md-6">
