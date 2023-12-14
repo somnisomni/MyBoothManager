@@ -33,6 +33,8 @@ services:
     build:
       context: .
       dockerfile: ./projects/Backend/Containerfile
+    volumes:
+      - mbm-uploads:/app/uploads
     ports:
       - "31111:31111"
     environment:
@@ -46,3 +48,6 @@ services:
       MYSQL_DATABASE: myboothmanager
       SEQUELIZE_TIMEZONE: +09:00
     network_mode: host
+
+volumes:
+  uploads:
