@@ -2,7 +2,7 @@
   <section>
     <!-- Booth image & info area -->
     <VSheet class="booth-info-section">
-      <VParallax class="booth-image d-flex align-end" :src="bannerImageUrl">
+      <VParallax class="booth-image d-flex align-end" :src="bannerImageUrl" scale="0.8">
         <div class="booth-image-overlay"></div>
 
         <VContainer>
@@ -34,8 +34,8 @@
 
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { getUploadFilePath } from "@/lib/common-functions";
 import { Component, Prop, Vue } from "vue-facing-decorator";
+import { getUploadFilePath } from "@/lib/common-functions";
 
 @Component({})
 export default class BoothInfoSection extends Vue {
