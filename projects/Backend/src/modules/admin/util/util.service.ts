@@ -46,7 +46,7 @@ export class UtilService {
   }
 
   async getFileFromRequest(req: FastifyRequest, validate: boolean = true) {
-    let file: MultipartFile | null = null;
+    let file: MultipartFile | undefined | null = null;
 
     try {
       file = await req.file();
