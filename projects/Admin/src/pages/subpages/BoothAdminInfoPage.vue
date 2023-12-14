@@ -2,6 +2,7 @@
   <div>
     <ImageWithUpload :existingSrc="boothBannerImageUrl"
                      contextName="배너"
+                     width="100%"
                      height="300px"
                      aspectRatio="3/1"
                      :uploadCallback="boothBannerImageUploadCallback"

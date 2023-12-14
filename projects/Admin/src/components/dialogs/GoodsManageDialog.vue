@@ -22,8 +22,8 @@
                        class="flex-0-1 mr-4"
                        :existingSrc="goodsImageUrl"
                        contextName="굿즈"
-                       width="200px"
-                       height="auto"
+                       width="auto"
+                       height="250px"
                        aspectRatio="4/5"
                        hideSubtitle
                        :uploadCallback="goodsImageUploadCallback"

@@ -48,7 +48,7 @@ export default class ImageWithUpload extends Vue {
   @Prop({ type: String, required: true, default: null }) existingSrc!: string | null;
   @Prop({ type: String, default: "" }) contextName!: string;
   @Prop({ type: Boolean, default: false }) hideSubtitle!: boolean;
-  @Prop({ type: String, default: "100%" }) width!: string;
+  @Prop({ type: String, default: "auto" }) width!: string;
   @Prop({ type: String, default: "300px" }) height!: string;
   @Prop({ type: String, default: "1/1" }) aspectRatio!: string;
   @Prop({ type: Promise, default: async () => true }) uploadCallback!: (file: File | Blob | null) => Promise<boolean>;
