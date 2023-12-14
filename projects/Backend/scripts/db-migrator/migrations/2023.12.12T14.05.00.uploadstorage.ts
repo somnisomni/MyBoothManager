@@ -4,8 +4,8 @@
 /* *** See https://github.com/somnisomni/MyBoothManager/commit/46beffa949180f1c8a1e5814d29115d93cbaed0d *** */
 
 import { DataTypes } from "sequelize";
-import { Migration } from "../umzug";
 import UploadStorage from "@/db/models/uploadstorage";
+import { Migration } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
   return await context.createTable(UploadStorage.name, {
