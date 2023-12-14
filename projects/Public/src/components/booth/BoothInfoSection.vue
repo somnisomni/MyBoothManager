@@ -6,13 +6,13 @@
         <div class="booth-image-overlay"></div>
 
         <VLayout class="booth-info-content w-100 d-flex flex-row align-end pa-2 pa-sm-4">
-          <VLayout class="d-flex flex-column flex-1-0" style="max-width: 100%">
+          <VLayout class="d-flex flex-column flex-1-1" style="max-width: 100%">
             <h4 v-if="boothData.boothNumber" class="d-sm-none text-h4 mb-2">{{ boothData.boothNumber }}</h4>
             <h3 class="text-h3 font-weight-bold mb-2">{{ boothData?.name }}</h3>
             <div v-if="boothData?.description" class="text-subtitle-1" style="font-size: 1.125rem !important;">{{ boothData?.description }}</div>
             <div class="text-overline">@ {{ boothData?.location }}</div>
           </VLayout>
-          <VLayout v-if="boothData.boothNumber" class="d-none d-sm-flex flex-column flex-0-1 text-center">
+          <VLayout v-if="boothData.boothNumber" class="d-none d-sm-flex flex-column flex-0-0 text-center">
             <div class="text-subtitle-1">부스 번호</div>
             <h2 class="text-h2 pa-2">{{ boothData.boothNumber }}</h2>
           </VLayout>
