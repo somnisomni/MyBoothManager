@@ -45,6 +45,9 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
   @HasOne(() => Booth, "bannerImageId")
   declare boothBannerImageParent?: Booth;
 
+  @HasOne(() => Booth, "infoImageId")
+  declare boothInfoImageParent?: Booth;
+
   @HasOne(() => Goods, "goodsImageId")
   declare goodsImageParent?: Goods;
 }
