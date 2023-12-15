@@ -1,7 +1,7 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import { BoothStatus, IBoothMember, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
@@ -11,6 +11,15 @@ export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "de
                                & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">>;
 
 @Table
+@DefaultScope(() => ({
+  include: [{
+    as: "bannerImage",
+    model: UploadStorage,
+  }, {
+    as: "infoImage",
+    model: UploadStorage,
+  }],
+}))
 export default class Booth extends Model<IBoothModel, BoothCreationAttributes> implements IBoothModel {
   @PrimaryKey
   @Unique
