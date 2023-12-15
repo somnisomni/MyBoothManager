@@ -6,9 +6,7 @@ html {
 .max-w-100 { max-width: 100%; }
 .max-h-100 { max-height: 100%; }
 
-.no-interaction {
-  pointer-events: none;
-
+@mixin no-selection {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,14 +16,13 @@ html {
   user-drag: none;
 }
 
-.no-selection {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.no-interaction, .no-interaction-all, .no-interaction-all * {
+  pointer-events: none;
+  @include no-selection;
+}
 
-  -webkit-user-drag: none;
-  user-drag: none;
+.no-selection, .no-selection-all, .no-selection-all * {
+  @include no-selection;
 }
 
 /* Workarounds for VDialog (CommonDialog) */

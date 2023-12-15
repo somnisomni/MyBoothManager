@@ -10,12 +10,12 @@
                 dialogTitle="관리할 부스 선택">
     <VSheet v-for="booth in boothList"
             :key="booth.id"
-            class="booth-item"
+            class="booth-item no-selection-all"
             min-height="120px"
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
-        <VImg :src="'https://picsum.photos/seed/' + booth.id + '/1500/300'" cover aspect-ratio="4/1" class="booth-item-image" />
+        <VImg :src="getBoothBannerImageURL(booth.bannerImageUrl)" cover aspect-ratio="4/1" class="booth-item-image" />
         <div class="booth-item-image-overlay"></div>
       </div>
 
@@ -38,6 +38,7 @@ import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { useAdminStore } from "@/stores/admin";
+import { getUploadFilePath } from "@/lib/functions";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
@@ -75,6 +76,10 @@ export default class BoothSelectionDialog extends Vue {
       case BoothStatus.PREPARE: return "운영 준비";
       default: return "알 수 없음";
     }
+  }
+
+  getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
+    return getUploadFilePath(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
   }
 
   showBoothAddDialog(): void {
@@ -126,6 +131,8 @@ export default class BoothSelectionDialog extends Vue {
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(0.25em);
+      transition: background-color 0.25s, backdrop-filter 0.25s;
     }
 
     .booth-item-image {
@@ -134,6 +141,12 @@ export default class BoothSelectionDialog extends Vue {
       height: 100%;
     }
   }
+
+  &:hover .booth-item-image-container .booth-item-image-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(0);
+  }
+
   .booth-item-info {
     color: white;
     line-height: 1.125;
