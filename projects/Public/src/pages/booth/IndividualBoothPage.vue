@@ -27,7 +27,9 @@
         <BoothInfoSection :boothData="boothData" />
 
         <VContainer>
-          <p v-if="dataPollingTimerId" class="text-right text-primary" style="opacity: 0.5">※ 부스 정보는 30초마다 자동 업데이트됩니다.</p>
+          <p v-if="dataPollingTimerId"
+             class="text-right text-primary"
+             style="opacity: 0.5">※ 부스 정보는 30초마다 자동 업데이트됩니다.</p>
 
           <VSpacer class="my-8" />
 
@@ -58,7 +60,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
-import { ErrorCodes, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
+import { BoothStatus, ErrorCodes, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
@@ -71,6 +73,7 @@ import { getUploadFilePath } from "@/lib/common-functions";
   },
 })
 export default class IndividualBoothPage extends Vue {
+  readonly BoothStatus = BoothStatus;
   readonly ErrorCodes = ErrorCodes;
   readonly getUploadFilePath = getUploadFilePath;
 
@@ -93,8 +96,10 @@ export default class IndividualBoothPage extends Vue {
     this.isDataFetched = true;
 
     if(this.boothData) {
-      this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
-      console.info("Start polling ", this.dataPollingTimerId);
+      if(this.boothData.status === BoothStatus.OPEN || this.boothData.status === BoothStatus.PAUSE) {
+        this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
+        console.info("Start polling ", this.dataPollingTimerId);
+      }
 
       document.title = `${this.boothData.name} - 부스 정보`;
     } else {
