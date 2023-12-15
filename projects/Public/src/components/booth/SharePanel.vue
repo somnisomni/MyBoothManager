@@ -48,7 +48,11 @@ export default class SharePanel extends Vue {
   }
 
   shareTwitter(): void {
-    const content = encodeURIComponent(`『 ${this.boothData.name}』\n\n부스 정보 확인하기 ↓\n`);
+    const contentString = `『 ${this.boothData.name}』\n` +
+                          `📍 ${this.boothData.boothNumber ? `${this.boothData.boothNumber}  @ ` : ""}${this.boothData.location}\n` +
+                          ((this.boothData.dateOpen || this.boothData.dateClose) ? `🗓️ ${this.boothData.dateOpen !== this.boothData.dateClose ? `${this.boothData.dateOpen} ~ ` : ""}${this.boothData.dateClose}\n` : "") +
+                          "\n";
+    const content = encodeURIComponent(contentString);
     const href = encodeURIComponent(window.location.href);
     const url = `https://twitter.com/intent/tweet?text=${content}&url=${href}`;
     window.open(url, "_blank");
