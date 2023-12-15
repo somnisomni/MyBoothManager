@@ -43,6 +43,9 @@ export default class GoodsCategoryTitle extends Vue {
 <style lang="scss">
 .goods-category-title {
   .v-btn {
+    height: auto;
+    min-height: calc(var(--v-btn-height));
+
     &__content {
       max-width: 100%;
       white-space: pre-wrap;
