@@ -1,29 +1,3 @@
-html {
-  touch-action: manipulation;
-}
-
-.no-interaction {
-  pointer-events: none;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-
-  -webkit-user-drag: none;
-  user-drag: none;
-}
-
-.no-selection {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-
-  -webkit-user-drag: none;
-  user-drag: none;
-}
-
 /* VNavigationDrawer content -> flex */
 .navdrawer-flex .v-navigation-drawer__content {
   display: flex;
@@ -34,4 +8,9 @@ html {
 .v-input.text-right input {
   text-align: right;
   margin-right: 0.125em;
+}
+
+/* VForm max width 100% */
+.v-form {
+  max-width: 100%;
 }
