@@ -107,6 +107,13 @@ export default class IndividualBoothPage extends Vue {
     }
   }
 
+  unmounted() {
+    if(this.dataPollingTimerId) {
+      clearInterval(this.dataPollingTimerId);
+      console.info("Stop polling ", this.dataPollingTimerId);
+    }
+  }
+
   async fetchData() {
     if(!this.boothId || this.boothId <= 0) {
       this.fetchError = ErrorCodes.INVALID_REQUEST_BODY;
