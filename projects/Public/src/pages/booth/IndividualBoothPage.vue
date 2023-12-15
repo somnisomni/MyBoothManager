@@ -27,6 +27,8 @@
         <BoothInfoSection :boothData="boothData" />
 
         <VContainer>
+          <p v-if="dataPollingTimerId" class="text-right text-primary" style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
+
           <VSpacer class="my-8" />
 
           <h4 class="text-h4 text-left font-weight-medium ml-2">굿즈 목록</h4>
@@ -71,6 +73,9 @@ export default class IndividualBoothPage extends Vue {
   boothGoodsList: Array<IGoods> = [];
   boothCategoryList: Array<IGoodsCategory> = [];
 
+  readonly dataPollingInterval: number = 30000; // 30 seconds
+  dataPollingTimerId: NodeJS.Timeout | null = null;
+
   get boothId(): number {
     return new Number(useRoute().params["boothId"] as string).valueOf();
   }
@@ -80,6 +85,9 @@ export default class IndividualBoothPage extends Vue {
     this.isDataFetched = true;
 
     if(this.boothData) {
+      this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
+      console.info("Start polling ", this.dataPollingTimerId);
+
       document.title = `${this.boothData.name} - 부스 정보`;
     } else {
       document.title = "오류";
@@ -110,6 +118,24 @@ export default class IndividualBoothPage extends Vue {
       this.boothGoodsList = goodsResponse;
       this.boothCategoryList = categoryResponse;
     }
+  }
+
+  async pollData(): Promise<boolean | ErrorCodes[]> {
+    const errors: ErrorCodes[] = [-1, -1, -1];
+
+    const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
+    if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
+    else errors[0] = boothDataResponse.errorCode;
+
+    const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
+    if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse;
+    else errors[1] = goodsResponse.errorCode;
+
+    const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
+    if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
+    else errors[2] = categoryResponse.errorCode;
+
+    return errors.every((error) => error === ErrorCodes.SUCCESS) ? true : errors;
   }
 }
 </script>
