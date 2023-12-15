@@ -15,6 +15,7 @@ const useAdminStore = defineStore("admin", () => {
 
   const isBoothDataLoaded = ref<boolean>(false);
   const isChangingBooth = ref<boolean>(false);
+  const isAPIFetchError = ref<boolean>(false);
 
   const boothList: Record<number, IBooth> = reactive({});
   const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
@@ -23,7 +24,15 @@ const useAdminStore = defineStore("admin", () => {
 
   /* Private actions (not to be exported) */
   async function apiWrapper<T>(func: () => Promise<T | ErrorCodes>): Promise<T | ErrorCodes> {
-    const result = await func();
+    isAPIFetchError.value = false;
+
+    let result;
+    try {
+      result = await func();
+    } catch(err) {
+      isAPIFetchError.value = true;
+      return ErrorCodes.UNKNOWN_ERROR;
+    }
 
     if(typeof result === "number") {
       if(result === ErrorCodes.AUTH_TOKEN_NEED_REFRESH) {
@@ -396,6 +405,7 @@ const useAdminStore = defineStore("admin", () => {
     currentBoothId,
     isBoothDataLoaded,
     isChangingBooth,
+    isAPIFetchError,
 
     boothList,
     boothGoodsCategoryList,

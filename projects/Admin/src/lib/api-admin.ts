@@ -6,17 +6,12 @@ export default class AdminAPI {
 
   /* Admin FE specific API call wrapper */
   private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IBackendErrorResponse>): Promise<T | CT.ErrorCodes> {
-    try {
-      const response = await callee() as T | CT.IBackendErrorResponse;
+    const response = await callee() as T | CT.IBackendErrorResponse;
 
-      if((response as CT.IBackendErrorResponse).errorCode) {
-        return (response as CT.IBackendErrorResponse).errorCode as CT.ErrorCodes;
-      } else {
-        return response as T;
-      }
-    } catch(error) {
-      console.error(error);
-      return CT.ErrorCodes.UNKNOWN_ERROR;
+    if((response as CT.IBackendErrorResponse).errorCode) {
+      return (response as CT.IBackendErrorResponse).errorCode as CT.ErrorCodes;
+    } else {
+      return response as T;
     }
   }
 

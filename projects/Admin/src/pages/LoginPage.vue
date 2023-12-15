@@ -95,10 +95,15 @@ export default class LoginPage extends Vue {
   async doLogin(confirm?: boolean) {
     this.loginProgress = true;
 
-    const result = await useAuthStore().adminLogin({
-      ...this.loginData,
-      confirmLogoutExistingSession: confirm,
-    });
+    let result;
+    try {
+      result = await useAuthStore().adminLogin({
+        ...this.loginData,
+        confirmLogoutExistingSession: confirm,
+      });
+    } catch(err) {
+      result = ErrorCodes.UNKNOWN_ERROR;
+    }
 
     if(result === true) {
       if(useAdminStore().currentAccount?.superAdmin) {
@@ -119,6 +124,9 @@ export default class LoginPage extends Vue {
           break;
         case ErrorCodes.SESSION_ALREADY_EXISTS:
           this.confirmLoginDialogShown = true;
+          break;
+        case ErrorCodes.UNKNOWN_ERROR:
+          this.errorMessage = "지정되지 않은 오류 또는 서버 API 호출 중 오류가 발생했습니다.";
           break;
         default:
           this.errorMessage = `로그인 중 알 수 없는 오류가 발생했습니다. (${result})`;
