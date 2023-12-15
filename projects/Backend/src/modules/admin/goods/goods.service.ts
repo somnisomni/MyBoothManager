@@ -128,7 +128,7 @@ export class GoodsService {
     }
   }
 
-  async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number) {
+  async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number): Promise<Goods> {
     if(updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0) {
       delete updateGoodsDto.categoryId;
     }

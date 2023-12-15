@@ -54,16 +54,19 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   declare statusReason?: string;
 
   @AllowNull(false)
-  @Column(DataTypes.INTEGER.UNSIGNED)
-  declare price: number;
+  @Column(DataTypes.FLOAT.UNSIGNED)
+  get price(): number { return parseFloat(this.getDataValue("price").toFixed(3)); }
+  set price(value: number) { this.setDataValue("price", parseFloat(new Number(value).toFixed(3))); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare stockInitial: number;
+  get stockInitial(): number { return Math.floor(this.getDataValue("stockInitial")); }
+  set stockInitial(value: number) { this.setDataValue("stockInitial", Math.floor(new Number(value).valueOf())); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare stockRemaining: number;
+  get stockRemaining(): number { return Math.floor(this.getDataValue("stockRemaining")); }
+  set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(new Number(value).valueOf())); }
 
   @AllowNull(false)
   @Default(GoodsStockVisibility.SHOW_ALL)

@@ -4,6 +4,12 @@ import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
 
+const orderSanitizerCallback = (order: IGoodsOrderDetailItem): IGoodsOrderDetailItem => {
+  order.price = order.price ? parseFloat(new Number(order.price).toFixed(3)) : undefined;
+  order.quantity = Math.floor(new Number(order.quantity).valueOf());
+  return order;
+};
+
 export type GoodsOrderCreationAttributes = Omit<IGoodsOrder, InternalKeysWithId>;
 
 @Table
@@ -22,7 +28,8 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
 
   @AllowNull(false)
   @Column(DataTypes.JSON)
-  declare order: Array<IGoodsOrderDetailItem>;
+  get order(): Array<IGoodsOrderDetailItem> { return this.getDataValue("order").map(orderSanitizerCallback); }
+  set order(value: Array<IGoodsOrderDetailItem>) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
 
   @AllowNull(false)
   @Default(GoodsOrderStatus.RECORDED)
@@ -31,7 +38,8 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare totalPrice: number;
+  get totalPrice(): number { return Math.floor(this.getDataValue("totalPrice")); }
+  set totalPrice(value: number) { this.setDataValue("totalPrice", Math.floor(value)); }
 
 
   /* === Relations === */
