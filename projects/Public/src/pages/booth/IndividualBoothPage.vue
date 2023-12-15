@@ -27,7 +27,15 @@
         <BoothInfoSection :boothData="boothData" />
 
         <VContainer>
-          <p v-if="dataPollingTimerId" class="text-right text-primary" style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
+          <p v-if="dataPollingTimerId" class="text-right text-primary" style="opacity: 0.5">※ 부스 정보는 30초마다 자동 업데이트됩니다.</p>
+
+          <VSpacer class="my-8" />
+
+          <div v-if="boothData?.infoImageUrl" class="w-100">
+            <h4 class="text-h4 text-left font-weight-medium ml-2">부스 인포</h4>
+            <VDivider class="my-2" />
+            <VImg :src="getUploadFilePath(boothData?.infoImageUrl)" class="w-100 no-interaction rounded-lg" />
+          </div>
 
           <VSpacer class="my-8" />
 

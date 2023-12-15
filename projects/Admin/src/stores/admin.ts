@@ -200,6 +200,21 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function uploadBoothInfoImage(payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadBoothInfoImage(currentBoothId.value, payload));
+
+    if(response && response instanceof Object) {
+      if(typeof response.value === "string") {
+        boothList[currentBoothId.value].infoImageUrl = response.value;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return response;
+    }
+  }
+
   async function uploadGoodsImage(goodsId: number, payload: File | Blob): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.uploadGoodsImage(goodsId, currentBoothId.value, payload));
 
@@ -332,6 +347,17 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteBoothInfoImage(): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothInfoImage(currentBoothId.value));
+
+    if(response && response instanceof Object) {
+      delete boothList[currentBoothId.value].infoImageUrl;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoodsImage(goodsId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoodsImage(goodsId, currentBoothId.value));
 
@@ -431,8 +457,10 @@ const useAdminStore = defineStore("admin", () => {
     createGoodsCategory,
     createGoodsOrder,
     uploadBoothBannerImage,
+    uploadBoothInfoImage,
     uploadGoodsImage,
     deleteBoothBannerImage,
+    deleteBoothInfoImage,
     deleteGoodsImage,
     deleteGoods,
     deleteGoodsCategory,

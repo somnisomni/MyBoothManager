@@ -5,7 +5,6 @@ import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@m
 import { WhereOptions , Op } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
-import UploadStorage from "@/db/models/uploadstorage";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
 import { BoothNotPublishedException } from "./booth.exception";
@@ -26,7 +25,7 @@ export class PublicBoothService {
   };
 
   async findOne(boothId: number): Promise<Booth> {
-    const booth = await findOneByPk(Booth, boothId, [ UploadStorage ]);
+    const booth = await findOneByPk(Booth, boothId);
 
     if(booth.status === BoothStatus.PREPARE && !booth.statusPublishContent) {
       throw new BoothNotPublishedException();
@@ -44,13 +43,14 @@ export class PublicBoothService {
       }),
     };
 
-    return await Booth.findAll({
-      include: [ UploadStorage ],
-      where,
-      attributes: {
-        exclude: SEQUELIZE_INTERNAL_KEYS,
-      },
-    });
+    try {
+      return await Booth.findAll({
+        where,
+        attributes: {
+          exclude: SEQUELIZE_INTERNAL_KEYS,
+        },
+      });
+    } catch(err) { console.error(err); return []; }
   }
 
   async countAll(): Promise<IValueResponse> {

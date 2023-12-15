@@ -1,7 +1,7 @@
 <template>
   <div class="mb-2">
     <VLayout class="d-flex flex-column align-center justify-center text-center"
-             :style="{ 'min-height': height }">
+             :style="{ 'min-height': height === 'auto' ? '100px' : height }">
       <VImg v-if="imageSource" :src="imageSource" cover class="no-interaction rounded-lg" :style="imageDynamicStyle" />
       <span v-else class="text-body-1 text-disabled"><VIcon>mdi-image-remove</VIcon> {{ contextName }} 이미지가 없습니다.</span>
       <VExpandTransition>
@@ -76,6 +76,7 @@ export default class ImageWithUpload extends Vue {
 
   onImageFileChange() {
     this.imageWillBeDeleted = false;
+    this.imageUpdateOK = false;
 
     if(this.imageFileSelection) {
       this.imageNeedUpdate = true;
@@ -87,6 +88,8 @@ export default class ImageWithUpload extends Vue {
   }
 
   onImageRequestDelete() {
+    this.imageUpdateOK = false;
+
     if(!this.existingSrc) {
       this.imageFileSelection = null;
       this.onImageFileChange();
@@ -99,6 +102,7 @@ export default class ImageWithUpload extends Vue {
 
   async onUpdateRequest() {
     this.imageUpdateInProgress = true;
+    this.imageUpdateOK = false;
 
     const response = this.imageFileSelection ? await this.uploadCallback(this.imageFileSelection) : await this.deleteCallback();
 

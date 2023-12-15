@@ -25,7 +25,7 @@ export class BoothService {
   ) {}
 
   async findBoothBelongsToAccount(boothId: number, accountId: number): Promise<Booth> {
-    const booth = await findOneByPk(Booth, boothId, [ UploadStorage ]);
+    const booth = await findOneByPk(Booth, boothId);
 
     if(!booth) throw new EntityNotFoundException();
     else if(booth.ownerId !== accountId) throw new NoAccessException();

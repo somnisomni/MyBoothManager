@@ -11,6 +11,14 @@
     <VContainer class="mt-2 pa-2 pa-md-6">
       <BoothInfoPanel class="mb-4" />
       <BoothMembersPanel class="my-4" />
+
+      <ImageWithUpload :existingSrc="boothInfoImageUrl"
+                       contextName="인포"
+                       width="100%"
+                       height="auto"
+                       aspectRatio="auto"
+                       :uploadCallback="boothInfoImageUploadCallback"
+                       :deleteCallback="boothInfoImageDeleteCallback" />
     </VContainer>
   </div>
 </template>
@@ -34,12 +42,24 @@ export default class BoothAdminInfoPage extends Vue {
     return useAdminStore().boothList[useAdminStore().currentBoothId].bannerImageUrl ?? null;
   }
 
+  get boothInfoImageUrl(): string | null {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].infoImageUrl ?? null;
+  }
+
   async boothBannerImageUploadCallback(file: File | Blob | null) {
     return await useAdminStore().uploadBoothBannerImage(file!);
   }
 
   async boothBannerImageDeleteCallback() {
     return await useAdminStore().deleteBoothBannerImage();
+  }
+
+  async boothInfoImageUploadCallback(file: File | Blob | null) {
+    return await useAdminStore().uploadBoothInfoImage(file!);
+  }
+
+  async boothInfoImageDeleteCallback() {
+    return await useAdminStore().deleteBoothInfoImage();
   }
 }
 </script>
