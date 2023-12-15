@@ -7,8 +7,8 @@ import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 import UploadStorage from "./uploadstorage";
 
-export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">
-                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId">>;
+export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">
+                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">>;
 
 @Table
 export default class Booth extends Model<IBoothModel, BoothCreationAttributes> implements IBoothModel {
@@ -95,6 +95,22 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
     }
   }
 
+  @AllowNull
+  @Default([])
+  @ForeignKey(() => UploadStorage)
+  @Column(DataTypes.JSON)
+  declare infoImageId?: number | null;
+
+  @Column(DataTypes.VIRTUAL)
+  get infoImageUrl(): string | null {
+    if(this.infoImage) {
+      return this.infoImage.filePath;
+    } else {
+      return null;
+    }
+  }
+
+
   /* === Relations === */
   @BelongsTo(() => Account)
   declare ownerAccount: Account;
@@ -107,4 +123,7 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
 
   @BelongsTo(() => UploadStorage, "bannerImageId")
   declare bannerImage?: UploadStorage;
+
+  @BelongsTo(() => UploadStorage, "infoImageId")
+  declare infoImage?: UploadStorage;
 }

@@ -43,6 +43,16 @@ export class BoothController {
     return await this.boothService.deleteBannerImage(+id, authData.id);
   }
 
+  @Post(":id/info")
+  async uploadInfoImage(@Param("id") id: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.uploadInfoImage(+id, await this.utilService.getFileFromRequest(req), authData.id);
+  }
+
+  @Delete(":id/info")
+  async removeInfoImage(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.deleteInfoImage(+id, authData.id);
+  }
+
   @Put(":id/member")
   async addMember(@Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.addMember(addBoothMemberDto, authData.id);

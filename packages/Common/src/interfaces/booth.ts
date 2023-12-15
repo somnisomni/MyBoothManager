@@ -40,11 +40,13 @@ export interface IBooth extends IDataModelBase {
   statusReason?: string;
   statusPublishContent?: boolean;
   bannerImageUrl?: string;
+  infoImageUrl?: string;  // TODO: many images
 }
 export type IBoothResponse = IBooth;
 
-export interface IBoothModel extends Omit<IBooth, "bannerImageUrl"> {
+export interface IBoothModel extends Omit<IBooth, "bannerImageUrl" | "infoImageUrl"> {
   bannerImageId?: number | null;
+  infoImageId?: number | null;  // TODO: many images
 }
 
 export type BoothCreateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "dateOpen" | "dateClose";

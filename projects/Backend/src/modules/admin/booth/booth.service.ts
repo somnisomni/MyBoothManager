@@ -90,6 +90,47 @@ export class BoothService {
     }
   }
 
+  async uploadInfoImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+    const uploadSubpath = "booth/info";
+
+    let fileName: string;
+    try {
+      fileName = generateUploadFileName("boothinfo", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
+      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.infoImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.infoImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      const upload = await create(UploadStorage, {
+        ownerId: callerAccountId,
+        savePath: uploadSubpath,
+        fileName,
+      } as Omit<IUploadStorage, "id">);
+      await upload.save();
+
+      await booth.update({ infoImageId: upload.id });
+
+      return {
+        value: upload.filePath,
+      };
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
   async deleteBannerImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     try {
       const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
@@ -103,6 +144,28 @@ export class BoothService {
       }
 
       booth.set("bannerImageId", null);
+      await booth.save();
+
+      return SUCCESS_RESPONSE;
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
+  async deleteInfoImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
+    try {
+      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+      if(booth.infoImageId) {
+        const existingUpload = await UploadStorage.findByPk(booth.infoImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      booth.set("infoImageId", null);
       await booth.save();
 
       return SUCCESS_RESPONSE;
