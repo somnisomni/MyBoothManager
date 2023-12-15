@@ -78,6 +78,12 @@ export default class IndividualBoothPage extends Vue {
   async mounted() {
     await this.fetchData();
     this.isDataFetched = true;
+
+    if(this.boothData) {
+      document.title = `${this.boothData.name} - 부스 정보`;
+    } else {
+      document.title = "오류";
+    }
   }
 
   async fetchData() {

@@ -10,6 +10,7 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "404",
+      meta: { title: "404 | MyBoothManager" },
       component: NotFoundErrorPage,
     },
 
@@ -20,6 +21,7 @@ const router = createRouter({
         {
           path: "",
           name: "landing",
+          meta: { title: "MyBoothManager" },
           component: LandingPage,
         },
       ],
@@ -27,9 +29,14 @@ const router = createRouter({
     {
       path: "/booth/:boothId",
       name: "booth-individual",
+      meta: { title: "부스 정보 | MyBoothManager" },
       component: IndividualBoothPage,
     },
   ],
+});
+
+router.afterEach((to) => {
+  document.title = to.meta.title as string ?? "MyBoothManager";
 });
 
 export default router;
