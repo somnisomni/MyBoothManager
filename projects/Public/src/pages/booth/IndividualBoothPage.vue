@@ -29,7 +29,7 @@
         <VContainer>
           <VSpacer class="my-8" />
 
-          <h4 class="text-h4 text-left font-weight-medium">굿즈 목록</h4>
+          <h4 class="text-h4 text-left font-weight-medium ml-2">굿즈 목록</h4>
           <VDivider class="my-2" />
           <GoodsListView v-if="boothGoodsList.length > 0"
                         :currencySymbol="boothData?.currencySymbol"

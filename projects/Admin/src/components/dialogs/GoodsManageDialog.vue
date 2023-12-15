@@ -30,23 +30,23 @@
                        :uploadCallback="goodsImageUploadCallback"
                        :deleteCallback="goodsImageDeleteCallback" />
 
-      <VForm v-model="formValid" @submit.prevent class="flex-1-0-100">
+      <VForm v-model="formValid" @submit.prevent class="flex-1-1">
         <VTextField v-model="formData.name"
                     tabindex="1"
                     density="compact"
                     label="굿즈 이름 *"
                     placeholder="예시) 겁나 귀여운 코하루 아크릴 스탠드"
                     :rules="stringValidator(formData.name)" />
-        <VRow class="ma-0 d-flex flex-row">
+        <VRow class="ma-0 d-flex flex-row flex-nowrap">
           <VSelect v-model="formData.categoryId"
                   tabindex="2"
-                  class="flex-grow-1"
+                  class="flex-1-1"
                   :items="allCategoryData"
                   item-title="name"
                   item-value="id"
                   label="카테고리 *"
                   :rules="[!formData.categoryId ? '카테고리를 선택해주세요.' : true]" />
-          <VBtn icon variant="flat" class="mt-1 ml-2"
+          <VBtn icon variant="flat" class="flex-0-0 mt-1 ml-2"
                 title="굿즈 카테고리 추가"
                 @click="goodsCategoryManageDialogShown = !goodsCategoryManageDialogShown">
             <VTooltip activator="parent" location="bottom">굿즈 카테고리 추가</VTooltip>
