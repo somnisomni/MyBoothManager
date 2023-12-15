@@ -15,7 +15,7 @@
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
-        <VImg :src="getBoothBannerImageURL(booth.bannerImageUrl)" cover aspect-ratio="4/1" class="booth-item-image" />
+        <VImg :src="getBoothBannerImageURL(booth.bannerImageUrl, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
         <div class="booth-item-image-overlay"></div>
       </div>
 
