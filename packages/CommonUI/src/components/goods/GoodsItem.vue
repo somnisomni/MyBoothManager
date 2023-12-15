@@ -17,9 +17,9 @@
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name">{{ goodsData.name }}</div>
 
-      <VLayout class="d-flex flex-row justify-space-between">
-        <div>{{ currencySymbol }}{{ goodsData.price.toLocaleString() }}</div>
-        <div><span class="goods-stock-current">{{ goodsData.stockRemaining }}</span> <span class="goods-stock-initial">/ {{ goodsData.stockInitial }}</span></div>
+      <VLayout class="d-flex flex-row flex-wrap justify-space-between">
+        <div class="flex-0-0">{{ currencySymbol }}{{ goodsData.price.toLocaleString() }}</div>
+        <div class="flex-1-0 text-right"><span class="goods-stock-current">{{ goodsData.stockRemaining }}</span> <span class="goods-stock-initial">/ {{ goodsData.stockInitial }}</span></div>
       </VLayout>
     </VLayout>
   </VSheet>
