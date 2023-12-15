@@ -17,7 +17,7 @@
                 :disablePrimary="!isFormEdited || !formValid"
                 :closeOnCancel="false">
     <VForm v-model="formValid" @submit.prevent>
-      <VTextField v-model="formData.name"
+      <VTextField v-model.trim="formData.name"
                   tabindex="1"
                   density="compact"
                   label="굿즈 카테고리 이름"

@@ -21,7 +21,8 @@
                   variant="outlined"
                   :hide-details="formValid"
                   class="mx-2 text-right"
-                  :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"/>
+                  :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"
+                  @change="orderDataCopied.quantity = Math.floor(new Number(orderDataCopied.quantity).valueOf())" />
       <VChipGroup v-model.number="orderDataCopied.quantity"
                   class="d-flex flex-row justify-start"
                   selected-class="text-primary"
@@ -41,11 +42,12 @@
                   hint="비워두면 굿즈의 기본 가격 사용"
                   persistent-hint
                   clearable
-                  :placeholder="goodsItem.price.toString()"
+                  :placeholder="goodsItem.price.toLocaleString()"
                   :prefix="currencySymbol"
                   variant="outlined"
                   class="mx-2 mt-6"
-                  :rules="[(val: number) => val === undefined || val >= 0 ? true : '판매 단가는 음수일 수 없습니다.']" />
+                  :rules="[(val: number) => val === undefined || val >= 0 ? true : '판매 단가는 음수일 수 없습니다.']"
+                  @change="orderDataCopied.price = new Number(new Number(orderDataCopied.price).toFixed(3)).valueOf()" />
       <VChipGroup v-model="orderDataCopied.price"
                   class="d-flex flex-row justify-start"
                   selected-class="text-primary">

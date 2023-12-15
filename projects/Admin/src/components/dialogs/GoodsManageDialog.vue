@@ -31,7 +31,7 @@
                        :deleteCallback="goodsImageDeleteCallback" />
 
       <VForm v-model="formValid" @submit.prevent class="flex-1-1">
-        <VTextField v-model="formData.name"
+        <VTextField v-model.trim="formData.name"
                     tabindex="1"
                     density="compact"
                     label="굿즈 이름 *"
@@ -53,26 +53,27 @@
             <VIcon>mdi-plus</VIcon>
           </VBtn>
         </VRow>
-        <VTextField v-model="formData.description"
+        <VTextField v-model.trim="formData.description"
                     tabindex="3"
                     density="compact"
                     label="굿즈 설명"
                     placeholder="예시) 1/10 비율 등신대 아크릴 스탠드" />
-        <VTextField v-model="formData.type"
+        <VTextField v-model.trim="formData.type"
                     tabindex="4"
                     density="compact"
                     label="굿즈 종류"
                     placeholder="예시) 아크릴 스탠드" />
-        <VTextField v-model="formData.price"
+        <VTextField v-model.number="formData.price"
                     tabindex="5"
                     density="compact"
                     type="number"
                     min="0"
                     :prefix="currencySymbol"
                     label="가격 (단가) *"
-                    :rules="numberValidator(formData.price)" />
+                    :rules="numberValidator(formData.price)"
+                    @change="formData.price = new Number(new Number(formData.price).toFixed(3)).valueOf()" />
         <VRow class="ma-0 d-flex flex-row">
-          <VTextField v-model="formData.stockRemaining"
+          <VTextField v-model.number="formData.stockRemaining"
                       tabindex="7"
                       density="compact"
                       type="number"
@@ -81,9 +82,10 @@
                       suffix="개"
                       label="현재 재고 *"
                       :rules="numberValidatorStockRemaining(formData.stockRemaining)"
-                      @focus="!formData.stockRemaining ? formData.stockRemaining = formData.stockInitial : undefined" />
+                      @focus="!formData.stockRemaining ? formData.stockRemaining = formData.stockInitial : undefined"
+                      @change="formData.stockRemaining = Math.floor(new Number(formData.stockRemaining).valueOf())" />
           <span class="mx-2 mt-1" style="font-size: 1.5em"> / </span>
-          <VTextField v-model="formData.stockInitial"
+          <VTextField v-model.number="formData.stockInitial"
                       tabindex="6"
                       density="compact"
                       type="number"
@@ -91,7 +93,8 @@
                       min="0"
                       suffix="개"
                       label="초기 재고 *"
-                      :rules="numberValidator(formData.stockInitial)" />
+                      :rules="numberValidator(formData.stockInitial)"
+                      @change="formData.stockInitial = Math.floor(new Number(formData.stockInitial).valueOf())" />
         </VRow>
       </VForm>
     </VLayout>
