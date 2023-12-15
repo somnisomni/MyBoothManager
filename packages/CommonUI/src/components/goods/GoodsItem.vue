@@ -9,7 +9,7 @@
           @pointerenter="isHovering = true"
           @pointerleave="isHovering = false"
           @click.stop="onItemClick">
-    <VImg class="goods-image" :src="goodsImageUrlComputed" cover />
+    <VImg class="goods-image no-interaction" :src="goodsImageUrlComputed" cover />
     <div class="goods-image-overlay"></div>
 
     <div v-if="editable" class="click-to-edit-text"><VIcon>mdi-pencil</VIcon> 클릭하여 수정</div>
@@ -111,16 +111,6 @@ export default class GoodsItem extends Vue {
   }
 
   .goods-image {
-    pointer-events: none;
-
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-
-    -webkit-user-drag: none;
-            user-drag: none;
-
     position: absolute;
     width: 100%;
     height: 100%;

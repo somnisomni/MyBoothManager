@@ -1,25 +1,25 @@
 <template>
   <div v-for="category in goodsCategoryListAdjusted"
        :key="category.id"
-       class="my-4">
-    <GoodsCategoryTitle class="mb-2"
-                        :categoryData="category"
+       class="my-4 mt-8">
+    <GoodsCategoryTitle :categoryData="category"
                         :editable="editable && category.id !== -1"
                         @click="onGoodsCategoryClick"
                         @editRequest="onGoodsCategoryEditRequest" />
 
-    <VRow class="ma-0 justify-start">
+    <VRow v-if="findGoodsInCategory(category.id).length > 0" class="ma-0 justify-start">
       <VSlideYReverseTransition group leave-absolute>
-          <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
-                     :key="goods.id"
-                     :editable="editable"
-                     :goodsData="goods"
-                     :goodsImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
-                     :currencySymbol="currencySymbol"
-                     @click="onGoodsClick"
-                     @editRequest="onGoodsEditRequest" />
+        <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
+                   :key="goods.id"
+                   :editable="editable"
+                   :goodsData="goods"
+                   :goodsImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
+                   :currencySymbol="currencySymbol"
+                   @click="onGoodsClick"
+                   @editRequest="onGoodsEditRequest" />
       </VSlideYReverseTransition>
     </VRow>
+    <h6 v-else class="d-inline-flex align-center text-h6 text-disabled mx-4 my-2"><VIcon class="mr-1">mdi-exclamation</VIcon> 카테고리에 등록된 굿즈가 없습니다.</h6>
   </div>
 </template>
 

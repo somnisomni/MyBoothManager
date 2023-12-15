@@ -1,18 +1,22 @@
 <template>
-  <VBtn class="goods-category-title d-flex flex-row align-center justify-start text-left text-2xl pl-2"
-        variant="text"
-        size="large"
-        :class="{ 'edit': editable }"
-        @click.stop="onTitleClick"
-        @pointerenter="hasPointerEntered = true"
-        @pointerleave="hasPointerEntered = false">
+  <div class="goods-category-title no-selection text-2xl font-bold ml-2"
+       :class="{ 'edit': editable }">
+    <VBtn v-if="editable"
+          class="d-flex flex-row align-center justify-start text-left pl-2"
+          variant="text"
+          size="large"
+          @click.stop="onTitleClick"
+          @pointerenter="hasPointerEntered = true"
+          @pointerleave="hasPointerEntered = false">
 
-    <h2 class="font-bold">{{ categoryData.name }}</h2>
+      <h2 class="d-inline-block">{{ categoryData.name }}</h2>
 
-    <VSlideXTransition>
-      <VIcon v-if="editable" v-show="hasPointerEntered" class="ml-2">mdi-pencil</VIcon>
-    </VSlideXTransition>
-  </VBtn>
+      <VSlideXTransition>
+        <VIcon v-if="editable" v-show="hasPointerEntered" class="ml-2">mdi-pencil</VIcon>
+      </VSlideXTransition>
+    </VBtn>
+    <h2 v-else class="no-interaction d-inline-block max-w-100 pl-2">{{ categoryData.name }}</h2>
+  </div>
 </template>
 
 <script lang="ts">
@@ -36,10 +40,13 @@ export default class GoodsCategoryTitle extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .goods-category-title {
-  &:not(.edit) {
-    pointer-events: none;
+  .v-btn {
+    &__content {
+      max-width: 100%;
+      white-space: pre-wrap;
+    }
   }
 }
 </style>
