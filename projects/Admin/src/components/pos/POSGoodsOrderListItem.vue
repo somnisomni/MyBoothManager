@@ -1,11 +1,11 @@
 <template>
   <VImg class="order-item"
-        :src="'https://picsum.photos/seed/' + item.goodsId + '/200/250'"
+        :src="currentGoodsImageUrl"
         v-ripple
         cover
         :height="singleLine ? '48px' : '72px'"
         @click.stop="onOrderItemClick">
-    <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.66)">
+    <VLayout class="d-flex flex-row align-center px-2 py-1 w-100 h-100 text-background" style="background-color: rgba(0, 0, 0, 0.75)">
       <div class="d-flex flex-grow-1 flex-shrink-1" style="min-width: 0;"
            :class="{ 'flex-column': !singleLine, 'flex-row': singleLine }">
         <div class="overflow-hidden text-body-1 font-weight-bold mr-2" style="text-overflow: ellipsis">{{ boothGoodsDict[item.goodsId].name }}</div>
@@ -40,6 +40,7 @@ import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import type { IGoods } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import { getUploadFilePath } from "@/lib/functions";
 
 @Component({
   emits: ["quantityChange", "click"],
@@ -60,6 +61,10 @@ export default class POSGoodsOrderListItem extends Vue {
 
   get currentGoods(): IGoods {
     return this.boothGoodsDict[this.item.goodsId];
+  }
+
+  get currentGoodsImageUrl(): string {
+    return getUploadFilePath(this.currentGoods.goodsImageUrl) ?? `https://picsum.photos/seed/${this.currentGoods.id}/200/250`;
   }
 
   get calculatedGoodsPrice(): number {
