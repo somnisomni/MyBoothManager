@@ -1,5 +1,5 @@
 <template>
-  <VSheet class="bg-transparent position-fixed d-flex flex-column pa-2" style="top: 0; right: 0; z-index: 10">
+  <VSheet class="bg-transparent position-fixed d-flex flex-column pa-2" style="top: 0; right: 0; z-index: 1000">
     <VBtn v-if="showHomeButton" class="share-button my-1" variant="outlined" icon :to="{ name: 'landing' }">
       <VIcon>mdi-home</VIcon>
       <VTooltip activator="parent" location="bottom">메인 페이지로</VTooltip>
