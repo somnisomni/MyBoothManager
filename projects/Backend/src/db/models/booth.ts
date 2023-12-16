@@ -105,7 +105,7 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   }
 
   @AllowNull
-  @Default([])
+  @Default(null)
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.JSON)
   declare infoImageId?: number | null;
