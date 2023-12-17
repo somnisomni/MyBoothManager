@@ -43,10 +43,11 @@ const useAdminStore = defineStore("admin", () => {
           return await func();
         }
       } else if(result === ErrorCodes.INVALID_AUTH_TOKEN || result === ErrorCodes.NEED_RELOGIN) {
-        // Logout
-        router.replace({ name: "logout", state: { authTokenInvalid: true } });
-        return result;
+        // Insert further specific actions for these error codes here
       }
+
+      // Force logout
+      router.replace({ name: "logout", state: { authTokenInvalid: true } });
     }
 
     return result;

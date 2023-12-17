@@ -38,7 +38,7 @@ export class GoodsController {
 
   @Delete(":id")
   async remove(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
-    return await this.goodsService.remove(+id, parseInt(boothId), authData.id);
+    return await this.goodsService.remove(+id, +boothId, authData.id);
   }
 
   /* SuperAdmin routes */

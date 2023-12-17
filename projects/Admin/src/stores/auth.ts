@@ -52,8 +52,11 @@ const useAuthStore = defineStore("auth", () => {
       registerAuthData(response);
       return true;
     } else {
-      if(response === ErrorCodes.AUTH_TOKEN_NEED_REFRESH || response === ErrorCodes.NEED_RELOGIN) {
-        // Refresh token is expired, require re-login
+      if(response === ErrorCodes.AUTH_TOKEN_NEED_REFRESH
+        || response === ErrorCodes.NEED_RELOGIN
+        || response === ErrorCodes.EXPIRED_REFRESH_TOKEN
+        || response === ErrorCodes.INVALID_REFRESH_TOKEN) {
+        // Refresh token is expired or invalid, require force re-login
         invalidateLoginData();
         return false;
       } else {
