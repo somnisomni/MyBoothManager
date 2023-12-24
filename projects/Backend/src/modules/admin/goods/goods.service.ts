@@ -19,7 +19,7 @@ export class GoodsService {
     private readonly utilService: UtilService) { }
 
   private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
-    const goods = await findOneByPk(Goods, goodsId, [ UploadStorage ]);
+    const goods = await findOneByPk(Goods, goodsId);
     if(!goods) throw new EntityNotFoundException();
     if(goods.boothId !== boothId) throw new NoAccessException();
 

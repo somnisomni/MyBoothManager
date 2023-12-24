@@ -1,7 +1,7 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import { GoodsStatus, GoodsStockVisibility, IGoodsModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
@@ -11,6 +11,14 @@ export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "de
                                & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
 
 @Table
+@DefaultScope(() => ({
+  include: [
+    {
+      as: "goodsImage",
+      model: UploadStorage,
+    },
+  ],
+}))
 export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> implements IGoodsModel {
   @PrimaryKey
   @Unique
