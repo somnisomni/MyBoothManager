@@ -150,6 +150,13 @@ export class GoodsService {
 
   async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     const goods = await this.findGoodsBelongsToBooth(id, boothId, callerAccountId);
+
+    // Delete goods image
+    if(goods.goodsImageId) {
+      // TODO: calling this.deleteImage() will execute find query again, which already found above.
+      await this.deleteImage(id, boothId, callerAccountId);
+    }
+
     return await removeTarget(goods);
   }
 }
