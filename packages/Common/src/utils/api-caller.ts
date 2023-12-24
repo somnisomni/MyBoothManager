@@ -1,4 +1,4 @@
-import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsResponse, IValueResponse } from "..";
+import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, IValueResponse } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -99,6 +99,17 @@ export default class APICaller {
     else return response;
   }
 
+  public async fetchAllGoodsCombinationOfBooth(boothId: number) {
+    return await this.createPublicAPI().GET<Array<IGoodsCombinationResponse>>(`booth/${boothId}/goods/combination`);
+  }
+
+  public async fetchCountAllGoodsCombinationOfBooth(boothId: number) {
+    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/combination/count`);
+
+    if("value" in response) return +response.value;
+    else return response;
+  }
+
   // Goods
   public async fetchSingleGoods(goodsId: number) {
     return await this.createPublicAPI().GET<IGoodsResponse>(`goods/${goodsId}`);
@@ -107,5 +118,10 @@ export default class APICaller {
   // Goods category
   public async fetchSingleGoodsCategory(goodsCategoryId: number) {
     return await this.createPublicAPI().GET<IGoodsCategoryResponse>(`goods/category/${goodsCategoryId}`);
+  }
+
+  // Goods combination
+  public async fetchSingleGoodsCombination(goodsCombinationId: number) {
+    return await this.createPublicAPI().GET<IGoodsCombinationResponse>(`goods/combination/${goodsCombinationId}`);
   }
 }

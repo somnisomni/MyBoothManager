@@ -57,6 +57,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/goods/order`));
   }
 
+  static async fetchAllGoodsCombinationOfBooth(boothId: number) {
+    return await this.apiCallWrapper<Array<CT.IGoodsCombinationResponse>>(() => this.API.GET(`booth/${boothId}/goods/combination`));
+  }
+
   /* Update */
   static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateRequest) {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.PATCH(`booth/${boothId}`, payload));
@@ -76,6 +80,10 @@ export default class AdminAPI {
 
   static async updateGoodsOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`goods/order/${orderId}/status?bId=${boothId}`, payload));
+  }
+
+  static async updateGoodsCombinationInfo(combinationId: number, payload: CT.IGoodsCombinationUpdateRequest) {
+    return await this.apiCallWrapper<CT.IGoodsCombinationResponse>(() => this.API.PATCH(`goods/combination/${combinationId}`, payload));
   }
 
   /* Create */
@@ -105,6 +113,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST("goods/order", payload));
   }
 
+  static async createGoodsCombination(payload: CT.IGoodsCombinationCreateRequest) {
+    return await this.apiCallWrapper<CT.IGoodsCombinationResponse>(() => this.API.POST("goods/combination", payload));
+  }
+
   /* Upload */
   static async uploadBoothBannerImage(boothId: number, image: Blob) {
     const formData = new FormData();
@@ -124,6 +136,12 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
   }
 
+  static async uploadGoodsCombinationImage(combinationId: number, boothId: number, image: Blob) {
+    const formData = new FormData();
+    formData.set("0", image);
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));
+  }
+
   /* Delete */
   static async deleteBoothBannerImage(boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/banner`));
@@ -133,15 +151,23 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/infoimage`));
   }
 
-  static async deleteGoodsImage(goodsId: number, boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
-  }
-
   static async deleteGoods(goodsId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}?bId=${boothId}`));
   }
 
+  static async deleteGoodsImage(goodsId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
+  }
+
   static async deleteGoodsCategory(categoryId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/category/${categoryId}`));
+  }
+
+  static async deleteGoodsCombination(combinationId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}?bId=${boothId}`));
+  }
+
+  static async deleteGoodsCombinationImage(combinationId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image?bId=${boothId}`));
   }
 }
