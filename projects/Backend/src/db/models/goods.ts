@@ -5,6 +5,7 @@ import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
+import GoodsCombination from "./goods-combination";
 
 export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
                                & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
@@ -28,6 +29,12 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   @ForeignKey(() => GoodsCategory)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare categoryId?: number | null;
+
+  @AllowNull
+  @Default(null)
+  @ForeignKey(() => GoodsCombination)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare combinationId?: number | null;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(128))
@@ -95,6 +102,9 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
 
   @BelongsTo(() => GoodsCategory)
   declare assignedGoodsCategory?: GoodsCategory;
+
+  @BelongsTo(() => GoodsCombination)
+  declare assignedGoodsCombination?: GoodsCombination;
 
   @BelongsTo(() => UploadStorage, "goodsImageId")
   declare goodsImage?: UploadStorage;
