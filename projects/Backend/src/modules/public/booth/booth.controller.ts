@@ -41,4 +41,14 @@ export class PublicBoothController {
   async countAllBoothGoodsCategory(@Param("id") boothId: string) {
     return await this.publicBoothService.countAllGoodsCategoryOfBooth(+boothId);
   }
+
+  @Get(":id/goods/combination")
+  async findAllBoothGoodsCombination(@Param("id") boothId: string) {
+    return await this.publicBoothService.findAllGoodsCombinationOfBooth(+boothId);
+  }
+
+  @Get(":id/goods/combination/count")
+  async countAllBoothGoodsCombination(@Param("id") boothId: string) {
+    return await this.publicBoothService.countAllGoodsCombinationOfBooth(+boothId);
+  }
 }
