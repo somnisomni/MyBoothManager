@@ -58,7 +58,7 @@ export default class AdminAPI {
   }
 
   static async fetchAllGoodsCombinationOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsCombinationResponse>>(() => this.API.GET(`booth/${boothId}/goods/combination`));
+    return await this.apiCallWrapper(() => this.API.fetchAllGoodsCombinationOfBooth(boothId));
   }
 
   /* Update */
