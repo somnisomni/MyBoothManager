@@ -7,8 +7,10 @@
                    :goodsList="goodsList"
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
+                   :goodsCombinationList="goodsCombinationList"
                    @goodsEditRequest="openGoodsEditDialog"
-                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog" />
+                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog"
+                   @combinationEditRequest="openGoodsCombinationEditDialog" />
   </VContainer>
 
   <GoodsManageDialog v-model="goodsEditDialogOpen"
@@ -17,14 +19,18 @@
   <GoodsCategoryManageDialog v-model="goodsCategoryEditDialogOpen"
                              :editMode="true"
                              :categoryId="editDialogCategoryId" />
+  <GoodsCombinationManageDialog v-model="goodsCombinationEditDialogOpen"
+                                :editMode="true"
+                                :combinationId="editDialogCombinationId" />
 </template>
 
 <script lang="ts">
-import type { IGoods, IGoodsCategory } from "@myboothmanager/common";
+import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
 import { Vue, Component } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
+import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 
@@ -33,6 +39,7 @@ import { getUploadFilePath } from "@/lib/functions";
     GoodsManagePanel,
     GoodsManageDialog,
     GoodsCategoryManageDialog,
+    GoodsCombinationManageDialog,
   },
 })
 export default class BoothAdminGoodsPage extends Vue {
@@ -40,8 +47,10 @@ export default class BoothAdminGoodsPage extends Vue {
 
   goodsEditDialogOpen = false;
   goodsCategoryEditDialogOpen = false;
+  goodsCombinationEditDialogOpen = false;
   editDialogGoodsId: number | null = null;
   editDialogCategoryId: number | null = null;
+  editDialogCombinationId: number | null = null;
 
   get currencySymbol(): string {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
@@ -55,9 +64,18 @@ export default class BoothAdminGoodsPage extends Vue {
     return Object.values(useAdminStore().boothGoodsCategoryList);
   }
 
+  get goodsCombinationList(): Array<IGoodsCombination> {
+    return Object.values(useAdminStore().boothGoodsCombinationList);
+  }
+
   openGoodsEditDialog(goodsId: number) {
     this.editDialogGoodsId = goodsId;
     this.goodsEditDialogOpen = true;
+  }
+
+  openGoodsCombinationEditDialog(combinationId: number) {
+    this.editDialogCombinationId = combinationId;
+    this.goodsCombinationEditDialogOpen = true;
   }
 
   openGoodsCategoryEditDialog(categoryId: number) {

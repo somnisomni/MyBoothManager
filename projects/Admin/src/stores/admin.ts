@@ -518,6 +518,7 @@ const useAdminStore = defineStore("admin", () => {
     boothGoodsCategoryList,
     boothGoodsList,
     boothGoodsOrderList,
+    boothGoodsCombinationList,
 
     invalidateAllStates,
     changeBooth,

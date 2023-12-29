@@ -5,8 +5,9 @@
 
     <div v-for="(field, fieldname, index) in fields"
          :key="field.label"
-         class="d-flex flex-row flex-nowrap justify-center">
-      <component :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+         class="d-flex flex-row flex-nowrap justify-center align-center">
+      <component v-if="isFormField(field.type)"
+                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  v-model.trim.lazy="models[fieldname]"
                  :tabindex="index + 1    /* tabindex should be started with 1 */"
                  :type="isNumericField(field.type) ? 'number' : field.type"
@@ -31,11 +32,17 @@
                  @change="isNumericField(field.type)
                           ? ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname))
                           : undefined" />
+      <component v-else
+                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+                 :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
+                 :style="field.style">
+        {{ (field as IFormOtherFieldOptions).content }}
+      </component>
 
       <VBtn v-for="button in field.additionalButtons"
             :key="button.title"
             icon
-            class="flex-0-0 ml-2 mt-2"
+            class="flex-0-0 align-self-start ml-2 mt-2"
             :title="button.title"
             :variant="button.variant ?? 'flat'"
             @click="button.onClick">
@@ -69,7 +76,9 @@ export enum FormFieldType {
   // FILE = "file",
   // EMAIL = "email",
   // URL = "url",
+
   HEADING = "heading",
+  PARAGRAPH = "paragraph",
 }
 
 export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent | string> = {
@@ -86,7 +95,9 @@ export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent |
   // [FormFieldType.FILE]: "VFileInput",
   // [FormFieldType.EMAIL]: markRaw(VTextField),
   // [FormFieldType.URL]: markRaw(VTextField),
+
   [FormFieldType.HEADING]: "h2",
+  [FormFieldType.PARAGRAPH]: "p",
 };
 
 export interface IFormFieldOptions {
@@ -146,11 +157,17 @@ export interface IFormFieldDateOptions extends IFormFieldOptions {
   max?: string;
 }
 
+export interface IFormOtherFieldOptions extends Omit<IFormFieldOptions, "label">, Partial<Pick<IFormFieldOptions, "label">> {
+  content: string;
+}
+
 export type FormFieldOptions = IFormFieldOptions
                                | ({ type: FormFieldType.NUMBER } & IFormFieldNumericOptions)
                                | ({ type: FormFieldType.CURRENCY } & IFormFieldCurrencyOptions)
                                | ({ type: FormFieldType.SELECT } & IFormFieldSelectOptions)
-                               | ({ type: FormFieldType.DATE } & IFormFieldDateOptions);
+                               | ({ type: FormFieldType.DATE } & IFormFieldDateOptions)
+                               | ({ type: FormFieldType.HEADING } & IFormOtherFieldOptions)
+                               | ({ type: FormFieldType.PARAGRAPH } & IFormOtherFieldOptions);
 
 @Component({
   emits: ["submit"],
@@ -193,6 +210,16 @@ export default class CommonForm extends Vue {
   // FORM
   public reset() { this.models = { ...this.initialModelValues }; }
   public resetValidation() { if(this.form) this.form.resetValidation(); }
+
+  isFormField(fieldType: FormFieldType): boolean {
+    switch(fieldType) {
+      case FormFieldType.HEADING:
+      case FormFieldType.PARAGRAPH:
+        return false;
+      default:
+        return true;
+    }
+  }
 
   // NUMBER
   isNumericField(fieldType: FormFieldType): boolean {
