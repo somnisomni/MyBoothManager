@@ -1380,27 +1380,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=aa5ec0&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: a6ac746557d54d54ea98ddc0ecf9443db8707380eddc35990f23cb1418cad2e7e21bb34e9eb1826c94496bd94224c02cdf1895cb2fb8c94088b2b9e54eeee8b3
+  checksum: 02479e2e352653db157a97b43c6aa88fa759c07a32343c2e6760d69358690a6f95235b67b59414c50554e5624a16f5e312e732c0fb2f82e81f7291ccf40ba97b
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=aa5ec0&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: a6ac746557d54d54ea98ddc0ecf9443db8707380eddc35990f23cb1418cad2e7e21bb34e9eb1826c94496bd94224c02cdf1895cb2fb8c94088b2b9e54eeee8b3
+  checksum: 02479e2e352653db157a97b43c6aa88fa759c07a32343c2e6760d69358690a6f95235b67b59414c50554e5624a16f5e312e732c0fb2f82e81f7291ccf40ba97b
   languageName: node
   linkType: hard
 
@@ -1440,37 +1440,37 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=08c67e&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=399ad5&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: cf91793308ee9e87958972383adee229e7103fa42d08da5cc5042745be48972329769f8e812cab7b028e8bc4a5be7e98fde700b1a95ea635b32df94290d5d9c9
+  checksum: 6dac8f55d1de694c8890d723a67f884a941d77e92642380680b6b1015fd25c9912b05d6877d683d275d1dea125ea0a0117304fd67c57c494eab6a784d65a67e2
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=08c67e&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=399ad5&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: cf91793308ee9e87958972383adee229e7103fa42d08da5cc5042745be48972329769f8e812cab7b028e8bc4a5be7e98fde700b1a95ea635b32df94290d5d9c9
+  checksum: 6dac8f55d1de694c8890d723a67f884a941d77e92642380680b6b1015fd25c9912b05d6877d683d275d1dea125ea0a0117304fd67c57c494eab6a784d65a67e2
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=08c67e&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=399ad5&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: cf91793308ee9e87958972383adee229e7103fa42d08da5cc5042745be48972329769f8e812cab7b028e8bc4a5be7e98fde700b1a95ea635b32df94290d5d9c9
+  checksum: 6dac8f55d1de694c8890d723a67f884a941d77e92642380680b6b1015fd25c9912b05d6877d683d275d1dea125ea0a0117304fd67c57c494eab6a784d65a67e2
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../Common::locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../Common#../Common::hash=08c67e&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
+  resolution: "@myboothmanager/common@file:../Common#../Common::hash=399ad5&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: cf91793308ee9e87958972383adee229e7103fa42d08da5cc5042745be48972329769f8e812cab7b028e8bc4a5be7e98fde700b1a95ea635b32df94290d5d9c9
+  checksum: 6dac8f55d1de694c8890d723a67f884a941d77e92642380680b6b1015fd25c9912b05d6877d683d275d1dea125ea0a0117304fd67c57c494eab6a784d65a67e2
   languageName: node
   linkType: hard
 
