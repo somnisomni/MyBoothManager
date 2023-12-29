@@ -45,7 +45,22 @@ export class GoodsCombinationService {
       throw new GoodsCombinationParentBoothNotFoundException();
     }
 
-    return await create(GoodsCombination, dto);
+    // Create combination
+    const combination = await create(GoodsCombination, dto);
+
+    // Update goods
+    const goodsToBeUpdated = await Goods.findAll({
+      where: {
+        id: dto.goodsIds,
+      },
+    });
+    for(const g of goodsToBeUpdated) {
+      if(!g.combinationId) {
+        await (g.set("combinationId", combination.id)).save();
+      }
+    }
+
+    return await combination.reload();
   }
 
   async uploadImage(combinationId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {

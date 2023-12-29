@@ -6,4 +6,5 @@ export class CreateGoodsCombinationDTO implements IGoodsCombinationCreateRequest
   declare name: string;
   declare description?: string;
   declare price: number;
+  declare goodsIds: number[];
 }

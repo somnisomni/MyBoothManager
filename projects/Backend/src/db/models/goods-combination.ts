@@ -1,7 +1,7 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import { GoodsStockVisibility, IGoodsCombinationModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
@@ -11,6 +11,12 @@ export type GoodsCombinationCreationAttributes = Omit<IGoodsCombinationModel, In
                                & Partial<Pick<IGoodsCombinationModel, "description">>;
 
 @Table
+@DefaultScope(() => ({
+  include: [
+    { model: Goods, as: "combinedGoods" },
+    { model: UploadStorage, as: "combinationImage" },
+  ],
+}))
 export default class GoodsCombination extends Model<IGoodsCombinationModel, GoodsCombinationCreationAttributes> implements IGoodsCombinationModel {
   @PrimaryKey
   @Unique
@@ -56,20 +62,20 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   declare combinationImageId?: number | null;
 
   @Column(DataTypes.VIRTUAL)
-  get stockInitial(): number | null {
-    if(this.combinedGoods) {
+  get stockInitial(): number {
+    if(this.combinedGoods && this.combinedGoods.length > 0) {
       return Math.min(...this.combinedGoods.map(g => g.stockInitial));
     } else {
-      return null;
+      return 0;
     }
   }
 
   @Column(DataTypes.VIRTUAL)
-  get stockRemaining(): number | null {
-    if(this.combinedGoods) {
+  get stockRemaining(): number {
+    if(this.combinedGoods && this.combinedGoods.length > 0) {
       return Math.min(...this.combinedGoods.map(g => g.stockRemaining));
     } else {
-      return null;
+      return 0;
     }
   }
 
