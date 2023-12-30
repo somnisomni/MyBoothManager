@@ -35,14 +35,19 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsCombinationCreateRequest } from "@myboothmanager/common";
+import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
+import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
+
+export type IGoodsCombinationManageFormField
+  = Pick<IGoodsCombination, "name" | "description" | "categoryId" | "price" | "stockVisibility">
+    & { goodsIds: number[] };
 
 @Component({
   components: {
@@ -66,12 +71,13 @@ export default class GoodsCombinationManageDialog extends Vue {
     leftButtonText: this.editMode ? "삭제" : undefined,
   };
 
-  readonly formModels: Record<string, any> = reactive({
+  readonly formModels: IGoodsCombinationManageFormField = reactive({
     name: "",
     description: "",
     categoryId: -1,
     price: 0,
     goodsIds: [],
+    stockVisibility: GoodsStockVisibility.SHOW_ALL,
   });
   readonly formFields = readonly({
     name: {
@@ -121,8 +127,8 @@ export default class GoodsCombinationManageDialog extends Vue {
         },
       ],
     },
-  } as Record<string, FormFieldOptions>);
-  readonly formModelsInitial: Record<string, any> = readonly(this.editMode ? { } : { ...this.formModels });
+  } as Record<keyof IGoodsCombinationManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
+  formModelsInitial: IGoodsCombinationManageFormField = deepClone(this.formModels);
 
   goodsSelectionDialogShown = false;
   openGoodsSelectionDialog() { this.goodsSelectionDialogShown = true; }
@@ -137,11 +143,32 @@ export default class GoodsCombinationManageDialog extends Vue {
     return Object.values(useAdminStore().boothGoodsList);
   }
 
-  @Watch("formModels.goodsIds", { deep: true })
-  test() { console.info(this.formModels.goodsIds); }
+  @Watch("open") mounted() {
+    if(this.editMode && this.combinationId) {
+      const combination = useAdminStore().boothGoodsCombinationList[Number(this.combinationId)];
+      if(combination) {
+        this.formModels.name = combination.name;
+        this.formModels.description = combination.description;
+        this.formModels.categoryId = combination.categoryId;
+        this.formModels.price = combination.price;
+        this.formModels.goodsIds = Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
+        this.formModels.stockVisibility = combination.stockVisibility;
 
-  mounted() { this.resetForm(); }
-  @Watch("open") onOpenChanged() { this.resetForm(); }
+        this.formModelsInitial = deepClone(this.formModels);
+      }
+    } else {
+      this.formModels.name = "";
+      this.formModels.description = "";
+      this.formModels.categoryId = -1;
+      this.formModels.price = 0;
+      this.formModels.goodsIds = [];
+      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_ALL;
+
+      this.formModelsInitial = deepClone(this.formModels);
+    }
+
+    this.resetForm();
+  }
 
   resetForm() {
     if(this.form) this.form.reset();

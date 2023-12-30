@@ -60,6 +60,8 @@
 import { markRaw, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
+import deepEqual from "fast-deep-equal";
+import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 
 export enum FormFieldType {
@@ -187,10 +189,11 @@ export default class CommonForm extends Vue {
   /* Model value update */
   @Watch("models", { deep: true, immediate: true })
   onModelDataUpdate() {
-    this.isEdited = Object.keys(this.models).some((key) => {
-      const k = key as keyof typeof this.models;
-      return this.models[k] !== this.initialModelValues[k];
-    });
+    this.isEdited = !deepEqual(this.models, this.initialModelValues);
+    // this.isEdited = Object.keys(this.models).some((key) => {
+    //   const k = key as keyof typeof this.models;
+    //   return this.models[k] !== this.initialModelValues[k];
+    // });
   }
 
   /* Common rules */
@@ -208,7 +211,7 @@ export default class CommonForm extends Vue {
 
   /* Form utility functions */
   // FORM
-  public reset() { this.models = { ...this.initialModelValues }; }
+  public reset() { this.models = deepClone(this.initialModelValues); }
   public resetValidation() { if(this.form) this.form.resetValidation(); }
 
   isFormField(fieldType: FormFieldType): boolean {
