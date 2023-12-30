@@ -75,6 +75,8 @@ export default class GoodsManagePanel extends Vue {
   async onListRefreshClick() {
     this.goodsListRefreshing = true;
     await useAdminStore().fetchGoodsOfCurrentBooth(true);
+    await useAdminStore().fetchGoodsCategoriesOfCurrentBooth(true);
+    await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true);
     this.goodsListRefreshing = false;
   }
 
