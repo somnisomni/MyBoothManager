@@ -140,15 +140,47 @@ export class GoodsCombinationService {
 
     const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId!, callerAccountId);
 
+    // Remove combination ID from existing goods
+    if(dto.goodsIds) {
+      const goodsToBeUpdated = await Goods.findAll({
+        where: {
+          combinationId: combination.id,
+        },
+      });
+      for(const g of goodsToBeUpdated) {
+        if(g.combinationId) {
+          await (g.set("combinationId", null)).save();
+        }
+      }
+    }
+
+    // Update combination
     try {
       await combination.update({
         ...dto,
         boothId: undefined,  // Prevent boothId from being updated
       });
-      return await combination.save();
+      await (await combination.save()).reload();
     } catch(err) {
       throw new GoodsCombinationInfoUpdateFailedException();
     }
+
+    // Assign goods to combination
+    if(dto.goodsIds) {
+      const goodsToBeUpdated = await Goods.findAll({
+        where: {
+          id: dto.goodsIds,
+        },
+      });
+      for(const g of goodsToBeUpdated) {
+        if(!g.combinationId) {
+          await (g.set("combinationId", combination.id)).save();
+        }
+      }
+    }
+
+    // Done
+    return await combination.reload();
   }
 
   async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {

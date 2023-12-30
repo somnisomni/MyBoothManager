@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest } from "@myboothmanager/common";
+import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
@@ -187,7 +187,23 @@ export default class GoodsCombinationManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.editMode) {
-      // TODO
+      const requestData: IGoodsCombinationUpdateRequest = {
+        boothId: useAdminStore().currentBoothId,
+        categoryId: this.formModels.categoryId,
+        name: this.formModels.name,
+        description: this.formModels.description,
+        price: this.formModels.price,
+        goodsIds: this.formModels.goodsIds,
+        stockVisibility: this.formModels.stockVisibility,
+      };
+      const result = await useAdminStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
+
+      if(result === true) {
+        this.$emit("updated");
+        this.open = false;
+      } else {
+        alert("오류 " + result);
+      }
     } else {
       const requestData: IGoodsCombinationCreateRequest = {
         boothId: useAdminStore().currentBoothId,
