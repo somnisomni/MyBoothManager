@@ -45,6 +45,11 @@ export class GoodsCombinationService {
       throw new GoodsCombinationParentBoothNotFoundException();
     }
 
+    // Set category ID to null if not provided or -1
+    if(!dto.categoryId || dto.categoryId < 0) {
+      dto.categoryId = null;
+    }
+
     // Create combination
     const combination = await create(GoodsCombination, dto);
 

@@ -84,7 +84,7 @@ export default class GoodsListView extends Vue {
         list[i].categoryId = -1;
       }
     }
-
+    
     return list;
   }
 
@@ -93,7 +93,7 @@ export default class GoodsListView extends Vue {
   }
 
   findCombinationInCategory(categoryId: number) {
-    return this.goodsCombinationList.filter((combination) => combination.categoryId === categoryId);
+    return this.goodsCombinationListAdjusted.filter((combination) => combination.categoryId === categoryId);
   }
 
   @Emit("goodsClick") onGoodsClick(goodsId: number) { return goodsId; }
