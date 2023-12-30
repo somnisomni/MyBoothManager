@@ -29,9 +29,13 @@
                  :rules="[...(field.rules ?? []),
                           ...(field.optional ? [] : RULE_MANDATORY),
                           ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
-                 @change="isNumericField(field.type)
-                          ? ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname))
-                          : undefined" />
+                 @change="() => {
+                            if(field.onChange) field.onChange();
+                            if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname));
+                          }"
+                  @update:modelValue="() => {
+                                        if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
+                                      }" />
       <component v-else
                  :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
@@ -124,6 +128,9 @@ export interface IFormFieldOptions {
 
   // Additional buttons
   additionalButtons?: Array<IFormFieldAdditionalButtonOptions>;
+
+  // Event
+  onChange?(): void;
 }
 
 export interface IFormFieldAdditionalButtonOptions {
@@ -152,6 +159,7 @@ export interface IFormFieldSelectOptions extends IFormFieldOptions {
   items: any[];
   itemTitle: string;
   itemValue: string;
+  onSelectionChange?(): void;
 }
 
 export interface IFormFieldDateOptions extends IFormFieldOptions {

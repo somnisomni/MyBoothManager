@@ -97,6 +97,7 @@ export default class GoodsCombinationManageDialog extends Vue {
       items: [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }],
       itemTitle: "name",
       itemValue: "id",
+      onSelectionChange: () => { this.formModels.goodsIds = []; },
       // additionalButtons: [
       //   {
       //     icon: "mdi-plus",
