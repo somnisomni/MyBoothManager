@@ -19,6 +19,7 @@
                      :goodsList="Object.values(boothGoodsDict)"
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
+                     :goodsCombinationList="boothGoodsCombinationList"
                      @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
     </VLayout>
 
@@ -42,7 +43,7 @@
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
@@ -76,6 +77,7 @@ export default class BoothPOSPage extends Vue {
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().boothGoodsCategoryList); }
+  get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().boothGoodsCombinationList); }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
