@@ -97,7 +97,7 @@ export default class GoodsCombinationManageDialog extends Vue {
       items: [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }],
       itemTitle: "name",
       itemValue: "id",
-      onSelectionChange: () => { this.formModels.goodsIds = []; },
+      onSelectionChange: this.clearSelectedGoods,
       // additionalButtons: [
       //   {
       //     icon: "mdi-plus",
@@ -163,7 +163,7 @@ export default class GoodsCombinationManageDialog extends Vue {
       this.formModels.description = "";
       this.formModels.categoryId = -1;
       this.formModels.price = 0;
-      this.formModels.goodsIds = [];
+      this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
       this.formModels.stockVisibility = GoodsStockVisibility.SHOW_ALL;
 
       this.formModelsInitial = deepClone(this.formModels);
@@ -172,9 +172,8 @@ export default class GoodsCombinationManageDialog extends Vue {
     this.resetForm();
   }
 
-  resetForm() {
-    if(this.form) this.form.reset();
-  }
+  resetForm() { if(this.form) this.form.reset(); }
+  clearSelectedGoods() { this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length); }
 
   onDialogCancel() {
     if(this.isFormEdited) {

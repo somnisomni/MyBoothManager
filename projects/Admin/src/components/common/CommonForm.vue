@@ -33,9 +33,9 @@
                             if(field.onChange) field.onChange();
                             if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname));
                           }"
-                  @update:modelValue="() => {
-                                        if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
-                                      }" />
+                 @update:modelValue="() => {
+                                       if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
+                                     }" />
       <component v-else
                  :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { markRaw, type Component as VueComponent } from "vue";
+import { markRaw, reactive, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
@@ -189,8 +189,8 @@ export default class CommonForm extends Vue {
   @Model({ type: Boolean, default: false }) isValid!: boolean;
   @Model({ name: "edited", type: Boolean, default: false }) isEdited!: boolean;
   @Model({ name: "data", type: Object, default: {}, required: true }) models!: Record<string, any>;
-  @Prop({ type: Object, default: {}, required: true }) initialModelValues!: Record<string, any>;
-  @Prop({ type: Object, default: {}, required: true }) fields!: Record<string, FormFieldOptions>;
+  @Prop({ type: Object, default: {}, required: true }) readonly initialModelValues!: Record<string, any>;
+  @Prop({ type: Object, default: {}, required: true }) readonly fields!: Record<string, FormFieldOptions>;
 
   @Ref("form") readonly form!: VForm;
 
@@ -219,7 +219,7 @@ export default class CommonForm extends Vue {
 
   /* Form utility functions */
   // FORM
-  public reset() { this.models = deepClone(this.initialModelValues); }
+  public reset() { this.models = reactive(deepClone(this.initialModelValues)); }
   public resetValidation() { if(this.form) this.form.resetValidation(); }
 
   isFormField(fieldType: FormFieldType): boolean {
