@@ -317,7 +317,12 @@ const useAdminStore = defineStore("admin", () => {
         ...boothGoodsList[goodsId],
         ...response,
       };
-      return true;
+
+      if(response.combinationId) {
+        return await fetchGoodsCombinationOfCurrentBooth(true);
+      } else {
+        return true;
+      }
     } else {
       return response;
     }
