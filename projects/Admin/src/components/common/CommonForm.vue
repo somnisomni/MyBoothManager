@@ -39,7 +39,13 @@
       <component v-else
                  :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
-                 :style="field.style">
+                 :style="field.style"
+                 :size="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).size : undefined"
+                 :color="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).color : undefined"
+                 :variant="field.type === FormFieldType.BUTTON ? ((field as IFormButtonFieldOptions).variant ?? 'flat') : undefined"
+                 :prepend-icon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).prependIcon : undefined"
+                 :append-icon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).appendIcon : undefined"
+                 @click="(field as IFormOtherFieldOptions).onClick">
         {{ (field as IFormOtherFieldOptions).content }}
       </component>
 
@@ -63,7 +69,7 @@
 <script lang="ts">
 import { markRaw, reactive, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
-import { VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
+import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
@@ -85,6 +91,7 @@ export enum FormFieldType {
 
   HEADING = "heading",
   PARAGRAPH = "paragraph",
+  BUTTON = "button",
 }
 
 export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent | string> = {
@@ -104,6 +111,7 @@ export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent |
 
   [FormFieldType.HEADING]: "h2",
   [FormFieldType.PARAGRAPH]: "p",
+  [FormFieldType.BUTTON]: markRaw(VBtn),
 };
 
 export interface IFormFieldOptions {
@@ -169,6 +177,15 @@ export interface IFormFieldDateOptions extends IFormFieldOptions {
 
 export interface IFormOtherFieldOptions extends Omit<IFormFieldOptions, "label">, Partial<Pick<IFormFieldOptions, "label">> {
   content: string;
+  onClick?(): void;
+}
+
+export interface IFormButtonFieldOptions extends IFormOtherFieldOptions {
+  size?: string;
+  color?: string;
+  variant?: string;
+  prependIcon?: string;
+  appendIcon?: string;
 }
 
 export type FormFieldOptions = IFormFieldOptions
@@ -177,7 +194,8 @@ export type FormFieldOptions = IFormFieldOptions
                                | ({ type: FormFieldType.SELECT } & IFormFieldSelectOptions)
                                | ({ type: FormFieldType.DATE } & IFormFieldDateOptions)
                                | ({ type: FormFieldType.HEADING } & IFormOtherFieldOptions)
-                               | ({ type: FormFieldType.PARAGRAPH } & IFormOtherFieldOptions);
+                               | ({ type: FormFieldType.PARAGRAPH } & IFormOtherFieldOptions)
+                               | ({ type: FormFieldType.BUTTON } & IFormButtonFieldOptions);
 
 @Component({
   emits: ["submit"],
@@ -226,6 +244,7 @@ export default class CommonForm extends Vue {
     switch(fieldType) {
       case FormFieldType.HEADING:
       case FormFieldType.PARAGRAPH:
+      case FormFieldType.BUTTON:
         return false;
       default:
         return true;
