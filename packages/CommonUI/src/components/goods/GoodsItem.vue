@@ -1,6 +1,8 @@
 <template>
   <VSheet class="goods-item no-selection d-flex ma-2"
           :class="{ 'hover': isHovering || isSelected,
+                    'selectable': selectable,
+                    'selected': selectable && isSelected,
                     'edit': editable,
                     'combination-item': isGoodsCombination,
                     'sm': !mdAndUp,
@@ -119,7 +121,7 @@ export default class GoodsItem extends Vue {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: box-shadow $transition-duration, transform $transition-duration cubic-bezier(0, 0, 0, 1);
+  transition: box-shadow $transition-duration, transform $transition-duration cubic-bezier(0, 0, 0, 1), opacity $transition-duration;
 
   &.hover {
     transform: translateY(-3.3%);
@@ -127,6 +129,12 @@ export default class GoodsItem extends Vue {
 
   &.sm {
     font-size: 90%;
+  }
+
+  &.selectable {
+    opacity: 0.75;
+
+    &.selected { opacity: 1; }
   }
 
   .top-indicator {
