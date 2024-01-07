@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex-grow-1 pa-2 border-s-sm">
-      <div class="text-h6 text-sm-h5">
+      <div class="mb-2 text-h6 text-sm-h5" style="line-height: 1em;">
         <VIcon v-if="!smAndUp"
                :icon="statusIcon.icon"
                :color="statusIcon.color"
