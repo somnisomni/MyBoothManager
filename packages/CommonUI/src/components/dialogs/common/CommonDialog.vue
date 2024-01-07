@@ -1,8 +1,8 @@
 <template>
   <VDialog v-model="open"
            :persistent="progressActive || persistent"
-           :width="width"
-           :max-width="maxWidth"
+           :width="isFullScreenOnSmallScreenEligable ? '100%' : width"
+           :max-width="isFullScreenOnSmallScreenEligable ? '100%' : maxWidth"
            :height="isFullScreenOnSmallScreenEligable ? '100%' : ''"
            :max-height="isFullScreenOnSmallScreenEligable ? '100%' : ''"
            :scrollable="scrollable"
@@ -130,7 +130,7 @@ export default class CommonDialog extends Vue {
   }
 
   get isFullScreenOnSmallScreenEligable(): boolean {
-    return this.fullscreenOnSmallScreen && unref(useDisplay().smAndDown);
+    return this.fullscreenOnSmallScreen && !unref(useDisplay().smAndUp);
   }
 
   @Emit("close")

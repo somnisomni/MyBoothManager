@@ -1,9 +1,10 @@
 <template>
-  <VSheet class="goods-item no-selection d-flex ma-2 ma-md-4"
+  <VSheet class="goods-item no-selection d-flex ma-2"
           :class="{ 'hover': isHovering || isSelected,
                     'edit': editable,
                     'combination-item': isGoodsCombination,
-                    'sm': !mdAndUp }"
+                    'sm': !mdAndUp,
+                    'ma-md-4': !forceSmallSize }"
           :width="width"
           :height="height"
           rounded="lg"
