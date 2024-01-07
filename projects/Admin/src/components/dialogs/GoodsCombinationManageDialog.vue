@@ -147,6 +147,7 @@ export default class GoodsCombinationManageDialog extends Vue {
   @Watch("open") mounted() {
     if(this.editMode && this.combinationId) {
       const combination = useAdminStore().boothGoodsCombinationList[Number(this.combinationId)];
+
       if(combination) {
         this.formModels.name = combination.name;
         this.formModels.description = combination.description;

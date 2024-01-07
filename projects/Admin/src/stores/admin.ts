@@ -303,7 +303,7 @@ const useAdminStore = defineStore("admin", () => {
 
     if(response && response instanceof Object) {
       boothGoodsCombinationList[response.id] = response;
-      return true;
+      return await fetchGoodsOfCurrentBooth(true);
     } else {
       return response;
     }
@@ -341,11 +341,8 @@ const useAdminStore = defineStore("admin", () => {
     const response = await apiWrapper(() => AdminAPI.updateGoodsCombinationInfo(combinationId, payload));
 
     if(response && response instanceof Object) {
-      boothGoodsCombinationList[combinationId] = {
-        ...boothGoodsCombinationList[combinationId],
-        ...response,
-      };
-      return true;
+      boothGoodsCombinationList[combinationId] = { ...response };
+      return await fetchGoodsOfCurrentBooth(true);
     } else {
       return response;
     }
