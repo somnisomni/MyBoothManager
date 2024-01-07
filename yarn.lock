@@ -1383,27 +1383,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=b51039&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2a91ec&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 4b47bb091c74914c55f8c8081743a6b64c25ca468c9923ccd53345201f3a1eec213cef6946eed7150d4ff6aa209c08eb5f4ddb16b09bc7d7dd9cb5aaea58cb27
+  checksum: 420806c25ecab38bc52830918000c690ba90a16ea01c4fc81666f4b64948d794eb570600dbdffcf4f89b440979c9071dd3d849720226db64d2377d6537fcb0f5
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=b51039&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2a91ec&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 4b47bb091c74914c55f8c8081743a6b64c25ca468c9923ccd53345201f3a1eec213cef6946eed7150d4ff6aa209c08eb5f4ddb16b09bc7d7dd9cb5aaea58cb27
+  checksum: 420806c25ecab38bc52830918000c690ba90a16ea01c4fc81666f4b64948d794eb570600dbdffcf4f89b440979c9071dd3d849720226db64d2377d6537fcb0f5
   languageName: node
   linkType: hard
 

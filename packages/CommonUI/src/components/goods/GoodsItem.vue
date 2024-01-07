@@ -165,7 +165,8 @@ export default class GoodsItem extends Vue {
   .click-to-edit-text {
     color: white;
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(0.5em);
+    -webkit-backdrop-filter: blur(0.5em);
+            backdrop-filter: blur(0.5em);
     transform: translateY(-4rem);
     transition: transform $transition-duration cubic-bezier(0, 0, 0, 1);
   }
