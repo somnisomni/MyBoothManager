@@ -36,13 +36,13 @@
     </VExpandTransition>
 
     <!-- Selected goods count < 2 alert-->
-    <VExpandTransition>
+    <VSlideYTransition>
       <VAlert v-if="formModels.goodsIds.length < 2"
               type="warning"
               class="mt-2">
         <span><strong>최소 2개 이상</strong>의 굿즈를 세트에 포함시켜야 합니다.</span>
       </VAlert>
-    </VExpandTransition>
+    </VSlideYTransition>
   </CommonDialog>
 
   <GoodsSelectionDialog      v-model="goodsSelectionDialogShown"
