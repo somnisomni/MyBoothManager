@@ -122,6 +122,9 @@ export default class GoodsItem extends Vue {
   position: relative;
   overflow: hidden;
   transition: box-shadow $transition-duration, transform $transition-duration cubic-bezier(0, 0, 0, 1), opacity $transition-duration;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 
   &.hover {
     transform: translateY(-3.3%);
