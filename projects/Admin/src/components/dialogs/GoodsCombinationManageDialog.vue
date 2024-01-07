@@ -22,6 +22,27 @@
                 ref="form"
                 :initialModelValues="formModelsInitial"
                 :fields="formFields" />
+
+    <!-- Selected goods status -->
+    <VExpandTransition>
+      <div v-if="formModels.goodsIds.length > 0" class="text-subtitle-2 mx-2">
+        <div class="d-flex flex-row flex-wrap justify-end">
+          <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}개</b> 선택됨</span>
+          <VSpacer />
+          <span class="text-right">세트 판매 가능한 재고량 <b>{{ minimumStockOfSelectedGoods.toLocaleString() }}개</b></span>
+        </div>
+        <div class="text-right">선택한 굿즈들의 가격 총합 <b>{{ currencySymbol }}{{ sumPriceOfSelectedGoods.toLocaleString() }}</b></div>
+      </div>
+    </VExpandTransition>
+
+    <!-- Selected goods count < 2 alert-->
+    <VExpandTransition>
+      <VAlert v-if="formModels.goodsIds.length < 2"
+              type="warning"
+              class="mt-2">
+        <span><strong>최소 2개 이상</strong>의 굿즈를 세트에 포함시켜야 합니다.</span>
+      </VAlert>
+    </VExpandTransition>
   </CommonDialog>
 
   <GoodsSelectionDialog      v-model="goodsSelectionDialogShown"
@@ -37,7 +58,7 @@
 <script lang="ts">
 import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
-import { reactive, readonly } from "vue";
+import { reactive, markRaw } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -79,7 +100,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     goodsIds: [],
     stockVisibility: GoodsStockVisibility.SHOW_ALL,
   });
-  readonly formFields = readonly({
+  readonly formFields = markRaw({
     name: {
       type: FormFieldType.TEXT,
       label: "세트명",
@@ -117,16 +138,13 @@ export default class GoodsCombinationManageDialog extends Vue {
       class: [ "text-center", "text-disabled" ],
     },
     _2: {
-      type: FormFieldType.PARAGRAPH,
-      content: "세트에 포함할 굿즈 선택",
-      class: [ "text-center" ],
-      additionalButtons: [
-        {
-          icon: "mdi-plus",
-          title: "굿즈 선택",
-          onClick: this.openGoodsSelectionDialog,
-        },
-      ],
+      type: FormFieldType.BUTTON,
+      content: "포함할 굿즈 선택",
+      class: [ "text-center", "mt-4" ],
+      size: "x-large",
+      color: "primary",
+      prependIcon: "mdi-selection-drag",
+      onClick: this.openGoodsSelectionDialog,
     },
   } as Record<keyof IGoodsCombinationManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
   formModelsInitial: IGoodsCombinationManageFormField = deepClone(this.formModels);
@@ -136,12 +154,27 @@ export default class GoodsCombinationManageDialog extends Vue {
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
 
-  isFormValid = false;
+  _isFormValid = false;
   isFormEdited = false;
   updateInProgress = false;
 
+  get isFormValid() { return this._isFormValid && this.formModels.goodsIds.length >= 2; }
+  set isFormValid(value: boolean) { this._isFormValid = value; }
+
+  get minimumStockOfSelectedGoods() {
+    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().boothGoodsList[goodsId].stockRemaining));
+  }
+
+  get sumPriceOfSelectedGoods() {
+    return this.formModels.goodsIds.reduce((acc, goodsId) => acc + useAdminStore().boothGoodsList[goodsId].price, 0);
+  }
+
   get boothGoodsList() {
     return Object.values(useAdminStore().boothGoodsList);
+  }
+
+  get currencySymbol() {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
   }
 
   @Watch("open") mounted() {

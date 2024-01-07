@@ -4,6 +4,8 @@
                 dialogTitle="세트에 포함할 굿즈 선택"
                 dialogPrimaryText="확인"
                 dialogCancelText=""
+                hideCloseButton
+                fullscreenOnSmallScreen
                 @primary="open = false">
     <SelectableGoodsListView v-model="selectedGoodsIds"
                              :goodsList="goodsList"

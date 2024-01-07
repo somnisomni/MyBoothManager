@@ -6,7 +6,7 @@
                 :titleExtraMargin="true"
                 :dialogCancelText="null"
                 :closeOnCancel="false"
-                :fullscreenOnSmallScreen="true"
+                fullscreenOnSmallScreen
                 dialogTitle="관리할 부스 선택">
     <VSheet v-for="booth in boothList"
             :key="booth.id"
