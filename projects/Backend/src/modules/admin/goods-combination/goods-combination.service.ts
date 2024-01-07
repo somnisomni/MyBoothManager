@@ -50,6 +50,21 @@ export class GoodsCombinationService {
       dto.categoryId = null;
     }
 
+    // Remove/Exclude target goods with different category
+    if(dto.goodsIds) {
+      const targetGoods = await Goods.findAll({
+        where: {
+          id: dto.goodsIds,
+        },
+      });
+      for(const g of targetGoods) {
+        if(g.categoryId !== dto.categoryId) {
+          await (g.set("combinationId", null)).save();
+          dto.goodsIds.splice(dto.goodsIds.indexOf(g.id), 1);
+        }
+      }
+    }
+
     // Create combination
     const combination = await create(GoodsCombination, dto);
 
@@ -150,6 +165,21 @@ export class GoodsCombinationService {
       for(const g of goodsToBeUpdated) {
         if(g.combinationId) {
           await (g.set("combinationId", null)).save();
+        }
+      }
+    }
+
+    // Remove/Exclude target goods with different category
+    if(dto.goodsIds) {
+      const targetGoods = await Goods.findAll({
+        where: {
+          id: dto.goodsIds,
+        },
+      });
+      for(const g of targetGoods) {
+        if(g.categoryId !== dto.categoryId) {
+          await (g.set("combinationId", null)).save();
+          dto.goodsIds.splice(dto.goodsIds.indexOf(g.id), 1);
         }
       }
     }
