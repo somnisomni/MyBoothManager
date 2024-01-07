@@ -41,15 +41,36 @@ import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
   emits: ["goodsClick", "goodsEditRequest", "combinationClick", "combinationEditRequest", "goodsCategoryClick", "goodsCategoryEditRequest"],
 })
 export default class GoodsListView extends Vue {
-  @Prop({ type: Object, required: true })  goodsList!: Array<IGoods>;
-  @Prop({ type: Object, required: true })  goodsCategoryList!: Array<IGoodsCategory>;
-  @Prop({ type: Object, required: true })  goodsCombinationList!: Array<IGoodsCombination>;
-  @Prop({ type: Function, default: (s: any) => s }) goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
-  @Prop({ type: Boolean, default: false }) omitEmptyGoodsCategory!: boolean;
-  @Prop({ type: String, required: true })  currencySymbol!: string;
-  @Prop({ type: Boolean, default: false }) editable!: boolean;
+  @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
+  @Prop({ type: Object, required: true })  readonly goodsCategoryList!: Array<IGoodsCategory>;
+  @Prop({ type: Object, required: true })  readonly goodsCombinationList!: Array<IGoodsCombination>;
+  @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
+  @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
+  @Prop({ type: String, required: true })  readonly currencySymbol!: string;
+  @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
+
+  get goodsListAdjusted() {
+    if(!this.goodsList) {
+      console.warn("[GoodsListView] goodsList is not provided!");
+      return [];
+    }
+
+    const list = [...this.goodsList];
+    for(const i in list) {
+      if(!list[i].categoryId || list[i].categoryId! < 0) {
+        list[i].categoryId = -1;
+      }
+    }
+
+    return list;
+  }
 
   get goodsCategoryListAdjusted() {
+    if(!this.goodsCategoryList) {
+      console.warn("[GoodsListView] goodsCategoryList is not provided!");
+      return [];
+    }
+
     const checkFn = (categoryId: number) => !this.omitEmptyGoodsCategory || this.findGoodsInCategory(categoryId).length > 0;
     const list = [];
 
@@ -66,25 +87,19 @@ export default class GoodsListView extends Vue {
     return list;
   }
 
-  get goodsListAdjusted() {
-    const list = [...this.goodsList];
-    for(const i in list) {
-      if(!list[i].categoryId || list[i].categoryId! < 0) {
-        list[i].categoryId = -1;
-      }
+  get goodsCombinationListAdjusted() {
+    if(!this.goodsCombinationList) {
+      console.warn("[GoodsListView] goodsCombinationList is not provided!");
+      return [];
     }
 
-    return list;
-  }
-
-  get goodsCombinationListAdjusted() {
     const list = [...this.goodsCombinationList];
     for(const i in list) {
       if(!list[i].categoryId || list[i].categoryId! < 0) {
         list[i].categoryId = -1;
       }
     }
-    
+
     return list;
   }
 
