@@ -2,24 +2,42 @@
   <div v-for="category in goodsCategoryListAdjusted"
        :key="category.id"
        class="my-4 mt-8">
+    <!-- Goods Category -->
     <GoodsCategoryTitle :categoryData="category"
                         :editable="editable && category.id !== -1"
                         @click="onGoodsCategoryClick"
                         @editRequest="onGoodsCategoryEditRequest" />
 
     <VRow v-if="findGoodsInCategory(category.id).length > 0" class="ma-0 justify-start">
+      <!-- Goods Combination and combinated Goods -->
       <VSlideYReverseTransition group leave-absolute>
-        <GoodsItem v-for="combination in findCombinationInCategory(category.id)"
-                   :key="combination.id"
-                   :editable="editable"
-                   :combinationData="combination"
-                   :currencySymbol="currencySymbol"
-                   @click="onCombinationClick"
-                   @editRequest="onCombinationEditRequest" />
+        <div v-for="combination in findCombinationInCategory(category.id)"
+             :key="combination.id"
+             class="combination-container my-1 pa-1 d-flex flex-1-0-100 flex-row flex-wrap bg-teal-lighten-5 rounded-lg border-dashed border-sm">
+          <!-- Goods Combination -->
+          <GoodsItem :editable="editable"
+                     :combinationData="combination"
+                     :currencySymbol="currencySymbol"
+                     @click="onCombinationClick"
+                     @editRequest="onCombinationEditRequest" />
+
+          <!-- Combinated Goods -->
+          <VSlideYReverseTransition group leave-absolute>
+            <GoodsItem v-for="goods in findGoodsInCombination(combination.id)"
+                       :key="goods.id"
+                       :editable="editable"
+                       :goodsData="goods"
+                       :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
+                       :currencySymbol="currencySymbol"
+                       @click="onGoodsClick"
+                       @editRequest="onGoodsEditRequest" />
+          </VSlideYReverseTransition>
+        </div>
       </VSlideYReverseTransition>
 
+      <!-- Goods (non-combinated only) -->
       <VSlideYReverseTransition group leave-absolute>
-        <GoodsItem v-for="goods in findGoodsInCategory(category.id)"
+        <GoodsItem v-for="goods in findGoodsInCategory(category.id, true)"
                    :key="goods.id"
                    :editable="editable"
                    :goodsData="goods"
@@ -103,8 +121,12 @@ export default class GoodsListView extends Vue {
     return list;
   }
 
-  findGoodsInCategory(categoryId: number) {
-    return this.goodsListAdjusted.filter((goods) => goods.categoryId === categoryId);
+  findGoodsInCategory(categoryId: number, nonCombinatedOnly: boolean = false) {
+    return this.goodsListAdjusted.filter((goods) => goods.categoryId === categoryId && !(nonCombinatedOnly && goods.combinationId));
+  }
+
+  findGoodsInCombination(combinationId: number) {
+    return this.goodsListAdjusted.filter((goods) => goods.combinationId === combinationId);
   }
 
   findCombinationInCategory(categoryId: number) {
