@@ -18,7 +18,7 @@
     <VImg class="representative-image no-interaction" :src="representativeImageUrlComputed" cover />
     <div class="representative-image-overlay"></div>
 
-    <div v-if="isGoodsCombination" class="top-indicator goods-combination-indicator">세트 구성</div>
+    <div v-if="isGoodsCombination" class="top-indicator goods-combination-indicator bg-teal">세트 구성</div>
     <div v-if="editable" class="top-indicator click-to-edit-text"><VIcon>mdi-pencil</VIcon> 클릭하여 수정</div>
     <VSlideYTransition leave-absolute>
       <div v-if="isSelected" class="top-indicator selected-indicator"><VIcon>mdi-check</VIcon> 선택됨</div>
@@ -147,14 +147,13 @@ export default class GoodsItem extends Vue {
     left: 0;
     right: 0;
     top: 0;
-    padding: 0.5em 0;
+    padding: 0.33em 0;
     font-size: 1.2em;
     font-weight: 500;
   }
 
   .goods-combination-indicator {
     color: white;
-    background: rgb(255, 128, 64);
   }
 
   .selected-indicator {
