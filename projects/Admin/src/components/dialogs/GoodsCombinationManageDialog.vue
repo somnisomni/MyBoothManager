@@ -138,6 +138,11 @@ export default class GoodsCombinationManageDialog extends Vue {
       content: "※ 세트 재고 수량은 포함된 굿즈 중 재고 수량이 가장 낮은 값으로 자동으로 설정됩니다.",
       class: [ "text-center", "text-disabled" ],
     },
+    _3: {
+      type: FormFieldType.PARAGRAPH,
+      content: "※ 현재는 한 굿즈에 1개의 세트 할당만 지원됩니다.",
+      class: [ "text-center", "text-disabled" ],
+    },
     _2: {
       type: FormFieldType.BUTTON,
       content: "포함할 굿즈 선택",
