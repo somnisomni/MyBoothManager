@@ -48,6 +48,7 @@
   <GoodsSelectionDialog      v-model="goodsSelectionDialogShown"
                              v-model:selectedGoodsIds="formModels.goodsIds"
                              :goodsList="boothGoodsList"
+                             :disabledIdList="alreadyCombinatedGoodsIdList"
                              :categoryId="formModels.categoryId" />
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @primary="() => { open = false; }" />
@@ -175,6 +176,12 @@ export default class GoodsCombinationManageDialog extends Vue {
 
   get currencySymbol() {
     return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+  }
+
+  get alreadyCombinatedGoodsIdList() {
+    return Object.values(useAdminStore().boothGoodsList)
+      .filter((goods) => goods.combinationId !== null && goods.combinationId !== Number(this.combinationId))
+      .map((goods) => goods.id);
   }
 
   @Watch("open") mounted() {

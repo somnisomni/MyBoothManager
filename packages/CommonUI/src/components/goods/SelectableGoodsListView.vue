@@ -4,6 +4,8 @@
       <GoodsItem v-for="goods in goodsList"
                  v-model="selectedGoods[goods.id]"
                  :key="goods.id"
+                 :disabled="goodsDisabledIdList.includes(goods.id)"
+                 disabledReason="이미 다른 세트에 포함됨"
                  :selectable="true"
                  :goodsData="goods"
                  :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
@@ -21,7 +23,8 @@ import { Component, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 @Component({})
 export default class SelectableGoodsListView extends Vue {
   @Model({ type: Array, default: [] }) selectedGoodsIds!: Array<number>;
-  @Prop({ type: Object, required: true }) goodsList!: Array<IGoods>;
+  @Prop({ type: Array, required: true }) goodsList!: Array<IGoods>;
+  @Prop({ type: Array, default: [] }) goodsDisabledIdList!: Array<number>;
   @Prop({ type: Function, default: (s: any) => s }) goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
   @Prop({ type: String, required: true })  currencySymbol!: string;
 

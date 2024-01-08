@@ -9,6 +9,7 @@
                 @primary="open = false">
     <SelectableGoodsListView v-model="selectedGoodsIds"
                              :goodsList="goodsList"
+                             :goodsDisabledIdList="disabledIdList"
                              :goodsImageUrlResolver="getUploadFilePath"
                              :currencySymbol="currencySymbol" />
   </CommonDialog>
@@ -26,6 +27,7 @@ export default class GoodsSelectionDialog extends Vue {
 
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Model({ name: "selectedGoodsIds", type: Array }) selectedGoodsIds!: Array<number>;
+  @Prop({ type: Array, default: [] }) disabledIdList!: Array<number>;
   @Prop({ type: Number, default: null }) categoryId!: number | null | undefined;
 
   get goodsList(): Array<IGoods> {

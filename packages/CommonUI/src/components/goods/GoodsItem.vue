@@ -1,6 +1,7 @@
 <template>
   <VSheet class="goods-item no-selection d-flex ma-2"
-          :class="{ 'hover': isHovering || isSelected,
+          :class="{ 'no-interaction': disabled,
+                    'hover': isHovering || isSelected,
                     'selectable': selectable,
                     'selected': selectable && isSelected,
                     'edit': editable,
@@ -23,6 +24,7 @@
     <VSlideYTransition leave-absolute>
       <div v-if="isSelected" class="top-indicator selected-indicator"><VIcon>mdi-check</VIcon> 선택됨</div>
     </VSlideYTransition>
+    <div v-if="disabled && disabledReason" class="top-indicator text-subtitle-2 bg-black">{{ disabledReason }}</div>
 
     <VLayout class="goods-info d-flex flex-column align-self-end pa-2">
       <div class="name"><VIcon v-if="isGoodsCombination">mdi-set-all</VIcon> {{ normalizedData.name }}</div>
@@ -40,7 +42,7 @@
 
 <script lang="ts">
 import { GoodsStockVisibility, type IGoods, type IGoodsCombination } from "@myboothmanager/common";
-import { Vue, Component, Prop, Emit, Model } from "vue-facing-decorator";
+import { Vue, Component, Prop, Model } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { unref } from "vue";
 import { isDisplayXXS } from "@/plugins/vuetify";
@@ -58,6 +60,8 @@ export default class GoodsItem extends Vue {
   @Prop({ type: String, required: true }) currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) editable!: boolean;
   @Prop({ type: Boolean, default: false }) selectable!: boolean;
+  @Prop({ type: Boolean, default: false }) disabled!: boolean;
+  @Prop({ type: String, default: "" }) disabledReason!: string;
   @Prop({ type: Boolean, default: false }) forceSmallSize!: boolean;
   @Prop({ type: Boolean, default: false }) showNameOnly!: boolean;
 
@@ -105,11 +109,12 @@ export default class GoodsItem extends Vue {
     };
   }
 
-  @Emit("click")
   onItemClick() {
+    if(this.disabled) return;
+
     if(this.selectable) this.isSelected = !this.isSelected;
     if(this.editable) this.$emit("editRequest", this.normalizedData.id);
-    return this.normalizedData.id;
+    this.$emit("click", this.normalizedData.id);
   }
 }
 </script>
