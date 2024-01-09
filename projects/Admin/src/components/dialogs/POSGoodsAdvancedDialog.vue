@@ -8,20 +8,20 @@
                 @leftbutton="onDialogLeftButton"
                 @primary="onDialogPrimary"
                 :disablePrimary="!formValid">
-    <p class="text-h6 text-center mb-4"><strong>{{ goodsItem.name }}</strong></p>
+    <p class="text-h6 text-center mb-4"><strong>{{ isCombination ? "[세트]" : "" }} {{ targetItem.name }}</strong></p>
 
     <VForm v-model="formValid">
       <VTextField v-model.number="orderDataCopied.quantity"
                   type="number"
                   min="1"
-                  :max="goodsItem.stockRemaining"
+                  :max="targetItem.stockRemaining"
                   label="판매 수량"
                   placeholder="기본값 사용"
                   suffix="개"
                   variant="outlined"
                   :hide-details="formValid"
                   class="mx-2 text-right"
-                  :rules="[(val: number) => (val > 0 && val <= goodsItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"
+                  :rules="[(val: number) => (val > 0 && val <= targetItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"
                   @change="orderDataCopied.quantity = Math.floor(new Number(orderDataCopied.quantity).valueOf())" />
       <VChipGroup v-model.number="orderDataCopied.quantity"
                   class="d-flex flex-row justify-start"
@@ -42,7 +42,7 @@
                   hint="비워두면 굿즈의 기본 가격 사용"
                   persistent-hint
                   clearable
-                  :placeholder="goodsItem.price.toLocaleString()"
+                  :placeholder="targetItem.price.toLocaleString()"
                   :prefix="currencySymbol"
                   variant="outlined"
                   class="mx-2 mt-6"
@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { currencySymbolInfo, type IGoods } from "@myboothmanager/common";
+import { currencySymbolInfo } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 
@@ -69,6 +69,7 @@ import { useAdminStore } from "@/stores/admin";
 export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrderInternal;
+  @Prop({ type: Boolean, default: undefined }) isCombination?: true;
 
   formValid: boolean = false;
   orderDataCopied: IGoodsOrderInternal = { ...this.orderData };
@@ -78,8 +79,10 @@ export default class POSGoodsAdvancedDialog extends Vue {
   }
   @Watch("open", { immediate: true }) onDialogOpen() { this.orderDataCopied = { ...this.orderData }; }
 
-  get goodsItem(): IGoods {
-    return useAdminStore().boothGoodsList[this.orderData.goodsId];
+  get targetItem() {
+    return this.isCombination
+      ? useAdminStore().boothGoodsCombinationList[this.orderData.id]
+      : useAdminStore().boothGoodsList[this.orderData.id];
   }
 
   get currencySymbol(): string {
@@ -105,15 +108,22 @@ export default class POSGoodsAdvancedDialog extends Vue {
   }
 
   @Emit("deleteRequest")
-  onDialogLeftButton(): number {
+  onDialogLeftButton() {
     this.open = false;
-    return this.orderData.goodsId;
+    return {
+      id: this.orderData.id,
+      isCombination: this.isCombination,
+    };
   }
 
   @Emit("confirm")
-  onDialogPrimary(): { goodsId: number, newOrderData: IGoodsOrderInternal } {
+  onDialogPrimary() {
     this.open = false;
-    return { goodsId: this.orderData.goodsId, newOrderData: this.orderDataCopied };
+    return {
+      id: this.orderData.id,
+      isCombination: this.isCombination,
+      newOrderData: this.orderDataCopied,
+    };
   }
 }
 </script>

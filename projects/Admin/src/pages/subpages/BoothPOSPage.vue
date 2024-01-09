@@ -20,7 +20,8 @@
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
                      :goodsCombinationList="boothGoodsCombinationList"
-                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
+                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ id: goodsId, delta: 1 })"
+                     @combinationClick="(combinationId: number) => updateOrderListQuantity({ id: combinationId, delta: 1, isCombination: true })" />
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -42,11 +43,11 @@
 
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
-import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Vue } from "vue-facing-decorator";
-import { unref } from "vue";
+import { reactive, unref } from "vue";
 import { useDisplay } from "vuetify";
+import { POSOrderList } from "@/lib/interfaces";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
@@ -62,7 +63,7 @@ import { getUploadFilePath } from "@/lib/functions";
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFilePath = getUploadFilePath;
-  readonly orderList: Record<number, IGoodsOrderInternal> = {};
+  readonly orderList = reactive(new POSOrderList());
 
   smDrawerHeight: number = 0;
   showStockNotEnoughSnackbar: boolean = false;
@@ -77,6 +78,7 @@ export default class BoothPOSPage extends Vue {
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().boothGoodsCategoryList); }
+  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().boothGoodsCombinationList; }
   get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().boothGoodsCombinationList); }
 
   mounted(): void {
@@ -105,45 +107,31 @@ export default class BoothPOSPage extends Vue {
     this.smDrawerHeight = height;
   }
 
-  onGoodsItemClick(goodsId: number) {
-    if(this.orderList[goodsId]) {
-      if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
-        this.orderList[goodsId].quantity++;
-      } else {
+  // onGoodsItemClick(goodsId: number) {
+  //   if(this.orderList[goodsId]) {
+  //     if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
+  //       this.orderList[goodsId].quantity++;
+  //     } else {
+  //       this.showStockNotEnoughSnackbar = true;
+  //     }
+  //   } else {
+  //     this.orderList[goodsId] = {
+  //       id: goodsId,
+  //       quantity: 1,
+  //     };
+  //   }
+  // }
+
+  updateOrderListQuantity(eventData: { id: number, delta: number, isCombination?: true }) {
+    const { id, delta, isCombination } = eventData;
+    const targetOriginal = isCombination ? this.boothGoodsCombinationDict[id] : this.boothGoodsDict[id];
+
+    try {
+      this.orderList.updateQuantity(isCombination ? "combination" : "goods", id, delta, targetOriginal.stockRemaining);
+    } catch(e) {
+      if(e === "UpperLimitExceeded") {
         this.showStockNotEnoughSnackbar = true;
       }
-    } else {
-      this.orderList[goodsId] = {
-        goodsId,
-        quantity: 1,
-      };
-    }
-  }
-
-  updateOrderListQuantity(eventData: { goodsId: number, delta: number }) {
-    const { goodsId, delta } = eventData;
-
-    if(this.orderList[goodsId]) {
-      if(this.orderList[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
-        this.orderList[goodsId].quantity += delta;
-      } else {
-        this.showStockNotEnoughSnackbar = true;
-      }
-
-      if(this.orderList[goodsId].quantity <= 0) {
-        delete this.orderList[goodsId];
-      }
-    } else {
-      if(delta <= 0) return;
-      if(this.boothGoodsDict[goodsId].stockRemaining <= 0) {
-        this.showStockNotEnoughSnackbar = true;
-        return;
-      }
-
-      this.orderList[goodsId] = {
-        goodsId,
-        quantity: delta,
-      };
     }
   }
 

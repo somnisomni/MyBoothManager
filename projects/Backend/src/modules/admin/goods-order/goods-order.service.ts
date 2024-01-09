@@ -38,21 +38,29 @@ export class GoodsOrderService {
     if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new GoodsOrderCreateOrderEmptyException();
 
     for(const order of createGoodsOrderDto.order) {
-      // Check if goods exists
-      const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
-      if(!goods) throw new GoodsOrderCreateGoodsNotFoundException();
+      if("gId" in order) {
+        // PROCESS FOR SINGLE GOODS
 
-      // Validate goods stock
-      if(goods.stockRemaining < order.quantity) throw new GoodsOrderCreateInvalidGoodsAmountException();
+        // Check if goods exists
+        const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createGoodsOrderDto.boothId, callerAccountId);
+        if(!goods) throw new GoodsOrderCreateGoodsNotFoundException();
 
-      // Set price if not provided
-      if(typeof order.price !== "number" && !order.price) order.price = goods.price;
+        // Validate goods stock
+        if(goods.stockRemaining < order.quantity) throw new GoodsOrderCreateInvalidGoodsAmountException();
 
-      // Set goods name if not provided
-      if(typeof order.name !== "string" && !order.name) order.name = goods.name;
+        // Set price if not provided
+        if(typeof order.price !== "number" && !order.price) order.price = goods.price;
 
-      // If all good, update remaining stock count of the goods
-      await goods.update({ stockRemaining: goods.stockRemaining - order.quantity });
+        // Set goods name if not provided
+        if(typeof order.name !== "string" && !order.name) order.name = goods.name;
+
+        // If all good, update remaining stock count of the goods
+        await goods.update({ stockRemaining: goods.stockRemaining - order.quantity });
+      } else if("cId" in order) {
+        // PROCESS FOR GOODS COMBINATION
+
+        // TODO
+      }
     }
 
     return await createTarget(GoodsOrder, createGoodsOrderDto);
@@ -83,12 +91,19 @@ export class GoodsOrderService {
     /* Revert goods stock if canceled */
     if(updateGoodsOrderStatusDto.status === GoodsOrderStatus.CANCELED) {
       for(const orderItem of order.order) {
-        try {
-          const goods = await this.goodsService.findGoodsBelongsToBooth(orderItem.gId, boothId, callerAccountId);
-          await goods.update({ stockRemaining: goods.stockRemaining + orderItem.quantity });
-        } catch(e) {
-          // Just ignore any goods-related exceptions and continue processing
-          continue;
+        if("gId" in orderItem) {
+          // PROCESS FOR SINGLE GOODS
+          try {
+            const goods = await this.goodsService.findGoodsBelongsToBooth(orderItem.gId, boothId, callerAccountId);
+            await goods.update({ stockRemaining: goods.stockRemaining + orderItem.quantity });
+          } catch(e) {
+            // Just ignore any goods-related exceptions and continue processing
+            continue;
+          }
+        } else if("cId" in orderItem) {
+          // PROCESS FOR GOODS COMBINATION
+
+          // TODO
         }
       }
     }
