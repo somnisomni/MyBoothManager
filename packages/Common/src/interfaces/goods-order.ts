@@ -1,16 +1,19 @@
 import type { IDataModelBase } from "./base";
+import { MutualExclusive } from "..";
 
 export enum GoodsOrderStatus {
   RECORDED = "recorded",
   CANCELED = "canceled",
 }
 
-export interface IGoodsOrderDetailItem {
+export interface IGoodsOrderDetailItemBase {
   gId: number;  // Goods.id
+  cId: number;  // GoodsCombination.id
   name?: string;
   quantity: number;
   price?: number;
 }
+export type IGoodsOrderDetailItem = MutualExclusive<IGoodsOrderDetailItemBase, "gId", "cId">;
 
 export interface IGoodsOrder extends IDataModelBase {
   id: number;
