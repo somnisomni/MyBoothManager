@@ -1,7 +1,7 @@
 <template>
   <CommonDialog v-model="open"
                 width="400px"
-                dialogTitle="굿즈 판매 정보 수정"
+                :dialogTitle="`${targetTypeString} 판매 정보 수정`"
                 dialogCancelText="취소"
                 dialogLeftButtonText="삭제"
                 dialogPrimaryText="확인"
@@ -39,7 +39,7 @@
                   min="0"
                   :step="priceStep"
                   label="판매 단가 (가격)"
-                  hint="비워두면 굿즈의 기본 가격 사용"
+                  :hint="`비워두면 ${targetTypeString}의 기본 가격 사용`"
                   persistent-hint
                   clearable
                   :placeholder="targetItem.price.toLocaleString()"
@@ -78,6 +78,10 @@ export default class POSGoodsAdvancedDialog extends Vue {
     this.orderDataCopied = { ...this.orderData };
   }
   @Watch("open", { immediate: true }) onDialogOpen() { this.orderDataCopied = { ...this.orderData }; }
+
+  get targetTypeString(): string {
+    return this.isCombination ? "세트" : "굿즈";
+  }
 
   get targetItem() {
     return this.isCombination
