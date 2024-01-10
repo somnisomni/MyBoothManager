@@ -3,11 +3,11 @@
 import { createHash } from "crypto";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
-import { BaseError, Includeable, Model, ModelDefined, WhereOptions } from "sequelize";
+import { BaseError, Includeable, Model, ModelDefined, Transaction, WhereOptions } from "sequelize";
 import { EntityNotFoundException } from "./exceptions";
 
 /* === Sequelize model util functions === */
-export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, includeModels?: Includeable[], excludeSequelizeInternalKeys: boolean = true): Promise<T> {
+export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, includeModels?: Includeable[], transaction?: Transaction, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
   let target = null;
 
   try {
@@ -16,6 +16,7 @@ export async function findOneByPk<T extends Model<any, any>>(model: { new (): T 
       attributes: {
         exclude: excludeSequelizeInternalKeys ? SEQUELIZE_INTERNAL_KEYS : [],
       },
+      transaction,
     });
   } catch(error) {
     console.error(error);
@@ -33,12 +34,12 @@ export async function findOneByPk<T extends Model<any, any>>(model: { new (): T 
   else return target as unknown as T;
 }
 
-export async function create<T extends Model<any, any>>(model: { new (): T }, dto: object, additionalParams?: Record<string, unknown>): Promise<T> {
+export async function create<T extends Model<any, any>>(model: { new (): T }, dto: object, transaction?: Transaction, additionalParams?: Record<string, unknown>): Promise<T> {
   try {
     return await (model as unknown as ModelDefined<any, any>).create({
       ...dto,
       ...additionalParams,
-    }) as unknown as T;
+    }, { transaction }) as unknown as T;
   } catch(error) {
     console.error(error);
 
@@ -52,10 +53,10 @@ export async function create<T extends Model<any, any>>(model: { new (): T }, dt
   }
 }
 
-export async function removeTarget<T extends Model<any, any>>(model: T, ignoreParanoid: boolean = false): Promise<ISuccessResponse> {
+export async function removeTarget<T extends Model<any, any>>(model: T, transaction?: Transaction, ignoreParanoid: boolean = false): Promise<ISuccessResponse> {
   try {
-    await model.destroy({ force: ignoreParanoid });
-    await model.save();
+    await model.destroy({ force: ignoreParanoid, transaction });
+    await model.save({ transaction });
   } catch(error) {
     console.error(error);
 
@@ -65,12 +66,12 @@ export async function removeTarget<T extends Model<any, any>>(model: T, ignorePa
   return SUCCESS_RESPONSE;
 }
 
-export async function removeOne<T extends Model<any, any>>(model: { new (): T }, where: WhereOptions<T>, ignoreParanoid: boolean = false): Promise<ISuccessResponse> {
+export async function removeOne<T extends Model<any, any>>(model: { new (): T }, where: WhereOptions<T>, transaction?: Transaction, ignoreParanoid: boolean = false): Promise<ISuccessResponse> {
   try {
     const target = await (model as unknown as ModelDefined<any, any>).findAll({ where });
     if(target.length !== 1) throw new BadRequestException("삭제 대상이 하나가 아닙니다.");
 
-    return await removeTarget(target[0], ignoreParanoid);
+    return await removeTarget(target[0], transaction, ignoreParanoid);
   } catch(error) {
     console.error(error);
 

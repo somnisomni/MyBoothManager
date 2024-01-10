@@ -232,6 +232,6 @@ export class GoodsCombinationService {
       await this.deleteImage(id, boothId, callerAccountId);
     }
 
-    return await removeTarget(combination, true);
+    return await removeTarget(combination, undefined, true);
   }
 }

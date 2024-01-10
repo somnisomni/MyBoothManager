@@ -26,6 +26,18 @@ export class GoodsOrderCreateInvalidGoodsAmountException extends BaseHttpExcepti
   }
 }
 
+export class GoodsOrderCreateGoodsCombinationNotFoundException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.GOODS_ORDER_INVALID_CREATE_REQUEST_GOODS_COMBINATION_NOT_FOUND, HttpStatus.BAD_REQUEST);
+  }
+}
+
+export class GoodsOrderCreateInvalidGoodsCombinationException extends BaseHttpException {
+  constructor() {
+    super(ErrorCodes.GOODS_ORDER_INVALID_CREATE_REQUEST_INVALID_GOODS_COMBINATION, HttpStatus.BAD_REQUEST);
+  }
+}
+
 export class GoodsOrderStatusUpdateFailedException extends BaseHttpException {
   constructor() {
     super(ErrorCodes.GOODS_ORDER_STATUS_UPDATE_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);

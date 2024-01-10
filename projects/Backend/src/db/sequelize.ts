@@ -1,3 +1,4 @@
+import type { Transaction } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 import generateConfig from "./config";
 import Account from "./models/account";
@@ -51,5 +52,18 @@ export default class MBMSequelize {
   static async close(): Promise<void> {
     await MBMSequelize.instance.close();
     MBMSequelize._instance = null;
+  }
+
+  static async createTransaction(afterCommit?: (transaction: Transaction) => void | Promise<void>): Promise<Transaction> {
+    console.info("Begin transaction");
+
+    const transaction = await MBMSequelize.instance.transaction();
+    transaction.afterCommit(async () => {
+      console.info("Transaction committed");
+
+      if(afterCommit) await afterCommit(transaction);
+    });
+
+    return transaction;
   }
 }
