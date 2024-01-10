@@ -4,6 +4,7 @@ import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, HasMany, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
 import Goods from "./goods";
+import GoodsCombination from "./goods-combination";
 
 export type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
 
@@ -39,4 +40,7 @@ export default class GoodsCategory extends Model<IGoodsCategory, GoodsCategoryCr
 
   @HasMany(() => Goods)
   declare goods: Goods[];
+
+  @HasMany(() => GoodsCombination)
+  declare goodsCombinations: GoodsCombination[];
 }

@@ -6,6 +6,8 @@ import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
 import UploadStorage from "./uploadstorage";
+import Goods from "./goods";
+import GoodsCombination from "./goods-combination";
 
 export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">
                                & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">>;
@@ -124,11 +126,17 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @BelongsTo(() => Account)
   declare ownerAccount: Account;
 
+  @HasMany(() => Goods)
+  declare goods: Goods[];
+
   @HasMany(() => GoodsCategory)
   declare goodsCategories: GoodsCategory[];
 
   @HasMany(() => GoodsOrder)
   declare goodsOrders: GoodsOrder[];
+
+  @HasMany(() => GoodsCombination)
+  declare goodsCombinations: GoodsCombination[];
 
   @BelongsTo(() => UploadStorage, "bannerImageId")
   declare bannerImage?: UploadStorage;

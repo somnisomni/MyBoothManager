@@ -29,6 +29,7 @@ export default function generateConfig(): SequelizeOptions {
       updatedAt: "updatedAt",
       deletedAt: "deletedAt",
     },
+    omitNull: false,
   };
 
   return sequelizeConfig;

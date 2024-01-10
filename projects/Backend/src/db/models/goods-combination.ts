@@ -90,11 +90,11 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
 
 
   /* === Relations === */
-  @HasMany(() => Goods)
-  declare combinedGoods: Goods[];
-
   @BelongsTo(() => Booth)
   declare ownerBooth: Booth;
+  
+  @HasMany(() => Goods)
+  declare combinedGoods: Goods[];
 
   @BelongsTo(() => GoodsCategory)
   declare assignedGoodsCategory?: GoodsCategory;
