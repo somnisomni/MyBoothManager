@@ -140,7 +140,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     },
     _3: {
       type: FormFieldType.PARAGRAPH,
-      content: "※ 현재는 한 굿즈에 1개의 세트 할당만 지원됩니다.",
+      content: "※ 동일 카테고리 내의 굿즈만 선택할 수 있습니다. 현재는 한 굿즈에 1개의 세트 할당만 지원됩니다.",
       class: [ "text-center", "text-disabled" ],
     },
     _2: {
