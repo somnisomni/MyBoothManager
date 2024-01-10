@@ -18,6 +18,7 @@
           <GoodsItem :editable="editable"
                      :combinationData="combination"
                      :currencySymbol="currencySymbol"
+                     :representativeImageUrl="goodsImageUrlResolver(combination.combinationImageUrl)"
                      @click="onCombinationClick"
                      @editRequest="onCombinationEditRequest" />
 

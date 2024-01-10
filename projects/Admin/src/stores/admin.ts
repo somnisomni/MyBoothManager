@@ -265,6 +265,21 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function uploadGoodsCombinationImage(combinationId: number, payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadGoodsCombinationImage(combinationId, currentBoothId.value, payload));
+
+    if(response && response instanceof Object) {
+      if(typeof response.value === "string") {
+        boothGoodsCombinationList[combinationId].combinationImageUrl = response.value;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return response;
+    }
+  }
+
   async function createGoods(payload: IGoodsCreateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.createGoods(payload));
 
@@ -431,14 +446,28 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteGoodsCombinationImage(combinationId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoodsCombinationImage(combinationId, currentBoothId.value));
+
+    if(response && response instanceof Object) {
+      delete boothGoodsCombinationList[combinationId].combinationImageUrl;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoods(goodsId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, currentBoothId.value));
 
     if(response && response instanceof Object) {
       // Force fetch goods
-      const result = await fetchGoodsOfCurrentBooth(true);
+      const results = [
+        await fetchGoodsOfCurrentBooth(true),
+        await fetchGoodsCombinationOfCurrentBooth(true),
+      ];
 
-      return result;
+      return results.every((s) => typeof s === "boolean" && s === true);
     } else {
       return response;
     }
@@ -452,6 +481,7 @@ const useAdminStore = defineStore("admin", () => {
       const results = [
         await fetchGoodsOfCurrentBooth(true),
         await fetchGoodsCategoriesOfCurrentBooth(true),
+        await fetchGoodsCombinationOfCurrentBooth(true),
       ];
 
       return results.every((s) => typeof s === "boolean" && s === true);
@@ -546,9 +576,11 @@ const useAdminStore = defineStore("admin", () => {
     uploadBoothBannerImage,
     uploadBoothInfoImage,
     uploadGoodsImage,
+    uploadGoodsCombinationImage,
     deleteBoothBannerImage,
     deleteBoothInfoImage,
     deleteGoodsImage,
+    deleteGoodsCombinationImage,
     deleteGoods,
     deleteGoodsCategory,
     deleteGoodsCombination,

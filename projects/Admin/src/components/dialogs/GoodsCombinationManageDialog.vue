@@ -1,6 +1,6 @@
 <template>
   <CommonDialog v-model="open"
-                width="500px"
+                :width="editMode ? '800px' : '500px'"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 hideCloseButton
@@ -16,33 +16,49 @@
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
-    <CommonForm v-model="isFormValid"
-                v-model:edited="isFormEdited"
-                v-model:data="formModels"
-                ref="form"
-                :initialModelValues="formModelsInitial"
-                :fields="formFields" />
+    <VLayout class="d-flex flex-column flex-md-row">
+      <ImageWithUpload v-if="editMode"
+                       class="flex-0-1 mr-4 align-self-center"
+                       :existingSrc="combinationImageUrl"
+                       contextName="굿즈 세트"
+                       width="200px"
+                       height="250px"
+                       aspectRatio="4/5"
+                       hideSubtitle
+                       controlsColumn
+                       :uploadCallback="combinationImageUploadCallback"
+                       :deleteCallback="combinationImageDeleteCallback" />
+      <div class="flex-1-1">
+        <CommonForm v-model="isFormValid"
+                    v-model:edited="isFormEdited"
+                    v-model:data="formModels"
+                    ref="form"
+                    class="flex-1-1"
+                    :initialModelValues="formModelsInitial"
+                    :fields="formFields" />
 
-    <!-- Selected goods status -->
-    <VExpandTransition>
-      <div v-if="formModels.goodsIds.length > 0" class="text-subtitle-2 mx-2">
-        <div class="d-flex flex-row flex-wrap justify-end">
-          <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}개</b> 선택됨</span>
-          <VSpacer />
-          <span class="text-right">세트 판매 가능한 재고량 <b>{{ minimumStockOfSelectedGoods.toLocaleString() }}개</b></span>
-        </div>
-        <div class="text-right">선택한 굿즈들의 가격 총합 <b>{{ currencySymbol }}{{ sumPriceOfSelectedGoods.toLocaleString() }}</b></div>
+        <!-- Selected goods status -->
+        <VExpandTransition>
+          <div v-if="formModels.goodsIds.length > 0" class="text-subtitle-2 mx-2">
+            <div class="d-flex flex-row flex-wrap justify-end">
+              <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}개</b> 선택됨</span>
+              <VSpacer />
+              <span class="text-right">세트 판매 가능한 재고량 <b>{{ minimumStockOfSelectedGoods.toLocaleString() }}개</b></span>
+            </div>
+            <div class="text-right">선택한 굿즈들의 가격 총합 <b>{{ currencySymbol }}{{ sumPriceOfSelectedGoods.toLocaleString() }}</b></div>
+          </div>
+        </VExpandTransition>
+
+        <!-- Selected goods count < 2 alert-->
+        <VSlideYTransition>
+          <VAlert v-if="formModels.goodsIds.length < 2"
+                  type="warning"
+                  class="mt-2">
+            <span><strong>최소 2개 이상</strong>의 굿즈를 세트에 포함시켜야 합니다.</span>
+          </VAlert>
+        </VSlideYTransition>
       </div>
-    </VExpandTransition>
-
-    <!-- Selected goods count < 2 alert-->
-    <VSlideYTransition>
-      <VAlert v-if="formModels.goodsIds.length < 2"
-              type="warning"
-              class="mt-2">
-        <span><strong>최소 2개 이상</strong>의 굿즈를 세트에 포함시켜야 합니다.</span>
-      </VAlert>
-    </VSlideYTransition>
+    </VLayout>
   </CommonDialog>
 
   <GoodsSelectionDialog      v-model="goodsSelectionDialogShown"
@@ -59,10 +75,11 @@
 <script lang="ts">
 import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
-import { reactive, markRaw } from "vue";
+import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
@@ -73,6 +90,7 @@ export type IGoodsCombinationManageFormField
 
 @Component({
   components: {
+    ImageWithUpload,
     CommonForm,
     GoodsSelectionDialog,
     FormDataLossWarningDialog,
@@ -101,7 +119,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     goodsIds: [],
     stockVisibility: GoodsStockVisibility.SHOW_ALL,
   });
-  readonly formFields = markRaw({
+  readonly formFields = readonly({
     name: {
       type: FormFieldType.TEXT,
       label: "세트명",
@@ -116,7 +134,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     categoryId: {
       type: FormFieldType.SELECT,
       label: "카테고리",
-      items: [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }],
+      get items() { return [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }]; },
       itemTitle: "name",
       itemValue: "id",
       onSelectionChange: this.clearSelectedGoods,
@@ -187,6 +205,10 @@ export default class GoodsCombinationManageDialog extends Vue {
     return Object.values(useAdminStore().boothGoodsList)
       .filter((goods) => goods.combinationId !== null && goods.combinationId !== Number(this.combinationId))
       .map((goods) => goods.id);
+  }
+
+  get combinationImageUrl(): string | null {
+    return this.editMode ? useAdminStore().boothGoodsCombinationList[Number(this.combinationId)].combinationImageUrl ?? null : null;
   }
 
   @Watch("open") mounted() {
@@ -286,6 +308,14 @@ export default class GoodsCombinationManageDialog extends Vue {
     }
 
     this.updateInProgress = false;
+  }
+
+  async combinationImageUploadCallback(file: File | Blob | null) {
+    return await useAdminStore().uploadGoodsCombinationImage(Number(this.combinationId!), file!);
+  }
+
+  async combinationImageDeleteCallback() {
+    return await useAdminStore().deleteGoodsCombinationImage(Number(this.combinationId!));
   }
 }
 </script>

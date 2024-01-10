@@ -129,17 +129,18 @@ export class GoodsCombinationService {
   async deleteImage(combinationId: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     try {
       const combination = await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId);
+      const combinationImageId = combination.combinationImageId;
 
-      if(combination.combinationImageId) {
-        const existingUpload = await UploadStorage.findByPk(combination.combinationImageId);
+      combination.combinationImageId = null;
+      await combination.save();
+
+      if(combinationImageId) {
+        const existingUpload = await UploadStorage.findByPk(combinationImageId);
         if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
           await existingUpload.destroy({ force: true });
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
         }
       }
-
-      combination.set("combinationImageId", null);
-      await combination.save();
 
       return SUCCESS_RESPONSE;
     } catch(err) {
@@ -150,13 +151,13 @@ export class GoodsCombinationService {
 
   async updateInfo(id: number, dto: UpdateGoodsCombinationDTO, callerAccountId: number): Promise<GoodsCombination> {
     if(dto.categoryId && dto.categoryId < 0) {
-      delete dto.categoryId;
+      dto.categoryId = null;
     }
 
     const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId!, callerAccountId);
 
-    // Remove combination ID from existing goods
     if(dto.goodsIds) {
+      // Remove combination ID from existing goods
       const goodsToBeUpdated = await Goods.findAll({
         where: {
           combinationId: combination.id,
@@ -167,10 +168,8 @@ export class GoodsCombinationService {
           await (g.set("combinationId", null)).save();
         }
       }
-    }
 
-    // Remove/Exclude target goods with different category
-    if(dto.goodsIds) {
+      // Remove/Exclude target goods with different category
       const targetGoods = await Goods.findAll({
         where: {
           id: dto.goodsIds,
