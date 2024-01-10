@@ -31,7 +31,7 @@
       <!-- Goods & Goods Combination pending list -->
       <div class="d-flex flex-column flex-1-1 overflow-visible overflow-x-hidden">
         <!-- Combinations first -->
-        <VList class="overflow-visible pb-1">
+        <VList class="bg-transparent overflow-visible pb-1">
           <VSlideXReverseTransition group leave-absolute>
             <VListItem v-for="item in orderList.values('combination')"
                        :key="item.id"
@@ -47,7 +47,7 @@
         </VList>
 
         <!-- Goods after -->
-        <VList class="overflow-visible pt-1">
+        <VList class="bg-transparent overflow-visible pt-1">
           <VSlideXReverseTransition group leave-absolute>
             <VListItem v-for="item in orderList.values('goods')"
                       :key="item.id"
@@ -142,7 +142,7 @@ export default class POSOrderDrawer extends Vue {
   get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothName(): string { return this.currentBooth.name; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get isOrderListEmpty(): boolean { return Object.keys(this.orderList).length <= 0; }
+  get isOrderListEmpty(): boolean { return this.orderList.length() <= 0; }
 
   get totalOrderWorth(): number {
     return this.orderList.values().reduce(

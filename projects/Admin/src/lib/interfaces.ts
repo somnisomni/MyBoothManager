@@ -8,7 +8,7 @@ export interface IGoodsOrderInternal {
 
 export type POSOrderListWhat = "goods" | "combination";
 export class POSOrderList {
-  constructor(readonly list: Record<string, IGoodsOrderInternal & { what: POSOrderListWhat }> = reactive({})) { }
+  constructor(private readonly list: Record<string, IGoodsOrderInternal & { what: POSOrderListWhat }> = reactive({})) { }
 
   private buildKey(what: POSOrderListWhat, id: number) { return `${what}-${id}`; }
 
@@ -26,6 +26,7 @@ export class POSOrderList {
   values(what?: POSOrderListWhat) {
     return this.entries(what).map(([, value]) => value);
   }
+  length(what?: POSOrderListWhat) { return this.keys(what).length; }
   clear() { Object.keys(this.list).forEach(key => delete this.list[key]); }
 
   /* POS specific methods */
