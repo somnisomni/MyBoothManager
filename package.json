@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "yarn@4.0.2",
   "scripts": {
-    "all": "yarn workspaces foreach run",
+    "all": "yarn workspaces foreach -A run",
     "all:build": "yarn all build",
     "common": "yarn workspace @myboothmanager/common",
     "commonui": "yarn workspace @myboothmanager/common-ui",
