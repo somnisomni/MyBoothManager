@@ -146,8 +146,15 @@ export class GoodsOrderService {
           }
         } else if(orderItem.cId) {
           // PROCESS FOR GOODS COMBINATION
-
-          // TODO
+          try {
+            const combination = await this.goodsCombinationService.findGoodsCombinationBelongsToBooth(orderItem.cId, boothId, callerAccountId);
+            for(const goods of combination.combinedGoods) {
+              await goods.update({ stockRemaining: goods.stockRemaining + orderItem.quantity });
+            }
+          } catch(e) {
+            // Just ignore any goods-related exceptions and continue processing
+            continue;
+          }
         }
       }
     }
