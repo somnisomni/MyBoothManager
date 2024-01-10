@@ -6,6 +6,7 @@ import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
+import GoodsCombination from "@/db/models/goods-combination";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
 import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoundException } from "./goods-category.exception";
@@ -66,14 +67,12 @@ export class GoodsCategoryService {
   async remove(id: number): Promise<ISuccessResponse> {
     const category = await this.publicGoodsCategoryService.findOne(id);
 
-    // Find goods by category and set to default(uncategorized)
-    const goods = await Goods.findAll({
-      where: {
-        categoryId: id,
-      },
-    });
-    for(const g of goods) {
+    // Find goods/combinations by category and set to default(uncategorized)
+    for(const g of await Goods.findAll({ where: { categoryId: id } })) {
       await (g.set("categoryId", null)).save();
+    }
+    for(const c of await GoodsCombination.findAll({ where: { categoryId: id } })) {
+      await (c.set("categoryId", null)).save();
     }
 
     return await removeTarget(category, undefined, true);
