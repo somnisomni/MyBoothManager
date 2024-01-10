@@ -12,8 +12,9 @@ export interface IGoodsOrderDetailItemBase {
   name?: string;
   quantity: number;
   price?: number;
+  combinedGoods?: Array<Pick<IGoodsOrderDetailItemBase, "gId" | "name">>;
 }
-export type IGoodsOrderDetailItem = MutualExclusive<IGoodsOrderDetailItemBase, "gId", "cId">;
+export type IGoodsOrderDetailItem = MutualExclusive<IGoodsOrderDetailItemBase, "gId", "cId" | "combinedGoods">;
 
 export interface IGoodsOrder extends IDataModelBase {
   id: number;

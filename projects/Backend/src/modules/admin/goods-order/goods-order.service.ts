@@ -94,6 +94,9 @@ export class GoodsOrderService {
           // Do process for each goods in combination
           for(const goods of combination.combinedGoods) {
             await goodsProcessFn(goods, order);
+
+            if(!order.combinedGoods) order.combinedGoods = [];
+            order.combinedGoods.push({ gId: goods.id, name: goods.name });
           }
         }
       }
