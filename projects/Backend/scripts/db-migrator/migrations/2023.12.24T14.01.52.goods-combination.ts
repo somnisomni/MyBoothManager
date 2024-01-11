@@ -11,14 +11,6 @@ import UploadStorage from "@/db/models/uploadstorage";
 import { Migration, SEQUELIZE_TIMESTAMP_ATTRIBUTES } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
-  const goods = context.addColumn(Goods.name, "combinationId", {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: GoodsCombination.name,
-      key: "id",
-    },
-  });
   const combination = context.createTable(GoodsCombination.name, {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -70,8 +62,16 @@ export const up: Migration = async ({ context }) => {
     },
     ...SEQUELIZE_TIMESTAMP_ATTRIBUTES,
   });
+  const goods = context.addColumn(Goods.name, "combinationId", {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: true,
+    references: {
+      model: GoodsCombination.name,
+      key: "id",
+    },
+  });
 
-  return Promise.all([goods, combination]);
+  return Promise.all([combination, goods]);
 };
 
 export const down: Migration = async ({ context }) => {
