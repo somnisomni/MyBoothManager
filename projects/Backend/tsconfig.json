@@ -39,6 +39,6 @@
   "watchOptions": {
     "watchFile": "dynamicPriorityPolling",
     "watchDirectory": "dynamicPriorityPolling",
-    "excludeDirectories": ["node_modules", "dist", "coverage"],
+    "excludeDirectories": ["node_modules", "dist", "coverage"]
   }
 }
