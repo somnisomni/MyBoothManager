@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PublicGoodsModule } from "../goods/goods.module";
 import { PublicGoodsCategoryModule } from "../goods-category/goods-category.module";
+import { PublicGoodsCombinationModule } from "../goods-combination/goods-combination.module";
 import { PublicBoothController } from "./booth.controller";
 import { PublicBoothService } from "./booth.service";
 
@@ -9,7 +10,7 @@ describe("BoothController", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PublicGoodsModule, PublicGoodsCategoryModule],
+      imports: [PublicGoodsModule, PublicGoodsCategoryModule, PublicGoodsCombinationModule],
       controllers: [PublicBoothController],
       providers: [PublicBoothService],
     }).compile();

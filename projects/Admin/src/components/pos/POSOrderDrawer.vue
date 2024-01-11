@@ -28,19 +28,39 @@
         </VListItem>
       </VList>
 
-      <VList class="overflow-auto overflow-x-hidden flex-grow-1">
-        <VSlideXReverseTransition group leave-absolute>
-          <VListItem v-for="item in orderList"
-                     :key="item.goodsId"
-                     class="pa-0"
-                     :height="sm && !smDrawerExpanded ? '48px' : '72px'">
-            <POSGoodsOrderListItem :item="item"
-                                   :singleLine="sm && !smDrawerExpanded"
-                                   @click="onGoodsOrderItemClick"
-                                   @quantityChange="onGoodsOrderQuantityUpdateRequest" />
-          </VListItem>
-        </VSlideXReverseTransition>
-      </VList>
+      <!-- Goods & Goods Combination pending list -->
+      <div class="d-flex flex-column flex-1-1 overflow-visible overflow-x-hidden">
+        <!-- Combinations first -->
+        <VList class="bg-transparent overflow-visible pb-1">
+          <VSlideXReverseTransition group leave-absolute>
+            <VListItem v-for="item in orderSimulationLayer.orderList.values('combination')"
+                       :key="item.id"
+                       class="pa-0"
+                       :height="sm && !smDrawerExpanded ? '48px' : '72px'">
+              <POSGoodsOrderListItem :item="item"
+                                     :isCombination="true"
+                                     :singleLine="sm && !smDrawerExpanded"
+                                     @click="onGoodsOrderItemClick"
+                                     @quantityChange="onGoodsOrderQuantityUpdateRequest" />
+            </VListItem>
+          </VSlideXReverseTransition>
+        </VList>
+
+        <!-- Goods after -->
+        <VList class="bg-transparent overflow-visible pt-1">
+          <VSlideXReverseTransition group leave-absolute>
+            <VListItem v-for="item in orderSimulationLayer.orderList.values('goods')"
+                      :key="item.id"
+                      class="pa-0"
+                      :height="sm && !smDrawerExpanded ? '48px' : '72px'">
+              <POSGoodsOrderListItem :item="item"
+                                     :singleLine="sm && !smDrawerExpanded"
+                                     @click="onGoodsOrderItemClick"
+                                     @quantityChange="onGoodsOrderQuantityUpdateRequest" />
+            </VListItem>
+          </VSlideXReverseTransition>
+        </VList>
+      </div>
 
       <VList nav class="flex-shrink-0 pa-0 pb-2">
         <VListItem v-show="!sm || smDrawerExpanded" class="px-2 py-1">
@@ -65,20 +85,22 @@
   </div>
 
   <POSGoodsAdvancedDialog v-model="showOrderAdvancedDialog"
+                          :currentOrderSimulationLayer="orderSimulationLayer"
                           :orderData="orderAdvancedDialogOrderData"
-                          @deleteRequest="(goodsId: number) => delete orderList[goodsId]"
+                          :isCombination="orderAdvancedDialogOrderIsCombination"
+                          @deleteRequest="onOrderItemAdvancedDeleteRequest"
                           @confirm="onOrderItemAdvancedConfirm" />
   <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
-                             @confirm="resetOrderList" />
+                             @confirm="onOrderResetRequest" />
   <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
-                         :orders="orderList"
+                         :orders="orderSimulationLayer.orderList"
                          @confirm="onOrderConfirm" />
 </template>
 
 <script lang="ts">
-import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { APP_NAME, emptyNumberKeyObject, type IBooth, type IGoods, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import { APP_NAME, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest, type IGoodsOrderDetailItemBase } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/BoothPOSPage.lib";
 import { useAdminStore } from "@/stores/admin";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 import POSListResetConfirmDialog from "../dialogs/POSListResetConfirmDialog.vue";
@@ -99,10 +121,11 @@ import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
     "orderCreationSuccess",
     "orderCreationFailed",
     "orderCreationDone",
+    "orderListResetRequest",
   ],
 })
 export default class POSOrderDrawer extends Vue {
-  @Prop({ type: Object, required: true }) orderList!: Record<number, IGoodsOrderInternal>;
+  @Prop({ type: POSOrderSimulationLayer, required: true }) orderSimulationLayer!: POSOrderSimulationLayer;
   @Prop({ type: Boolean, default: false }) sm!: boolean;
   @Prop({ type: Number }) smDrawerHeight!: number;
 
@@ -115,18 +138,17 @@ export default class POSOrderDrawer extends Vue {
   showListResetConfirmDialog: boolean = false;
   showOrderAdvancedDialog: boolean = false;
   orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
+  orderAdvancedDialogOrderIsCombination?: boolean;
 
   get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
   get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothName(): string { return this.currentBooth.name; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get isOrderListEmpty(): boolean { return Object.keys(this.orderList).length <= 0; }
+  get isOrderListEmpty(): boolean { return this.orderSimulationLayer.orderList.length() <= 0; }
 
   get totalOrderWorth(): number {
-    return Object.keys(this.orderList).reduce((acc, goodsId) => {
-      const gId: number = Number(goodsId);
-      return acc + (this.orderList[gId].price ?? this.currentBoothGoods[gId].price) * this.orderList[gId].quantity;
-    }, 0);
+    return this.orderSimulationLayer.orderList.values().reduce(
+      (acc, order) => (acc + ((order.price ?? this.getTargetOriginalInfo(order.id, order.what === "combination").price) * order.quantity)), 0);
   }
   get totalOrderWorthString(): string { return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`; }
 
@@ -136,25 +158,37 @@ export default class POSOrderDrawer extends Vue {
     }).observe(this.$refs.orderDrawer as HTMLElement);
   }
 
-  onGoodsOrderItemClick(item: IGoodsOrderInternal) {
+  onGoodsOrderItemClick(item: IGoodsOrderInternal & { isCombination?: true }) {
     this.showOrderAdvancedDialog = true;
     this.orderAdvancedDialogOrderData = item;
+    this.orderAdvancedDialogOrderIsCombination = item.isCombination;
   }
 
-  onOrderItemAdvancedConfirm(eventData: { goodsId: number, newOrderData: IGoodsOrderInternal }) {
-    this.orderList[eventData.goodsId] = {
+  onOrderItemAdvancedConfirm(eventData: { id: number, isCombination?: true, newOrderData: IGoodsOrderInternal }) {
+    const targetOrder = this.orderSimulationLayer.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id);
+    Object.assign(targetOrder, {
       ...eventData.newOrderData,
-      quantity: this.orderList[eventData.goodsId].quantity,
-    };
+      quantity: this.orderSimulationLayer.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id).quantity,
+    });
 
     this.onGoodsOrderQuantityUpdateRequest({
-      goodsId: eventData.goodsId,
-      delta: eventData.newOrderData.quantity - this.orderList[eventData.goodsId].quantity,
+      id: eventData.id,
+      isCombination: eventData.isCombination,
+      delta: eventData.newOrderData.quantity - targetOrder.quantity,
     });
   }
 
-  resetOrderList(): void {
-    emptyNumberKeyObject(this.orderList);
+  onOrderItemAdvancedDeleteRequest(eventData: { id: number, isCombination?: true }) {
+    this.orderSimulationLayer.deleteSingleTarget(eventData.isCombination ? "combination" : "goods", eventData.id);
+  }
+
+  @Emit("orderListResetRequest")
+  onOrderResetRequest(): void { }
+
+  getTargetOriginalInfo(id: number, isCombination: boolean): IGoods | IGoodsCombination {
+    return isCombination
+      ? useAdminStore().boothGoodsCombinationList[id]
+      : useAdminStore().boothGoodsList[id];
   }
 
   async onOrderConfirm() {
@@ -167,20 +201,28 @@ export default class POSOrderDrawer extends Vue {
       order: [],
     };
 
-    for(const goodsId in this.orderList) {
+    for(const [, order] of this.orderSimulationLayer.orderList.entries()) {
+      const id: Pick<IGoodsOrderDetailItemBase, "cId"> | Pick<IGoodsOrderDetailItemBase, "gId">
+        = order.what === "combination" ? { cId: order.id } : { gId: order.id };
+
       data.order.push({
-        gId: Number(goodsId),
-        price: this.orderList[goodsId].price ?? this.currentBoothGoods[goodsId].price,
-        quantity: this.orderList[goodsId].quantity,
+        ...id,
+        price: order.price ?? this.getTargetOriginalInfo(order.id, order.what === "combination").price,
+        quantity: order.quantity,
       });
     }
 
     // API call
-    const results = [await useAdminStore().createGoodsOrder(data), await useAdminStore().fetchGoodsOfCurrentBooth(true)];
+    const results = [
+      await useAdminStore().createGoodsOrder(data),
+      await useAdminStore().fetchGoodsOfCurrentBooth(true),
+      await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true),
+    ];
     if(results.every((res) => typeof res !== "string")) {
-      // If API call success, empty the order list
-      this.resetOrderList();
       this.$emit("orderCreationSuccess");
+
+      // If API call success, request reset the order list
+      this.$emit("orderListResetRequest");
     } else {
       this.$emit("orderCreationFailed");
     }
@@ -190,7 +232,7 @@ export default class POSOrderDrawer extends Vue {
   }
 
   @Emit("goodsOrderQuantityUpdateRequest")
-  onGoodsOrderQuantityUpdateRequest(eventData: { goodsId: number, delta: number }) {
+  onGoodsOrderQuantityUpdateRequest(eventData: { id: number, delta: number, isCombination?: true }) {
     return eventData;
   }
 }

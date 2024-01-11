@@ -1,10 +1,10 @@
 <template>
   <VContainer class="pa-0 pa-sm-2 pa-md-6">
-    <VLayout class="pa-2 d-flex align-end">
+    <VLayout class="pa-2 d-flex align-center align-sm-end flex-column flex-sm-row">
       <div>
         <div class="d-flex align-center text-body-2 text-disabled"><VIcon class="mr-1">mdi-information-box-outline</VIcon> 취소된 기록을 제외하여 계산된 값입니다.</div>
 
-        <VLayout class="mt-2">
+        <VLayout class="mt-2 d-flex align-center align-sm-center flex-column flex-sm-row">
           <VSheet class="mx-1"
                  variant="outlined"
                  @click.prevent>
@@ -13,7 +13,7 @@
               <span class="text-h5 font-weight-bold">{{ totalSaleCount.toLocaleString() }}개</span>
             </VLayout>
           </VSheet>
-          <VDivider class="mx-2" vertical />
+          <VDivider class="my-1 my-sm-0 mx-2 w-100 w-sm-auto" :vertical="smAndUp" />
           <VSheet class="mx-1"
                  variant="outlined"
                  @click.prevent>
@@ -27,7 +27,8 @@
 
       <VSpacer />
 
-      <VBtn size="large"
+      <VBtn class="mt-4 align-self-end align-self-sm-auto"
+            size="large"
             variant="outlined"
             prepend-icon="mdi-refresh"
             :disabled="dataLoading"
@@ -45,6 +46,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { GoodsOrderStatus } from "@myboothmanager/common";
+import { useDisplay } from "vuetify";
+import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
 
@@ -58,6 +61,10 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
 
   async mounted() {
     await this.onRefreshClick();
+  }
+
+  get smAndUp() {
+    return unref(useDisplay().smAndUp);
   }
 
   get boothGoodsOrders() {

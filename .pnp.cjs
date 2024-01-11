@@ -1921,20 +1921,23 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@myboothmanager/admin", "workspace:projects/Admin"],\
           ["@mdi/font", "npm:7.3.67"],\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
-          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["@rushstack/eslint-patch", "npm:1.6.0"],\
           ["@tsconfig/node18", "npm:18.2.2"],\
+          ["@types/clone-deep", "npm:4.0.4"],\
           ["@types/node", "npm:20.10.4"],\
           ["@vitejs/plugin-vue", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:4.5.2"],\
           ["@vue/eslint-config-typescript", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:12.0.0"],\
           ["@vue/tsconfig", "npm:0.4.0"],\
           ["chart.js", "npm:4.4.1"],\
           ["chartjs-adapter-moment", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:1.0.1"],\
+          ["clone-deep", "npm:4.0.1"],\
           ["eslint", "npm:8.55.0"],\
           ["eslint-import-resolver-typescript", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:3.6.1"],\
           ["eslint-plugin-import", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.29.0"],\
           ["eslint-plugin-vue", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:9.19.2"],\
+          ["fast-deep-equal", "npm:3.1.3"],\
           ["moment", "npm:2.29.4"],\
           ["npm-run-all", "npm:4.1.5"],\
           ["pinia", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.1.7"],\
@@ -1961,7 +1964,7 @@ const RAW_RUNTIME_STATE =
           ["@fastify/helmet", "npm:11.1.1"],\
           ["@fastify/multipart", "npm:8.0.0"],\
           ["@fastify/static", "npm:6.12.0"],\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
           ["@nestjs/cli", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.1"],\
           ["@nestjs/common", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
           ["@nestjs/core", "virtual:43183703085c32d90bc531676ecce68cc2639e205b546acca7491ebbcd60faf1a48cce5fb8e30f44b3bad3720c800d76eae8a51dffcc2544a65d00769cb0157c#npm:10.2.10"],\
@@ -2003,34 +2006,34 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@myboothmanager/common", [\
-      ["file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-a2e0d29b3b-a75c057e4e.zip/node_modules/@myboothmanager/common/",\
+      ["file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-a06f806d34-19f7eb3bc7.zip/node_modules/@myboothmanager/common/",\
         "packageDependencies": [\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["currency-symbol-map", "npm:5.1.0"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-65ecc02b6e-a75c057e4e.zip/node_modules/@myboothmanager/common/",\
+      ["file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-1962223e71-19f7eb3bc7.zip/node_modules/@myboothmanager/common/",\
         "packageDependencies": [\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"],\
           ["currency-symbol-map", "npm:5.1.0"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-57cae6b9d3-a75c057e4e.zip/node_modules/@myboothmanager/common/",\
+      ["file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-ca458fc9b7-19f7eb3bc7.zip/node_modules/@myboothmanager/common/",\
         "packageDependencies": [\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
           ["currency-symbol-map", "npm:5.1.0"]\
         ],\
         "linkType": "HARD"\
       }],\
-      ["file:../Common#../Common::hash=7d0a90&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-b505c7ee6f-a75c057e4e.zip/node_modules/@myboothmanager/common/",\
+      ["file:../Common#../Common::hash=d609e2&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-file-e3a63866ee-19f7eb3bc7.zip/node_modules/@myboothmanager/common/",\
         "packageDependencies": [\
-          ["@myboothmanager/common", "file:../Common#../Common::hash=7d0a90&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"],\
+          ["@myboothmanager/common", "file:../Common#../Common::hash=d609e2&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"],\
           ["currency-symbol-map", "npm:5.1.0"]\
         ],\
         "linkType": "HARD"\
@@ -2059,26 +2062,26 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@myboothmanager/common-ui", [\
-      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-6e0e44b5d7-a6ac746557.zip/node_modules/@myboothmanager/common-ui/",\
+      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-8caf574783-9cb2b71bb1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"]\
+          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
-        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-3eb3622de1-a6ac746557.zip/node_modules/@myboothmanager/common-ui/",\
+      ["file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
+        "packageLocation": "./.yarn/cache/@myboothmanager-common-ui-file-67a215a26c-9cb2b71bb1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"]\
+          ["@myboothmanager/common-ui", "file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
-        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-0fd51919ca/0/cache/@myboothmanager-common-ui-file-6e0e44b5d7-a6ac746557.zip/node_modules/@myboothmanager/common-ui/",\
+      ["virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin", {\
+        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-138a08757e/0/cache/@myboothmanager-common-ui-file-8caf574783-9cb2b71bb1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common-ui", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["@mdi/font", "npm:7.3.67"],\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"],\
           ["@types/mdi__font", null],\
           ["@types/myboothmanager__common", null],\
           ["@types/vue", null],\
@@ -2102,12 +2105,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
-        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-9100f0e1ba/0/cache/@myboothmanager-common-ui-file-3eb3622de1-a6ac746557.zip/node_modules/@myboothmanager/common-ui/",\
+      ["virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic", {\
+        "packageLocation": "./.yarn/__virtual__/@myboothmanager-common-ui-virtual-543454f1d0/0/cache/@myboothmanager-common-ui-file-67a215a26c-9cb2b71bb1.zip/node_modules/@myboothmanager/common-ui/",\
         "packageDependencies": [\
-          ["@myboothmanager/common-ui", "virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
+          ["@myboothmanager/common-ui", "virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
           ["@mdi/font", "npm:7.3.67"],\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
           ["@types/mdi__font", null],\
           ["@types/myboothmanager__common", null],\
           ["@types/vue", null],\
@@ -2135,7 +2138,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./packages/CommonUI/",\
         "packageDependencies": [\
           ["@myboothmanager/common-ui", "workspace:packages/CommonUI"],\
-          ["@myboothmanager/common", "file:../Common#../Common::hash=7d0a90&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"],\
+          ["@myboothmanager/common", "file:../Common#../Common::hash=d609e2&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"],\
           ["@rushstack/eslint-patch", "npm:1.6.0"],\
           ["@tsconfig/node18", "npm:18.2.2"],\
           ["@types/node", "npm:20.10.4"],\
@@ -2175,8 +2178,8 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@myboothmanager/public", "workspace:projects/Public"],\
           ["@mdi/font", "npm:7.3.67"],\
-          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
-          ["@myboothmanager/common-ui", "virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
+          ["@myboothmanager/common", "file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
+          ["@myboothmanager/common-ui", "virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"],\
           ["@rushstack/eslint-patch", "npm:1.6.0"],\
           ["@tsconfig/node18", "npm:18.2.2"],\
           ["@types/node", "npm:20.10.4"],\
@@ -2820,6 +2823,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-bluebird-npm-3.5.42-15f353048c-09ad60b083.zip/node_modules/@types/bluebird/",\
         "packageDependencies": [\
           ["@types/bluebird", "npm:3.5.42"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/clone-deep", [\
+      ["npm:4.0.4", {\
+        "packageLocation": "./.yarn/cache/@types-clone-deep-npm-4.0.4-30fdceae51-84cfd1ad9a.zip/node_modules/@types/clone-deep/",\
+        "packageDependencies": [\
+          ["@types/clone-deep", "npm:4.0.4"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4836,6 +4848,18 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/clone-npm-1.0.4-a610fcbcf9-d06418b733.zip/node_modules/clone/",\
         "packageDependencies": [\
           ["clone", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["clone-deep", [\
+      ["npm:4.0.1", {\
+        "packageLocation": "./.yarn/cache/clone-deep-npm-4.0.1-70adab92c8-770f912fe4.zip/node_modules/clone-deep/",\
+        "packageDependencies": [\
+          ["clone-deep", "npm:4.0.1"],\
+          ["is-plain-object", "npm:2.0.4"],\
+          ["kind-of", "npm:6.0.3"],\
+          ["shallow-clone", "npm:3.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -7578,6 +7602,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["is-plain-object", [\
+      ["npm:2.0.4", {\
+        "packageLocation": "./.yarn/cache/is-plain-object-npm-2.0.4-da3265d804-2a401140cf.zip/node_modules/is-plain-object/",\
+        "packageDependencies": [\
+          ["is-plain-object", "npm:2.0.4"],\
+          ["isobject", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["is-property", [\
       ["npm:1.0.2", {\
         "packageLocation": "./.yarn/cache/is-property-npm-1.0.2-6eac53b30e-2f66eacb3d.zip/node_modules/is-property/",\
@@ -7694,6 +7728,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/isexe-npm-3.1.1-9c0061eead-7fe1931ee4.zip/node_modules/isexe/",\
         "packageDependencies": [\
           ["isexe", "npm:3.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["isobject", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/isobject-npm-3.0.1-8145901fd2-db85c4c970.zip/node_modules/isobject/",\
+        "packageDependencies": [\
+          ["isobject", "npm:3.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -8547,6 +8590,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["keyv", "npm:4.5.4"],\
           ["json-buffer", "npm:3.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["kind-of", [\
+      ["npm:6.0.3", {\
+        "packageLocation": "./.yarn/cache/kind-of-npm-6.0.3-ab15f36220-5873d303fb.zip/node_modules/kind-of/",\
+        "packageDependencies": [\
+          ["kind-of", "npm:6.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10907,6 +10959,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/setprototypeof-npm-1.2.0-0fedbdcd3a-fde1630422.zip/node_modules/setprototypeof/",\
         "packageDependencies": [\
           ["setprototypeof", "npm:1.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["shallow-clone", [\
+      ["npm:3.0.1", {\
+        "packageLocation": "./.yarn/cache/shallow-clone-npm-3.0.1-dab5873d0d-e066bd540c.zip/node_modules/shallow-clone/",\
+        "packageDependencies": [\
+          ["shallow-clone", "npm:3.0.1"],\
+          ["kind-of", "npm:6.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\

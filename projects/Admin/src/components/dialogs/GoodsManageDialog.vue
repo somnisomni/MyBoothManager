@@ -1,6 +1,6 @@
 <template>
   <CommonDialog v-model="open"
-                :width="editMode ? '800px' : undefined"
+                :width="editMode ? '800px' : '500px'"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
                 :hideCloseButton="true"

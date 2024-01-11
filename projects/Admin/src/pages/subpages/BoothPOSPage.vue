@@ -5,12 +5,14 @@
                  density="compact" />
     </VList>
 
-    <POSOrderDrawer :orderList="orderList"
+    <POSOrderDrawer v-if="orderSimulationLayer && orderSimulationLayer.orderList"
+                    :orderSimulationLayer="orderSimulationLayer"
                     :sm="!mdAndUp"
                     @smDrawerHeightChanged="onSMDrawerHeightChanged"
                     @goodsOrderQuantityUpdateRequest="updateOrderListQuantity"
                     @orderCreationSuccess="onOrderCreationSuccess"
-                    @orderCreationFailed="onOrderCreationFailed" />
+                    @orderCreationFailed="onOrderCreationFailed"
+                    @orderListResetRequest="resetSimulationLayer" />
 
     <VLayout class="pos-item-area d-flex flex-column flex-wrap mt-8 mt-md-0"
              :class="{ 'sm': !mdAndUp }"
@@ -19,7 +21,9 @@
                      :goodsList="Object.values(boothGoodsDict)"
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
-                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ goodsId, delta: 1 })" />
+                     :goodsCombinationList="boothGoodsCombinationList"
+                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ id: goodsId, delta: 1 })"
+                     @combinationClick="(combinationId: number) => updateOrderListQuantity({ id: combinationId, delta: 1, isCombination: true })" />
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -41,8 +45,7 @@
 
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
-import type { IGoodsOrderInternal } from "@/lib/interfaces";
-import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Vue } from "vue-facing-decorator";
 import { unref } from "vue";
 import { useDisplay } from "vuetify";
@@ -51,6 +54,7 @@ import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
 import { getUploadFilePath } from "@/lib/functions";
+import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
 
 @Component({
   components: {
@@ -61,7 +65,8 @@ import { getUploadFilePath } from "@/lib/functions";
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFilePath = getUploadFilePath;
-  readonly orderList: Record<number, IGoodsOrderInternal> = {};
+
+  orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
   smDrawerHeight: number = 0;
   showStockNotEnoughSnackbar: boolean = false;
@@ -76,11 +81,16 @@ export default class BoothPOSPage extends Vue {
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().boothGoodsCategoryList); }
+  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().boothGoodsCombinationList; }
+  get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().boothGoodsCombinationList); }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
+      return;
     }
+
+    this.resetSimulationLayer();
   }
 
   @Hook()
@@ -94,6 +104,14 @@ export default class BoothPOSPage extends Vue {
     }
   }
 
+  resetSimulationLayer(): void {
+    if(this.orderSimulationLayer) {
+      this.orderSimulationLayer.reset(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
+    } else {
+      this.orderSimulationLayer = new POSOrderSimulationLayer(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
+    }
+  }
+
   onPageLeaveConfirm(): void {
     this.pageLeaveConfirmed = true;
     router.replace(this.pageLeaveTarget ?? { name: "admin" });
@@ -103,45 +121,30 @@ export default class BoothPOSPage extends Vue {
     this.smDrawerHeight = height;
   }
 
-  onGoodsItemClick(goodsId: number) {
-    if(this.orderList[goodsId]) {
-      if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
-        this.orderList[goodsId].quantity++;
-      } else {
+  // onGoodsItemClick(goodsId: number) {
+  //   if(this.orderList[goodsId]) {
+  //     if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
+  //       this.orderList[goodsId].quantity++;
+  //     } else {
+  //       this.showStockNotEnoughSnackbar = true;
+  //     }
+  //   } else {
+  //     this.orderList[goodsId] = {
+  //       id: goodsId,
+  //       quantity: 1,
+  //     };
+  //   }
+  // }
+
+  updateOrderListQuantity(eventData: { id: number, delta: number, isCombination?: true }) {
+    const { id, delta, isCombination } = eventData;
+
+    try {
+      this.orderSimulationLayer?.handleQuantityUpdate(isCombination ? "combination" : "goods", id, delta);
+    } catch(e) {
+      if(e === "UpperLimitExceeded") {
         this.showStockNotEnoughSnackbar = true;
       }
-    } else {
-      this.orderList[goodsId] = {
-        goodsId,
-        quantity: 1,
-      };
-    }
-  }
-
-  updateOrderListQuantity(eventData: { goodsId: number, delta: number }) {
-    const { goodsId, delta } = eventData;
-
-    if(this.orderList[goodsId]) {
-      if(this.orderList[goodsId].quantity + delta <= this.boothGoodsDict[goodsId].stockRemaining) {
-        this.orderList[goodsId].quantity += delta;
-      } else {
-        this.showStockNotEnoughSnackbar = true;
-      }
-
-      if(this.orderList[goodsId].quantity <= 0) {
-        delete this.orderList[goodsId];
-      }
-    } else {
-      if(delta <= 0) return;
-      if(this.boothGoodsDict[goodsId].stockRemaining <= 0) {
-        this.showStockNotEnoughSnackbar = true;
-        return;
-      }
-
-      this.orderList[goodsId] = {
-        goodsId,
-        quantity: delta,
-      };
     }
   }
 

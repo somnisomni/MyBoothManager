@@ -4,7 +4,7 @@
            type="file"
            :accept="acceptsString"
            :multiple="multiple"
-           class="w-0 h-0"
+           class="w-0 h-0 d-none"
            style="opacity: 0" @change="onFileInputChange" />
 
     <slot name="button">

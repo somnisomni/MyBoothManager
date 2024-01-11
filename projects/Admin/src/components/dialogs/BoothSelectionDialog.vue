@@ -6,7 +6,7 @@
                 :titleExtraMargin="true"
                 :dialogCancelText="null"
                 :closeOnCancel="false"
-                :fullscreenOnSmallScreen="true"
+                fullscreenOnSmallScreen
                 dialogTitle="관리할 부스 선택">
     <VSheet v-for="booth in boothList"
             :key="booth.id"
@@ -131,7 +131,8 @@ export default class BoothSelectionDialog extends Vue {
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(0.25em);
+      -webkit-backdrop-filter: blur(0.25em);
+              backdrop-filter: blur(0.25em);
       transition: background-color 0.25s, backdrop-filter 0.25s;
     }
 
@@ -144,7 +145,8 @@ export default class BoothSelectionDialog extends Vue {
 
   &:hover .booth-item-image-container .booth-item-image-overlay {
     background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+            backdrop-filter: blur(0);
   }
 
   .booth-item-info {

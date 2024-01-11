@@ -19,7 +19,7 @@ export class GoodsService {
     private readonly utilService: UtilService) { }
 
   private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
-    const goods = await findOneByPk(Goods, goodsId, [ UploadStorage ]);
+    const goods = await findOneByPk(Goods, goodsId);
     if(!goods) throw new EntityNotFoundException();
     if(goods.boothId !== boothId) throw new NoAccessException();
 
@@ -109,17 +109,17 @@ export class GoodsService {
   async deleteImage(goodsId: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     try {
       const goods = await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId);
+      const goodsImageId = goods.goodsImageId;
 
-      if(goods.goodsImageId) {
-        const existingUpload = await UploadStorage.findByPk(goods.goodsImageId);
+      await (goods.set("goodsImageId", null)).save();
+
+      if(goodsImageId) {
+        const existingUpload = await UploadStorage.findByPk(goodsImageId);
         if(existingUpload) {
           this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
           await existingUpload.destroy({ force: true });
         }
       }
-
-      goods.set("goodsImageId", null);
-      await goods.save();
 
       return SUCCESS_RESPONSE;
     } catch(err) {
@@ -129,27 +129,34 @@ export class GoodsService {
   }
 
   async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number): Promise<Goods> {
-    if(updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0) {
-      delete updateGoodsDto.categoryId;
-    }
-
     let goods = await this.findGoodsBelongsToBooth(id, updateGoodsDto.boothId!, callerAccountId);
+    const categoryId = updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0 ? null : updateGoodsDto.categoryId;
 
     try {
-      await goods.update({
+      // Handling category change if the goods is combined
+      if(goods.combinationId && goods.categoryId !== categoryId) {
+        goods = await (goods.set("combinationId", null)).save();
+      }
+
+      return await goods.update({
         ...updateGoodsDto,
+        categoryId,
         boothId: undefined,  // Prevent boothId from being updated
       });
-      goods = await goods.save();
     } catch(err) {
       throw new GoodsInfoUpdateFailedException();
     }
-
-    return goods;
   }
 
   async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     const goods = await this.findGoodsBelongsToBooth(id, boothId, callerAccountId);
+
+    // Delete goods image
+    if(goods.goodsImageId) {
+      // TODO: calling this.deleteImage() will execute find query again, which already found above.
+      await this.deleteImage(id, boothId, callerAccountId);
+    }
+
     return await removeTarget(goods);
   }
 }

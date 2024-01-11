@@ -48,6 +48,7 @@
                         :goodsList="boothGoodsList"
                         :goodsImageUrlResolver="getUploadFilePath"
                         :goodsCategoryList="boothCategoryList"
+                        :goodsCombinationList="boothCombinationList"
                         :editable="false"
                         omitEmptyGoodsCategory />
           <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
@@ -60,7 +61,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
-import { BoothStatus, ErrorCodes, type IBooth, type IGoods, type IGoodsCategory } from "@myboothmanager/common";
+import { BoothStatus, ErrorCodes, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
@@ -83,6 +84,7 @@ export default class IndividualBoothPage extends Vue {
   boothData: IBooth | null = null;
   boothGoodsList: Array<IGoods> = [];
   boothCategoryList: Array<IGoodsCategory> = [];
+  boothCombinationList: Array<IGoodsCombination> = [];
 
   readonly dataPollingInterval: number = 30000; // 30 seconds
   dataPollingTimerId: NodeJS.Timeout | null = null;
@@ -133,15 +135,17 @@ export default class IndividualBoothPage extends Vue {
     /* After booth data is fetched successfully, fetch others */
     const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
     const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
+    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
 
-    if(!("errorCode" in goodsResponse || "errorCode" in categoryResponse)) {
+    if(!("errorCode" in goodsResponse || "errorCode" in categoryResponse || "errorCode" in combinationResponse)) {
       this.boothGoodsList = goodsResponse;
       this.boothCategoryList = categoryResponse;
+      this.boothCombinationList = combinationResponse;
     }
   }
 
   async pollData(): Promise<boolean | ErrorCodes[]> {
-    const errors: ErrorCodes[] = [-1, -1, -1];
+    const errors: ErrorCodes[] = [-1, -1, -1, -1];
 
     const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
     if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
@@ -154,6 +158,10 @@ export default class IndividualBoothPage extends Vue {
     const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
     if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
     else errors[2] = categoryResponse.errorCode;
+
+    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
+    if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse;
+    else errors[3] = combinationResponse.errorCode;
 
     return errors.every((error) => error === ErrorCodes.SUCCESS) ? true : errors;
   }

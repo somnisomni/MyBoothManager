@@ -25,7 +25,7 @@
               variant="outlined"
               size="x-large"
               prepend-icon="mdi-set-all"
-              @click.stop="setConfigurationAddDialogOpen = !setConfigurationAddDialogOpen">세트 구성 추가</VBtn>
+              @click.stop="combinationAddDialogOpen = !combinationAddDialogOpen">세트 구성 추가</VBtn>
       </VLayout>
       <VBtn class="ml-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
@@ -39,26 +39,28 @@
   </DashboardPanel>
 
   <GoodsManageDialog v-model="goodsAddDialogOpen" />
+  <GoodsCombinationManageDialog v-model="combinationAddDialogOpen" />
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-facing-decorator";
+import { Vue, Component } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
+import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialog.vue";
 
 @Component({
   components: {
     DashboardPanel,
     GoodsManageDialog,
+    GoodsCombinationManageDialog,
   },
 })
 export default class GoodsManagePanel extends Vue {
   goodsAddDialogOpen = false;
-  setConfigurationAddDialogOpen = false;
-  @Watch("setConfigurationAddDialogOpen") temp() { alert("기능 구현 예정"); }
+  combinationAddDialogOpen = false;
 
   goodsListRefreshing = false;
 
@@ -73,6 +75,8 @@ export default class GoodsManagePanel extends Vue {
   async onListRefreshClick() {
     this.goodsListRefreshing = true;
     await useAdminStore().fetchGoodsOfCurrentBooth(true);
+    await useAdminStore().fetchGoodsCategoriesOfCurrentBooth(true);
+    await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true);
     this.goodsListRefreshing = false;
   }
 

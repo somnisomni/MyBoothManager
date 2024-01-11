@@ -16,6 +16,7 @@ export interface IGoods extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
   categoryId?: number | null;  // Foreign key to GoodsCategory.id
+  combinationId?: number | null;  // Foreign key to GoodsCombination.id
   name: string;
   description?: string;
   type?: string;
@@ -36,5 +37,5 @@ export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
 export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-export type GoodsUpdateRequestKey = "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason" | "stockVisibility";
+export type GoodsUpdateRequestKey = "categoryId" | "combinationId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason" | "stockVisibility";
 export type IGoodsUpdateRequest = Pick<IGoods, "boothId"> & Partial<Pick<IGoods, GoodsUpdateRequestKey>>;

@@ -23,10 +23,16 @@
       <ul class="mt-4">
         <div>판매 굿즈 목록</div>
 
-        <li v-for="order in orderData.order" :key="order.gId">
-          <span>{{ order.name }}</span> /
+        <li v-for="order in orderData.order" :key="(order.gId || order.cId)">
+          <span><VIcon v-if="order.cId" size="small">mdi-set-all</VIcon> {{ order.name }}</span> /
           <span>{{ currencySymbol }}{{ order.price?.toLocaleString() }}</span> /
           <span>{{ order.quantity.toLocaleString() }}개</span>
+
+          <ul v-if="order.cId" style="margin-inline-start: 1em">
+            <li v-for="combinedGoods in order.combinedGoods" :key="combinedGoods.gId">
+              <span>{{ combinedGoods.name }}</span>
+            </li>
+          </ul>
         </li>
       </ul>
 

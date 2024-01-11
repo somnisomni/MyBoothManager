@@ -37,7 +37,7 @@ export class BoothService {
   }
 
   async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
-    return await create(Booth, createBoothDto, { ownerId });
+    return await create(Booth, createBoothDto, undefined, { ownerId });
   }
 
   async findAllGoodsOrderOfBooth(boothId: number, callerAccountId: number): Promise<Array<GoodsOrder>> {
@@ -228,6 +228,19 @@ export class BoothService {
 
   async remove(id: number, callerAccountId: number): Promise<ISuccessResponse> {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
+
+    // Delete banner image
+    if(booth.bannerImageId) {
+      // TODO: calling this.deleteBannerImage() will execute find query again, which already found above.
+      await this.deleteBannerImage(id, callerAccountId);
+    }
+
+    // Delete info image
+    if(booth.infoImageId) {
+      // TODO: calling this.deleteInfoImage() will execute find query again, which already found above.
+      await this.deleteInfoImage(id, callerAccountId);
+    }
+
     return await removeTarget(booth);
   }
 }

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothMemberAddRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothMemberAddRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 import router from "@/plugins/router";
 import { useAuthStore } from "./auth";
@@ -15,26 +15,35 @@ const useAdminStore = defineStore("admin", () => {
 
   const isBoothDataLoaded = ref<boolean>(false);
   const isChangingBooth = ref<boolean>(false);
+
+  const isAPICriticalFetchError = ref<boolean>(false);
   const isAPIFetchError = ref<boolean>(false);
+  const apiFetchErrorMessage = ref<string | null>(null);
+  const apiFetchErrorCode = ref<ErrorCodes | null>(null);
 
   const boothList: Record<number, IBooth> = reactive({});
   const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
   const boothGoodsList: Record<number, IGoods> = reactive({});
   const boothGoodsOrderList: Record<number, IGoodsOrder> = reactive({});
+  const boothGoodsCombinationList: Record<number, IGoodsCombination> = reactive({});
 
   /* Private actions (not to be exported) */
   async function apiWrapper<T>(func: () => Promise<T | ErrorCodes>): Promise<T | ErrorCodes> {
     isAPIFetchError.value = false;
+    isAPICriticalFetchError.value = false;
+    apiFetchErrorMessage.value = null;
+    apiFetchErrorCode.value = null;
 
     let result;
     try {
       result = await func();
     } catch(err) {
-      isAPIFetchError.value = true;
+      isAPICriticalFetchError.value = true;
       return ErrorCodes.UNKNOWN_ERROR;
     }
 
     if(typeof result === "number") {
+      /* AUTH RELATED */
       if(result === ErrorCodes.AUTH_TOKEN_NEED_REFRESH) {
         // Try to refresh auth token and retry API call
         const refreshResult = await $authStore.adminAuthRefresh();
@@ -44,10 +53,18 @@ const useAdminStore = defineStore("admin", () => {
         }
       } else if(result === ErrorCodes.INVALID_AUTH_TOKEN || result === ErrorCodes.NEED_RELOGIN) {
         // Insert further specific actions for these error codes here
+
+        // Force logout
+        router.replace({ name: "logout", state: { authTokenInvalid: true } });
+        return result;
       }
 
-      // Force logout
-      router.replace({ name: "logout", state: { authTokenInvalid: true } });
+      /* GENERAL */
+      if(result === ErrorCodes.ROUTE_NOT_FOUND) {
+        isAPIFetchError.value = true;
+        apiFetchErrorMessage.value = "요청한 API를 찾을 수 없습니다.";
+        apiFetchErrorCode.value = result;
+      }
     }
 
     return result;
@@ -162,6 +179,23 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function fetchGoodsCombinationOfCurrentBooth(refresh: boolean = false): Promise<boolean | ErrorCodes> {
+    if(currentBoothId.value === -1) return false;
+
+    const response = await apiWrapper(() => AdminAPI.fetchAllGoodsCombinationOfBooth(currentBoothId.value));
+
+    if(response && response instanceof Array) {
+      if(refresh) emptyObject(boothGoodsCombinationList);
+
+      for(const combination of response) {
+        boothGoodsCombinationList[combination.id] = combination;
+      }
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function createBooth(payload: IBoothCreateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.createBooth(payload));
 
@@ -231,6 +265,21 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function uploadGoodsCombinationImage(combinationId: number, payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadGoodsCombinationImage(combinationId, currentBoothId.value, payload));
+
+    if(response && response instanceof Object) {
+      if(typeof response.value === "string") {
+        boothGoodsCombinationList[combinationId].combinationImageUrl = response.value;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return response;
+    }
+  }
+
   async function createGoods(payload: IGoodsCreateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.createGoods(payload));
 
@@ -264,6 +313,17 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function createGoodsCombination(payload: IGoodsCombinationCreateRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.createGoodsCombination(payload));
+
+    if(response && response instanceof Object) {
+      boothGoodsCombinationList[response.id] = response;
+      return await fetchGoodsOfCurrentBooth(true);
+    } else {
+      return response;
+    }
+  }
+
   async function updateGoodsInfo(goodsId: number, payload: IGoodsUpdateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.updateGoodsInfo(goodsId, payload));
 
@@ -272,7 +332,12 @@ const useAdminStore = defineStore("admin", () => {
         ...boothGoodsList[goodsId],
         ...response,
       };
-      return true;
+
+      if(response.combinationId) {
+        return await fetchGoodsCombinationOfCurrentBooth(true);
+      } else {
+        return true;
+      }
     } else {
       return response;
     }
@@ -287,6 +352,17 @@ const useAdminStore = defineStore("admin", () => {
         ...response,
       };
       return { id: response.id };
+    } else {
+      return response;
+    }
+  }
+
+  async function updateGoodsCombinationInfo(combinationId: number, payload: IGoodsCombinationUpdateRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.updateGoodsCombinationInfo(combinationId, payload));
+
+    if(response && response instanceof Object) {
+      boothGoodsCombinationList[combinationId] = { ...response };
+      return await fetchGoodsOfCurrentBooth(true);
     } else {
       return response;
     }
@@ -370,14 +446,28 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteGoodsCombinationImage(combinationId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoodsCombinationImage(combinationId, currentBoothId.value));
+
+    if(response && response instanceof Object) {
+      delete boothGoodsCombinationList[combinationId].combinationImageUrl;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoods(goodsId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoods(goodsId, currentBoothId.value));
 
     if(response && response instanceof Object) {
       // Force fetch goods
-      const result = await fetchGoodsOfCurrentBooth(true);
+      const results = [
+        await fetchGoodsOfCurrentBooth(true),
+        await fetchGoodsCombinationOfCurrentBooth(true),
+      ];
 
-      return result;
+      return results.every((s) => typeof s === "boolean" && s === true);
     } else {
       return response;
     }
@@ -391,6 +481,23 @@ const useAdminStore = defineStore("admin", () => {
       const results = [
         await fetchGoodsOfCurrentBooth(true),
         await fetchGoodsCategoriesOfCurrentBooth(true),
+        await fetchGoodsCombinationOfCurrentBooth(true),
+      ];
+
+      return results.every((s) => typeof s === "boolean" && s === true);
+    } else {
+      return response;
+    }
+  }
+
+  async function deleteGoodsCombination(combinationId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteGoodsCombination(combinationId, currentBoothId.value));
+
+    if(response && response instanceof Object) {
+      // Force fetch goods combinations
+      const results = [
+        await fetchGoodsOfCurrentBooth(true),
+        await fetchGoodsCombinationOfCurrentBooth(true),
       ];
 
       return results.every((s) => typeof s === "boolean" && s === true);
@@ -404,6 +511,7 @@ const useAdminStore = defineStore("admin", () => {
 
     emptyNumberKeyObject(boothGoodsList);
     emptyNumberKeyObject(boothGoodsCategoryList);
+    emptyNumberKeyObject(boothGoodsCombinationList);
     emptyNumberKeyObject(boothGoodsOrderList);
   }
 
@@ -415,6 +523,7 @@ const useAdminStore = defineStore("admin", () => {
 
     responses.push(
       await fetchGoodsCategoriesOfCurrentBooth(),
+      await fetchGoodsCombinationOfCurrentBooth(),
       await fetchGoodsOfCurrentBooth(),
     );
 
@@ -432,12 +541,16 @@ const useAdminStore = defineStore("admin", () => {
     currentBoothId,
     isBoothDataLoaded,
     isChangingBooth,
+    isAPICriticalFetchError,
     isAPIFetchError,
+    apiFetchErrorMessage,
+    apiFetchErrorCode,
 
     boothList,
     boothGoodsCategoryList,
     boothGoodsList,
     boothGoodsOrderList,
+    boothGoodsCombinationList,
 
     invalidateAllStates,
     changeBooth,
@@ -447,9 +560,11 @@ const useAdminStore = defineStore("admin", () => {
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
     fetchGoodsOrdersOfCurrentBooth,
+    fetchGoodsCombinationOfCurrentBooth,
     updateGoodsInfo,
     updateGoodsCategoryInfo,
     updateCurrentBoothInfo,
+    updateGoodsCombinationInfo,
     updateCurrentBoothStatus,
     updateGoodsOrderStatus,
     createBooth,
@@ -457,14 +572,18 @@ const useAdminStore = defineStore("admin", () => {
     createGoods,
     createGoodsCategory,
     createGoodsOrder,
+    createGoodsCombination,
     uploadBoothBannerImage,
     uploadBoothInfoImage,
     uploadGoodsImage,
+    uploadGoodsCombinationImage,
     deleteBoothBannerImage,
     deleteBoothInfoImage,
     deleteGoodsImage,
+    deleteGoodsCombinationImage,
     deleteGoods,
     deleteGoodsCategory,
+    deleteGoodsCombination,
     clearAllBoothData,
     fetchAllBoothData,
   };

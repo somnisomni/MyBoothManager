@@ -7,6 +7,7 @@ import { AuthModule } from "./auth/auth.module";
 import { AuthGuard } from "./auth/auth.guard";
 import { GoodsOrderModule } from "./goods-order/goods-order.module";
 import { GoodsCategoryModule } from "./goods-category/goods-category.module";
+import { GoodsCombinationModule } from "./goods-combination/goods-combination.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GoodsCategoryModule } from "./goods-category/goods-category.module";
     GoodsModule,
     GoodsCategoryModule,
     GoodsOrderModule,
+    GoodsCombinationModule,
   ],
   controllers: [],
   providers: [

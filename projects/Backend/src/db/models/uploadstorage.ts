@@ -6,6 +6,7 @@ import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table,
 import Account from "./account";
 import Booth from "./booth";
 import Goods from "./goods";
+import GoodsCombination from "./goods-combination";
 
 export type UploadStorageCreationAttributes = Omit<IUploadStorage, InternalKeysWithId>;
 
@@ -50,4 +51,7 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
 
   @HasOne(() => Goods, "goodsImageId")
   declare goodsImageParent?: Goods;
+
+  @HasOne(() => GoodsCombination, "combinationImageId")
+  declare goodsCombinationImageParent?: GoodsCombination;
 }

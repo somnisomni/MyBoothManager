@@ -1,3 +1,4 @@
+import type { Transaction } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 import generateConfig from "./config";
 import Account from "./models/account";
@@ -6,6 +7,7 @@ import Goods from "./models/goods";
 import GoodsCategory from "./models/goods-category";
 import GoodsOrder from "./models/goods-order";
 import UploadStorage from "./models/uploadstorage";
+import GoodsCombination from "./models/goods-combination";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
@@ -18,7 +20,7 @@ export default class MBMSequelize {
 
   private static async setupModels(): Promise<void> {
     /* == Model initialization == */
-    MBMSequelize.instance.addModels([Account, Booth, Goods, GoodsCategory, GoodsOrder, UploadStorage]);
+    MBMSequelize.instance.addModels([Account, Booth, Goods, GoodsCategory, GoodsOrder, GoodsCombination, UploadStorage]);
 
     /* == Sync model == */
     await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });
@@ -50,5 +52,18 @@ export default class MBMSequelize {
   static async close(): Promise<void> {
     await MBMSequelize.instance.close();
     MBMSequelize._instance = null;
+  }
+
+  static async createTransaction(afterCommit?: (transaction: Transaction) => void | Promise<void>): Promise<Transaction> {
+    console.info("Begin transaction");
+
+    const transaction = await MBMSequelize.instance.transaction();
+    transaction.afterCommit(async () => {
+      console.info("Transaction committed");
+
+      if(afterCommit) await afterCommit(transaction);
+    });
+
+    return transaction;
   }
 }

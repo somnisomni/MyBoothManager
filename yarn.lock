@@ -1304,16 +1304,19 @@ __metadata:
     "@myboothmanager/common-ui": ../../packages/CommonUI
     "@rushstack/eslint-patch": "npm:^1.6.0"
     "@tsconfig/node18": "npm:^18.2.2"
+    "@types/clone-deep": "npm:^4.0.4"
     "@types/node": "npm:^20.10.4"
     "@vitejs/plugin-vue": "npm:^4.5.2"
     "@vue/eslint-config-typescript": "npm:^12.0.0"
     "@vue/tsconfig": "npm:^0.4.0"
     chart.js: "npm:^4.4.1"
     chartjs-adapter-moment: "npm:^1.0.1"
+    clone-deep: "npm:^4.0.1"
     eslint: "npm:^8.55.0"
     eslint-import-resolver-typescript: "npm:^3.6.1"
     eslint-plugin-import: "npm:^2.29.0"
     eslint-plugin-vue: "npm:^9.19.2"
+    fast-deep-equal: "npm:^3.1.3"
     moment: "npm:^2.29.4"
     npm-run-all: "npm:^4.1.5"
     pinia: "npm:^2.1.7"
@@ -1380,27 +1383,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: a6ac746557d54d54ea98ddc0ecf9443db8707380eddc35990f23cb1418cad2e7e21bb34e9eb1826c94496bd94224c02cdf1895cb2fb8c94088b2b9e54eeee8b3
+  checksum: 9cb2b71bb1f45bc8003d445ddf6c083a8c4b3fc9cdd9144405adcb8f36a184bf001b15fe2806356d4b5b39d5a1ddfeeeea13efbc62050f50de1a33a3b1a543ae
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=2482db&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=214c4b&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: a6ac746557d54d54ea98ddc0ecf9443db8707380eddc35990f23cb1418cad2e7e21bb34e9eb1826c94496bd94224c02cdf1895cb2fb8c94088b2b9e54eeee8b3
+  checksum: 9cb2b71bb1f45bc8003d445ddf6c083a8c4b3fc9cdd9144405adcb8f36a184bf001b15fe2806356d4b5b39d5a1ddfeeeea13efbc62050f50de1a33a3b1a543ae
   languageName: node
   linkType: hard
 
@@ -1440,37 +1443,37 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a75c057e4e6fdcaf0d832ec82905128f619faf7e7f856e64da8be5d5a2a7526c4a53f2e9ef9be9c8a744f301930c82286c31110b2521aabe70ab8d8e20eb5591
+  checksum: 19f7eb3bc7a1118fa235008adaaf37648cf8bc0007b9efe3f1108e02782bea15f1051a844b2ecc50224c0e81c69a869c37cb97a88085cce224bf120349c89b86
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fbackend%40workspace%3Aprojects%2FBackend"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a75c057e4e6fdcaf0d832ec82905128f619faf7e7f856e64da8be5d5a2a7526c4a53f2e9ef9be9c8a744f301930c82286c31110b2521aabe70ab8d8e20eb5591
+  checksum: 19f7eb3bc7a1118fa235008adaaf37648cf8bc0007b9efe3f1108e02782bea15f1051a844b2ecc50224c0e81c69a869c37cb97a88085cce224bf120349c89b86
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=7d0a90&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d609e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a75c057e4e6fdcaf0d832ec82905128f619faf7e7f856e64da8be5d5a2a7526c4a53f2e9ef9be9c8a744f301930c82286c31110b2521aabe70ab8d8e20eb5591
+  checksum: 19f7eb3bc7a1118fa235008adaaf37648cf8bc0007b9efe3f1108e02782bea15f1051a844b2ecc50224c0e81c69a869c37cb97a88085cce224bf120349c89b86
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../Common::locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI":
   version: 0.0.0
-  resolution: "@myboothmanager/common@file:../Common#../Common::hash=7d0a90&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
+  resolution: "@myboothmanager/common@file:../Common#../Common::hash=d609e2&locator=%40myboothmanager%2Fcommon-ui%40workspace%3Apackages%2FCommonUI"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: a75c057e4e6fdcaf0d832ec82905128f619faf7e7f856e64da8be5d5a2a7526c4a53f2e9ef9be9c8a744f301930c82286c31110b2521aabe70ab8d8e20eb5591
+  checksum: 19f7eb3bc7a1118fa235008adaaf37648cf8bc0007b9efe3f1108e02782bea15f1051a844b2ecc50224c0e81c69a869c37cb97a88085cce224bf120349c89b86
   languageName: node
   linkType: hard
 
@@ -1966,6 +1969,13 @@ __metadata:
   version: 3.5.42
   resolution: "@types/bluebird@npm:3.5.42"
   checksum: 09ad60b083f916c7611936d3c70986df8f2eae11e46768ab7901d86bee5b1ca6b00cd9ef8cc0d3761256e2bc4ada3388e5529f71745a6b3d7602e868e3530310
+  languageName: node
+  linkType: hard
+
+"@types/clone-deep@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@types/clone-deep@npm:4.0.4"
+  checksum: 84cfd1ad9abe164aed3c8c4e9af0b3beab6f68f959cb77174cc00618ce3a752954b9025af0783e8f9923e736286dd5be4d2883ec712d6c86fbc2b66a7176433d
   languageName: node
   linkType: hard
 
@@ -3500,6 +3510,17 @@ __metadata:
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^7.0.0"
   checksum: eaa5561aeb3135c2cddf7a3b3f562fc4238ff3b3fc666869ef2adf264be0f372136702f16add9299087fb1907c2e4ec5dbfe83bd24bce815c70a80c6c1a2e950
+  languageName: node
+  linkType: hard
+
+"clone-deep@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "clone-deep@npm:4.0.1"
+  dependencies:
+    is-plain-object: "npm:^2.0.4"
+    kind-of: "npm:^6.0.2"
+    shallow-clone: "npm:^3.0.0"
+  checksum: 770f912fe4e6f21873c8e8fbb1e99134db3b93da32df271d00589ea4a29dbe83a9808a322c93f3bcaf8584b8b4fa6fc269fc8032efbaa6728e0c9886c74467d2
   languageName: node
   linkType: hard
 
@@ -5774,6 +5795,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-plain-object@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "is-plain-object@npm:2.0.4"
+  dependencies:
+    isobject: "npm:^3.0.1"
+  checksum: 2a401140cfd86cabe25214956ae2cfee6fbd8186809555cd0e84574f88de7b17abacb2e477a6a658fa54c6083ecbda1e6ae404c7720244cd198903848fca70ca
+  languageName: node
+  linkType: hard
+
 "is-property@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-property@npm:1.0.2"
@@ -5875,6 +5905,13 @@ __metadata:
   version: 3.1.1
   resolution: "isexe@npm:3.1.1"
   checksum: 7fe1931ee4e88eb5aa524cd3ceb8c882537bc3a81b02e438b240e47012eef49c86904d0f0e593ea7c3a9996d18d0f1f3be8d3eaa92333977b0c3a9d353d5563e
+  languageName: node
+  linkType: hard
+
+"isobject@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "isobject@npm:3.0.1"
+  checksum: db85c4c970ce30693676487cca0e61da2ca34e8d4967c2e1309143ff910c207133a969f9e4ddb2dc6aba670aabce4e0e307146c310350b298e74a31f7d464703
   languageName: node
   linkType: hard
 
@@ -6625,6 +6662,13 @@ __metadata:
   dependencies:
     json-buffer: "npm:3.0.1"
   checksum: 167eb6ef64cc84b6fa0780ee50c9de456b422a1e18802209234f7c2cf7eae648c7741f32e50d7e24ccb22b24c13154070b01563d642755b156c357431a191e75
+  languageName: node
+  linkType: hard
+
+"kind-of@npm:^6.0.2":
+  version: 6.0.3
+  resolution: "kind-of@npm:6.0.3"
+  checksum: 5873d303fb36aad875b7538798867da2ae5c9e328d67194b0162a3659a627d22f742fc9c4ae95cd1704132a24b00cae5041fc00c0f6ef937dc17080dc4dbb962
   languageName: node
   linkType: hard
 
@@ -8718,6 +8762,15 @@ __metadata:
   version: 1.2.0
   resolution: "setprototypeof@npm:1.2.0"
   checksum: fde1630422502fbbc19e6844346778f99d449986b2f9cdcceb8326730d2f3d9964dbcb03c02aaadaefffecd0f2c063315ebea8b3ad895914bf1afc1747fc172e
+  languageName: node
+  linkType: hard
+
+"shallow-clone@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "shallow-clone@npm:3.0.1"
+  dependencies:
+    kind-of: "npm:^6.0.2"
+  checksum: e066bd540cfec5e1b0f78134853e0d892d1c8945fb9a926a579946052e7cb0c70ca4fc34f875a8083aa7910d751805d36ae64af250a6de6f3d28f9fa7be6c21b
   languageName: node
   linkType: hard
 

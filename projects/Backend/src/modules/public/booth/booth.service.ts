@@ -5,15 +5,18 @@ import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@m
 import { WhereOptions , Op } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
+import GoodsCombination from "@/db/models/goods-combination";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
+import { PublicGoodsCombinationService } from "../goods-combination/goods-combination.service";
 import { BoothNotPublishedException } from "./booth.exception";
 
 @Injectable()
 export class PublicBoothService {
   constructor(
     private publicGoodsService: PublicGoodsService,
-    private publicGoodsCategoryService: PublicGoodsCategoryService) { }
+    private publicGoodsCategoryService: PublicGoodsCategoryService,
+    private publicGoodsCombinationService: PublicGoodsCombinationService) { }
 
   private readonly PUBLIC_WHERE_OPTIONS: WhereOptions<IBooth> = {
     [Op.not]: {
@@ -71,5 +74,13 @@ export class PublicBoothService {
 
   async countAllGoodsCategoryOfBooth(boothId: number): Promise<IValueResponse> {
     return await this.publicGoodsCategoryService.countAll(boothId);
+  }
+
+  async findAllGoodsCombinationOfBooth(boothId: number): Promise<Array<GoodsCombination>> {
+    return await this.publicGoodsCombinationService.findAll(boothId);
+  }
+
+  async countAllGoodsCombinationOfBooth(boothId: number): Promise<IValueResponse> {
+    return await this.publicGoodsCombinationService.countAll(boothId);
   }
 }
