@@ -14,14 +14,14 @@
       <VTextField v-model.number="orderDataCopied.quantity"
                   type="number"
                   min="1"
-                  :max="targetItem.stockRemaining"
+                  :max="targetItemMaxQuantity"
                   label="판매 수량"
                   placeholder="기본값 사용"
                   suffix="개"
                   variant="outlined"
                   :hide-details="formValid"
                   class="mx-2 text-right"
-                  :rules="[(val: number) => (val > 0 && val <= targetItem.stockRemaining) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"
+                  :rules="[(val: number) => (val > 0 && val <= targetItemMaxQuantity) ? true : '판매 수량은 1개 이상이고 남은 재고 수량보다 적어야 합니다.']"
                   @change="orderDataCopied.quantity = Math.floor(new Number(orderDataCopied.quantity).valueOf())" />
       <VChipGroup v-model.number="orderDataCopied.quantity"
                   class="d-flex flex-row justify-start"
@@ -58,9 +58,10 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsOrderInternal } from "@/lib/interfaces";
 import { currencySymbolInfo } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import deepClone from "clone-deep";
+import { POSOrderSimulationLayer, type IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
 import { useAdminStore } from "@/stores/admin";
 
 @Component({
@@ -69,15 +70,15 @@ import { useAdminStore } from "@/stores/admin";
 export default class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrderInternal;
+  @Prop({ type: POSOrderSimulationLayer, required: true }) currentOrderSimulationLayer!: POSOrderSimulationLayer;
   @Prop({ type: Boolean, default: undefined }) isCombination?: true;
 
   formValid: boolean = false;
-  orderDataCopied: IGoodsOrderInternal = { ...this.orderData };
+  orderDataCopied: IGoodsOrderInternal = deepClone(this.orderData);
 
-  mounted(): void {
-    this.orderDataCopied = { ...this.orderData };
+  @Watch("open") mounted() {
+    this.orderDataCopied = deepClone(this.orderData);
   }
-  @Watch("open", { immediate: true }) onDialogOpen() { this.orderDataCopied = { ...this.orderData }; }
 
   get targetTypeString(): string {
     return this.isCombination ? "세트" : "굿즈";
@@ -87,6 +88,10 @@ export default class POSGoodsAdvancedDialog extends Vue {
     return this.isCombination
       ? useAdminStore().boothGoodsCombinationList[this.orderData.id]
       : useAdminStore().boothGoodsList[this.orderData.id];
+  }
+
+  get targetItemMaxQuantity(): number {
+    return this.currentOrderSimulationLayer.getMaxAvailableQuantity(this.isCombination ? "combination" : "goods", this.orderData.id);
   }
 
   get currencySymbol(): string {
@@ -104,7 +109,7 @@ export default class POSGoodsAdvancedDialog extends Vue {
     }
   }
 
-  @Watch("orderDataCopied.price", { immediate: true })
+  @Watch("orderDataCopied.price")
   onOrderDataPriceChange(value: number | string) {
     if(value === "") {
       this.orderDataCopied.price = undefined;

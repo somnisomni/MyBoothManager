@@ -5,12 +5,14 @@
                  density="compact" />
     </VList>
 
-    <POSOrderDrawer :orderList="orderList"
+    <POSOrderDrawer v-if="orderSimulationLayer && orderSimulationLayer.orderList"
+                    :orderSimulationLayer="orderSimulationLayer"
                     :sm="!mdAndUp"
                     @smDrawerHeightChanged="onSMDrawerHeightChanged"
                     @goodsOrderQuantityUpdateRequest="updateOrderListQuantity"
                     @orderCreationSuccess="onOrderCreationSuccess"
-                    @orderCreationFailed="onOrderCreationFailed" />
+                    @orderCreationFailed="onOrderCreationFailed"
+                    @orderListResetRequest="resetSimulationLayer" />
 
     <VLayout class="pos-item-area d-flex flex-column flex-wrap mt-8 mt-md-0"
              :class="{ 'sm': !mdAndUp }"
@@ -45,14 +47,14 @@
 import type { RouteLocationRaw } from "vue-router";
 import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Vue } from "vue-facing-decorator";
-import { reactive, unref } from "vue";
+import { unref } from "vue";
 import { useDisplay } from "vuetify";
-import { POSOrderList } from "@/lib/interfaces";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
 import { getUploadFilePath } from "@/lib/functions";
+import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
 
 @Component({
   components: {
@@ -63,7 +65,8 @@ import { getUploadFilePath } from "@/lib/functions";
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFilePath = getUploadFilePath;
-  readonly orderList = reactive(new POSOrderList());
+
+  orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
   smDrawerHeight: number = 0;
   showStockNotEnoughSnackbar: boolean = false;
@@ -84,7 +87,10 @@ export default class BoothPOSPage extends Vue {
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
+      return;
     }
+
+    this.resetSimulationLayer();
   }
 
   @Hook()
@@ -95,6 +101,14 @@ export default class BoothPOSPage extends Vue {
       this.pageLeaveTarget = to;
     } else {
       next();
+    }
+  }
+
+  resetSimulationLayer(): void {
+    if(this.orderSimulationLayer) {
+      this.orderSimulationLayer.reset(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
+    } else {
+      this.orderSimulationLayer = new POSOrderSimulationLayer(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
     }
   }
 
@@ -124,10 +138,9 @@ export default class BoothPOSPage extends Vue {
 
   updateOrderListQuantity(eventData: { id: number, delta: number, isCombination?: true }) {
     const { id, delta, isCombination } = eventData;
-    const targetOriginal = isCombination ? this.boothGoodsCombinationDict[id] : this.boothGoodsDict[id];
 
     try {
-      this.orderList.updateQuantity(isCombination ? "combination" : "goods", id, delta, targetOriginal.stockRemaining);
+      this.orderSimulationLayer?.handleQuantityUpdate(isCombination ? "combination" : "goods", id, delta);
     } catch(e) {
       if(e === "UpperLimitExceeded") {
         this.showStockNotEnoughSnackbar = true;

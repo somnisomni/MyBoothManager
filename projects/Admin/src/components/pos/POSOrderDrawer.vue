@@ -33,7 +33,7 @@
         <!-- Combinations first -->
         <VList class="bg-transparent overflow-visible pb-1">
           <VSlideXReverseTransition group leave-absolute>
-            <VListItem v-for="item in orderList.values('combination')"
+            <VListItem v-for="item in orderSimulationLayer.orderList.values('combination')"
                        :key="item.id"
                        class="pa-0"
                        :height="sm && !smDrawerExpanded ? '48px' : '72px'">
@@ -49,7 +49,7 @@
         <!-- Goods after -->
         <VList class="bg-transparent overflow-visible pt-1">
           <VSlideXReverseTransition group leave-absolute>
-            <VListItem v-for="item in orderList.values('goods')"
+            <VListItem v-for="item in orderSimulationLayer.orderList.values('goods')"
                       :key="item.id"
                       class="pa-0"
                       :height="sm && !smDrawerExpanded ? '48px' : '72px'">
@@ -85,21 +85,22 @@
   </div>
 
   <POSGoodsAdvancedDialog v-model="showOrderAdvancedDialog"
+                          :currentOrderSimulationLayer="orderSimulationLayer"
                           :orderData="orderAdvancedDialogOrderData"
                           :isCombination="orderAdvancedDialogOrderIsCombination"
                           @deleteRequest="onOrderItemAdvancedDeleteRequest"
                           @confirm="onOrderItemAdvancedConfirm" />
   <POSListResetConfirmDialog v-model="showListResetConfirmDialog"
-                             @confirm="resetOrderList" />
+                             @confirm="onOrderResetRequest" />
   <POSOrderConfirmDialog v-model="showOrderConfirmDialog"
-                         :orders="orderList"
+                         :orders="orderSimulationLayer.orderList"
                          @confirm="onOrderConfirm" />
 </template>
 
 <script lang="ts">
 import { APP_NAME, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest, type IGoodsOrderDetailItemBase } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
-import { POSOrderList, type IGoodsOrderInternal } from "@/lib/interfaces";
+import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/BoothPOSPage.lib";
 import { useAdminStore } from "@/stores/admin";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 import POSListResetConfirmDialog from "../dialogs/POSListResetConfirmDialog.vue";
@@ -120,10 +121,11 @@ import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
     "orderCreationSuccess",
     "orderCreationFailed",
     "orderCreationDone",
+    "orderListResetRequest",
   ],
 })
 export default class POSOrderDrawer extends Vue {
-  @Prop({ type: POSOrderList, required: true }) orderList!: POSOrderList;
+  @Prop({ type: POSOrderSimulationLayer, required: true }) orderSimulationLayer!: POSOrderSimulationLayer;
   @Prop({ type: Boolean, default: false }) sm!: boolean;
   @Prop({ type: Number }) smDrawerHeight!: number;
 
@@ -142,10 +144,10 @@ export default class POSOrderDrawer extends Vue {
   get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
   get boothName(): string { return this.currentBooth.name; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get isOrderListEmpty(): boolean { return this.orderList.length() <= 0; }
+  get isOrderListEmpty(): boolean { return this.orderSimulationLayer.orderList.length() <= 0; }
 
   get totalOrderWorth(): number {
-    return this.orderList.values().reduce(
+    return this.orderSimulationLayer.orderList.values().reduce(
       (acc, order) => (acc + ((order.price ?? this.getTargetOriginalInfo(order.id, order.what === "combination").price) * order.quantity)), 0);
   }
   get totalOrderWorthString(): string { return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`; }
@@ -163,10 +165,10 @@ export default class POSOrderDrawer extends Vue {
   }
 
   onOrderItemAdvancedConfirm(eventData: { id: number, isCombination?: true, newOrderData: IGoodsOrderInternal }) {
-    const targetOrder = this.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id);
+    const targetOrder = this.orderSimulationLayer.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id);
     Object.assign(targetOrder, {
       ...eventData.newOrderData,
-      quantity: this.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id).quantity,
+      quantity: this.orderSimulationLayer.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id).quantity,
     });
 
     this.onGoodsOrderQuantityUpdateRequest({
@@ -177,12 +179,11 @@ export default class POSOrderDrawer extends Vue {
   }
 
   onOrderItemAdvancedDeleteRequest(eventData: { id: number, isCombination?: true }) {
-    this.orderList.delete(eventData.isCombination ? "combination" : "goods", eventData.id);
+    this.orderSimulationLayer.deleteSingleTarget(eventData.isCombination ? "combination" : "goods", eventData.id);
   }
 
-  resetOrderList(): void {
-    this.orderList.clear();
-  }
+  @Emit("orderListResetRequest")
+  onOrderResetRequest(): void { }
 
   getTargetOriginalInfo(id: number, isCombination: boolean): IGoods | IGoodsCombination {
     return isCombination
@@ -200,7 +201,7 @@ export default class POSOrderDrawer extends Vue {
       order: [],
     };
 
-    for(const [, order] of this.orderList.entries()) {
+    for(const [, order] of this.orderSimulationLayer.orderList.entries()) {
       const id: Pick<IGoodsOrderDetailItemBase, "cId"> | Pick<IGoodsOrderDetailItemBase, "gId">
         = order.what === "combination" ? { cId: order.id } : { gId: order.id };
 
@@ -218,9 +219,10 @@ export default class POSOrderDrawer extends Vue {
       await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true),
     ];
     if(results.every((res) => typeof res !== "string")) {
-      // If API call success, empty the order list
-      this.resetOrderList();
       this.$emit("orderCreationSuccess");
+
+      // If API call success, request reset the order list
+      this.$emit("orderListResetRequest");
     } else {
       this.$emit("orderCreationFailed");
     }
