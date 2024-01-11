@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsOrderInternal } from "@/lib/interfaces";
+import type { IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";

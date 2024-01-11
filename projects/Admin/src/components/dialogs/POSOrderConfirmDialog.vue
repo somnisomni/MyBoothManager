@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
-import type { POSOrderList } from "@/lib/interfaces";
+import type { POSOrderList } from "@/pages/subpages/BoothPOSPage.lib";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 

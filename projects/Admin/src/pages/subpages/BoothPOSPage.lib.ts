@@ -148,4 +148,4 @@ export class POSOrderSimulationLayer {
   }
 }
 
-export type { IGoodsOrderInternal };
+export type { POSOrderList, IGoodsOrderInternal };
