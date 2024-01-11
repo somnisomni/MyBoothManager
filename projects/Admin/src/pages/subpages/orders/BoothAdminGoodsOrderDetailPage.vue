@@ -24,7 +24,7 @@
         <div>판매 굿즈 목록</div>
 
         <li v-for="order in orderData.order" :key="(order.gId || order.cId)">
-          <span>{{ order.name }}</span> /
+          <span><VIcon v-if="order.cId" size="small">mdi-set-all</VIcon> {{ order.name }}</span> /
           <span>{{ currencySymbol }}{{ order.price?.toLocaleString() }}</span> /
           <span>{{ order.quantity.toLocaleString() }}개</span>
 

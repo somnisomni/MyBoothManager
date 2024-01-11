@@ -18,8 +18,12 @@
                class="mr-2" />
         <span v-if="orderData.createdAt"><strong>{{ createdTimeHourMinuteString }}<small>{{ createdTimeSecondsString }}</small></strong> <small class="d-inline-block ml-2">{{ createdDateString }}</small></span>
       </div>
-      <div class="text-sm-h6">판매 금액: <strong>{{ totalPriceFormatted }}</strong></div>
-      <div class="text-body-2 text-sm-body-1">굿즈 <strong>{{ totalItemCount.toLocaleString() }}종</strong> / 재고 <strong>{{ totalStockQuantity.toLocaleString() }}개</strong> 판매</div>
+      <div class="d-flex flex-row align-center text-sm-h6" :class="[`text-${statusIcon.textColor}`]"><VIcon class="mr-1">mdi-cash</VIcon> <strong>{{ totalPriceFormatted }}</strong></div>
+      <div class="text-subtitle-2 text-sm-body-1">
+        <span v-if="totalCombinationItemCount > 0">세트 <strong>{{ totalCombinationItemCount.toLocaleString() }}종</strong> / </span>
+        <span>굿즈 <strong>{{ totalGoodsItemCount.toLocaleString() }}종</strong> / </span>
+        <span>총 재고 <strong>{{ totalStockQuantity.toLocaleString() }}개</strong> 판매</span>
+      </div>
     </div>
 
     <div class="px-2">
@@ -43,24 +47,27 @@ export default class GoodsOrderListItem extends Vue {
 
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
 
-  get statusIcon(): { icon: string; color: string; class: string } {
+  get statusIcon(): { icon: string; color: string; textColor: string, class: string } {
     switch(this.orderData.status) {
       case GoodsOrderStatus.RECORDED:
         return {
           icon: "mdi-check",
           color: "green",
+          textColor: "green-darken-2",
           class: "",
         };
       case GoodsOrderStatus.CANCELED:
         return {
           icon: "mdi-undo-variant",
           color: "pink-lighten-2",
+          textColor: "pink",
           class: "small",
         };
       default:
         return {
           icon: "mdi-help",
           color: "grey-lighten-2",
+          textColor: "grey",
           class: "small",
         };
     }
@@ -95,11 +102,22 @@ export default class GoodsOrderListItem extends Vue {
   }
 
   get totalStockQuantity(): number {
-    return this.orderData.order.reduce((acc, cur) => acc + cur.quantity, 0);
+    return this.orderData.order.reduce((acc, cur) => {
+      let quantity = cur.quantity;
+      if(cur.cId && cur.combinedGoods) {
+        quantity = cur.combinedGoods?.length * cur.quantity;
+      }
+
+      return acc + quantity;
+    }, 0);
   }
 
-  get totalItemCount(): number {
-    return this.orderData.order.length;
+  get totalGoodsItemCount(): number {
+    return this.orderData.order.filter((order) => order.gId).length;
+  }
+
+  get totalCombinationItemCount(): number {
+    return this.orderData.order.filter((order) => order.cId).length;
   }
 
   @Emit("click")
