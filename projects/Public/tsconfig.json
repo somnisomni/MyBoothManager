@@ -9,9 +9,10 @@
     }
   ],
   "compilerOptions": {
-    "experimentalDecorators": true,
+    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "experimentalDecorators": true
   }
 }
