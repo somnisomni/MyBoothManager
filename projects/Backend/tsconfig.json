@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "include": ["env.d.ts", "./src/**/*.ts", "./scripts/**/*.ts"],
   "exclude": ["./dist"],
   "compilerOptions": {

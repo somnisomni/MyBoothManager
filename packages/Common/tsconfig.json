@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "include": ["./src", "src/index.ts"],
   "exclude": ["./dist", "node_modules"],
   "compilerOptions": {
