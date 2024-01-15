@@ -1,9 +1,10 @@
 <template>
   <CommonWarningDialog v-model="open"
                        dialogTitle="경고"
-                       cancelText="돌아가기"
+                       cancelText="취소"
+                       primaryText="닫기"
                        headlineText="아직 반영되지 않은 변경된 정보가 있습니다.">
-    <p>변경한 내용을 취소하고 창을 닫으시겠습니까?</p>
+    <p>변경한 내용을 적용하지 않고 창을 닫으시겠습니까?</p>
   </CommonWarningDialog>
 </template>
 
