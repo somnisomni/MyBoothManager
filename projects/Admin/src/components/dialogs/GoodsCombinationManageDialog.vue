@@ -104,13 +104,6 @@ export default class GoodsCombinationManageDialog extends Vue {
 
   @Ref("form") readonly form!: CommonForm;
 
-  readonly dynString = {
-    title: this.editMode ? "세트 구성 수정" : "세트 구성 추가",
-    primaryText: this.editMode ? "수정" : "추가",
-    secondaryText: this.editMode ? "되돌리기" : "초기화",
-    leftButtonText: this.editMode ? "삭제" : undefined,
-  };
-
   readonly formModels: IGoodsCombinationManageFormField = reactive({
     name: "",
     description: "",
@@ -181,6 +174,15 @@ export default class GoodsCombinationManageDialog extends Vue {
   _isFormValid = false;
   isFormEdited = false;
   updateInProgress = false;
+
+  get dynString() {
+    return {
+      title: this.editMode ? "세트 구성 수정" : "세트 구성 추가",
+      primaryText: this.editMode ? "수정" : "추가",
+      secondaryText: this.editMode ? "되돌리기" : "초기화",
+      leftButtonText: this.editMode ? "삭제" : undefined,
+    };
+  }
 
   get isFormValid() { return this._isFormValid && this.formModels.goodsIds.length >= 2; }
   set isFormValid(value: boolean) { this._isFormValid = value; }
