@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VSheet v-for="booth in boothList"
+    <VSheet v-for="booth in boothListNormalized"
          :key="booth.id"
          v-ripple
          class="booth-item py-2 px-4"
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import type { IBooth } from "@myboothmanager/common";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
@@ -19,6 +19,11 @@ import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 })
 export default class BoothListView extends Vue {
   @Prop({ type: Object, required: true }) boothList!: Array<IBooth>;
+
+  get boothListNormalized() {
+    // Don't list closed booths in the booth list view
+    return this.boothList.filter((booth) => booth.status !== BoothStatus.CLOSE);
+  }
 
   @Emit("boothItemClick")
   onBoothItemClick(boothId: number) {
