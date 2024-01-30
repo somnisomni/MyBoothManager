@@ -87,8 +87,8 @@ export async function removeOne<T extends Model<any, any>>(model: { new (): T },
 
 /* === Common util functions === */
 export type UploadFileNameFormat = `${string}-${string}_${string}.${string}.${string}`;
-export function generateUploadFileName(usage: string, accountId: number, usageId: number, modifier: string, fileExtension: string): { formatted: UploadFileNameFormat, fileName: string } {
-  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${+usageId}.${modifier}.${new Date().getTime()}`;
+export function generateUploadFileName(usage: string, accountId: number, usageId: number | string, modifier: string, fileExtension: string): { formatted: UploadFileNameFormat, fileName: string } {
+  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${usageId}.${modifier}.${new Date().getTime()}`;
   const fileName: string = `${createHash("sha1").update(formatted).digest("base64url")}.${fileExtension}`;
 
   return { formatted, fileName };

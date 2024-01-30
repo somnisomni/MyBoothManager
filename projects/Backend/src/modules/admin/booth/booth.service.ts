@@ -217,6 +217,89 @@ export class BoothService {
     }
   }
 
+  async getMemberImageUrl(boothId: number, memberUuid: string, callerAccountId: number): Promise<IValueResponse> {
+    const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+    const member = booth.members.find(member => member.uuid === memberUuid);
+    if(!member) throw new EntityNotFoundException();
+
+    if(member.memberImageId) {
+      const upload = await UploadStorage.findByPk(member.memberImageId);
+      if(upload) return { value: upload.filePath };
+    }
+
+    throw new EntityNotFoundException();
+  }
+
+  async uploadMemberImage(boothId: number, memberUuid: string, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+    const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+    const member = booth.members.find(member => member.uuid === memberUuid);
+    if(!member) throw new EntityNotFoundException();
+
+    const uploadSubpath = "booth/member";
+
+    let fileName: string;
+    try {
+      fileName = generateUploadFileName("boothmember", callerAccountId, memberUuid, "test", file.filename.split(".").pop()!).fileName;
+      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    try {
+      if(member.memberImageId) {
+        const existingUpload = await UploadStorage.findByPk(member.memberImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      const upload = await create(UploadStorage, {
+        ownerId: callerAccountId,
+        savePath: uploadSubpath,
+        fileName,
+      } as Omit<IUploadStorage, "id">);
+      await upload.save();
+
+      booth.members[booth.members.findIndex(member => member.uuid === memberUuid)].memberImageId = upload.id;
+      booth.changed("members", true);
+      await booth.save({ fields: ["members"] });
+
+      return {
+        value: upload.filePath,
+      };
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
+  async deleteMemberImage(boothId: number, memberUuid: string, callerAccountId: number): Promise<ISuccessResponse> {
+    const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+    const member = booth.members.find(member => member.uuid === memberUuid);
+    if(!member) throw new EntityNotFoundException();
+
+    try {
+      if(member.memberImageId) {
+        const existingUpload = await UploadStorage.findByPk(member.memberImageId);
+        if(existingUpload) {
+          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
+          await existingUpload.destroy({ force: true });
+        }
+      }
+
+      delete booth.members[booth.members.findIndex(member => member.uuid === memberUuid)].memberImageId;
+      booth.changed("members", true);
+      await booth.save({ fields: ["members"] });
+
+      return SUCCESS_RESPONSE;
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
   async updateBoothInfo(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {
     let booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 

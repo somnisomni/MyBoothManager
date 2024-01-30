@@ -14,6 +14,8 @@ export interface IBoothMember extends IDataModelBase {
   role: string;
   primaryColor: string;
   url?: string;
+  memberImageId?: number;  // for backend
+  memberImageUrl?: string; // for frontend
 }
 export type IBoothMemberAddRequest = Omit<IBoothMember, "uuid">;
 export type IBoothMemberUpdateRequest = Omit<Partial<IBoothMember>, "uuid">;

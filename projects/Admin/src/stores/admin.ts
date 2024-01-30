@@ -250,6 +250,24 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function uploadBoothMemberImage(memberUuid: string, payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadBoothMemberImage(currentBoothId.value, memberUuid, payload));
+
+    if(response && response instanceof Object) {
+      if(typeof response.value === "string") {
+        const member = boothList[currentBoothId.value].members.find((member) => member.uuid === memberUuid);
+        if(!member) return false;
+
+        member.memberImageUrl = response.value;
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return response;
+    }
+  }
+
   async function uploadGoodsImage(goodsId: number, payload: File | Blob): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.uploadGoodsImage(goodsId, currentBoothId.value, payload));
 
@@ -449,6 +467,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteBoothMemberImage(memberUuid: string): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothMemberImage(currentBoothId.value, memberUuid));
+
+    if(response && response instanceof Object) {
+      const member = boothList[currentBoothId.value].members.find((member) => member.uuid === memberUuid);
+      if(!member) return false;
+
+      delete member.memberImageUrl;
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoodsImage(goodsId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoodsImage(goodsId, currentBoothId.value));
 
@@ -589,11 +621,13 @@ const useAdminStore = defineStore("admin", () => {
     createGoodsCombination,
     uploadBoothBannerImage,
     uploadBoothInfoImage,
+    uploadBoothMemberImage,
     uploadGoodsImage,
     uploadGoodsCombinationImage,
     deleteBoothBannerImage,
     deleteBoothInfoImage,
     deleteBoothMember,
+    deleteBoothMemberImage,
     deleteGoodsImage,
     deleteGoodsCombinationImage,
     deleteGoods,

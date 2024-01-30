@@ -63,6 +63,21 @@ export class BoothController {
     return await this.boothService.removeMember(+boothId, memberUuid, authData.id);
   }
 
+  @Get(":id/member/:memberUuid/image")
+  async getMemberImageUrl(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.getMemberImageUrl(+boothId, memberUuid, authData.id);
+  }
+
+  @Post(":id/member/:memberUuid/image")
+  async uploadMemberImage(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.uploadMemberImage(+boothId, memberUuid, await this.utilService.getFileFromRequest(req), authData.id);
+  }
+
+  @Delete(":id/member/:memberUuid/image")
+  async removeMemberImage(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.deleteMemberImage(+boothId, memberUuid, authData.id);
+  }
+
   @Patch(":id")
   async updateBoothInfo(@Param("id") id: string, @Body() updateBoothDto: UpdateBoothDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.updateBoothInfo(+id, updateBoothDto, authData.id);

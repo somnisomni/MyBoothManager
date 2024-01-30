@@ -130,6 +130,12 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
   }
 
+  static async uploadBoothMemberImage(boothId: number, memberUuid: string, image: Blob) {
+    const formData = new FormData();
+    formData.set("0", image);
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberUuid}/image`, formData));
+  }
+
   static async uploadGoodsImage(goodsId: number, boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
@@ -153,6 +159,10 @@ export default class AdminAPI {
 
   static async deleteBoothMember(boothId: number, memberUuid: string) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberUuid}`));
+  }
+
+  static async deleteBoothMemberImage(boothId: number, memberUuid: string) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberUuid}/image`));
   }
 
   static async deleteGoods(goodsId: number, boothId: number) {

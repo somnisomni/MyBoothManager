@@ -16,13 +16,27 @@
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
-    <CommonForm v-model="isFormValid"
-                v-model:edited="isFormEdited"
-                v-model:data="formModels"
-                ref="form"
-                class="flex-1-1"
-                :initialModelValues="formModelsInitial"
-                :fields="formFields" />
+    <VLayout class="d-flex flex-column flex-md-row">
+      <ImageWithUpload v-if="editMode"
+                       class="flex-0-1 mr-4 align-self-center"
+                       :existingSrc="memberImageUrl"
+                       contextName="멤버"
+                       width="200px"
+                       height="200px"
+                       aspectRatio="1/1"
+                       hideSubtitle
+                       controlsColumn
+                       :uploadCallback="memberImageUploadCallback"
+                       :deleteCallback="memberImageDeleteCallback" />
+
+      <CommonForm v-model="isFormValid"
+                  v-model:edited="isFormEdited"
+                  v-model:data="formModels"
+                  ref="form"
+                  class="flex-1-1"
+                  :initialModelValues="formModelsInitial"
+                  :fields="formFields" />
+    </VLayout>
   </CommonDialog>
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -38,6 +52,7 @@ import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { type IBoothMember, type IBoothMemberAddRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
@@ -46,6 +61,7 @@ export type IBoothMemberManageFormField
 
 @Component({
   components: {
+    ImageWithUpload,
     CommonForm,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
@@ -117,6 +133,15 @@ export default class BoothMemberManageDialog extends Vue {
     };
   }
 
+  get currentMember(): IBoothMember | undefined {
+    return useAdminStore().boothList[useAdminStore().currentBoothId].members.find(
+      (member) => member.uuid === this.boothMemberUuid,
+    );
+  }
+  get memberImageUrl(): string | null {
+    return this.editMode && this.currentMember ? this.currentMember.memberImageUrl ?? null : null;
+  }
+
   @Watch("open") mounted() {
     if(this.editMode && this.boothMemberUuid) {
       const member = useAdminStore().boothList[useAdminStore().currentBoothId].members.find(
@@ -159,7 +184,6 @@ export default class BoothMemberManageDialog extends Vue {
     this.updateInProgress = true;
 
     const requestData: IBoothMemberAddRequest = {
-      boothId: useAdminStore().currentBoothId,
       name: this.formModels.name,
       descriptionShort: this.formModels.descriptionShort,
       url: this.formModels.url,
@@ -195,6 +219,14 @@ export default class BoothMemberManageDialog extends Vue {
     }
 
     this.updateInProgress = false;
+  }
+
+  async memberImageUploadCallback(file: File | Blob | null) {
+    return await useAdminStore().uploadBoothMemberImage(this.boothMemberUuid!, file!);
+  }
+
+  async memberImageDeleteCallback() {
+    return await useAdminStore().deleteBoothMemberImage(this.boothMemberUuid!);
   }
 }
 </script>
