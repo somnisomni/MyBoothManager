@@ -97,8 +97,8 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.POST("booth", payload));
   }
 
-  static async addBoothMember(payload: CT.IBoothMemberAddRequest) {
-    return await this.apiCallWrapper<CT.IBoothMemberManipulationResponse>(() => this.API.PUT(`booth/${payload.boothId}/member`, payload));
+  static async addBoothMember(boothId: number, payload: CT.IBoothMemberAddRequest) {
+    return await this.apiCallWrapper<CT.IBoothMemberManipulationResponse>(() => this.API.PUT(`booth/${boothId}/member`, payload));
   }
 
   static async createGoods(payload: CT.IGoodsCreateRequest) {
@@ -149,6 +149,10 @@ export default class AdminAPI {
 
   static async deleteBoothInfoImage(boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/infoimage`));
+  }
+
+  static async deleteBoothMember(boothId: number, memberUuid: string) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberUuid}`));
   }
 
   static async deleteGoods(goodsId: number, boothId: number) {

@@ -9,9 +9,9 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @cancel="onDialogCancel"
                 @primary="onDialogConfirm"
                 @secondary="resetForm"
+                @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
@@ -96,6 +96,7 @@ export type IGoodsCombinationManageFormField
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
+  emits: [ "updated", "deleted", "error" ],
 })
 export default class GoodsCombinationManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -271,6 +272,7 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.$emit("updated");
         this.open = false;
       } else {
+        this.$emit("error");
         alert("오류 " + result);
       }
     } else {
@@ -288,6 +290,7 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.$emit("updated");
         this.open = false;
       } else {
+        this.$emit("error");
         alert("오류 " + result);
       }
     }
@@ -305,6 +308,7 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.$emit("deleted");
         this.open = false;
       } else {
+        this.$emit("error");
         alert("오류 " + response);
       }
     }

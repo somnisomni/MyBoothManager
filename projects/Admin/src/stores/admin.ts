@@ -208,12 +208,12 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function addBoothMember(payload: IBoothMemberAddRequest): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.addBoothMember(payload));
+    const response = await apiWrapper(() => AdminAPI.addBoothMember(currentBoothId.value, payload));
 
     if(response && response instanceof Object) {
-      if(!boothList[response.boothId].members) boothList[response.boothId].members = [];
+      if(!boothList[currentBoothId.value].members) boothList[currentBoothId.value].members = [];
 
-      boothList[response.boothId].members.splice(0, boothList[response.boothId].members.length, ...response.members);
+      boothList[currentBoothId.value].members.splice(0, boothList[currentBoothId.value].members.length, ...response.members);
       return true;
     } else {
       return response;
@@ -435,6 +435,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function deleteBoothMember(memberUuid: string): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothMember(currentBoothId.value, memberUuid));
+
+    if(response && response instanceof Object) {
+      boothList[currentBoothId.value].members.splice(
+        boothList[currentBoothId.value].members.findIndex((member) => member.uuid === memberUuid),
+        1,
+      );
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function deleteGoodsImage(goodsId: number): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.deleteGoodsImage(goodsId, currentBoothId.value));
 
@@ -579,6 +593,7 @@ const useAdminStore = defineStore("admin", () => {
     uploadGoodsCombinationImage,
     deleteBoothBannerImage,
     deleteBoothInfoImage,
+    deleteBoothMember,
     deleteGoodsImage,
     deleteGoodsCombinationImage,
     deleteGoods,

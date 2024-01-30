@@ -54,8 +54,13 @@ export class BoothController {
   }
 
   @Put(":id/member")
-  async addMember(@Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.addMember(addBoothMemberDto, authData.id);
+  async addMember(@Param("id") boothId: string, @Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.addMember(+boothId, addBoothMemberDto, authData.id);
+  }
+
+  @Delete(":id/member/:memberUuid")
+  async removeMember(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.removeMember(+boothId, memberUuid, authData.id);
   }
 
   @Patch(":id")

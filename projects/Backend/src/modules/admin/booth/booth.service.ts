@@ -175,8 +175,8 @@ export class BoothService {
     }
   }
 
-  async addMember(addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {
-    const booth = await this.findBoothBelongsToAccount(addBoothMemberDto.boothId, callerAccountId);
+  async addMember(boothId: number, addBoothMemberDto: AddBoothMemberDTO, callerAccountId: number): Promise<IBoothMemberManipulationResponse> {
+    const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
 
     try {
       if(!booth.members) booth.members = [];
@@ -195,6 +195,23 @@ export class BoothService {
         boothId: booth.id,
         members: (await booth.save({ fields: ["members"] })).members,
       };
+    } catch(err) {
+      throw new BoothMemberManipulationFailedException();
+    }
+  }
+
+  async removeMember(boothId: number, memberUuid: string, callerAccountId: number): Promise<ISuccessResponse> {
+    const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
+
+    // Throw error if the member not found
+    if(booth.members && booth.members.findIndex(member => member.uuid === memberUuid) < 0) throw new EntityNotFoundException();
+
+    try {
+      booth.members = booth.members.filter(member => member.uuid !== memberUuid);
+      booth.changed("members", true);
+
+      await booth.save({ fields: ["members"] });
+      return SUCCESS_RESPONSE;
     } catch(err) {
       throw new BoothMemberManipulationFailedException();
     }

@@ -15,8 +15,8 @@ export interface IBoothMember extends IDataModelBase {
   primaryColor: string;
   url?: string;
 }
-export type IBoothMemberAddRequest = Omit<IBoothMember, "uuid"> & { boothId: number };
-export type IBoothMemberRemoveRequest = Pick<IBoothMember, "uuid"> & { boothId: number };
+export type IBoothMemberAddRequest = Omit<IBoothMember, "uuid">;
+export type IBoothMemberUpdateRequest = Omit<Partial<IBoothMember>, "uuid">;
 export type IBoothMemberManipulationResponse = { boothId: number, members: Array<IBoothMember> };
 
 export interface IBoothExpense extends IDataModelBase {

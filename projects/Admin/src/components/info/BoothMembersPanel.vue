@@ -5,14 +5,19 @@
       <div>{{ member.name }} - {{ member.role }}</div>
       <div v-if="member.descriptionShort">{{ member.descriptionShort }}</div>
       <a v-if="member.url" :href="member.url" target="_blank">대표 URL</a>
+
+      <VBtn icon="mdi-pencil" variant="outlined" title="멤버 수정" @click="onMemberEditButtonClick(member.uuid)" />
     </div>
 
     <VLayout class="d-flex justify-end align-center w-100">
-      <VBtn icon="mdi-plus" variant="outlined" title="멤버 추가" @click="addDialogShown = true" />
+      <VBtn icon="mdi-plus" variant="outlined" title="멤버 추가" @click="onMemberAddButtonClick" />
     </VLayout>
 
-    <BoothMemberAddDialog v-model="addDialogShown"
-                          @added="$forceUpdate()" />
+    <BoothMemberManageDialog v-model="memberManageDialogShown"
+                             :editMode="memberManageDialogEditMode"
+                             :boothMemberUuid="memberManageDialogMemberUuid"
+                             @updated="$forceUpdate()"
+                             @deleted="$forceUpdate()" />
   </DashboardPanel>
 </template>
 
@@ -21,19 +26,33 @@ import type { IBoothMember } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
-import BoothMemberAddDialog from "../dialogs/BoothMemberAddDialog.vue";
+import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";
 
 @Component({
   components: {
     DashboardPanel,
-    BoothMemberAddDialog,
+    BoothMemberManageDialog,
   },
 })
 export default class BoothMembersPanel extends Vue {
-  addDialogShown = false;
+  memberManageDialogShown = false;
+  memberManageDialogEditMode = false;
+  memberManageDialogMemberUuid: string | null = null;
 
   get membersList(): Array<IBoothMember> {
     return useAdminStore().boothList[useAdminStore().currentBoothId].members ?? [];
+  }
+
+  onMemberAddButtonClick() {
+    this.memberManageDialogShown = true;
+    this.memberManageDialogEditMode = false;
+    this.memberManageDialogMemberUuid = null;
+  }
+
+  onMemberEditButtonClick(uuid: string) {
+    this.memberManageDialogShown = true;
+    this.memberManageDialogEditMode = true;
+    this.memberManageDialogMemberUuid = uuid;
   }
 }
 </script>
