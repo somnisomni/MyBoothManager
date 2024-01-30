@@ -7,6 +7,7 @@ import Account from "./account";
 import Booth from "./booth";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
+import BoothMember from "./booth-member";
 
 export type UploadStorageCreationAttributes = Omit<IUploadStorage, InternalKeysWithId>;
 
@@ -48,6 +49,9 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
 
   @HasOne(() => Booth, "infoImageId")
   declare boothInfoImageParent?: Booth;
+
+  @HasOne(() => BoothMember, "memberImageId")
+  declare boothMemberImageParent?: BoothMember;
 
   @HasOne(() => Goods, "goodsImageId")
   declare goodsImageParent?: Goods;

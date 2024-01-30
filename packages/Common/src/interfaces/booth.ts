@@ -7,20 +7,6 @@ export enum BoothStatus {
   PREPARE = "prepare",
 }
 
-export interface IBoothMember extends IDataModelBase {
-  uuid: string;
-  name: string;
-  descriptionShort?: string;
-  role: string;
-  primaryColor: string;
-  url?: string;
-  memberImageId?: number;  // for backend
-  memberImageUrl?: string; // for frontend
-}
-export type IBoothMemberAddRequest = Omit<IBoothMember, "uuid">;
-export type IBoothMemberUpdateRequest = Omit<Partial<IBoothMember>, "uuid">;
-export type IBoothMemberManipulationResponse = { boothId: number, members: Array<IBoothMember> };
-
 export interface IBoothExpense extends IDataModelBase {
   name: string;
   price: number;
@@ -34,7 +20,6 @@ export interface IBooth extends IDataModelBase {
   location: string;
   boothNumber?: string;
   currencySymbol: string;
-  members: Array<IBoothMember>;
   expenses: Array<IBoothExpense>;  // 부대비용 (경비)
   dateOpen: Date;
   dateClose: Date;
