@@ -9,7 +9,6 @@ const testBooth: IBooth = {
   status: BoothStatus.OPEN,
   location: "SOMEWHERE",
   description: "DESCRIPTION",
-  members: [],
   expenses: [],
   dateOpen: new Date(),
   dateClose: new Date(),
