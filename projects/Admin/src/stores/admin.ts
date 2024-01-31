@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothMemberAddRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { emptyNumberKeyObject, emptyObject, ErrorCodes, type IAccountUserland, type IBooth, type IBoothCreateRequest, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest, type IBoothStatusUpdateRequest, type IBoothUpdateRequest, type IGoods, type IGoodsCategory, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest, type IGoodsCreateRequest, type IGoodsOrder, type IGoodsOrderCreateRequest, type IGoodsOrderStatusUpdateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import AdminAPI from "@/lib/api-admin";
 import router from "@/plugins/router";
 import { useAuthStore } from "./auth";
@@ -22,6 +22,7 @@ const useAdminStore = defineStore("admin", () => {
   const apiFetchErrorCode = ref<ErrorCodes | null>(null);
 
   const boothList: Record<number, IBooth> = reactive({});
+  const boothMemberList: Record<number, IBoothMember> = reactive({});
   const boothGoodsCategoryList: Record<number, IGoodsCategory> = reactive({});
   const boothGoodsList: Record<number, IGoods> = reactive({});
   const boothGoodsOrderList: Record<number, IGoodsOrder> = reactive({});
@@ -79,6 +80,7 @@ const useAdminStore = defineStore("admin", () => {
     isChangingBooth.value = false;
 
     emptyNumberKeyObject(boothList);
+    emptyNumberKeyObject(boothMemberList);
     emptyNumberKeyObject(boothGoodsCategoryList);
     emptyNumberKeyObject(boothGoodsList);
     emptyNumberKeyObject(boothGoodsOrderList);
@@ -121,6 +123,23 @@ const useAdminStore = defineStore("admin", () => {
 
       for(const booth of response) {
         boothList[booth.id] = booth;
+      }
+      return true;
+    } else {
+      return response;
+    }
+  }
+
+  async function fetchBoothMembersOfCurrentBooth(refresh: boolean = false): Promise<boolean | ErrorCodes> {
+    if(currentBoothId.value === -1) return false;
+
+    const response = await apiWrapper(() => AdminAPI.fetchAllMembersOfBooth(currentBoothId.value));
+
+    if(response && response instanceof Array) {
+      if(refresh) emptyObject(boothMemberList);
+
+      for(const member of response) {
+        boothMemberList[member.id] = member;
       }
       return true;
     } else {
@@ -207,13 +226,11 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function addBoothMember(payload: IBoothMemberAddRequest): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.addBoothMember(currentBoothId.value, payload));
+  async function createBoothMember(payload: IBoothMemberCreateRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.createBoothMember(currentBoothId.value, payload));
 
     if(response && response instanceof Object) {
-      if(!boothList[currentBoothId.value].members) boothList[currentBoothId.value].members = [];
-
-      boothList[currentBoothId.value].members.splice(0, boothList[currentBoothId.value].members.length, ...response.members);
+      boothMemberList[response.id] = response;
       return true;
     } else {
       return response;
@@ -250,15 +267,12 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function uploadBoothMemberImage(memberUuid: string, payload: File | Blob): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.uploadBoothMemberImage(currentBoothId.value, memberUuid, payload));
+  async function uploadBoothMemberImage(memberId: number, payload: File | Blob): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.uploadBoothMemberImage(currentBoothId.value, memberId, payload));
 
     if(response && response instanceof Object) {
       if(typeof response.value === "string") {
-        const member = boothList[currentBoothId.value].members.find((member) => member.uuid === memberUuid);
-        if(!member) return false;
-
-        member.memberImageUrl = response.value;
+        boothMemberList[memberId].memberImageUrl = response.value;
         return true;
       } else {
         return false;
@@ -386,6 +400,20 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  async function updateBoothMemberInfo(memberId: number, payload: IBoothMemberUpdateRequest): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.updateBoothMemberInfo(currentBoothId.value, memberId, payload));
+
+    if(response && response instanceof Object) {
+      boothMemberList[memberId] = {
+        ...boothMemberList[memberId],
+        ...payload,
+      };
+      return true;
+    } else {
+      return response;
+    }
+  }
+
   async function updateCurrentBoothInfo(payload: IBoothUpdateRequest): Promise<boolean | ErrorCodes> {
     const response = await apiWrapper(() => AdminAPI.updateBoothInfo(currentBoothId.value, payload));
 
@@ -453,28 +481,11 @@ const useAdminStore = defineStore("admin", () => {
     }
   }
 
-  async function deleteBoothMember(memberUuid: string): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.deleteBoothMember(currentBoothId.value, memberUuid));
+  async function deleteBoothMemberImage(memberId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothMemberImage(currentBoothId.value, memberId));
 
     if(response && response instanceof Object) {
-      boothList[currentBoothId.value].members.splice(
-        boothList[currentBoothId.value].members.findIndex((member) => member.uuid === memberUuid),
-        1,
-      );
-      return true;
-    } else {
-      return response;
-    }
-  }
-
-  async function deleteBoothMemberImage(memberUuid: string): Promise<boolean | ErrorCodes> {
-    const response = await apiWrapper(() => AdminAPI.deleteBoothMemberImage(currentBoothId.value, memberUuid));
-
-    if(response && response instanceof Object) {
-      const member = boothList[currentBoothId.value].members.find((member) => member.uuid === memberUuid);
-      if(!member) return false;
-
-      delete member.memberImageUrl;
+      delete boothMemberList[memberId].memberImageUrl;
       return true;
     } else {
       return response;
@@ -498,6 +509,22 @@ const useAdminStore = defineStore("admin", () => {
     if(response && response instanceof Object) {
       delete boothGoodsCombinationList[combinationId].combinationImageUrl;
       return true;
+    } else {
+      return response;
+    }
+  }
+
+  async function deleteBoothMember(memberId: number): Promise<boolean | ErrorCodes> {
+    const response = await apiWrapper(() => AdminAPI.deleteBoothMember(currentBoothId.value, memberId));
+
+    if(response && response instanceof Object) {
+      // Force fetch booth members & goods
+      const results = [
+        await fetchBoothMembersOfCurrentBooth(true),
+        await fetchGoodsOfCurrentBooth(true),
+      ];
+
+      return results.every((s) => typeof s === "boolean" && s === true);
     } else {
       return response;
     }
@@ -555,6 +582,7 @@ const useAdminStore = defineStore("admin", () => {
   function clearAllBoothData(includeBoothList: boolean = true): void {
     if(includeBoothList) emptyNumberKeyObject(boothList);
 
+    emptyNumberKeyObject(boothMemberList);
     emptyNumberKeyObject(boothGoodsList);
     emptyNumberKeyObject(boothGoodsCategoryList);
     emptyNumberKeyObject(boothGoodsCombinationList);
@@ -562,19 +590,23 @@ const useAdminStore = defineStore("admin", () => {
   }
 
   async function fetchAllBoothData(startup: boolean = true): Promise<boolean> {
-    const responses = [];
     if(startup && !isChangingBooth.value) {
-      responses.push(await fetchBoothsOfCurrentAccount(true));
+      await fetchBoothsOfCurrentAccount(true);
     }
 
-    responses.push(
-      await fetchGoodsCategoriesOfCurrentBooth(),
-      await fetchGoodsCombinationOfCurrentBooth(),
-      await fetchGoodsOfCurrentBooth(),
+    const responsePromises: Array<Promise<any>> = [];
+    responsePromises.push(
+      fetchBoothMembersOfCurrentBooth(),
+      fetchGoodsCategoriesOfCurrentBooth(),
+      fetchGoodsCombinationOfCurrentBooth(),
+      fetchGoodsOfCurrentBooth(),
     );
 
     isChangingBooth.value = false;
-    if(responses.every((s) => typeof s !== "string")) {
+
+    const results = await Promise.all(responsePromises);
+    console.log(results);
+    if(results.every((s) => typeof s !== "string")) {
       isBoothDataLoaded.value = true;
       return true;
     } else {
@@ -593,6 +625,7 @@ const useAdminStore = defineStore("admin", () => {
     apiFetchErrorCode,
 
     boothList,
+    boothMemberList,
     boothGoodsCategoryList,
     boothGoodsList,
     boothGoodsOrderList,
@@ -603,18 +636,20 @@ const useAdminStore = defineStore("admin", () => {
     changeBoothToFirst,
     fetchCurrentAccountInfo,
     fetchBoothsOfCurrentAccount,
+    fetchBoothMembersOfCurrentBooth,
     fetchGoodsCategoriesOfCurrentBooth,
     fetchGoodsOfCurrentBooth,
     fetchGoodsOrdersOfCurrentBooth,
     fetchGoodsCombinationOfCurrentBooth,
     updateGoodsInfo,
     updateGoodsCategoryInfo,
-    updateCurrentBoothInfo,
     updateGoodsCombinationInfo,
-    updateCurrentBoothStatus,
     updateGoodsOrderStatus,
+    updateBoothMemberInfo,
+    updateCurrentBoothInfo,
+    updateCurrentBoothStatus,
     createBooth,
-    addBoothMember,
+    createBoothMember,
     createGoods,
     createGoodsCategory,
     createGoodsOrder,

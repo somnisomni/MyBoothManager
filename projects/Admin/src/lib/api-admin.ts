@@ -41,6 +41,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<Array<CT.IBoothResponse>>(() => this.API.GET("booth"));
   }
 
+  static async fetchAllMembersOfBooth(boothId: number) {
+    return await this.apiCallWrapper(() => this.API.fetchAllMembersOfBooth(boothId));
+  }
+
   static async fetchAllGoodsOfBooth(boothId: number) {
     return await this.apiCallWrapper(() => this.API.fetchAllGoodsOfBooth(boothId));
   }
@@ -70,6 +74,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`booth/${boothId}/status`, payload));
   }
 
+  static async updateBoothMemberInfo(boothId: number, memberId: number, payload: CT.IBoothMemberUpdateRequest) {
+    return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.PATCH(`booth/${boothId}/member/${memberId}`, payload));
+  }
+
   static async updateGoodsInfo(goodsId: number, payload: CT.IGoodsUpdateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.PATCH(`goods/${goodsId}`, payload));
   }
@@ -97,8 +105,8 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.POST("booth", payload));
   }
 
-  static async addBoothMember(boothId: number, payload: CT.IBoothMemberAddRequest) {
-    return await this.apiCallWrapper<CT.IBoothMemberManipulationResponse>(() => this.API.PUT(`booth/${boothId}/member`, payload));
+  static async createBoothMember(boothId: number, payload: CT.IBoothMemberCreateRequest) {
+    return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.POST(`booth/${boothId}/member`, payload));
   }
 
   static async createGoods(payload: CT.IGoodsCreateRequest) {
@@ -130,10 +138,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
   }
 
-  static async uploadBoothMemberImage(boothId: number, memberUuid: string, image: Blob) {
+  static async uploadBoothMemberImage(boothId: number, memberId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberUuid}/image`, formData));
+    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
   }
 
   static async uploadGoodsImage(goodsId: number, boothId: number, image: Blob) {
@@ -157,12 +165,12 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/infoimage`));
   }
 
-  static async deleteBoothMember(boothId: number, memberUuid: string) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberUuid}`));
+  static async deleteBoothMember(boothId: number, memberId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}`));
   }
 
-  static async deleteBoothMemberImage(boothId: number, memberUuid: string) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberUuid}/image`));
+  static async deleteBoothMemberImage(boothId: number, memberId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}/image`));
   }
 
   static async deleteGoods(goodsId: number, boothId: number) {
