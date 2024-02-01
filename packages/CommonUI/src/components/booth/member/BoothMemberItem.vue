@@ -5,14 +5,14 @@
           v-ripple
           height="7em"
           max-height="7em"
-          max-width="24em"
+          :max-width="maxWidth"
           @click="$emit('click', member.id)">
-    <VAvatar v-if="member.memberImageUrl" :image="getUploadFilePath(member.memberImageUrl)" size="6em" class="no-interaction" />
+    <VAvatar v-if="member.memberImageUrl" :image="imageUrlResolver(member.memberImageUrl)" size="6em" class="no-interaction" />
 
-    <div class="d-flex flex-column ml-2">
-      <div class="d-flex">
+    <div class="d-flex flex-column ml-2 overflow-hidden">
+      <div class="d-flex" style="white-space: nowrap">
         <span style="font-size: 1.25em; overflow: hidden; word-break: keep-all; text-overflow: ellipsis"><strong :title="member.name">{{ member.name }}</strong></span>
-        <span class="flex-shrink-0 text-subtitle-1">- {{ member.role }}</span>
+        <span class="ml-1 flex-shrink-0 text-subtitle-1"> - {{ member.role }}</span>
       </div>
       <div v-if="member.descriptionShort" class="description" :title="member.descriptionShort">{{ member.descriptionShort }}</div>
 
@@ -28,17 +28,23 @@
 
 <script lang="ts">
 import type { IBoothMember } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
-import { getUploadFilePath } from "@/lib/functions";
+import { Component, Prop, Setup, Vue } from "vue-facing-decorator";
+import { useDisplay } from "vuetify";
 
 @Component({
   emits: ["click"],
 })
 export default class BoothMemberItem extends Vue {
-  readonly getUploadFilePath = getUploadFilePath;
-
   @Prop({ type: Object, required: true }) member!: IBoothMember;
   @Prop({ type: Boolean, default: false }) editable!: boolean;
+  @Prop({ type: Function, default: (s: any) => s }) imageUrlResolver!: (rawImageUrl?: string) => string | null | undefined;
+
+  @Setup(() => useDisplay().smAndUp)
+  smAndUp!: boolean;
+
+  get maxWidth(): number | string {
+    return this.smAndUp ? "24em" : "100%";
+  }
 
   get hasMemberImage() {
     return !!this.member.memberImageUrl;

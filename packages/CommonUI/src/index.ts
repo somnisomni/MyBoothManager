@@ -4,6 +4,8 @@ import "@/styles/styles.scss";
 
 export default {
   install(app: App) {
+    app.component("BoothMemberItem", C.BoothMemberItem);
+
     app.component("CommonDialog", C.CommonDialog);
     app.component("CommonErrorDialog", C.CommonErrorDialog);
     app.component("CommonWarningDialog", C.CommonWarningDialog);

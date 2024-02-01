@@ -3,8 +3,9 @@
     <div v-if="membersList.length > 0" class="d-flex flex-row flex-wrap justify-center">
       <VSlideYTransition group leave-absolute>
         <BoothMemberItem v-for="member in membersList"
-                         :key="member.name"
+                         :key="member.id"
                          :member="member"
+                         :imageUrlResolver="getUploadFilePath"
                          editable
                          @click="onMemberEditButtonClick" />
       </VSlideYTransition>
@@ -30,11 +31,9 @@ import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";
-import BoothMemberItem from "./BoothMemberItem.vue";
 
 @Component({
   components: {
-    BoothMemberItem,
     DashboardPanel,
     BoothMemberManageDialog,
   },
@@ -47,7 +46,6 @@ export default class BoothMembersPanel extends Vue {
   memberManageDialogMemberId: number | null = null;
 
   get membersList(): Array<IBoothMember> {
-    // TODO: member image url is not included in the booth list API response, but image id does.
     return Object.values(useAdminStore().boothMemberList) ?? [];
   }
 
