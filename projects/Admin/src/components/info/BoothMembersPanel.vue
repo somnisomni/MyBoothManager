@@ -1,16 +1,15 @@
 <template>
   <DashboardPanel title="참여 멤버">
-    <div v-for="member in membersList"
-         :key="member.name">
-      <VAvatar v-if="member.memberImageUrl" :image="getUploadFilePath(member.memberImageUrl)" size="200px" />
-      <div>{{ member.name }} - {{ member.role }}</div>
-      <div v-if="member.descriptionShort">{{ member.descriptionShort }}</div>
-      <a v-if="member.url" :href="member.url" target="_blank">대표 URL</a>
-
-      <VBtn icon="mdi-pencil" variant="outlined" title="멤버 수정" @click="onMemberEditButtonClick(member.id)" />
+    <div v-if="membersList.length > 0" class="d-flex flex-row flex-wrap justify-center">
+      <VSlideYTransition group leave-absolute>
+        <BoothMemberItem v-for="member in membersList"
+                         :key="member.name"
+                         :member="member"
+                         editable
+                         @click="onMemberEditButtonClick" />
+      </VSlideYTransition>
     </div>
-
-    <div v-if="membersList.length <= 0">멤버 정보가 없습니다.</div>
+    <div v-else class="text-center text-grey">등록된 멤버 정보가 없습니다.</div>
 
     <VLayout class="d-flex justify-end align-center w-100">
       <VBtn icon="mdi-plus" variant="outlined" title="멤버 추가" @click="onMemberAddButtonClick" />
@@ -31,9 +30,11 @@ import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";
+import BoothMemberItem from "./BoothMemberItem.vue";
 
 @Component({
   components: {
+    BoothMemberItem,
     DashboardPanel,
     BoothMemberManageDialog,
   },
