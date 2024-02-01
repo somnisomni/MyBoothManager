@@ -49,7 +49,7 @@
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
-import { type IBoothMember, type IBoothMemberAddRequest } from "@myboothmanager/common";
+import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
@@ -71,7 +71,7 @@ export type IBoothMemberManageFormField
 export default class BoothMemberManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
-  @Prop({ type: String, default: null }) boothMemberUuid!: string | null;
+  @Prop({ type: Number, default: null }) boothMemberId!: number | null;
 
   @Ref("form") readonly form!: CommonForm;
 
@@ -133,30 +133,23 @@ export default class BoothMemberManageDialog extends Vue {
     };
   }
 
-  get currentMember(): IBoothMember | undefined {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].members.find(
-      (member) => member.uuid === this.boothMemberUuid,
-    );
+  get currentMember(): IBoothMember | null {
+    return (this.boothMemberId && (this.boothMemberId in useAdminStore().boothMemberList)) ? readonly(useAdminStore().boothMemberList[this.boothMemberId]) : null;
   }
+
   get memberImageUrl(): string | null {
     return this.editMode && this.currentMember ? this.currentMember.memberImageUrl ?? null : null;
   }
 
   @Watch("open") mounted() {
-    if(this.editMode && this.boothMemberUuid) {
-      const member = useAdminStore().boothList[useAdminStore().currentBoothId].members.find(
-        (member) => member.uuid === this.boothMemberUuid,
-      );
+    if(this.editMode && this.currentMember) {
+      this.formModels.name = this.currentMember.name;
+      this.formModels.descriptionShort = this.currentMember.descriptionShort;
+      this.formModels.url = this.currentMember.url;
+      this.formModels.role = this.currentMember.role;
+      this.formModels.primaryColor = this.currentMember.primaryColor;
 
-      if(member) {
-        this.formModels.name = member.name;
-        this.formModels.descriptionShort = member.descriptionShort;
-        this.formModels.url = member.url;
-        this.formModels.role = member.role;
-        this.formModels.primaryColor = member.primaryColor;
-
-        this.formModelsInitial = deepClone(this.formModels);
-      }
+      this.formModelsInitial = deepClone(this.formModels);
     } else {
       this.formModels.name = "";
       this.formModels.descriptionShort = "";
@@ -183,14 +176,33 @@ export default class BoothMemberManageDialog extends Vue {
   async onDialogConfirm() {
     this.updateInProgress = true;
 
-    const requestData: IBoothMemberAddRequest = {
-      name: this.formModels.name,
-      descriptionShort: this.formModels.descriptionShort,
-      url: this.formModels.url,
-      role: this.formModels.role,
-      primaryColor: this.formModels.primaryColor,
-    };
-    const result = await useAdminStore().addBoothMember(requestData);
+    let result: boolean | ErrorCodes = false;
+
+    if(this.editMode && this.boothMemberId) {
+      // UPDATE
+
+      const requestData: IBoothMemberUpdateRequest = {
+        name: this.formModels.name,
+        descriptionShort: this.formModels.descriptionShort,
+        url: this.formModels.url,
+        role: this.formModels.role,
+        primaryColor: this.formModels.primaryColor,
+      };
+
+      result = await useAdminStore().updateBoothMemberInfo(this.boothMemberId, requestData);
+    } else {
+      // CREATE
+
+      const requestData: IBoothMemberCreateRequest = {
+        name: this.formModels.name,
+        descriptionShort: this.formModels.descriptionShort,
+        url: this.formModels.url,
+        role: this.formModels.role,
+        primaryColor: this.formModels.primaryColor,
+      };
+
+      result = await useAdminStore().createBoothMember(requestData);
+    }
 
     if(result === true) {
       this.$emit("updated");
@@ -206,8 +218,8 @@ export default class BoothMemberManageDialog extends Vue {
   async onDeleteConfirm() {
     this.updateInProgress = true;
 
-    if(this.boothMemberUuid) {
-      const response = await useAdminStore().deleteBoothMember(this.boothMemberUuid);
+    if(this.boothMemberId) {
+      const response = await useAdminStore().deleteBoothMember(this.boothMemberId);
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
@@ -222,11 +234,11 @@ export default class BoothMemberManageDialog extends Vue {
   }
 
   async memberImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadBoothMemberImage(this.boothMemberUuid!, file!);
+    return await useAdminStore().uploadBoothMemberImage(this.boothMemberId!, file!);
   }
 
   async memberImageDeleteCallback() {
-    return await useAdminStore().deleteBoothMemberImage(this.boothMemberUuid!);
+    return await useAdminStore().deleteBoothMemberImage(this.boothMemberId!);
   }
 }
 </script>

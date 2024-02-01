@@ -84,8 +84,7 @@
 </template>
 
 <script lang="ts">
-import { unref } from "vue";
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
 export interface CommonDialogButtonParams {
@@ -123,6 +122,9 @@ export default class CommonDialog extends Vue {
   @Prop({ type: Boolean, default: true }) closeOnCancel!: boolean;
   @Prop({ type: Boolean, default: false }) progressActive!: boolean;
 
+  @Setup(() => useDisplay().smAndUp)
+  smAndUp!: boolean;
+
   get isAnyDialogActionAvailable(): boolean {
     return (!!this.dialogPrimaryText) ||
            (!!this.dialogSecondaryText) ||
@@ -130,7 +132,7 @@ export default class CommonDialog extends Vue {
   }
 
   get isFullScreenOnSmallScreenEligable(): boolean {
-    return this.fullscreenOnSmallScreen && !unref(useDisplay().smAndUp);
+    return this.fullscreenOnSmallScreen && !this.smAndUp;
   }
 
   @Emit("close")

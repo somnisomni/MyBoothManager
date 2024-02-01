@@ -42,9 +42,8 @@
 
 <script lang="ts">
 import { GoodsStockVisibility, type IGoods, type IGoodsCombination } from "@myboothmanager/common";
-import { Vue, Component, Prop, Model } from "vue-facing-decorator";
+import { Vue, Component, Prop, Model, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { unref } from "vue";
 import { isDisplayXXS } from "@/plugins/vuetify";
 
 @Component({
@@ -74,15 +73,17 @@ export default class GoodsItem extends Vue {
 
   isHovering: boolean = false;
 
-  get mdAndUp(): boolean {
-    return unref(useDisplay().mdAndUp);
-  }
+  @Setup(() => useDisplay().mdAndUp)
+  mdAndUp!: boolean;
+
+  @Setup(() => useDisplay().width)
+  displayWidth!: number;
 
   get elevation(): number {
     return this.isHovering || (this.selectable && this.isSelected) ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL;
   }
   get width(): number | string {
-    return this.mdAndUp && !this.forceSmallSize ? this.WIDTH_NORMAL : (!isDisplayXXS() ? this.WIDTH_SMALL : "100%");
+    return this.mdAndUp && !this.forceSmallSize ? this.WIDTH_NORMAL : (!isDisplayXXS(this.displayWidth) ? this.WIDTH_SMALL : "100%");
   }
   get height(): number {
     return this.mdAndUp && !this.forceSmallSize ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL;

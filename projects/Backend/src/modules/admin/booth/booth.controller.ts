@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
@@ -8,7 +8,6 @@ import { BoothService } from "./booth.service";
 import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
-import { AddBoothMemberDTO } from "./dto/add-booth-member.dto";
 
 @Controller("/admin/booth")
 export class BoothController {
@@ -51,31 +50,6 @@ export class BoothController {
   @Delete(":id/infoimage")
   async removeInfoImage(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
     return await this.boothService.deleteInfoImage(+id, authData.id);
-  }
-
-  @Put(":id/member")
-  async addMember(@Param("id") boothId: string, @Body() addBoothMemberDto: AddBoothMemberDTO, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.addMember(+boothId, addBoothMemberDto, authData.id);
-  }
-
-  @Delete(":id/member/:memberUuid")
-  async removeMember(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.removeMember(+boothId, memberUuid, authData.id);
-  }
-
-  @Get(":id/member/:memberUuid/image")
-  async getMemberImageUrl(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.getMemberImageUrl(+boothId, memberUuid, authData.id);
-  }
-
-  @Post(":id/member/:memberUuid/image")
-  async uploadMemberImage(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.uploadMemberImage(+boothId, memberUuid, await this.utilService.getFileFromRequest(req), authData.id);
-  }
-
-  @Delete(":id/member/:memberUuid/image")
-  async removeMemberImage(@Param("id") boothId: string, @Param("memberUuid") memberUuid: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.deleteMemberImage(+boothId, memberUuid, authData.id);
   }
 
   @Patch(":id")

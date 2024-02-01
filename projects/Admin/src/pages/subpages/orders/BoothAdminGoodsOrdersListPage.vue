@@ -44,10 +44,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Setup, Vue } from "vue-facing-decorator";
 import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
-import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
 
@@ -59,12 +58,11 @@ import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
 export default class BoothAdminGoodsOrdersListPage extends Vue {
   dataLoading: boolean = true;
 
+  @Setup(() => useDisplay().smAndUp)
+  smAndUp!: boolean;
+
   async mounted() {
     await this.onRefreshClick();
-  }
-
-  get smAndUp() {
-    return unref(useDisplay().smAndUp);
   }
 
   get boothGoodsOrders() {

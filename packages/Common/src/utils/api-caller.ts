@@ -1,4 +1,4 @@
-import type { IBackendErrorResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, IValueResponse } from "..";
+import type { IBackendErrorResponse, IBoothMemberResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, IValueResponse } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -108,6 +108,15 @@ export default class APICaller {
 
     if("value" in response) return +response.value;
     else return response;
+  }
+
+  // Booth member
+  public async fetchAllMembersOfBooth(boothId: number) {
+    return await this.createPublicAPI().GET<Array<IBoothMemberResponse>>(`booth/${boothId}/member`);
+  }
+
+  public async fetchSingleMemberOfBooth(boothId: number, memberId: number) {
+    return await this.createPublicAPI().GET<IBoothMemberResponse>(`booth/${boothId}/member/${memberId}`);
   }
 
   // Goods

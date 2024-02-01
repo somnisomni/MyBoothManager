@@ -8,12 +8,14 @@ import { AuthGuard } from "./auth/auth.guard";
 import { GoodsOrderModule } from "./goods-order/goods-order.module";
 import { GoodsCategoryModule } from "./goods-category/goods-category.module";
 import { GoodsCombinationModule } from "./goods-combination/goods-combination.module";
+import { BoothMemberModule } from "./booth-member/booth-member.module";
 
 @Module({
   imports: [
     AccountModule,
     AuthModule,
     BoothModule,
+    BoothMemberModule,
     GoodsModule,
     GoodsCategoryModule,
     GoodsOrderModule,

@@ -43,9 +43,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { unref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
@@ -64,12 +63,11 @@ export default class GoodsManagePanel extends Vue {
 
   goodsListRefreshing = false;
 
+  @Setup(() => useDisplay().smAndUp)
+  smAndUp!: boolean;
+
   get goodsCount(): string {
     return Object.keys(useAdminStore().boothGoodsList).length.toLocaleString();
-  }
-
-  get smAndUp(): boolean {
-    return unref(useDisplay().smAndUp);
   }
 
   async onListRefreshClick() {

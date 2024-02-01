@@ -1,5 +1,5 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { BoothStatus, IBoothMember, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
+import { BoothStatus, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Account from "./account";
@@ -8,9 +8,10 @@ import GoodsOrder from "./goods-order";
 import UploadStorage from "./uploadstorage";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
+import BoothMember from "./booth-member";
 
-export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">
-                               & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "members" | "expenses" | "bannerImageId" | "infoImageId">>;
+export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "expenses" | "bannerImageId" | "infoImageId">
+                                     & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "expenses" | "bannerImageId" | "infoImageId">>;
 
 @Table
 @DefaultScope(() => ({
@@ -57,11 +58,6 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @Default("₩")
   @Column(DataTypes.STRING(8))
   declare currencySymbol: string;
-
-  @AllowNull(false)
-  @Default([])
-  @Column(DataTypes.JSON)
-  declare members: IBoothMember[];
 
   @AllowNull(false)
   @Default([])
@@ -137,6 +133,9 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
 
   @HasMany(() => GoodsCombination)
   declare goodsCombinations: GoodsCombination[];
+
+  @HasMany(() => BoothMember)
+  declare boothMembers: BoothMember[];
 
   @BelongsTo(() => UploadStorage, "bannerImageId")
   declare bannerImage?: UploadStorage;

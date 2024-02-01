@@ -33,6 +33,19 @@
 
           <VSpacer class="my-8" />
 
+          <div v-if="boothMemberList.length > 0">
+            <h4 class="text-h4 text-left font-weight-meium ml-2">멤버 목록</h4>
+            <VDivider class="my-2" />
+            <div class="d-flex flex-row flex-wrap justify-center">
+              <BoothMemberItem v-for="member in boothMemberList"
+                               :key="member.id"
+                               :member="member"
+                               :imageUrlResolver="getUploadFilePath" />
+            </div>
+          </div>
+
+          <VSpacer v-if="boothData?.infoImageUrl" class="my-8" />
+
           <div v-if="boothData?.infoImageUrl" class="w-100">
             <h4 class="text-h4 text-left font-weight-medium ml-2">부스 인포</h4>
             <VDivider class="my-2" />
@@ -61,7 +74,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
-import { BoothStatus, ErrorCodes, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
@@ -82,6 +95,7 @@ export default class IndividualBoothPage extends Vue {
   fetchError: ErrorCodes | null = null;
 
   boothData: IBooth | null = null;
+  boothMemberList: Array<IBoothMember> = [];
   boothGoodsList: Array<IGoods> = [];
   boothCategoryList: Array<IGoodsCategory> = [];
   boothCombinationList: Array<IGoodsCombination> = [];
@@ -133,35 +147,44 @@ export default class IndividualBoothPage extends Vue {
     }
 
     /* After booth data is fetched successfully, fetch others */
-    const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
-    const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
-    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
+    const responsePromises: Array<Promise<any>> = [
+      usePublicStore().apiCaller.fetchAllMembersOfBooth(this.boothId),
+      usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId),
+      usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId),
+      usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId),
+    ];
 
-    if(!("errorCode" in goodsResponse || "errorCode" in categoryResponse || "errorCode" in combinationResponse)) {
-      this.boothGoodsList = goodsResponse;
-      this.boothCategoryList = categoryResponse;
-      this.boothCombinationList = combinationResponse;
+    const responses = await Promise.all(responsePromises);
+    if(responses.every((response) => !("errorCode" in response))) {
+      this.boothMemberList = responses[0];
+      this.boothGoodsList = responses[1];
+      this.boothCategoryList = responses[2];
+      this.boothCombinationList = responses[3];
     }
   }
 
   async pollData(): Promise<boolean | ErrorCodes[]> {
-    const errors: ErrorCodes[] = [-1, -1, -1, -1];
+    const errors: ErrorCodes[] = [-1, -1, -1, -1, -1];
 
     const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
     if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
     else errors[0] = boothDataResponse.errorCode;
 
+    const boothMemberResponse = await usePublicStore().apiCaller.fetchAllMembersOfBooth(this.boothId);
+    if(!("errorCode" in boothMemberResponse)) this.boothMemberList = boothMemberResponse;
+    else errors[1] = boothMemberResponse.errorCode;
+
     const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
     if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse;
-    else errors[1] = goodsResponse.errorCode;
+    else errors[2] = goodsResponse.errorCode;
 
     const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
     if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
-    else errors[2] = categoryResponse.errorCode;
+    else errors[3] = categoryResponse.errorCode;
 
     const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
     if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse;
-    else errors[3] = combinationResponse.errorCode;
+    else errors[4] = combinationResponse.errorCode;
 
     return errors.every((error) => error === ErrorCodes.SUCCESS) ? true : errors;
   }
