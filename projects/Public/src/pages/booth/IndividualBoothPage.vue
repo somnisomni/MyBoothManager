@@ -34,7 +34,7 @@
           <VSpacer class="my-8" />
 
           <div v-if="boothMemberList.length > 0">
-            <h4 class="text-h4 text-left font-weight-meium ml-2">멤버 목록</h4>
+            <h4 class="text-h4 text-left font-weight-medium ml-2">멤버 목록</h4>
             <VDivider class="my-2" />
             <div class="d-flex flex-row flex-wrap justify-center">
               <BoothMemberItem v-for="member in boothMemberList"
