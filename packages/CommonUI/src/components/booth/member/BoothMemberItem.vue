@@ -10,9 +10,9 @@
     <VAvatar v-if="member.memberImageUrl" :image="imageUrlResolver(member.memberImageUrl)" size="6em" class="no-interaction" />
 
     <div class="d-flex flex-column ml-2 overflow-hidden">
-      <div class="d-flex" style="white-space: nowrap">
+      <div class="d-flex align-center" style="white-space: nowrap">
         <span style="font-size: 1.25em; overflow: hidden; word-break: keep-all; text-overflow: ellipsis"><strong :title="member.name">{{ member.name }}</strong></span>
-        <span class="ml-1 flex-shrink-0 text-subtitle-1"> - {{ member.role }}</span>
+        <span v-if="member.role" class="ml-1 flex-shrink-0 text-subtitle-1"> - {{ member.role }}</span>
       </div>
       <div v-if="member.descriptionShort" class="description" :title="member.descriptionShort">{{ member.descriptionShort }}</div>
 
