@@ -605,7 +605,6 @@ const useAdminStore = defineStore("admin", () => {
     isChangingBooth.value = false;
 
     const results = await Promise.all(responsePromises);
-    console.log(results);
     if(results.every((s) => typeof s !== "string")) {
       isBoothDataLoaded.value = true;
       return true;
