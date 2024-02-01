@@ -69,8 +69,7 @@
 
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { unref } from "vue";
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
@@ -90,6 +89,9 @@ export default class BoothAdminLayout extends Vue {
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
 
+  @Setup(() => useDisplay().mdAndUp)
+  mdAndUp!: boolean;
+
   set navOpen(value: boolean) { this._navOpen = value; }
   get navOpen() {
     if(this.navPersistent) return true;
@@ -97,7 +99,7 @@ export default class BoothAdminLayout extends Vue {
   }
 
   get navPersistent() {
-    return unref(useDisplay().mdAndUp);
+    return this.mdAndUp;
   }
 
   get currentBooth(): IBooth {

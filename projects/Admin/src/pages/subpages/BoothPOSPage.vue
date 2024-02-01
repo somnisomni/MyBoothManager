@@ -46,8 +46,7 @@
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
-import { Component, Hook, Vue } from "vue-facing-decorator";
-import { unref } from "vue";
+import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
@@ -76,7 +75,9 @@ export default class BoothPOSPage extends Vue {
   pageLeaveConfirmed: boolean = false;
   private pageLeaveTarget: RouteLocationRaw | null = null;
 
-  get mdAndUp(): boolean { return unref(useDisplay().mdAndUp); }
+  @Setup(() => useDisplay().mdAndUp)
+  mdAndUp!: boolean;
+
   get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }

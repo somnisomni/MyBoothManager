@@ -34,8 +34,7 @@
 
 <script lang="ts">
 import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
-import { unref } from "vue";
+import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 
@@ -46,6 +45,9 @@ export default class GoodsOrderListItem extends Vue {
   readonly GoodsOrderStatus = GoodsOrderStatus;
 
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
+
+  @Setup(() => useDisplay().smAndUp)
+  smAndUp!: boolean;
 
   get statusIcon(): { icon: string; color: string; textColor: string, class: string } {
     switch(this.orderData.status) {
@@ -71,10 +73,6 @@ export default class GoodsOrderListItem extends Vue {
           class: "small",
         };
     }
-  }
-
-  get smAndUp(): boolean {
-    return unref(useDisplay().smAndUp);
   }
 
   get currencySymbol(): string {
