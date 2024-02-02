@@ -1,12 +1,17 @@
+import type { Model } from "sequelize-typescript";
+import type { MultipartFile } from "@fastify/multipart";
+import type { FastifyRequest } from "fastify";
 import path from "path";
 import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
-import { MultipartFile } from "@fastify/multipart";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { type FastifyRequest } from "fastify";
 import { path as APP_ROOT_PATH } from "app-root-path";
-import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
+import { ISuccessResponse, IUploadStorage, IValueResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
+import UploadStorage from "@/db/models/uploadstorage";
+import { create, generateRandomDigestFileName } from "@/lib/common-functions";
+import { InternalKeysWithId } from "@/lib/types";
+import ImageManipulator from "@/lib/image-manipulation";
 
 @Injectable()
 export class UtilService {
@@ -106,6 +111,21 @@ export class UtilService {
     });
   }
 
+  async writeBufferAsFileTo(buffer: Buffer, fileName: string, subpath?: string): Promise<string> {
+    const filePath = await this.getFileUploadPath(fileName, subpath);
+    return new Promise<string>((resolve, reject) => {
+      try {
+        const stream = createWriteStream(filePath, { flags: "w", autoClose: true });
+        stream.write(buffer);
+        stream.end().close();
+        resolve(filePath);
+      } catch(err) {
+        reject(err);
+        throw new InternalServerErrorException();
+      }
+    });
+  }
+
   async removeFile(fileName: string, subpath?: string): Promise<boolean> {
     const filePath = await this.getFileUploadPath(fileName, subpath);
 
@@ -116,5 +136,81 @@ export class UtilService {
       console.error(err);
       return false;
     }
+  }
+
+  async processImageUpload<TModel extends Model>(
+    targetModelInstance: TModel,
+    targetModelImageIdColumnKey: keyof TModel,
+    file: MultipartFile,
+    fileSaveSubpath: string,
+    imageSizeConstraint: ImageSizeConstraintKey,
+    callerAccountId: number): Promise<IValueResponse> {
+    /* #1. Remove existing image if exists */
+    if(targetModelInstance[targetModelImageIdColumnKey]) {
+      // Do not try-catch here; ignore the file nonexistence
+      const existingUpload = await UploadStorage.findByPk(targetModelInstance[targetModelImageIdColumnKey] as number);
+      if(existingUpload) {
+        await this.removeFile(existingUpload.fileName, existingUpload.savePath);
+        await existingUpload.destroy({ force: true });
+      }
+    }
+
+    /* #2. Image manipulation */
+    const manipulator = new ImageManipulator(await file.toBuffer());
+    await manipulator.resizeAndCrop(imageSizeConstraint);
+
+    const imageWebpBuffer = Buffer.from(await (await manipulator.toWebP()).arrayBuffer());
+    const imageJpgBuffer  = Buffer.from(await (await manipulator.toJPG()).arrayBuffer());
+    // const imageThumbnailBase64 = await manipulator.toThumbnailBase64();
+
+    manipulator.close();
+
+    /* #3. Save manipulated image file to disk */
+    const digest = generateRandomDigestFileName();
+    try {
+      await this.writeBufferAsFileTo(imageWebpBuffer, digest.withExt("webp"), fileSaveSubpath);
+      await this.writeBufferAsFileTo(imageJpgBuffer, digest.withExt("jpg"), fileSaveSubpath);
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+
+    /* #4. Create new upload record & return upload file path */
+    try {
+      const upload = await (await create(UploadStorage, {
+        ownerId: callerAccountId,
+        savePath: fileSaveSubpath,
+        fileName: digest.withExt("webp"),  // TODO: multiple extension & thumbnail to be supported
+      } as Omit<IUploadStorage, InternalKeysWithId>)).save();
+
+      await targetModelInstance.update({ [targetModelImageIdColumnKey]: upload.id });
+
+      return {
+        value: upload.filePath,
+      };
+    } catch(err) {
+      console.error(err);
+      throw new InternalServerErrorException();  // TODO: custom exception
+    }
+  }
+
+  async processImageDelete<TModel extends Model>(
+    targetModelInstance: TModel,
+    targetModelImageIdColumnKey: keyof TModel): Promise<ISuccessResponse> {
+    /* #1. Remove existing image if exists */
+    if(targetModelInstance[targetModelImageIdColumnKey]) {
+      // Do not try-catch here; ignore the file nonexistence
+      const existingUpload = await UploadStorage.findByPk(targetModelInstance[targetModelImageIdColumnKey] as number);
+      if(existingUpload) {
+        await this.removeFile(existingUpload.fileName, existingUpload.savePath);  // TODO: multiple extension to be supported
+        await existingUpload.destroy({ force: true });
+      }
+    }
+
+    /* #2. Set image id to null & return success response */
+    targetModelInstance.set(targetModelImageIdColumnKey, null);
+    await targetModelInstance.save();
+
+    return SUCCESS_RESPONSE;
   }
 }

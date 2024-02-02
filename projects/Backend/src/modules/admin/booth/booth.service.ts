@@ -1,12 +1,11 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable } from "@nestjs/common";
+import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
-import { create, findOneByPk, generateUploadFileName, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
-import UploadStorage from "@/db/models/uploadstorage";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UtilService } from "../util/util.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -46,131 +45,39 @@ export class BoothService {
   }
 
   async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
-    const uploadSubpath = "booth/banner";
-
-    // TODO: file validation
-
-    let fileName: string;
-    try {
-      fileName = generateUploadFileName("boothbanner", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
-      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
-
-    try {
-      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-      if(booth.bannerImageId) {
-        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      const upload = await create(UploadStorage, {
-        ownerId: callerAccountId,
-        savePath: uploadSubpath,
-        fileName,
-      } as Omit<IUploadStorage, "id">);
-      await upload.save();
-
-      await booth.update({ bannerImageId: upload.id });
-
-      return {
-        value: upload.filePath,
-      };
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageUpload(
+      await this.findBoothBelongsToAccount(boothId, callerAccountId),
+      "bannerImageId",
+      file,
+      "booth/banner",
+      ImageSizeConstraintKey.BOOTH_BANNER,
+      callerAccountId,
+    );
   }
 
   async uploadInfoImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
-    const uploadSubpath = "booth/info";
-
-    let fileName: string;
-    try {
-      fileName = generateUploadFileName("boothinfo", callerAccountId, boothId, "test", file.filename.split(".").pop()!).fileName;
-      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
-
-    try {
-      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-      if(booth.infoImageId) {
-        const existingUpload = await UploadStorage.findByPk(booth.infoImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      const upload = await create(UploadStorage, {
-        ownerId: callerAccountId,
-        savePath: uploadSubpath,
-        fileName,
-      } as Omit<IUploadStorage, "id">);
-      await upload.save();
-
-      await booth.update({ infoImageId: upload.id });
-
-      return {
-        value: upload.filePath,
-      };
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageUpload(
+      await this.findBoothBelongsToAccount(boothId, callerAccountId),
+      "infoImageId",
+      file,
+      "booth/info",
+      ImageSizeConstraintKey.BOOTH_INFO,
+      callerAccountId,
+    );
   }
 
   async deleteBannerImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
-    try {
-      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-      if(booth.bannerImageId) {
-        const existingUpload = await UploadStorage.findByPk(booth.bannerImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      booth.set("bannerImageId", null);
-      await booth.save();
-
-      return SUCCESS_RESPONSE;
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageDelete(
+      await this.findBoothBelongsToAccount(boothId, callerAccountId),
+      "bannerImageId",
+    );
   }
 
   async deleteInfoImage(boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
-    try {
-      const booth = await this.findBoothBelongsToAccount(boothId, callerAccountId);
-
-      if(booth.infoImageId) {
-        const existingUpload = await UploadStorage.findByPk(booth.infoImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      booth.set("infoImageId", null);
-      await booth.save();
-
-      return SUCCESS_RESPONSE;
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageDelete(
+      await this.findBoothBelongsToAccount(boothId, callerAccountId),
+      "infoImageId",
+    );
   }
 
   async updateBoothInfo(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {

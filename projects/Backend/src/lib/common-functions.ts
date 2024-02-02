@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { createHash } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
 import { BaseError, Includeable, Model, ModelDefined, Transaction, WhereOptions } from "sequelize";
@@ -86,10 +86,13 @@ export async function removeOne<T extends Model<any, any>>(model: { new (): T },
 }
 
 /* === Common util functions === */
-export type UploadFileNameFormat = `${string}-${string}_${string}.${string}.${string}`;
-export function generateUploadFileName(usage: string, accountId: number, usageId: number | string, modifier: string, fileExtension: string): { formatted: UploadFileNameFormat, fileName: string } {
-  const formatted: UploadFileNameFormat = `${usage}-${+accountId}_${usageId}.${modifier}.${new Date().getTime()}`;
-  const fileName: string = `${createHash("sha1").update(formatted).digest("base64url")}.${fileExtension}`;
+export function generateRandomDigestFileName() {
+  const digest = `${createHash("sha1").update(randomBytes(64)).digest("base64url")}`;
 
-  return { formatted, fileName };
+  return {
+    fileName: digest,
+    withExt(ext: string) {
+      return `${this.fileName}.${ext}`;
+    },
+  };
 }
