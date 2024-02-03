@@ -12,6 +12,7 @@ export default class ImageManipulator {
         ignoreIcc: true,
       });
     } catch(e) {
+      console.error(e);
       throw new InvalidImageException();
     }
   }
@@ -33,6 +34,7 @@ export default class ImageManipulator {
       width = metadata.width!;
       height = metadata.height!;
     } catch(e) {
+      console.error(e);
       throw new InvalidImageException();
     }
 
@@ -49,6 +51,7 @@ export default class ImageManipulator {
         });
       });
     } catch(e) {
+      console.error(e);
       throw new ImageManipulationException();
     }
   }
