@@ -3,18 +3,18 @@
                 :width="editMode ? '800px' : '500px'"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                :hideCloseButton="true"
+                hideCloseButton
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @cancel="onDialogCancel"
-                @primary="onDialogConfirm"
                 @secondary="resetForm"
+                @primary="onDialogConfirm"
+                @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !formValid"
+                :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
     <p v-if="!editMode" class="mb-2 text-warning">※ 굿즈 이미지는 먼저 굿즈를 추가한 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.</p>
     <VLayout class="d-flex flex-column flex-md-row">
@@ -30,73 +30,13 @@
                        :uploadCallback="goodsImageUploadCallback"
                        :deleteCallback="goodsImageDeleteCallback" />
 
-      <VForm v-model="formValid" @submit.prevent class="flex-1-1">
-        <VTextField v-model.trim="formData.name"
-                    tabindex="1"
-                    density="compact"
-                    label="굿즈 이름 *"
-                    placeholder="예시) 겁나 귀여운 코하루 아크릴 스탠드"
-                    :rules="stringValidator(formData.name)" />
-        <VRow class="ma-0 d-flex flex-row flex-nowrap">
-          <VSelect v-model="formData.categoryId"
-                  tabindex="2"
+      <CommonForm v-model="isFormValid"
+                  v-model:edited="isFormEdited"
+                  v-model:data="formModels"
+                  ref="form"
                   class="flex-1-1"
-                  :items="allCategoryData"
-                  item-title="name"
-                  item-value="id"
-                  label="카테고리 *"
-                  :rules="[!formData.categoryId ? '카테고리를 선택해주세요.' : true]" />
-          <VBtn icon variant="flat" class="flex-0-0 mt-1 ml-2"
-                title="굿즈 카테고리 추가"
-                @click="goodsCategoryManageDialogShown = !goodsCategoryManageDialogShown">
-            <VTooltip activator="parent" location="bottom">굿즈 카테고리 추가</VTooltip>
-            <VIcon>mdi-plus</VIcon>
-          </VBtn>
-        </VRow>
-        <VTextField v-model.trim="formData.description"
-                    tabindex="3"
-                    density="compact"
-                    label="굿즈 설명"
-                    placeholder="예시) 1/10 비율 등신대 아크릴 스탠드" />
-        <VTextField v-model.trim="formData.type"
-                    tabindex="4"
-                    density="compact"
-                    label="굿즈 종류"
-                    placeholder="예시) 아크릴 스탠드" />
-        <VTextField v-model.number="formData.price"
-                    tabindex="5"
-                    density="compact"
-                    type="number"
-                    min="0"
-                    :prefix="currencySymbol"
-                    label="가격 (단가) *"
-                    :rules="numberValidator(formData.price)"
-                    @change="formData.price = new Number(new Number(formData.price).toFixed(3)).valueOf()" />
-        <VRow class="ma-0 d-flex flex-row">
-          <VTextField v-model.number="formData.stockRemaining"
-                      tabindex="7"
-                      density="compact"
-                      type="number"
-                      :max="formData.stockInitial"
-                      min="0"
-                      suffix="개"
-                      label="현재 재고 *"
-                      :rules="numberValidatorStockRemaining(formData.stockRemaining)"
-                      @focus="!formData.stockRemaining ? formData.stockRemaining = formData.stockInitial : undefined"
-                      @change="formData.stockRemaining = Math.floor(new Number(formData.stockRemaining).valueOf())" />
-          <span class="mx-2 mt-1" style="font-size: 1.5em"> / </span>
-          <VTextField v-model.number="formData.stockInitial"
-                      tabindex="6"
-                      density="compact"
-                      type="number"
-                      max="10000"
-                      min="0"
-                      suffix="개"
-                      label="초기 재고 *"
-                      :rules="numberValidator(formData.stockInitial)"
-                      @change="formData.stockInitial = Math.floor(new Number(formData.stockInitial).valueOf())" />
-        </VRow>
-      </VForm>
+                  :initialModelValues="formModelsInitial"
+                  :fields="formFields" />
     </VLayout>
 
     <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown"
@@ -109,18 +49,24 @@
 </template>
 
 <script lang="ts">
-import type { IBooth, IGoodsCreateRequest, IGoodsUpdateRequest } from "@myboothmanager/common";
-import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
-import { reactive } from "vue";
+import { ErrorCodes, GoodsStockVisibility, type IGoods, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
+import { reactive , readonly } from "vue";
+import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
+import CommonForm from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
+import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
+
+type IGoodsManageFormField = Omit<IGoodsCreateRequest, "boothId">;
 
 @Component({
   components: {
     ImageWithUpload,
+    CommonForm,
     GoodsCategoryManageDialog,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
@@ -129,25 +75,97 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 export default class GoodsManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
-  @Prop({ type: Number, default: null }) goodsId!: number | string | null;
+  @Prop({ type: Number, default: null }) goodsId!: number | null;
 
-  readonly GOODS_ADD_DEFAULT_DATA: Partial<IGoodsCreateRequest> = {
-    boothId: this.currentBooth.id,
+  @Ref("form") readonly form!: CommonForm;
+
+  readonly formModels: IGoodsManageFormField = reactive({
     name: "",
     description: "",
-    type: "",
-    price: undefined,
     categoryId: -1,
-    stockInitial: undefined,
-    stockRemaining: undefined,
-  };
+    type: "",
+    price: 0,
+    stockInitial: 0,
+    stockRemaining: 0,
+    stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+  });
+  readonly formFields = readonly({
+    name: {
+      type: FormFieldType.TEXT,
+      label: "굿즈 이름",
+      placeholder: "겁나 귀여운 코하루 아크릴 스탠드",
+    },
+    description: {
+      type: FormFieldType.TEXT,
+      label: "굿즈 설명",
+      placeholder: "1/10 비율 등신대 아크릴 스탠드",
+      optional: true,
+    },
+    categoryId: {
+      type: FormFieldType.SELECT,
+      label: "카테고리",
+      get items() { return [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }]; },
+      itemTitle: "name",
+      itemValue: "id",
+      additionalButtons: [
+        {
+          icon: "mdi-plus",
+          title: "굿즈 카테고리 추가",
+          onClick: this.openAddCategoryDialog,
+        },
+      ],
+    },
+    type: {
+      type: FormFieldType.TEXT,
+      label: "굿즈 종류",
+      placeholder: "아크릴 스탠드",
+      optional: true,
+    },
+    price: {
+      type: FormFieldType.CURRENCY,
+      label: "가격 (단가)",
+      min: 0,
+      allowDecimal: true,
+    },
+    stockInitial: {
+      type: FormFieldType.NUMBER,
+      label: "초기 재고",
+      suffix: "개",
+      min: 0,
+      onChange: this.resetValidation,
+    },
+    stockRemaining: {
+      type: FormFieldType.NUMBER,
+      label: "현재 재고",
+      suffix: "개",
+      min: 0,
+      onChange: this.resetValidation,
+      rules: [ this.stockRemainingValidationRule ],
+    },
+    stockVisibility: {
+      type: FormFieldType.SELECT,
+      label: "재고 표시 방법",
+      items: [
+        { title: "남은 재고량 및 전체 재고량 표시", value: GoodsStockVisibility.SHOW_ALL },
+        { title: "현재 남은 재고량만 표시", value: GoodsStockVisibility.SHOW_REMAINING_ONLY },
+        { title: "전부 숨기기", value: GoodsStockVisibility.HIDE_ALL },
+      ],
+      itemTitle: "title",
+      itemValue: "value",
+      hint: "공개 페이지에서만 적용됩니다.",
+      persistentHint: true,
+    },
+  } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
+  formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);
 
-  updateInProgress = false;
-  formData: IGoodsUpdateRequest | IGoodsCreateRequest = reactive({ boothId: useAdminStore().currentBoothId });
-  formValid = false;
   goodsCategoryManageDialogShown = false;
+  openAddCategoryDialog() { this.goodsCategoryManageDialogShown = true; }
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
+
+  isFormValid = false;
+  isFormEdited = false;
+  updateInProgress = false;
 
   get dynString(): Record<string, string | null> {
     return {
@@ -158,16 +176,12 @@ export default class GoodsManageDialog extends Vue {
     };
   }
 
+  get currentGoods(): IGoods | null {
+    return (this.goodsId && (this.goodsId in useAdminStore().boothGoodsList)) ? readonly(useAdminStore().boothGoodsList[this.goodsId]) : null;
+  }
+
   get goodsImageUrl(): string | null {
-    return this.editMode ? useAdminStore().boothGoodsList[Number(this.goodsId)].goodsImageUrl ?? null : null;
-  }
-
-  get currentBooth(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
-  }
-
-  get currencySymbol(): string {
-    return this.currentBooth.currencySymbol;
+    return this.editMode && this.currentGoods ? this.currentGoods.goodsImageUrl ?? null : null;
   }
 
   get allCategoryData() {
@@ -177,93 +191,36 @@ export default class GoodsManageDialog extends Vue {
     return list;
   }
 
-  get isFormEdited(): boolean {
-    let edited = false;
-
-    if(this.goodsId && this.editMode) {
-      const currentGoodsData = useAdminStore().boothGoodsList[Number(this.goodsId!)];
-
-      if(currentGoodsData) {
-        const formDataTyped = this.formData as IGoodsUpdateRequest;
-
-        edited = Object.keys(this.formData).some((key) => {
-          const k = key as keyof IGoodsUpdateRequest;
-          return formDataTyped[k] !== currentGoodsData[k];
-        });
-      }
+  @Watch("open") mounted() {
+    if(this.editMode && this.currentGoods) {
+      this.formModels.name = this.currentGoods.name;
+      this.formModels.description = this.currentGoods.description;
+      this.formModels.categoryId = this.currentGoods.categoryId;
+      this.formModels.type = this.currentGoods.type;
+      this.formModels.price = this.currentGoods.price;
+      this.formModels.stockInitial = this.currentGoods.stockInitial;
+      this.formModels.stockRemaining = this.currentGoods.stockRemaining;
+      this.formModels.stockVisibility = this.currentGoods.stockVisibility;
     } else {
-      const formDataTyped = this.formData as IGoodsCreateRequest;
-
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IGoodsCreateRequest;
-        return formDataTyped[k] !== this.GOODS_ADD_DEFAULT_DATA[k];
-      });
+      this.formModels.name = "";
+      this.formModels.description = "";
+      this.formModels.categoryId = -1;
+      this.formModels.type = "";
+      this.formModels.price = 0;
+      this.formModels.stockInitial = 0;
+      this.formModels.stockRemaining = 0;
+      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
     }
 
-    return edited;
+    this.formModelsInitial = deepClone(this.formModels);
+    this.resetForm();
   }
 
-  async goodsImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadGoodsImage(Number(this.goodsId!), file!);
-  }
-
-  async goodsImageDeleteCallback() {
-    return await useAdminStore().deleteGoodsImage(Number(this.goodsId!));
-  }
-
-  mounted() { this.resetForm(); }
-  @Watch("open", { immediate: true }) onDialogOpen() { this.resetForm(); }
-
-  resetForm() {
-    if(this.goodsId && this.editMode) {
-      const goodsData = useAdminStore().boothGoodsList[Number(this.goodsId)];
-
-      this.formData = reactive({
-        name: goodsData?.name,
-        description: goodsData?.description,
-        type: goodsData?.type,
-        price: goodsData?.price,
-        categoryId: goodsData?.categoryId,
-        stockInitial: goodsData?.stockInitial,
-        stockRemaining: goodsData?.stockRemaining,
-      } as IGoodsUpdateRequest);
-    } else {
-      this.formData = reactive({
-        ...this.GOODS_ADD_DEFAULT_DATA,
-      } as IGoodsCreateRequest);
-    }
-
-    this.formData.boothId = useAdminStore().currentBoothId;
-  }
-
-  stringValidator(input?: string): Array<string | boolean> {
-    const rules = [
-      (!input || input.trim().length <= 0) ? "입력한 내용이 없거나 공백으로만 이루어질 수 없습니다." : true,
-    ];
-
-    return rules;
-  }
-
-  numberValidator(input?: number): Array<string | boolean> {
-    const rules = [
-      !input ? "숫자를 입력해야 합니다." : true,
-      (input && input < 0) ? "0 이하의 숫자는 입력할 수 없습니다." : true,
-    ];
-
-    return rules;
-  }
-
-  numberValidatorStockRemaining(input?: number): Array<string | boolean> {
-    const rules = [
-      ...this.numberValidator(input),
-      (input && input > this.formData.stockInitial!) ? "현재 재고량은 초기 재고량보다 클 수 없습니다." : true,
-    ];
-
-    return rules;
-  }
+  resetForm() { if(this.form) this.form.reset(); }
+  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onGoodsCategoryUpdated(categoryId: number) {
-    this.formData.categoryId = categoryId;
+    this.formModels.categoryId = categoryId;
   }
 
   onDialogCancel() {
@@ -275,53 +232,39 @@ export default class GoodsManageDialog extends Vue {
   }
 
   async onDialogConfirm() {
-    let success = false;
-    let errorMsg = "";
-
     this.updateInProgress = true;
 
-    if(this.editMode) {
+    let result: boolean | ErrorCodes = false;
+
+    if(this.editMode && this.goodsId) {
+      // UPDATE
+
       const requestData: IGoodsUpdateRequest = {
-        ...this.formData as IGoodsUpdateRequest,
-        name: this.formData.name?.trim(),
-        description: this.formData.description?.trim(),
-        type: this.formData.type?.trim(),
-      };
-      const result = await useAdminStore().updateGoodsInfo(Number(this.goodsId!), requestData);
-
-      if(result === true) {
-        success = true;
-      } else {
-        errorMsg = `오류 (${result})`;
-      }
-    } else {
-      const requestData: IGoodsCreateRequest = {
-        ...this.formData as IGoodsCreateRequest,
+        ...this.formModels,
         boothId: useAdminStore().currentBoothId,
-        name: this.formData.name!.trim(),
-        description: this.formData.description?.trim(),
-        type: this.formData.type?.trim(),
       };
-      const result = await useAdminStore().createGoods(requestData);
 
-      if(result === true) {
-        success = true;
-      } else {
-        errorMsg = `오류 (${result})`;
-      }
+      result = await useAdminStore().updateGoodsInfo(Number(this.goodsId!), requestData);
+    } else {
+      // CREATE
+
+      const requestData: IGoodsCreateRequest = {
+        ...this.formModels,
+        boothId: useAdminStore().currentBoothId,
+      };
+
+      result = await useAdminStore().createGoods(requestData);
     }
 
-    this.updateInProgress = false;
-
-    if(success) {
+    if(result === true) {
       this.$emit("updated");
       this.open = false;
     } else {
       this.$emit("error");
-
-      // TODO: error dialog
-      alert(errorMsg);
+      alert("오류 " + result);
     }
+
+    this.updateInProgress = false;
   }
 
   async onDeleteConfirm() {
@@ -333,10 +276,29 @@ export default class GoodsManageDialog extends Vue {
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
         this.open = false;
+      } else {
+        this.$emit("error");
+        alert("오류 " + response);
       }
     }
 
     this.updateInProgress = false;
+  }
+
+  async goodsImageUploadCallback(file: File | Blob | null) {
+    return await useAdminStore().uploadGoodsImage(Number(this.goodsId!), file!);
+  }
+
+  async goodsImageDeleteCallback() {
+    return await useAdminStore().deleteGoodsImage(Number(this.goodsId!));
+  }
+
+  stockRemainingValidationRule() {
+    if(this.formModels.stockRemaining > this.formModels.stockInitial) {
+      return "현재 재고량은 초기 재고량보다 클 수 없습니다.";
+    } else {
+      return true;
+    }
   }
 }
 </script>

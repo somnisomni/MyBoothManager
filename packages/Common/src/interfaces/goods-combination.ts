@@ -19,7 +19,7 @@ export interface IGoodsCombinationModel extends Omit<IGoodsCombination, "stockIn
   combinationImageId?: number | null;
 }
 
-export type GoodsCombinationCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price";
+export type GoodsCombinationCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockVisibility";
 export type IGoodsCombinationCreateRequest = Pick<IGoodsCombination, GoodsCombinationCreateRequestKey> & { goodsIds: number[] };
 
 export type GoodsCombinationUpdateRequestKey = "categoryId" | "name" | "description" | "price" | "stockVisibility";

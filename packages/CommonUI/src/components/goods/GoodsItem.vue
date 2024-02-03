@@ -32,8 +32,9 @@
       <VLayout v-if="!showNameOnly" class="d-flex flex-row flex-wrap justify-space-between">
         <div class="flex-0-0">{{ isGoodsCombination ? "세트" : "" }} {{ currencySymbol }}{{ normalizedData.price.toLocaleString() }}</div>
         <div class="flex-1-0 text-right">
-          <span v-if="normalizedData.stockVisibility !== GoodsStockVisibility.HIDE_ALL" class="goods-stock-current">{{ normalizedData.stockRemaining }}</span>
-          <span v-if="normalizedData.stockVisibility === GoodsStockVisibility.SHOW_ALL" class="goods-stock-initial"> / {{ normalizedData.stockInitial }}</span>
+          <span v-if="forceShowAllStock || (normalizedData.stockVisibility !== GoodsStockVisibility.HIDE_ALL)" class="goods-stock-current">{{ normalizedData.stockRemaining }}</span>
+          <span v-if="!forceShowAllStock && normalizedData.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY" style="font-weight: 300; font-size: 0.8em">개 남음</span>
+          <span v-if="forceShowAllStock || (normalizedData.stockVisibility === GoodsStockVisibility.SHOW_ALL)" class="goods-stock-initial"> / {{ normalizedData.stockInitial }}</span>
         </div>
       </VLayout>
     </VLayout>
@@ -63,6 +64,7 @@ export default class GoodsItem extends Vue {
   @Prop({ type: String, default: "" }) disabledReason!: string;
   @Prop({ type: Boolean, default: false }) forceSmallSize!: boolean;
   @Prop({ type: Boolean, default: false }) showNameOnly!: boolean;
+  @Prop({ type: Boolean, default: false }) forceShowAllStock!: boolean;
 
   readonly ELEVATION_NORMAL = 4;
   readonly ELEVATION_HOVER  = 8;

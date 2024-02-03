@@ -34,7 +34,7 @@ export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
   goodsImageId?: number | null;
 }
 
-export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining";
+export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "stockVisibility";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
 export type GoodsUpdateRequestKey = "categoryId" | "combinationId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason" | "stockVisibility";

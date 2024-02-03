@@ -8,6 +8,7 @@
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    :goodsCombinationList="goodsCombinationList"
+                   forceShowAllGoodsStock
                    @goodsEditRequest="openGoodsEditDialog"
                    @goodsCategoryEditRequest="openGoodsCategoryEditDialog"
                    @combinationEditRequest="openGoodsCombinationEditDialog" />

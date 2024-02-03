@@ -22,6 +22,7 @@
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
                      :goodsCombinationList="boothGoodsCombinationList"
+                     forceShowAllGoodsStock
                      @goodsClick="(goodsId: number) => updateOrderListQuantity({ id: goodsId, delta: 1 })"
                      @combinationClick="(combinationId: number) => updateOrderListQuantity({ id: combinationId, delta: 1, isCombination: true })" />
     </VLayout>

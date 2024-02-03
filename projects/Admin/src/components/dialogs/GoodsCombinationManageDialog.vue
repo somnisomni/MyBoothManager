@@ -84,7 +84,7 @@ import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
 
-export type IGoodsCombinationManageFormField
+type IGoodsCombinationManageFormField
   = Pick<IGoodsCombination, "name" | "description" | "categoryId" | "price" | "stockVisibility">
     & { goodsIds: number[] };
 
@@ -111,7 +111,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     categoryId: -1,
     price: 0,
     goodsIds: [],
-    stockVisibility: GoodsStockVisibility.SHOW_ALL,
+    stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
   });
   readonly formFields = readonly({
     name: {
@@ -145,10 +145,23 @@ export default class GoodsCombinationManageDialog extends Vue {
       label: "세트 가격",
       allowDecimal: true,
     },
+    stockVisibility: {
+      type: FormFieldType.SELECT,
+      label: "재고 표시 방법",
+      items: [
+        { title: "남은 재고량 및 전체 재고량 표시", value: GoodsStockVisibility.SHOW_ALL },
+        { title: "현재 남은 재고량만 표시", value: GoodsStockVisibility.SHOW_REMAINING_ONLY },
+        { title: "전부 숨기기", value: GoodsStockVisibility.HIDE_ALL },
+      ],
+      itemTitle: "title",
+      itemValue: "value",
+      hint: "공개 페이지에서만 적용됩니다.",
+      persistentHint: true,
+    },
     _1: {
       type: FormFieldType.PARAGRAPH,
       content: "※ 세트 재고 수량은 포함된 굿즈 중 재고 수량이 가장 낮은 값으로 자동으로 설정됩니다.",
-      class: [ "text-center", "text-disabled" ],
+      class: [ "text-center", "text-disabled", "mt-4" ],
     },
     _3: {
       type: FormFieldType.PARAGRAPH,
@@ -234,7 +247,7 @@ export default class GoodsCombinationManageDialog extends Vue {
       this.formModels.categoryId = -1;
       this.formModels.price = 0;
       this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
-      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_ALL;
+      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
 
       this.formModelsInitial = deepClone(this.formModels);
     }
@@ -258,13 +271,8 @@ export default class GoodsCombinationManageDialog extends Vue {
 
     if(this.editMode) {
       const requestData: IGoodsCombinationUpdateRequest = {
+        ...this.formModels,
         boothId: useAdminStore().currentBoothId,
-        categoryId: this.formModels.categoryId,
-        name: this.formModels.name,
-        description: this.formModels.description,
-        price: this.formModels.price,
-        goodsIds: this.formModels.goodsIds,
-        stockVisibility: this.formModels.stockVisibility,
       };
       const result = await useAdminStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 
@@ -277,12 +285,8 @@ export default class GoodsCombinationManageDialog extends Vue {
       }
     } else {
       const requestData: IGoodsCombinationCreateRequest = {
+        ...this.formModels,
         boothId: useAdminStore().currentBoothId,
-        categoryId: this.formModels.categoryId,
-        name: this.formModels.name,
-        description: this.formModels.description,
-        price: this.formModels.price,
-        goodsIds: this.formModels.goodsIds,
       };
       const result = await useAdminStore().createGoodsCombination(requestData);
 

@@ -148,18 +148,15 @@ export default class BoothMemberManageDialog extends Vue {
       this.formModels.url = this.currentMember.url;
       this.formModels.role = this.currentMember.role;
       this.formModels.primaryColor = this.currentMember.primaryColor;
-
-      this.formModelsInitial = deepClone(this.formModels);
     } else {
       this.formModels.name = "";
       this.formModels.descriptionShort = "";
       this.formModels.url = "";
       this.formModels.role = "";
       this.formModels.primaryColor = "#000000";
-
-      this.formModelsInitial = deepClone(this.formModels);
     }
 
+    this.formModelsInitial = deepClone(this.formModels);
     this.resetForm();
   }
 
@@ -182,11 +179,7 @@ export default class BoothMemberManageDialog extends Vue {
       // UPDATE
 
       const requestData: IBoothMemberUpdateRequest = {
-        name: this.formModels.name,
-        descriptionShort: this.formModels.descriptionShort,
-        url: this.formModels.url,
-        role: this.formModels.role,
-        primaryColor: this.formModels.primaryColor,
+        ...this.formModels,
       };
 
       result = await useAdminStore().updateBoothMemberInfo(this.boothMemberId, requestData);
@@ -194,11 +187,7 @@ export default class BoothMemberManageDialog extends Vue {
       // CREATE
 
       const requestData: IBoothMemberCreateRequest = {
-        name: this.formModels.name,
-        descriptionShort: this.formModels.descriptionShort,
-        url: this.formModels.url,
-        role: this.formModels.role,
-        primaryColor: this.formModels.primaryColor,
+        ...this.formModels,
       };
 
       result = await useAdminStore().createBoothMember(requestData);

@@ -19,6 +19,7 @@
                      :combinationData="combination"
                      :currencySymbol="currencySymbol"
                      :representativeImageUrl="goodsImageUrlResolver(combination.combinationImageUrl)"
+                     :forceShowAllStock="forceShowAllGoodsStock"
                      @click="onCombinationClick"
                      @editRequest="onCombinationEditRequest" />
 
@@ -30,6 +31,7 @@
                        :goodsData="goods"
                        :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
                        :currencySymbol="currencySymbol"
+                       :forceShowAllStock="forceShowAllGoodsStock"
                        @click="onGoodsClick"
                        @editRequest="onGoodsEditRequest" />
           </VSlideYReverseTransition>
@@ -44,6 +46,7 @@
                    :goodsData="goods"
                    :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
                    :currencySymbol="currencySymbol"
+                   :forceShowAllStock="forceShowAllGoodsStock"
                    @click="onGoodsClick"
                    @editRequest="onGoodsEditRequest" />
       </VSlideYReverseTransition>
@@ -67,6 +70,7 @@ export default class GoodsListView extends Vue {
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly forceShowAllGoodsStock!: boolean;
 
   get goodsListAdjusted() {
     if(!this.goodsList) {
