@@ -1,12 +1,11 @@
 import type { MultipartFile } from "@fastify/multipart";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable } from "@nestjs/common";
+import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
-import { create, findOneByPk, generateUploadFileName, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicGoodsService } from "@/modules/public/goods/goods.service";
-import UploadStorage from "@/db/models/uploadstorage";
 import { UtilService } from "../util/util.service";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
@@ -64,68 +63,21 @@ export class GoodsService {
   }
 
   async uploadImage(goodsId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
-    const uploadSubpath = "goods/rep";
-
-    // TODO: file validation
-
-    let fileName: string;
-    try {
-      fileName = generateUploadFileName("goodsrep", callerAccountId, goodsId, "test", file.filename.split(".").pop()!).fileName;
-      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
-
-    try {
-      const goods = await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId);
-
-      if(goods.goodsImageId) {
-        const existingUpload = await UploadStorage.findByPk(goods.goodsImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      const upload = await create(UploadStorage, {
-        ownerId: callerAccountId,
-        savePath: uploadSubpath,
-        fileName,
-      } as Omit<IUploadStorage, "id">);
-      await upload.save();
-
-      await goods.update({ goodsImageId: upload.id });
-
-      return {
-        value: upload.filePath,
-      };
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageUpload(
+      await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId),
+      "goodsImageId",
+      file,
+      "goods/rep",
+      ImageSizeConstraintKey.GOODS,
+      callerAccountId,
+    );
   }
 
   async deleteImage(goodsId: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
-    try {
-      const goods = await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId);
-      const goodsImageId = goods.goodsImageId;
-
-      await (goods.set("goodsImageId", null)).save();
-
-      if(goodsImageId) {
-        const existingUpload = await UploadStorage.findByPk(goodsImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      return SUCCESS_RESPONSE;
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageDelete(
+      await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId),
+      "goodsImageId",
+    );
   }
 
   async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number): Promise<Goods> {

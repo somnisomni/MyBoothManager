@@ -65,4 +65,10 @@ export enum ErrorCodes {
   UNKNOWN_BOOTH_MEMBER_ERROR          = 7000,
   BOOTH_MEMBER_PARENT_BOOTH_NOT_FOUND = 7001,
   BOOTH_MEMBER_INFO_UPDATE_FAILED     = 7002,
+
+  // 8XXX: Upload / Image / File related errors
+  UNKNOWN_UPLOAD_ERROR      = 8000,
+  EMPTY_UPLOAD              = 8001,
+  INVALID_IMAGE             = 8002,
+  IMAGE_MANIPULATION_FAILED = 8003,
 }

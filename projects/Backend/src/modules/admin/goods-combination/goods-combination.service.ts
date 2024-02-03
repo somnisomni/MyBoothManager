@@ -1,10 +1,9 @@
 import type { MultipartFile } from "@fastify/multipart";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable } from "@nestjs/common";
+import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
-import { create, findOneByPk, generateUploadFileName, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import UploadStorage from "@/db/models/uploadstorage";
 import GoodsCombination from "@/db/models/goods-combination";
 import Goods from "@/db/models/goods";
 import { UtilService } from "../util/util.service";
@@ -84,69 +83,21 @@ export class GoodsCombinationService {
   }
 
   async uploadImage(combinationId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
-    const uploadSubpath = "goods-combination/rep";
-
-    // TODO: file validation
-
-    let fileName: string;
-    try {
-      fileName = generateUploadFileName("goodscombinationrep", callerAccountId, combinationId, "test", file.filename.split(".").pop()!).fileName;
-      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
-
-    try {
-      const combination = await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId);
-
-      if(combination.combinationImageId) {
-        const existingUpload = await UploadStorage.findByPk(combination.combinationImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      const upload = await create(UploadStorage, {
-        ownerId: callerAccountId,
-        savePath: uploadSubpath,
-        fileName,
-      } as Omit<IUploadStorage, "id">);
-      await upload.save();
-
-      await combination.update({ combinationImageId: upload.id });
-
-      return {
-        value: upload.filePath,
-      };
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageUpload(
+      await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId),
+      "combinationImageId",
+      file,
+      "goods-combination/rep",
+      ImageSizeConstraintKey.GOODS,
+      callerAccountId,
+    );
   }
 
   async deleteImage(combinationId: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
-    try {
-      const combination = await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId);
-      const combinationImageId = combination.combinationImageId;
-
-      combination.combinationImageId = null;
-      await combination.save();
-
-      if(combinationImageId) {
-        const existingUpload = await UploadStorage.findByPk(combinationImageId);
-        if(existingUpload) {
-          await existingUpload.destroy({ force: true });
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-        }
-      }
-
-      return SUCCESS_RESPONSE;
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageDelete(
+      await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId),
+      "combinationImageId",
+    );
   }
 
   async updateInfo(id: number, dto: UpdateGoodsCombinationDTO, callerAccountId: number): Promise<GoodsCombination> {

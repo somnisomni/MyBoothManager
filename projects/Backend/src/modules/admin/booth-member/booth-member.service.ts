@@ -1,12 +1,11 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ISuccessResponse, IUploadStorage, IValueResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { Injectable } from "@nestjs/common";
+import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
-import { create, generateUploadFileName, removeTarget } from "@/lib/common-functions";
+import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
 import BoothMember from "@/db/models/booth-member";
 import { PublicBoothMemberService } from "@/modules/public/booth-member/booth-member.service";
-import UploadStorage from "@/db/models/uploadstorage";
 import { UtilService } from "../util/util.service";
 import { UpdateBoothMemberDTO } from "./dto/update-booth-member.dto";
 import { CreateBoothMemberDTO } from "./dto/create-booth-member.dto";
@@ -61,64 +60,21 @@ export class BoothMemberService {
   }
 
   async uploadMemberImage(boothId: number, id: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
-    const member = await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId);
-    const uploadSubpath = "booth/member";
-
-    let fileName: string;
-    try {
-      fileName = generateUploadFileName("boothmember", callerAccountId, id, "test", file.filename.split(".").pop()!).fileName;
-      await this.utilService.writeFileTo(file, fileName, uploadSubpath);
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
-
-    try {
-      if(member.memberImageId) {
-        const existingUpload = await UploadStorage.findByPk(member.memberImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      const upload = await (await create(UploadStorage, {
-        ownerId: callerAccountId,
-        savePath: uploadSubpath,
-        fileName,
-      } as Omit<IUploadStorage, "id">)).save();
-
-      await member.update({ memberImageId: upload.id });
-
-      return {
-        value: upload.filePath,
-      };
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageUpload(
+      await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId),
+      "memberImageId",
+      file,
+      "booth/member",
+      ImageSizeConstraintKey.BOOTH_MEMBER_AVATAR,
+      callerAccountId,
+    );
   }
 
   async deleteMemberImage(boothId: number, id: number, callerAccountId: number): Promise<ISuccessResponse> {
-    const member = await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId);
-
-    try {
-      if(member.memberImageId) {
-        const existingUpload = await UploadStorage.findByPk(member.memberImageId);
-        if(existingUpload) {
-          this.utilService.removeFile(existingUpload.fileName, existingUpload.savePath);
-          await existingUpload.destroy({ force: true });
-        }
-      }
-
-      member.set("memberImageId", null);
-      await member.save();
-
-      return SUCCESS_RESPONSE;
-    } catch(err) {
-      console.error(err);
-      throw new InternalServerErrorException();  // TODO: custom exception
-    }
+    return await this.utilService.processImageDelete(
+      await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId),
+      "memberImageId",
+    );
   }
 
   async remove(boothId: number, id: number, callerAccountId: number): Promise<ISuccessResponse> {
