@@ -34,6 +34,15 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
   @Column(DataTypes.STRING(128))
   declare fileName: string;
 
+  @AllowNull(true)
+  @Default([])
+  @Column(DataTypes.JSON)
+  declare extensions?: Array<string>;
+
+  @AllowNull(true)
+  @Column(DataTypes.TEXT)
+  declare imageThumbnailBase64?: string;
+
   @Column(DataTypes.VIRTUAL)
   get filePath(): string {
     return path.join(this.savePath!, this.fileName);

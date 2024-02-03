@@ -161,7 +161,7 @@ export class UtilService {
 
     const imageWebpBuffer = Buffer.from(await (await manipulator.toWebP()).arrayBuffer());
     const imageJpgBuffer  = Buffer.from(await (await manipulator.toJPG()).arrayBuffer());
-    // const imageThumbnailBase64 = await manipulator.toThumbnailBase64();
+    const imageThumbnailBase64 = await manipulator.toThumbnailBase64();
 
     manipulator.close();
 
@@ -180,7 +180,9 @@ export class UtilService {
       const upload = await (await create(UploadStorage, {
         ownerId: callerAccountId,
         savePath: fileSaveSubpath,
-        fileName: digest.withExt("webp"),  // TODO: multiple extension & thumbnail to be supported
+        fileName: digest.withExt("webp"),
+        extensions: ["webp", "jpg"],
+        imageThumbnailBase64,
       } as Omit<IUploadStorage, InternalKeysWithId>)).save();
 
       await targetModelInstance.update({ [targetModelImageIdColumnKey]: upload.id });
@@ -197,12 +199,20 @@ export class UtilService {
   async processImageDelete<TModel extends Model>(
     targetModelInstance: TModel,
     targetModelImageIdColumnKey: keyof TModel): Promise<ISuccessResponse> {
-    /* #1. Remove existing image if exists */
+    /* #1. Remove existing images if exists */
     if(targetModelInstance[targetModelImageIdColumnKey]) {
       // Do not try-catch here; ignore the file nonexistence
       const existingUpload = await UploadStorage.findByPk(targetModelInstance[targetModelImageIdColumnKey] as number);
       if(existingUpload) {
-        await this.removeFile(existingUpload.fileName, existingUpload.savePath);  // TODO: multiple extension to be supported
+        const targetFileNames = [];
+        if(existingUpload.extensions) {
+          targetFileNames.push(...existingUpload.extensions.map((ext) => existingUpload.fileName.replace(/\.[^.]+$/, `.${ext}`)));
+        }
+
+        for(const fileName of targetFileNames) {
+          await this.removeFile(fileName, existingUpload.savePath);
+        }
+
         await existingUpload.destroy({ force: true });
       }
     }
