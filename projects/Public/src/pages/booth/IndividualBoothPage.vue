@@ -27,9 +27,30 @@
         <BoothInfoSection :boothData="boothData" />
 
         <VContainer>
-          <p v-if="dataPollingTimerId"
-             class="text-right text-primary"
-             style="opacity: 0.5">※ 부스 정보는 30초마다 자동 업데이트됩니다.</p>
+          <div>
+            <div v-if="boothData?.status !== BoothStatus.CLOSE"
+                 class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
+              <VCheckbox v-model="autoRefreshEnabled"
+                         hide-details
+                         class="flex-grow-0"
+                         label="데이터 자동 업데이트" />
+
+              <VBtn variant="outlined"
+                    size="large"
+                    prepend-icon="mdi-refresh"
+                    class="ml-4"
+                    text="새로고침"
+                    :disabled="isDataLoading"
+                    :loading="isDataLoading"
+                    @click="pollData" />
+            </div>
+
+            <VExpandTransition>
+              <p v-if="dataPollingTimerId"
+                 class="text-right text-primary"
+                 style="opacity: 0.5">※ 부스 데이터가 30초마다 자동 업데이트됩니다.</p>
+            </VExpandTransition>
+          </div>
 
           <VSpacer class="my-8" />
 
@@ -47,9 +68,16 @@
           <VSpacer v-if="boothData?.infoImageUrl" class="my-8" />
 
           <div v-if="boothData?.infoImageUrl" class="w-100">
-            <h4 class="text-h4 text-left font-weight-medium ml-2">부스 인포</h4>
-            <VDivider class="my-2" />
-            <VImg :src="getUploadFilePath(boothData?.infoImageUrl)" class="w-100 no-interaction rounded-lg" />
+            <div v-ripple class="d-flex align-center pa-2" style="cursor: pointer" @click="boothInfoExpanded = !boothInfoExpanded">
+              <h4 class="flex-grow-1 text-h4 text-left font-weight-medium">부스 인포</h4>
+              <VIcon :icon="boothInfoExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="large" class="pa-2" />
+            </div>
+
+            <VDivider class="mb-2" />
+
+            <VExpandTransition>
+              <VImg v-show="boothInfoExpanded" :src="getUploadFilePath(boothData?.infoImageUrl)" class="w-100 no-interaction rounded-lg" cover position="top" />
+            </VExpandTransition>
           </div>
 
           <VSpacer class="my-8" />
@@ -72,13 +100,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFilePath } from "@/lib/common-functions";
+import { useLocalStore } from "@/stores/local";
 
 @Component({
   components: {
@@ -92,6 +121,7 @@ export default class IndividualBoothPage extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
 
   isDataFetched: boolean = false;
+  isDataLoading: boolean = false;
   fetchError: ErrorCodes | null = null;
 
   boothData: IBooth | null = null;
@@ -100,6 +130,8 @@ export default class IndividualBoothPage extends Vue {
   boothCategoryList: Array<IGoodsCategory> = [];
   boothCombinationList: Array<IGoodsCombination> = [];
 
+  boothInfoExpanded: boolean = true;
+
   readonly dataPollingInterval: number = 30000; // 30 seconds
   dataPollingTimerId: NodeJS.Timeout | null = null;
 
@@ -107,16 +139,19 @@ export default class IndividualBoothPage extends Vue {
     return new Number(useRoute().params["boothId"] as string).valueOf();
   }
 
+  get autoRefreshEnabled(): boolean { return useLocalStore().boothPageSettings.enableAutoRefresh; }
+  set autoRefreshEnabled(value: boolean) { useLocalStore().boothPageSettings.enableAutoRefresh = value; }
+
   async mounted() {
+    this.isDataFetched = false;
     await this.fetchData();
     this.isDataFetched = true;
 
     if(this.boothData) {
-      if(this.boothData.status === BoothStatus.OPEN || this.boothData.status === BoothStatus.PAUSE) {
-        this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
-        console.info("Start polling ", this.dataPollingTimerId);
-      }
+      // Force execute onAutoRefreshEnabledChanged
+      this.onAutoRefreshEnabledChanged(this.autoRefreshEnabled);
 
+      useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
       document.title = `${this.boothData.name} - 부스 정보`;
     } else {
       document.title = "오류";
@@ -127,6 +162,20 @@ export default class IndividualBoothPage extends Vue {
     if(this.dataPollingTimerId) {
       clearInterval(this.dataPollingTimerId);
       console.info("Stop polling ", this.dataPollingTimerId);
+    }
+  }
+
+  @Watch("autoRefreshEnabled", { immediate: true })
+  onAutoRefreshEnabledChanged(value: boolean) {
+    if(value) {
+      if(this.boothData && this.boothData.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
+        this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
+      }
+    } else {
+      if(this.dataPollingTimerId) {
+        clearInterval(this.dataPollingTimerId);
+        this.dataPollingTimerId = null;
+      }
     }
   }
 
@@ -166,6 +215,8 @@ export default class IndividualBoothPage extends Vue {
   async pollData(): Promise<boolean | ErrorCodes[]> {
     const errors: ErrorCodes[] = [-1, -1, -1, -1, -1];
 
+    this.isDataLoading = true;
+
     const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
     if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
     else errors[0] = boothDataResponse.errorCode;
@@ -185,6 +236,8 @@ export default class IndividualBoothPage extends Vue {
     const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
     if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse;
     else errors[4] = combinationResponse.errorCode;
+
+    this.isDataLoading = false;
 
     return errors.every((error) => error === ErrorCodes.SUCCESS) ? true : errors;
   }

@@ -1698,6 +1698,7 @@ __metadata:
     eslint-plugin-vue: "npm:^9.21.1"
     npm-run-all2: "npm:^6.1.2"
     pinia: "npm:^2.1.7"
+    pinia-plugin-persistedstate: "npm:^3.2.1"
     qrcode: "npm:^1.5.3"
     sass: "npm:^1.70.0"
     typescript: "npm:^5.3.3"
