@@ -2,19 +2,19 @@
   <VSheet class="bg-transparent position-fixed d-flex flex-column pa-2" style="top: 0; right: 0; z-index: 1000">
     <VBtn v-if="showHomeButton" class="share-button my-1" variant="outlined" icon :to="{ name: 'landing' }">
       <VIcon>mdi-home</VIcon>
-      <VTooltip activator="parent" location="bottom">메인 페이지로</VTooltip>
+      <VTooltip activator="parent" location="left">메인 페이지로</VTooltip>
     </VBtn>
     <VBtn class="share-button my-1" variant="outlined" icon @click.stop="shareTwitter">
       <VIcon>mdi-twitter</VIcon>
-      <VTooltip activator="parent" location="bottom">X<small>(트위터)</small>에 공유</VTooltip>
+      <VTooltip activator="parent" location="left">X<small>(트위터)</small>에 공유</VTooltip>
     </VBtn>
     <VBtn class="share-button my-1" variant="outlined" icon @click.stop="shareURL">
       <VIcon>mdi-clipboard-text</VIcon>
-      <VTooltip activator="parent" location="bottom">URL 복사</VTooltip>
+      <VTooltip activator="parent" location="left">URL 복사</VTooltip>
     </VBtn>
     <VBtn class="share-button my-1" variant="outlined" icon @click.stop="showBoothQRCodeDialog = true">
       <VIcon>mdi-qrcode</VIcon>
-      <VTooltip activator="parent" location="bottom">QR 코드 생성</VTooltip>
+      <VTooltip activator="parent" location="left">QR 코드 생성</VTooltip>
     </VBtn>
   </VSheet>
 
