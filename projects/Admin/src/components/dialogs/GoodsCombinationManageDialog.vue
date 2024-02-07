@@ -149,7 +149,6 @@ export default class GoodsCombinationManageDialog extends Vue {
       type: FormFieldType.SELECT,
       label: "재고 표시 방법",
       items: [
-        { title: "남은 재고량 및 전체 재고량 표시", value: GoodsStockVisibility.SHOW_ALL },
         { title: "현재 남은 재고량만 표시", value: GoodsStockVisibility.SHOW_REMAINING_ONLY },
         { title: "전부 숨기기", value: GoodsStockVisibility.HIDE_ALL },
       ],

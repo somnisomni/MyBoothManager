@@ -1,6 +1,6 @@
 import type { MultipartFile } from "@fastify/multipart";
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
+import { GoodsStockVisibility, ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
@@ -47,6 +47,11 @@ export class GoodsCombinationService {
     // Set category ID to null if not provided or -1
     if(!dto.categoryId || dto.categoryId < 0) {
       dto.categoryId = null;
+    }
+
+    // Set stock visibility to SHOW_REMAINING_ONLY if set to SHOW_ALL
+    if(dto.stockVisibility === GoodsStockVisibility.SHOW_ALL) {
+      dto.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
     }
 
     // Remove/Exclude target goods with different category
@@ -101,8 +106,14 @@ export class GoodsCombinationService {
   }
 
   async updateInfo(id: number, dto: UpdateGoodsCombinationDTO, callerAccountId: number): Promise<GoodsCombination> {
+    // Set category ID to null if not provided or -1
     if(dto.categoryId && dto.categoryId < 0) {
       dto.categoryId = null;
+    }
+
+    // Set stock visibility to SHOW_REMAINING_ONLY if set to SHOW_ALL
+    if(dto.stockVisibility === GoodsStockVisibility.SHOW_ALL) {
+      dto.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
     }
 
     const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId!, callerAccountId);
