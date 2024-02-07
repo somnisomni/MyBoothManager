@@ -17,7 +17,16 @@ export default class AdminAPI {
 
   /* == Endpoints == */
   /* Common */
-  static async checkAPIServerAlive() { return await this.API.checkAPIServerAlive(); }
+  static async checkAPIServerAlive(): Promise<boolean> {
+    // Try max 3 times
+    for(let i = 0; i < 3; i++) {
+      if(await this.API.checkAPIServerAlive()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   /* Auth */
   static async login(payload: CT.IAccountLoginRequest) {
@@ -35,6 +44,10 @@ export default class AdminAPI {
   /* Fetch */
   static async fetchCurrentAccountInfo() {
     return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.GET("account"));
+  }
+
+  static async fetchSingleBooth(boothId: number) {
+    return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.GET(`booth/${boothId}`));
   }
 
   static async fetchAllBooths() {
