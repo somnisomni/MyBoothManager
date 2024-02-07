@@ -7,6 +7,7 @@ export interface IAccount extends IDataModelBase {
   loginPassHash: string;
   loginCount: number;
   lastLoginAt: Date;
+  lastSelectedBoothId?: number;
 }
 export type IAccountResponse = IAccount;
 export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount"> & { superAdmin?: boolean };

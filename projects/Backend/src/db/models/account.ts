@@ -39,6 +39,11 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   @Column(DataTypes.DATE)
   declare lastLoginAt: Date;
 
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare lastSelectedBoothId?: number;
+
 
   /* === Relations === */
   @HasMany(() => Booth)
