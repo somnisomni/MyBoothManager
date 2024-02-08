@@ -11,7 +11,9 @@
     <VSheet v-for="booth in boothList.value"
             :key="booth.id"
             class="booth-item no-selection-all"
+            :class="{ 'current no-interaction-all': booth.id === currentBoothId}"
             min-height="120px"
+            ref="boothItems"
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
@@ -26,6 +28,8 @@
         </VLayout>
         <div class="flex-shrink-0">{{ getBoothOpenStatusString(booth.status) }}</div>
       </VLayout>
+
+      <div v-if="booth.id === currentBoothId" class="booth-item-current-indicator bg-primary text-body-2">현재 관리 중인 부스</div>
     </VSheet>
 
     <BoothManageDialog v-model="boothAddDialogShown"
@@ -37,7 +41,7 @@
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
-import { ref, type Ref } from "vue";
+import { ref, type Ref as VueRef } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminAPIStore } from "@/stores/api";
@@ -51,7 +55,7 @@ import BoothManageDialog from "./BoothManageDialog.vue";
 export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
-  boothList: Ref<Array<IBooth>> = ref([]);
+  boothList: VueRef<Array<IBooth>> = ref([]);
   boothListFetching = false;
   boothAddDialogShown = false;
   titleButtons/* : CommonDialogButtonParams[] */ = [
@@ -67,7 +71,12 @@ export default class BoothSelectionDialog extends Vue {
     },
   ];
 
+  get currentBoothId() {
+    return useAdminStore().currentBooth.booth!.id;
+  }
+
   @Watch("open", { immediate: true })
+  @Watch("boothItems", { immediate: true })
   onDialogOpen(value: boolean) {
     if(value) this.refreshBoothList();
   }
@@ -143,10 +152,12 @@ export default class BoothSelectionDialog extends Vue {
     }
   }
 
-  &:hover .booth-item-image-container .booth-item-image-overlay {
-    background-color: rgba(0, 0, 0, 0.4);
-    -webkit-backdrop-filter: blur(0);
-            backdrop-filter: blur(0);
+  &:hover, &.current {
+    .booth-item-image-container .booth-item-image-overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+      -webkit-backdrop-filter: blur(0);
+              backdrop-filter: blur(0);
+    }
   }
 
   .booth-item-info {
@@ -157,6 +168,14 @@ export default class BoothSelectionDialog extends Vue {
       font-size: 1.5rem;
       font-weight: 700;
     }
+  }
+
+  .booth-item-current-indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.5em 1.25em 0.5em 0.75em;
+    margin-top: 1em;
   }
 }
 </style>
