@@ -9,8 +9,8 @@
     <div v-if="loadingTargetLength >= 0" class="text-caption">{{ loadingTargetCurrentProgress + 1}} / {{ loadingTargetLength }}</div>
   </VContainer>
 
-  <ServerDataLoadErrorDialog v-model="lastAPIErrorCode"
-                             :errorCode="lastAPIErrorCode" />
+  <ServerDataLoadErrorDialog v-model="apiErrorCode"
+                             :errorCode="apiErrorCode" />
 </template>
 
 <script lang="ts">
@@ -27,9 +27,7 @@ export default class BoothAdminLoadDataOverlay extends Vue {
   loadingTargetLength = -1;
   loadingTargetCurrentProgress = -1;
 
-  get lastAPIErrorCode() {
-    return useAdminAPIStore().lastAPIErrorCode;
-  }
+  apiErrorCode: ErrorCodes | null = null;
 
   get isBoothDataStillLoading() {
     return !useAdminStore().isBoothDataLoaded;
@@ -43,7 +41,10 @@ export default class BoothAdminLoadDataOverlay extends Vue {
     if(!$adminStore.currentAccount) {
       this.loadingTargetName = "계정 정보";
       const response = await $apiStore.fetchCurrentAccountInfo();
-      if(typeof response === "number") return response;
+      if(typeof response === "number") {
+        this.apiErrorCode = response;
+        return;
+      }
     }
 
     // Fetch account last selected booth data
@@ -71,7 +72,13 @@ export default class BoothAdminLoadDataOverlay extends Vue {
     this.loadingTargetCurrentProgress = 0;
     for(const [targetName, fetchFunc] of fetchTargets) {
       this.loadingTargetName = targetName;
-      await fetchFunc();
+
+      const response = await fetchFunc();
+      if(typeof response === "number") {
+        this.apiErrorCode = response;
+        return;
+      }
+
       this.loadingTargetCurrentProgress++;
     }
 
