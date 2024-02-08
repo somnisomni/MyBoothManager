@@ -30,15 +30,15 @@ import NoBoothAvailableOverlay from "./NoBoothAvailableOverlay.vue";
 })
 export default class BoothAdminRoot extends Vue {
   get loaded(): boolean {
-    return useAdminStore().isBoothDataLoaded;
+    return useAdminStore().isAllDataLoaded;
   }
 
   set loaded(value: boolean) {
-    useAdminStore().isBoothDataLoaded = value;
+    useAdminStore().isAllDataLoaded = value;
   }
 
   get boothAvailable(): boolean {
-    return Object.keys(useAdminStore().boothList).length > 0;
+    return useAdminStore().currentBooth.booth !== null;
   }
 
   get needCreateBooth(): boolean {

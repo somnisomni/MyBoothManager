@@ -228,7 +228,7 @@ export default class CommonForm extends Vue {
 
   /* Common getters */
   get currentBoothCurrencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   /* Component event emits */

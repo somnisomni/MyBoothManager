@@ -57,6 +57,7 @@ import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothStatusUpdateDialog from "@/components/dialogs/BoothStatusUpdateDialog.vue";
+import { useAdminAPIStore } from "@/stores/api";
 import DashboardPanel from "./DashboardPanel.vue";
 
 @Component({
@@ -98,15 +99,15 @@ export default class BoothStatusPanel extends Vue {
   statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
   get currentBoothStatus(): BoothStatus {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].status;
+    return useAdminStore().currentBooth.booth!.status;
   }
 
   get currentBoothStatusReason(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].statusReason || "";
+    return useAdminStore().currentBooth.booth!.statusReason || "";
   }
 
   get currentBoothStatusContentPublish(): boolean {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].statusPublishContent || false;
+    return useAdminStore().currentBooth.booth!.statusPublishContent || false;
   }
 
   onBoothStatusUpdateButtonClick(newStatus: BoothStatus): void {
@@ -117,7 +118,7 @@ export default class BoothStatusPanel extends Vue {
   async updateContentPublishStatus(publish: boolean) {
     this.contentPublishStatusUpdateProgress = true;
 
-    const response = await useAdminStore().updateCurrentBoothStatus({
+    const response = await useAdminAPIStore().updateCurrentBoothStatus({
       ...{
         status: this.currentBoothStatus,
         statusReason: this.currentBoothStatusReason,

@@ -29,6 +29,7 @@ import BoothInfoPanel from "@/components/info/BoothInfoPanel.vue";
 import BoothMembersPanel from "@/components/info/BoothMembersPanel.vue";
 import ImageWithUpload from "@/components/common/ImageWithUpload.vue";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 
 @Component({
   components: {
@@ -39,27 +40,27 @@ import { useAdminStore } from "@/stores/admin";
 })
 export default class BoothAdminInfoPage extends Vue {
   get boothBannerImageUrl(): string | null {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].bannerImageUrl ?? null;
+    return useAdminStore().currentBooth.booth!.bannerImageUrl ?? null;
   }
 
   get boothInfoImageUrl(): string | null {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].infoImageUrl ?? null;
+    return useAdminStore().currentBooth.booth!.infoImageUrl ?? null;
   }
 
   async boothBannerImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadBoothBannerImage(file!);
+    return await useAdminAPIStore().uploadBoothBannerImage(file!);
   }
 
   async boothBannerImageDeleteCallback() {
-    return await useAdminStore().deleteBoothBannerImage();
+    return await useAdminAPIStore().deleteBoothBannerImage();
   }
 
   async boothInfoImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadBoothInfoImage(file!);
+    return await useAdminAPIStore().uploadBoothInfoImage(file!);
   }
 
   async boothInfoImageDeleteCallback() {
-    return await useAdminStore().deleteBoothInfoImage();
+    return await useAdminAPIStore().deleteBoothInfoImage();
   }
 }
 </script>

@@ -118,14 +118,14 @@ const router = createRouter({
 /* Router global hooks */
 // Auth route guard
 router.beforeEach((to, from, next) => {
-  const isTokenAvailable = !!useAuthStore().isAuthTokenValid();
+  const isTokenAvailable = !!useAuthStore().isAuthTokenValid;
   // const isAccountDataAvailable = !!useAdminStore().currentAccount;
   const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable; */
 
   // SuperAdmin
   if(isAllAvailable
-      && useAdminStore().currentAccount?.superAdmin
-      && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
+     && useAdminStore().currentAccount?.superAdmin
+     && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
     next({ name: "superadmin" });
     return;
   } else if(isAllAvailable

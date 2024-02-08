@@ -86,8 +86,8 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   get targetItem() {
     return this.isCombination
-      ? useAdminStore().boothGoodsCombinationList[this.orderData.id]
-      : useAdminStore().boothGoodsList[this.orderData.id];
+      ? useAdminStore().currentBooth.goodsCombinations![this.orderData.id]
+      : useAdminStore().currentBooth.goods![this.orderData.id];
   }
 
   get targetItemMaxQuantity(): number {
@@ -95,7 +95,7 @@ export default class POSGoodsAdvancedDialog extends Vue {
   }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get priceStep(): number {

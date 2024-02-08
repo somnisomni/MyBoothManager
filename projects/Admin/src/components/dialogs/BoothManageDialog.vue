@@ -81,6 +81,7 @@ import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
 import { useDate } from "vuetify";
 import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
@@ -134,7 +135,7 @@ export default class BoothManageDialog extends Vue {
     let edited = false;
 
     if(this.editMode) {
-      // const currentBoothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+      // const currentBoothData = useAdminStore().currentBooth.booth!;
       // edited = Object.keys(this.formData).some((key) => {
       //   const k = key as keyof IBoothUpdateRequest;
       //   return this.formData[k] !== currentBoothData[k];
@@ -162,7 +163,7 @@ export default class BoothManageDialog extends Vue {
 
   resetForm() {
     if(this.editMode) {
-      const boothData = useAdminStore().boothList[useAdminStore().currentBoothId];
+      const boothData = useAdminStore().currentBooth.booth!;
 
       this.formData = reactive({
         ...boothData,
@@ -206,7 +207,7 @@ export default class BoothManageDialog extends Vue {
     };
 
     if(this.editMode) {
-      const result = await useAdminStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
+      const result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
 
       if(result === true) {
         success = true;
@@ -214,7 +215,7 @@ export default class BoothManageDialog extends Vue {
         errorMsg = `오류 (${result})`;
       }
     } else {
-      const result = await useAdminStore().createBooth(requestData as IBoothCreateRequest);
+      const result = await useAdminAPIStore().createBooth(requestData as IBoothCreateRequest);
 
       if(result === true) {
         success = true;

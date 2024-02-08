@@ -49,7 +49,7 @@ interface IGoodsOverviewData {
 })
 export default class GoodsOverviewPanel extends Vue {
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get goodsOverviewData(): IGoodsOverviewData {
@@ -61,7 +61,7 @@ export default class GoodsOverviewPanel extends Vue {
       totalSumSoldValue: 0,
     };
 
-    for(const goods of Object.values(useAdminStore().boothGoodsList)) {
+    for(const goods of Object.values(useAdminStore().currentBooth.goods ?? {})) {
       data.totalSumStockCount += Number(goods.stockInitial);
       data.remainingSumStockCount += Number(goods.stockRemaining);
       data.totalSumStockValue += Number(goods.price) * Number(goods.stockInitial);

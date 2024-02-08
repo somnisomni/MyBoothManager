@@ -51,6 +51,7 @@ import deepClone from "clone-deep";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
@@ -134,7 +135,7 @@ export default class BoothMemberManageDialog extends Vue {
   }
 
   get currentMember(): IBoothMember | null {
-    return (this.boothMemberId && (this.boothMemberId in useAdminStore().boothMemberList)) ? readonly(useAdminStore().boothMemberList[this.boothMemberId]) : null;
+    return (this.boothMemberId && (this.boothMemberId in useAdminStore().currentBooth.boothMembers!)) ? readonly(useAdminStore().currentBooth.boothMembers![this.boothMemberId]) : null;
   }
 
   get memberImageUrl(): string | null {
@@ -182,7 +183,7 @@ export default class BoothMemberManageDialog extends Vue {
         ...this.formModels,
       };
 
-      result = await useAdminStore().updateBoothMemberInfo(this.boothMemberId, requestData);
+      result = await useAdminAPIStore().updateBoothMemberInfo(this.boothMemberId, requestData);
     } else {
       // CREATE
 
@@ -190,7 +191,7 @@ export default class BoothMemberManageDialog extends Vue {
         ...this.formModels,
       };
 
-      result = await useAdminStore().createBoothMember(requestData);
+      result = await useAdminAPIStore().createBoothMember(requestData);
     }
 
     if(result === true) {
@@ -208,7 +209,7 @@ export default class BoothMemberManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.boothMemberId) {
-      const response = await useAdminStore().deleteBoothMember(this.boothMemberId);
+      const response = await useAdminAPIStore().deleteBoothMember(this.boothMemberId);
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
@@ -223,11 +224,11 @@ export default class BoothMemberManageDialog extends Vue {
   }
 
   async memberImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadBoothMemberImage(this.boothMemberId!, file!);
+    return await useAdminAPIStore().uploadBoothMemberImage(this.boothMemberId!, file!);
   }
 
   async memberImageDeleteCallback() {
-    return await useAdminStore().deleteBoothMemberImage(this.boothMemberId!);
+    return await useAdminAPIStore().deleteBoothMemberImage(this.boothMemberId!);
   }
 }
 </script>

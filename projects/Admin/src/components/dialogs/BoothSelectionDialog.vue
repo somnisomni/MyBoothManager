@@ -8,7 +8,7 @@
                 :closeOnCancel="false"
                 fullscreenOnSmallScreen
                 dialogTitle="관리할 부스 선택">
-    <VSheet v-for="booth in boothList"
+    <VSheet v-for="booth in boothList.value"
             :key="booth.id"
             class="booth-item no-selection-all"
             min-height="120px"
@@ -35,10 +35,12 @@
 
 <script lang="ts">
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import { BoothStatus } from "@myboothmanager/common";
+import { BoothStatus, type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
+import { ref, type Ref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
+import { useAdminAPIStore } from "@/stores/api";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
@@ -49,6 +51,7 @@ import BoothManageDialog from "./BoothManageDialog.vue";
 export default class BoothSelectionDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
+  boothList: Ref<Array<IBooth>> = ref([]);
   boothListFetching = false;
   boothAddDialogShown = false;
   titleButtons/* : CommonDialogButtonParams[] */ = [
@@ -64,8 +67,9 @@ export default class BoothSelectionDialog extends Vue {
     },
   ];
 
-  get boothList() {
-    return Object.values(useAdminStore().boothList);
+  @Watch("open", { immediate: true })
+  onDialogOpen(value: boolean) {
+    if(value) this.refreshBoothList();
   }
 
   getBoothOpenStatusString(status: BoothStatus): string {
@@ -88,15 +92,11 @@ export default class BoothSelectionDialog extends Vue {
 
   async refreshBoothList() {
     this.boothListFetching = true;
-    await useAdminStore().fetchBoothsOfCurrentAccount();
+
+    const response = await useAdminAPIStore().fetchAllBoothsOfCurrentAccount();
+    if(response instanceof Array) this.boothList.value = response;
+
     this.boothListFetching = false;
-  }
-
-  @Watch("open")
-  async onDialogShown() {
-    if(!this.open) return;
-
-    // await this.refreshBoothList();
   }
 
   onBoothSelect(boothId: number) {

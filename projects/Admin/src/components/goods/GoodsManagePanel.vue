@@ -47,6 +47,7 @@ import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
+import { useAdminAPIStore } from "@/stores/api";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialog.vue";
 
@@ -67,14 +68,14 @@ export default class GoodsManagePanel extends Vue {
   smAndUp!: boolean;
 
   get goodsCount(): string {
-    return Object.keys(useAdminStore().boothGoodsList).length.toLocaleString();
+    return Object.keys(useAdminStore().currentBooth.goods ?? {}).length.toLocaleString();
   }
 
   async onListRefreshClick() {
     this.goodsListRefreshing = true;
-    await useAdminStore().fetchGoodsOfCurrentBooth(true);
-    await useAdminStore().fetchGoodsCategoriesOfCurrentBooth(true);
-    await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true);
+    await useAdminAPIStore().fetchGoodsOfCurrentBooth();
+    await useAdminAPIStore().fetchGoodsCategoriesOfCurrentBooth();
+    await useAdminAPIStore().fetchGoodsCombinationsOfCurrentBooth();
     this.goodsListRefreshing = false;
   }
 

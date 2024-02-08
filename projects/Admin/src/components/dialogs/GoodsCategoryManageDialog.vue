@@ -42,6 +42,7 @@ import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdate
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
@@ -60,12 +61,12 @@ export default class GoodsCategoryManageDialog extends Vue {
   @Prop({ type: Number, default: null }) categoryId!: number | null;
 
   readonly GOODS_CATEGORY_ADD_DEFAULT_DATA: Partial<IGoodsCategoryCreateRequest> = {
-    boothId: useAdminStore().currentBoothId,
+    boothId: useAdminStore().currentBooth.booth!.id,
     name: "",
   };
 
   updateInProgress = false;
-  formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBoothId });
+  formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBooth.booth!.id });
   formValid = false;
   updateErrorCode: ErrorCodes | null = null;
   cancelWarningDialogShown = false;
@@ -84,7 +85,7 @@ export default class GoodsCategoryManageDialog extends Vue {
     let edited = false;
 
     if(this.categoryId && this.editMode) {
-      const currentGoodsData = useAdminStore().boothGoodsCategoryList[Number(this.categoryId!)];
+      const currentGoodsData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId!)];
 
       if(currentGoodsData) {
         const formDataTyped = this.formData as IGoodsCategoryUpdateRequest;
@@ -116,7 +117,7 @@ export default class GoodsCategoryManageDialog extends Vue {
 
   resetForm(): void {
     if(this.categoryId && this.editMode) {
-      const goodsData = useAdminStore().boothGoodsCategoryList[Number(this.categoryId)];
+      const goodsData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId)];
 
       if(goodsData) {
         this.formData = reactive({
@@ -129,7 +130,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       } as IGoodsCategoryCreateRequest);
     }
 
-    this.formData.boothId = useAdminStore().currentBoothId;
+    this.formData.boothId = useAdminStore().currentBooth.booth!.id;
   }
 
   stringValidator(input?: string): Array<string | boolean> {
@@ -149,10 +150,10 @@ export default class GoodsCategoryManageDialog extends Vue {
     if(this.editMode) {
       const requestData: IGoodsCategoryUpdateRequest = {
         ...this.formData as IGoodsCategoryUpdateRequest,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
         name: this.formData.name?.trim(),
       };
-      result = await useAdminStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
+      result = await useAdminAPIStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
 
       if(typeof result === "object" && "id" in result) {
         success = true;
@@ -162,10 +163,10 @@ export default class GoodsCategoryManageDialog extends Vue {
     } else {
       const requestData: IGoodsCategoryCreateRequest = {
         ...this.formData as IGoodsCategoryCreateRequest,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
         name: this.formData.name!.trim(),
       };
-      result = await useAdminStore().createGoodsCategory(requestData);
+      result = await useAdminAPIStore().createGoodsCategory(requestData);
 
       if(typeof result === "object" && "id" in result) {
         success = true;
@@ -196,7 +197,7 @@ export default class GoodsCategoryManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.categoryId) {
-      const response = await useAdminStore().deleteGoodsCategory(this.categoryId);
+      const response = await useAdminAPIStore().deleteGoodsCategory(this.categoryId);
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");

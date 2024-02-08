@@ -79,12 +79,12 @@ export default class BoothPOSPage extends Vue {
   @Setup(() => useDisplay().mdAndUp)
   mdAndUp!: boolean;
 
-  get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
+  get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
-  get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().boothGoodsCategoryList); }
-  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().boothGoodsCombinationList; }
-  get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().boothGoodsCombinationList); }
+  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().currentBooth.goods ?? {}; }
+  get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().currentBooth.goodsCategories ?? {}); }
+  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().currentBooth.goodsCombinations ?? {}; }
+  get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}); }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {
@@ -108,9 +108,9 @@ export default class BoothPOSPage extends Vue {
 
   resetSimulationLayer(): void {
     if(this.orderSimulationLayer) {
-      this.orderSimulationLayer.reset(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
+      this.orderSimulationLayer.reset(useAdminStore().currentBooth.goods ?? {}, useAdminStore().currentBooth.goodsCombinations ?? {});
     } else {
-      this.orderSimulationLayer = new POSOrderSimulationLayer(useAdminStore().boothGoodsList, useAdminStore().boothGoodsCombinationList);
+      this.orderSimulationLayer = new POSOrderSimulationLayer(useAdminStore().currentBooth.goods ?? {}, useAdminStore().currentBooth.goodsCombinations ?? {});
     }
   }
 
@@ -122,21 +122,6 @@ export default class BoothPOSPage extends Vue {
   onSMDrawerHeightChanged(height: number) {
     this.smDrawerHeight = height;
   }
-
-  // onGoodsItemClick(goodsId: number) {
-  //   if(this.orderList[goodsId]) {
-  //     if(this.orderList[goodsId].quantity < this.boothGoodsDict[goodsId].stockRemaining) {
-  //       this.orderList[goodsId].quantity++;
-  //     } else {
-  //       this.showStockNotEnoughSnackbar = true;
-  //     }
-  //   } else {
-  //     this.orderList[goodsId] = {
-  //       id: goodsId,
-  //       quantity: 1,
-  //     };
-  //   }
-  // }
 
   updateOrderListQuantity(eventData: { id: number, delta: number, isCombination?: true }) {
     const { id, delta, isCombination } = eventData;

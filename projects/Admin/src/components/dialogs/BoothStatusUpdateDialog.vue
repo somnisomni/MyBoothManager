@@ -43,6 +43,7 @@
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 
 @Component({})
 export default class BoothStatusUpdateDialog extends Vue {
@@ -53,7 +54,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   statusReason = "";
 
   get currentBoothData(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
+    return useAdminStore().currentBooth.booth!;
   }
 
   get dialogTitle(): string {
@@ -84,7 +85,7 @@ export default class BoothStatusUpdateDialog extends Vue {
   async onDialogConfirm() {
     this.updateInProgress = true;
 
-    const result = await useAdminStore().updateCurrentBoothStatus({
+    const result = await useAdminAPIStore().updateCurrentBoothStatus({
       status: this.targetStatus,
       statusReason: this.statusReason,
     });

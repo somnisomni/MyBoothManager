@@ -46,7 +46,7 @@ export default class BoothMembersPanel extends Vue {
   memberManageDialogMemberId: number | null = null;
 
   get membersList(): Array<IBoothMember> {
-    return Object.values(useAdminStore().boothMemberList) ?? [];
+    return Object.values(useAdminStore().currentBooth.boothMembers ?? {}) ?? [];
   }
 
   onMemberAddButtonClick() {

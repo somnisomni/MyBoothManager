@@ -37,13 +37,13 @@ export default class POSOrderConfirmDialog extends Vue {
   @Prop({ type: Object, required: true }) orders!: POSOrderList;
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   getTargetOriginalInfo(id: number, isCombination: boolean): IGoods | IGoodsCombination {
     return isCombination
-      ? useAdminStore().boothGoodsCombinationList[id]
-      : useAdminStore().boothGoodsList[id];
+      ? useAdminStore().currentBooth.goodsCombinations![id]
+      : useAdminStore().currentBooth.goods![id];
   }
 
   @Emit("confirm")

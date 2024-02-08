@@ -27,7 +27,7 @@ export default class BoothSelectionArea extends Vue {
   boothSelectionDialogOpen = false;
 
   get boothName() {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].name;
+    return useAdminStore().currentBooth.booth!.name;
   }
 }
 </script>

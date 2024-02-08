@@ -32,14 +32,14 @@ export default class GoodsSelectionDialog extends Vue {
 
   get goodsList(): Array<IGoods> {
     if(this.categoryId) {
-      return Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.categoryId === this.categoryId);
+      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === this.categoryId);
     } else {
-      return Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.categoryId === null);
+      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === null);
     }
   }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 }
 </script>

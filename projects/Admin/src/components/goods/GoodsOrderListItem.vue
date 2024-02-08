@@ -76,7 +76,7 @@ export default class GoodsOrderListItem extends Vue {
   }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get createdTime(): Date | undefined {

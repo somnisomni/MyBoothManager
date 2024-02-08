@@ -10,8 +10,8 @@
       </VLayout>
     </VSnackbar>
 
-    <VSnackbar v-model="isAPIFetchError" location="top" color="error" timeout="5000" :close-on-back="false" close-on-content-click>
-      <span><VIcon>mdi-alert</VIcon> API를 호출 중 오류가 발생했습니다. 인터넷 연결을 확인해주세요.</span>
+    <VSnackbar v-model="isAPIFetchError" location="top right" color="error" timeout="30000" :close-on-back="false" close-on-content-click transition="slide-x-reverse-transition">
+      <span><VIcon class="mr-2">mdi-alert</VIcon> API 호출 중 오류가 발생했습니다. 인터넷 연결을 확인해주세요.</span>
     </VSnackbar>
 
     <ServerNotRespondErrorDialog v-model="showServerNotRespondErrorDialog" />
@@ -22,7 +22,7 @@
 import { Vue, Component } from "vue-facing-decorator";
 import { APP_PRIMARY_COLOR } from "@myboothmanager/common-ui";
 import AdminAPI from "@/lib/api-admin";
-import { useAdminStore } from "./stores/admin";
+import { useAdminAPIStore } from "./stores/api";
 
 @Component({})
 export default class App extends Vue {
@@ -40,7 +40,7 @@ export default class App extends Vue {
   }
 
   get isServerConnectionChecking() { return !this.isServerAvailable; }
-  get isAPIFetchError() { return useAdminStore().isAPIFetchError; }
-  set isAPIFetchError(value: boolean) { useAdminStore().isAPIFetchError = value; }
+  get isAPIFetchError() { return useAdminAPIStore().isAPIFetchError; }
+  set isAPIFetchError(value: boolean) { useAdminAPIStore().isAPIFetchError = value; }
 }
 </script>

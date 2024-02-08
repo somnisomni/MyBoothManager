@@ -1,6 +1,6 @@
 import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type IAccountLoginTokenData } from "@myboothmanager/common";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./admin";
 
@@ -12,6 +12,13 @@ const useAuthStore = defineStore("auth", () => {
   const id = ref<number | null>(null);
   const authTokenData = ref<IAccountLoginTokenData | null>(null);
 
+  /* Computed */
+  const isAuthTokenValid = computed<boolean>(() =>
+    !!id.value &&
+    !!authTokenData.value &&
+    !!authTokenData.value.accessToken &&
+    !!authTokenData.value.refreshToken);
+
   /* Actions */
   function registerAuthData(data: IAccountLoginResponse): void {
     id.value = data.id;
@@ -19,6 +26,7 @@ const useAuthStore = defineStore("auth", () => {
       id: data.id,
       name: data.name,
       loginId: data.loginId,
+      lastSelectedBoothId: data.lastSelectedBoothId,
     };
     if(data.superAdmin) $adminStore.currentAccount.superAdmin = data.superAdmin;
 
@@ -52,32 +60,21 @@ const useAuthStore = defineStore("auth", () => {
       registerAuthData(response);
       return true;
     } else {
-      if(response === ErrorCodes.AUTH_TOKEN_NEED_REFRESH
-        || response === ErrorCodes.NEED_RELOGIN
-        || response === ErrorCodes.EXPIRED_REFRESH_TOKEN
-        || response === ErrorCodes.INVALID_REFRESH_TOKEN) {
-        // Refresh token is expired or invalid, require force re-login
-        invalidateLoginData();
-        return false;
-      } else {
-        return response;
+      switch(response) {
+        case ErrorCodes.AUTH_TOKEN_NEED_REFRESH:
+        case ErrorCodes.INVALID_REFRESH_TOKEN:
+        case ErrorCodes.EXPIRED_REFRESH_TOKEN:
+        case ErrorCodes.NEED_RELOGIN:
+          invalidateLoginData();
+          return false;
+        default:
+          return response;
       }
     }
   }
 
-  function isAuthTokenValid(): boolean {
-    if(id.value
-       && authTokenData.value
-       && authTokenData.value.accessToken
-       && authTokenData.value.refreshToken) {
-      return true;
-    }
-
-    return false;
-  }
-
   function invalidateLoginData(): void {
-    $adminStore.invalidateAllStates();
+    $adminStore.clearAllStates();
     id.value = null;
     authTokenData.value = null;
   }
@@ -86,9 +83,10 @@ const useAuthStore = defineStore("auth", () => {
     id,
     authTokenData,
 
+    isAuthTokenValid,
+
     adminLogin,
     adminAuthRefresh,
-    isAuthTokenValid,
     invalidateLoginData,
   };
 }, {

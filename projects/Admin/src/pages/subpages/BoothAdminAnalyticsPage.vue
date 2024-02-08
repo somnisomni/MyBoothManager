@@ -49,6 +49,7 @@ import { Chart } from "vue-chartjs";
 import colors from "vuetify/util/colors";
 import { useAdminStore } from "@/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
+import { useAdminAPIStore } from "@/stores/api";
 
 ChartJS.register();
 
@@ -146,17 +147,17 @@ export default class BoothAdminAnalyticsPage extends Vue {
   currentSelectedDay: Dateonly | "all" = "all";
 
   async mounted() {
-    await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+    await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
 
     this.dataLoading = false;
   }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId]?.currencySymbol ?? "";
+    return useAdminStore().currentBooth.booth!?.currencySymbol ?? "";
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
-    return useAdminStore().boothGoodsOrderList;
+    return useAdminStore().currentBooth.goodsOrders ?? {};
   }
 
   get orderHistoryFilteredArray(): Array<IGoodsOrder> {

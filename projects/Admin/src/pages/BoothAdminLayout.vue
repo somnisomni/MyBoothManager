@@ -103,7 +103,7 @@ export default class BoothAdminLayout extends Vue {
   }
 
   get currentBooth(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
+    return useAdminStore().currentBooth.booth!;
   }
 
   get currentBoothIsOpened(): boolean {
@@ -114,12 +114,8 @@ export default class BoothAdminLayout extends Vue {
     return this.currentBooth.status === BoothStatus.PREPARE && !this.currentBooth.statusPublishContent;
   }
 
-  get boothList(): IBooth[] {
-    return Object.values(useAdminStore().boothList);
-  }
-
   get boothPublicPageHref(): string {
-    return `${import.meta.env.VITE_MBM_PUBLIC_URL}/booth/${useAdminStore().currentBoothId}`;
+    return `${import.meta.env.VITE_MBM_PUBLIC_URL}/booth/${useAdminStore().currentBooth.booth!.id}`;
   }
 
   get currentAccount() {

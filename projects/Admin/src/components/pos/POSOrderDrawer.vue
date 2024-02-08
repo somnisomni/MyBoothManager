@@ -102,6 +102,7 @@ import { APP_NAME, type IBooth, type IGoods, type IGoodsCombination, type IGoods
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/BoothPOSPage.lib";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 import POSListResetConfirmDialog from "../dialogs/POSListResetConfirmDialog.vue";
 import POSOrderConfirmDialog from "../dialogs/POSOrderConfirmDialog.vue";
@@ -140,8 +141,8 @@ export default class POSOrderDrawer extends Vue {
   orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
   orderAdvancedDialogOrderIsCombination?: boolean;
 
-  get currentBooth(): IBooth { return useAdminStore().boothList[useAdminStore().currentBoothId]; }
-  get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
+  get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
+  get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().currentBooth.goods!; }
   get boothName(): string { return this.currentBooth.name; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get isOrderListEmpty(): boolean { return this.orderSimulationLayer.orderList.length() <= 0; }
@@ -187,8 +188,8 @@ export default class POSOrderDrawer extends Vue {
 
   getTargetOriginalInfo(id: number, isCombination: boolean): IGoods | IGoodsCombination {
     return isCombination
-      ? useAdminStore().boothGoodsCombinationList[id]
-      : useAdminStore().boothGoodsList[id];
+      ? useAdminStore().currentBooth.goodsCombinations![id]
+      : useAdminStore().currentBooth.goods![id];
   }
 
   async onOrderConfirm() {
@@ -214,9 +215,9 @@ export default class POSOrderDrawer extends Vue {
 
     // API call
     const results = [
-      await useAdminStore().createGoodsOrder(data),
-      await useAdminStore().fetchGoodsOfCurrentBooth(true),
-      await useAdminStore().fetchGoodsCombinationOfCurrentBooth(true),
+      await useAdminAPIStore().createGoodsOrder(data),
+      await useAdminAPIStore().fetchGoodsOfCurrentBooth(),
+      await useAdminAPIStore().fetchGoodsCombinationsOfCurrentBooth(),
     ];
     if(results.every((res) => typeof res !== "string")) {
       this.$emit("orderCreationSuccess");

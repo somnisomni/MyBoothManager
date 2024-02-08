@@ -28,7 +28,7 @@ export default class BoothAdminDashboardPage extends Vue {
   BoothStatus = BoothStatus;
 
   get currentBoothData(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
+    return useAdminStore().currentBooth.booth!;
   }
 }
 </script>

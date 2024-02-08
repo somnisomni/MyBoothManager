@@ -57,6 +57,7 @@ import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
@@ -65,7 +66,7 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
   async mounted() {
     if(!this.orderData) {
       // If order data is not fetched yet, try to fetch it
-      await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+      await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
     }
   }
 
@@ -74,16 +75,16 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
   }
 
   get orderData(): IGoodsOrder {
-    return useAdminStore().boothGoodsOrderList[this.orderId];
+    return useAdminStore().currentBooth.goodsOrders![this.orderId];
   }
 
   get currencySymbol(): string {
     // TODO: Use currency symbol from orderData, after backend is updated
-    return useAdminStore().boothList[this.orderData.boothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   async cancelOrder() {
-    const response = await useAdminStore().updateGoodsOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
+    const response = await useAdminAPIStore().updateGoodsOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
 
     if(response === true) {
       // TODO: further process

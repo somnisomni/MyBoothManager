@@ -55,6 +55,7 @@ import { reactive , readonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
+import { useAdminAPIStore } from "@/stores/api";
 import CommonForm from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -104,7 +105,7 @@ export default class GoodsManageDialog extends Vue {
     categoryId: {
       type: FormFieldType.SELECT,
       label: "카테고리",
-      get items() { return [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }]; },
+      get items() { return [...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" }]; },
       itemTitle: "name",
       itemValue: "id",
       additionalButtons: [
@@ -177,7 +178,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get currentGoods(): IGoods | null {
-    return (this.goodsId && (this.goodsId in useAdminStore().boothGoodsList)) ? readonly(useAdminStore().boothGoodsList[this.goodsId]) : null;
+    return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods![this.goodsId]) : null;
   }
 
   get goodsImageUrl(): string | null {
@@ -185,7 +186,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get allCategoryData() {
-    const list = Object.values(useAdminStore().boothGoodsCategoryList);
+    const list = Object.values(useAdminStore().currentBooth.goodsCategories!);
     list.push({ boothId: -1, id: -1, name: "미분류" });
 
     return list;
@@ -241,19 +242,19 @@ export default class GoodsManageDialog extends Vue {
 
       const requestData: IGoodsUpdateRequest = {
         ...this.formModels,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
-      result = await useAdminStore().updateGoodsInfo(Number(this.goodsId!), requestData);
+      result = await useAdminAPIStore().updateGoodsInfo(Number(this.goodsId!), requestData);
     } else {
       // CREATE
 
       const requestData: IGoodsCreateRequest = {
         ...this.formModels,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
-      result = await useAdminStore().createGoods(requestData);
+      result = await useAdminAPIStore().createGoods(requestData);
     }
 
     if(result === true) {
@@ -271,7 +272,7 @@ export default class GoodsManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.goodsId) {
-      const response = await useAdminStore().deleteGoods(Number(this.goodsId));
+      const response = await useAdminAPIStore().deleteGoods(Number(this.goodsId));
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
@@ -286,11 +287,11 @@ export default class GoodsManageDialog extends Vue {
   }
 
   async goodsImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadGoodsImage(Number(this.goodsId!), file!);
+    return await useAdminAPIStore().uploadGoodsImage(Number(this.goodsId!), file!);
   }
 
   async goodsImageDeleteCallback() {
-    return await useAdminStore().deleteGoodsImage(Number(this.goodsId!));
+    return await useAdminAPIStore().deleteGoodsImage(Number(this.goodsId!));
   }
 
   stockRemainingValidationRule() {

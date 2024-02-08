@@ -54,19 +54,19 @@ export default class BoothAdminGoodsPage extends Vue {
   editDialogCombinationId: number | null = null;
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get goodsList(): Array<IGoods> {
-    return Object.values(useAdminStore().boothGoodsList);
+    return Object.values(useAdminStore().currentBooth.goods ?? {});
   }
 
   get goodsCategoryList(): Array<IGoodsCategory> {
-    return Object.values(useAdminStore().boothGoodsCategoryList);
+    return Object.values(useAdminStore().currentBooth.goodsCategories ?? {});
   }
 
   get goodsCombinationList(): Array<IGoodsCombination> {
-    return Object.values(useAdminStore().boothGoodsCombinationList);
+    return Object.values(useAdminStore().currentBooth.goodsCombinations ?? {});
   }
 
   openGoodsEditDialog(goodsId: number) {

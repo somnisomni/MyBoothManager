@@ -41,7 +41,7 @@ export default class BoothInfoPanel extends Vue {
   boothEditDialogShown: boolean = false;
 
   get boothData(): IBooth {
-    return useAdminStore().boothList[useAdminStore().currentBoothId];
+    return useAdminStore().currentBooth.booth!;
   }
 }
 </script>

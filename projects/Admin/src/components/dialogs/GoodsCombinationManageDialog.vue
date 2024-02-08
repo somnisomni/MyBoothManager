@@ -78,6 +78,7 @@ import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
@@ -128,7 +129,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     categoryId: {
       type: FormFieldType.SELECT,
       label: "카테고리",
-      get items() { return [...Object.values(useAdminStore().boothGoodsCategoryList), { boothId: -1, id: -1, name: "미분류" }]; },
+      get items() { return [...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" }]; },
       itemTitle: "name",
       itemValue: "id",
       onSelectionChange: this.clearSelectedGoods,
@@ -201,41 +202,41 @@ export default class GoodsCombinationManageDialog extends Vue {
   set isFormValid(value: boolean) { this._isFormValid = value; }
 
   get minimumStockOfSelectedGoods() {
-    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().boothGoodsList[goodsId].stockRemaining));
+    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().currentBooth.goods![goodsId].stockRemaining));
   }
 
   get sumPriceOfSelectedGoods() {
-    return this.formModels.goodsIds.reduce((acc, goodsId) => acc + useAdminStore().boothGoodsList[goodsId].price, 0);
+    return this.formModels.goodsIds.reduce((acc, goodsId) => acc + useAdminStore().currentBooth.goods![goodsId].price, 0);
   }
 
   get boothGoodsList() {
-    return Object.values(useAdminStore().boothGoodsList);
+    return Object.values(useAdminStore().currentBooth.goods ?? {});
   }
 
   get currencySymbol() {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get alreadyCombinatedGoodsIdList() {
-    return Object.values(useAdminStore().boothGoodsList)
+    return Object.values(useAdminStore().currentBooth.goods ?? {})
       .filter((goods) => goods.combinationId !== null && goods.combinationId !== Number(this.combinationId))
       .map((goods) => goods.id);
   }
 
   get combinationImageUrl(): string | null {
-    return this.editMode ? useAdminStore().boothGoodsCombinationList[Number(this.combinationId)].combinationImageUrl ?? null : null;
+    return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)].combinationImageUrl ?? null : null;
   }
 
   @Watch("open") mounted() {
     if(this.editMode && this.combinationId) {
-      const combination = useAdminStore().boothGoodsCombinationList[Number(this.combinationId)];
+      const combination = useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)];
 
       if(combination) {
         this.formModels.name = combination.name;
         this.formModels.description = combination.description;
         this.formModels.categoryId = combination.categoryId;
         this.formModels.price = combination.price;
-        this.formModels.goodsIds = Object.values(useAdminStore().boothGoodsList).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
+        this.formModels.goodsIds = Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
         this.formModels.stockVisibility = combination.stockVisibility;
 
         this.formModelsInitial = deepClone(this.formModels);
@@ -271,9 +272,9 @@ export default class GoodsCombinationManageDialog extends Vue {
     if(this.editMode) {
       const requestData: IGoodsCombinationUpdateRequest = {
         ...this.formModels,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
-      const result = await useAdminStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
+      const result = await useAdminAPIStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 
       if(result === true) {
         this.$emit("updated");
@@ -285,9 +286,9 @@ export default class GoodsCombinationManageDialog extends Vue {
     } else {
       const requestData: IGoodsCombinationCreateRequest = {
         ...this.formModels,
-        boothId: useAdminStore().currentBoothId,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
-      const result = await useAdminStore().createGoodsCombination(requestData);
+      const result = await useAdminAPIStore().createGoodsCombination(requestData);
 
       if(result === true) {
         this.$emit("updated");
@@ -305,7 +306,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     this.updateInProgress = true;
 
     if(this.combinationId) {
-      const response = await useAdminStore().deleteGoodsCombination(Number(this.combinationId));
+      const response = await useAdminAPIStore().deleteGoodsCombination(Number(this.combinationId));
 
       if(typeof response === "boolean" && response === true) {
         this.$emit("deleted");
@@ -320,11 +321,11 @@ export default class GoodsCombinationManageDialog extends Vue {
   }
 
   async combinationImageUploadCallback(file: File | Blob | null) {
-    return await useAdminStore().uploadGoodsCombinationImage(Number(this.combinationId!), file!);
+    return await useAdminAPIStore().uploadGoodsCombinationImage(Number(this.combinationId!), file!);
   }
 
   async combinationImageDeleteCallback() {
-    return await useAdminStore().deleteGoodsCombinationImage(Number(this.combinationId!));
+    return await useAdminAPIStore().deleteGoodsCombinationImage(Number(this.combinationId!));
   }
 }
 </script>

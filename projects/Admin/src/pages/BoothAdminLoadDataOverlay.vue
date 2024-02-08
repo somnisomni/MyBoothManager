@@ -1,42 +1,82 @@
 <template>
   <VContainer class="position-fixed w-100 h-100 d-flex align-center justify-center flex-column bg-background"
               style="left: 0; right: 0; top: 0; bottom: 0;">
-    <VProgressCircular indeterminate size="96" class="mb-4" />
-    <div class="text-h6">데이터를 불러오는 중...</div>
+    <VProgressCircular :indeterminate="loadingTargetLength < 0"
+                       :model-value="(100 / loadingTargetLength) * loadingTargetCurrentProgress"
+                       size="96"
+                       class="mb-4" />
+    <div class="text-h6">{{ loadingTargetName }} 불러오는 중...</div>
+    <div v-if="loadingTargetLength >= 0" class="text-caption">{{ loadingTargetCurrentProgress + 1}} / {{ loadingTargetLength }}</div>
   </VContainer>
 
-  <ServerDataLoadErrorDialog v-model="errorDialogShown"
-                             :errorCode="errorCode" />
+  <ServerDataLoadErrorDialog v-model="lastAPIErrorCode"
+                             :errorCode="lastAPIErrorCode" />
 </template>
 
 <script lang="ts">
+import type { ErrorCodes } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import { useAdminAPIStore } from "@/stores/api";
 
 @Component({
   emits: ["completed"],
 })
 export default class BoothAdminLoadDataOverlay extends Vue {
-  errorDialogShown = false;
-  errorCode: number | null = null;
+  loadingTargetName = "";
+  loadingTargetLength = -1;
+  loadingTargetCurrentProgress = -1;
+
+  get lastAPIErrorCode() {
+    return useAdminAPIStore().lastAPIErrorCode;
+  }
+
+  get isBoothDataStillLoading() {
+    return !useAdminStore().isBoothDataLoaded;
+  }
 
   async mounted() {
-    if(!useAdminStore().currentAccount) {
-      const response = await useAdminStore().fetchCurrentAccountInfo();
-      if(typeof response === "number") {
-        this.errorCode = response;
-        this.errorDialogShown = true;
-        return;
-      }
+    const $adminStore = useAdminStore();
+    const $apiStore   = useAdminAPIStore();
+
+    // Fetch current account info if not already fetched
+    if(!$adminStore.currentAccount) {
+      this.loadingTargetName = "계정 정보";
+      const response = await $apiStore.fetchCurrentAccountInfo();
+      if(typeof response === "number") return response;
     }
 
-    const response = await useAdminStore().fetchAllBoothData();
-    if(response) {
-      this.$emit("completed");
-    } else {
-      this.errorCode = null;
-      this.errorDialogShown = true;
+    // Fetch account last selected booth data
+    if($adminStore.isFirstLoad) {
+      $adminStore.changeBooth($adminStore.currentAccount?.lastSelectedBoothId ?? -1);
+      $adminStore.isFirstLoad = false;
     }
+
+    // Wait for booth data to be loaded
+    while(this.isBoothDataStillLoading) {
+      this.loadingTargetName = "부스 정보";
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    // Fetch other data
+    const fetchTargets: Array<[string, () => Promise<true | ErrorCodes>]> = [
+      ["부스 멤버 목록", $apiStore.fetchBoothMembersOfCurrentBooth],
+      ["굿즈 목록", $apiStore.fetchGoodsOfCurrentBooth],
+      ["굿즈 세트 목록", $apiStore.fetchGoodsCombinationsOfCurrentBooth],
+      ["굿즈 카테고리 목록", $apiStore.fetchGoodsCategoriesOfCurrentBooth],
+      ["판매 기록", $apiStore.fetchGoodsOrdersOfCurrentBooth],
+    ];
+
+    this.loadingTargetLength = fetchTargets.length;
+    this.loadingTargetCurrentProgress = 0;
+    for(const [targetName, fetchFunc] of fetchTargets) {
+      this.loadingTargetName = targetName;
+      await fetchFunc();
+      this.loadingTargetCurrentProgress++;
+    }
+
+    // Emit completed event
+    this.$emit("completed");
   }
 }
 </script>

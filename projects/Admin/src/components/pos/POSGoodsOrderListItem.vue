@@ -55,11 +55,11 @@ export default class POSGoodsOrderListItem extends Vue {
 
   showAdvancedDialog: boolean = false;
 
-  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().boothGoodsList; }
-  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().boothGoodsCombinationList; }
+  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().currentBooth.goods!; }
+  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().currentBooth.goodsCombinations!; }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get currentTarget(): IGoods | IGoodsCombination {

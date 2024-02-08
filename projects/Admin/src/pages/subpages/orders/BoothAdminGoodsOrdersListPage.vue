@@ -49,6 +49,7 @@ import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
 import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
+import { useAdminAPIStore } from "@/stores/api";
 
 @Component({
   components: {
@@ -66,7 +67,7 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   }
 
   get boothGoodsOrders() {
-    return useAdminStore().boothGoodsOrderList;
+    return useAdminStore().currentBooth.goodsOrders!;
   }
 
   get boothGoodsOrdersLength(): number {
@@ -85,12 +86,12 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   }
 
   get currencySymbol(): string {
-    return useAdminStore().boothList[useAdminStore().currentBoothId].currencySymbol;
+    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   async onRefreshClick() {
     this.dataLoading = true;
-    await useAdminStore().fetchGoodsOrdersOfCurrentBooth();
+    await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
     this.dataLoading = false;
   }
 }
