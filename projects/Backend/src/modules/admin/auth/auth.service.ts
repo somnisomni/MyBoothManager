@@ -32,6 +32,7 @@ export class AuthService {
       loginId: account.loginId,
       accessToken: generatedToken,
       refreshToken: generatedRefreshToken.refreshToken,
+      lastSelectedBoothId: account.lastSelectedBoothId,
     };
   }
 

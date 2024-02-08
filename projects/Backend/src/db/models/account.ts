@@ -1,7 +1,7 @@
 import type { InternalKeysWithId } from "@/lib/types";
 import type { IAccount } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull } from "sequelize-typescript";
+import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull, AfterFind } from "sequelize-typescript";
 import Booth from "./booth";
 import UploadStorage from "./uploadstorage";
 
@@ -51,4 +51,17 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
 
   @HasMany(() => UploadStorage)
   declare uploads: UploadStorage[];
+
+
+  /* === Hooks === */
+  @AfterFind
+  static async setDefaultLastSelectedBoothId(instance: Account) {
+    if(!instance.lastSelectedBoothId) {
+      const firstBooth = await Booth.findOne({ where: { ownerId: instance.id }, attributes: [ "id" ] });
+      if(firstBooth) {
+        instance.lastSelectedBoothId = firstBooth.id;
+        await instance.save();
+      }
+    }
+  }
 }
