@@ -46,8 +46,9 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.GET("account"));
   }
 
-  static async fetchSingleBooth(boothId: number) {
-    return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.GET(`booth/${boothId}`));
+  static async fetchSingleBooth(boothId: number, setLast: boolean = true) {
+    const setLastParam = setLast ? "?setLast=true" : "";
+    return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.GET(`booth/${boothId}${setLastParam}`));
   }
 
   static async fetchAllBooths() {

@@ -6,6 +6,7 @@ import GoodsOrder from "@/db/models/goods-order";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
+import Account from "@/db/models/account";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UtilService } from "../util/util.service";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
@@ -29,7 +30,9 @@ export class BoothService {
     else return booth;
   }
 
-  async findOne(id: number, callerAccountId: number): Promise<Booth> {
+  async findOne(id: number, setLast: boolean | null | undefined = false, callerAccountId: number): Promise<Booth> {
+    if(setLast) await (await Account.findByPk(callerAccountId))?.update({ lastSelectedBoothId: id });
+
     return await this.findBoothBelongsToAccount(id, callerAccountId);
   }
 

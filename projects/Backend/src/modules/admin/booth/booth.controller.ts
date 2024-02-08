@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, ParseBoolPipe } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { AuthData, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
@@ -23,8 +23,10 @@ export class BoothController {
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.findOne(+id, authData.id);
+  async findOne(@Param("id") id: string,
+                @Query("setLast", new ParseBoolPipe({ optional: true })) setLast: boolean | null | undefined,
+                @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findOne(+id, setLast, authData.id);
   }
 
   @Post()
