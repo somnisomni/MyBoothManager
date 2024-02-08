@@ -1497,12 +1497,12 @@ __metadata:
     typescript: "npm:^5.3.3"
     vite: "npm:^5.0.12"
     vite-plugin-vuetify: "npm:^2.0.1"
-    vue: "npm:^3.4.15"
+    vue: "npm:=3.4.15"
     vue-chartjs: "npm:^5.3.0"
     vue-facing-decorator: "npm:^3.0.4"
     vue-router: "npm:^4.2.5"
     vue-tsc: "npm:^1.8.27"
-    vuetify: "npm:^3.5.2"
+    vuetify: "npm:^3.5.3"
   languageName: unknown
   linkType: soft
 
@@ -1556,27 +1556,27 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=3353cf&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=d1b1a8&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/2dd70a114dfa0de0b06d127d90c00a2f1c783570828f3ae1dd7daf17eeb5e1f5df1eff7b59a5e894ac72d9e91a3f279b79e0da4204654724db974586308c46ad
+  checksum: 10/cb02add9fad25aa78a758de21cf1ffdb10cad972d2a1c1565950a017b31dd0b9613406623e8f4aa78c4b67b75a13cda823436c2310b2a7c512a11db5382e179d
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.0
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=3353cf&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=d1b1a8&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/2dd70a114dfa0de0b06d127d90c00a2f1c783570828f3ae1dd7daf17eeb5e1f5df1eff7b59a5e894ac72d9e91a3f279b79e0da4204654724db974586308c46ad
+  checksum: 10/cb02add9fad25aa78a758de21cf1ffdb10cad972d2a1c1565950a017b31dd0b9613406623e8f4aa78c4b67b75a13cda823436c2310b2a7c512a11db5382e179d
   languageName: node
   linkType: hard
 
@@ -1601,10 +1601,10 @@ __metadata:
     vite-plugin-dts: "npm:^3.7.2"
     vite-plugin-vuetify: "npm:^2.0.1"
     vite-tsconfig-paths: "npm:^4.3.1"
-    vue: "npm:^3.4.15"
+    vue: "npm:=3.4.15"
     vue-facing-decorator: "npm:^3.0.4"
     vue-tsc: "npm:^1.8.27"
-    vuetify: "npm:^3.5.2"
+    vuetify: "npm:^3.5.3"
   peerDependencies:
     "@mdi/font": ">=7"
     "@myboothmanager/common": "*"
@@ -1704,11 +1704,11 @@ __metadata:
     typescript: "npm:^5.3.3"
     vite: "npm:^5.0.12"
     vite-plugin-vuetify: "npm:^2.0.1"
-    vue: "npm:^3.4.15"
+    vue: "npm:=3.4.15"
     vue-facing-decorator: "npm:^3.0.4"
     vue-router: "npm:^4.2.5"
     vue-tsc: "npm:^1.8.27"
-    vuetify: "npm:^3.5.2"
+    vuetify: "npm:^3.5.3"
   languageName: unknown
   linkType: soft
 
@@ -10097,7 +10097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.4.15":
+"vue@npm:=3.4.15":
   version: 3.4.15
   resolution: "vue@npm:3.4.15"
   dependencies:
@@ -10115,9 +10115,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuetify@npm:^3.5.2":
-  version: 3.5.2
-  resolution: "vuetify@npm:3.5.2"
+"vuetify@npm:^3.5.3":
+  version: 3.5.3
+  resolution: "vuetify@npm:3.5.3"
   peerDependencies:
     typescript: ">=4.7"
     vite-plugin-vuetify: ">=1.0.0-alpha.12"
@@ -10133,7 +10133,7 @@ __metadata:
       optional: true
     webpack-plugin-vuetify:
       optional: true
-  checksum: 10/b3bf1c86d41be2c743370954f780667bf9be39c117b6d23746a21220611650515f7f030837d7d5f0296d5fc9df71b6d9e314c037614717c0271ebb3071d5ee89
+  checksum: 10/2b48cd0a2326c8c27d5bd7eab4e993b31de7ef9c0c91e422408101931bd2711bdf59fa8c1d23fa28c247df9ceab595d8e07c5efc39b844c99e675b0d5457b78b
   languageName: node
   linkType: hard
 

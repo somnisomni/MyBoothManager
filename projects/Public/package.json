@@ -20,9 +20,9 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qrcode": "^1.5.3",
-    "vue": "^3.4.15",
+    "vue": "=3.4.15",
     "vue-router": "^4.2.5",
-    "vuetify": "^3.5.2"
+    "vuetify": "^3.5.3"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.7.2",

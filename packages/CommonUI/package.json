@@ -34,10 +34,10 @@
     "vite-plugin-dts": "^3.7.2",
     "vite-plugin-vuetify": "^2.0.1",
     "vite-tsconfig-paths": "^4.3.1",
-    "vue": "^3.4.15",
+    "vue": "=3.4.15",
     "vue-facing-decorator": "^3.0.4",
     "vue-tsc": "^1.8.27",
-    "vuetify": "^3.5.2"
+    "vuetify": "^3.5.3"
   },
   "peerDependencies": {
     "@mdi/font": ">=7",
