@@ -1,6 +1,8 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      TRUST_LOCALHOST_PROXY?: string,
+
       API_SERVER_HOST?: string,
       API_SERVER_PORT?: string,
       JWT_SECRET?: string,

@@ -17,7 +17,7 @@ export default function generateConfig(): SequelizeOptions {
     password: process.env.MYSQL_PASSWORD || "",
     database: process.env.MYSQL_DATABASE || "myboothmanager",
     timezone: process.env.SEQUELIZE_TIMEZONE || "+09:00",
-    logging: process.env.ENABLE_SEQUELIZE_LOGGING === "true" ? (...msg: unknown[]) => console.debug("[DB]", msg[0]) : false,
+    logging: process.env.ENABLE_SEQUELIZE_LOGGING?.toLowerCase() === "true" ? (...msg: unknown[]) => console.debug("[DB]", msg[0]) : false,
     define: {
       charset: "utf8mb4",
       collate: "utf8mb4_general_ci",

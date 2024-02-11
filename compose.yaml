@@ -38,6 +38,7 @@ services:
     ports:
       - "31111:31111"
     environment:
+      TRUST_LOCALHOST_PROXY: true
       JWT_SECRET: som_myboothmanager_ni
       SUPERADMIN_ID: admin
       SUPERADMIN_PASS: should1be2changed!

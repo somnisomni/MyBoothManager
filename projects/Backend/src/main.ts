@@ -43,7 +43,9 @@ async function bootstrap() {
   /* NestJS application initialization */
   app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      trustProxy: process.env.TRUST_LOCALHOST_PROXY?.toLowerCase() === "true" ? "127.0.0.1" : false,
+    }),
   );
 
   /* Fastify plugins */
