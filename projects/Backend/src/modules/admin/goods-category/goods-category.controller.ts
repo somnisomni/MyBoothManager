@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { GoodsCategoryService } from "./goods-category.service";
 import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
 
+@UseGuards(AdminAuthGuard)
 @Controller("/admin/goods/category")
 export class GoodsCategoryController {
   constructor(

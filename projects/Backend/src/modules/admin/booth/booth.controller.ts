@@ -1,7 +1,7 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, ParseBoolPipe } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, ParseBoolPipe, UseGuards } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
 import { BoothService } from "./booth.service";
@@ -9,6 +9,7 @@ import { CreateBoothDTO } from "./dto/create-booth.dto";
 import { UpdateBoothDTO } from "./dto/update-booth.dto";
 import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
 
+@UseGuards(AdminAuthGuard)
 @Controller("/admin/booth")
 export class BoothController {
   constructor(

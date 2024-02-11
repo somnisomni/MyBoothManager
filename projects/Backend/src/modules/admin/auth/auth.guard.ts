@@ -24,7 +24,7 @@ export interface IFastifyRequestParamsCustom {
 }
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

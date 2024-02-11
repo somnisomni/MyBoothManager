@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PublicGoodsModule } from "@/modules/public/goods/goods.module";
 import { UtilModule } from "../util/util.module";
+import { AdminAuthGuard } from "../auth/auth.guard";
 import { GoodsController } from "./goods.controller";
 import { GoodsService } from "./goods.service";
 
@@ -12,7 +13,7 @@ describe("GoodsController", () => {
       imports: [PublicGoodsModule, UtilModule],
       controllers: [GoodsController],
       providers: [GoodsService],
-    }).compile();
+    }).overrideGuard(AdminAuthGuard).useValue({ canActivate: () => true }).compile();
 
     controller = module.get<GoodsController>(GoodsController);
   });

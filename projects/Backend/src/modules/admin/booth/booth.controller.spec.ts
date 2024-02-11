@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PublicBoothModule } from "@/modules/public/booth/booth.module";
 import { GoodsOrderModule } from "../goods-order/goods-order.module";
 import { UtilModule } from "../util/util.module";
+import { AdminAuthGuard } from "../auth/auth.guard";
 import { BoothController } from "./booth.controller";
 import { BoothService } from "./booth.service";
 
@@ -13,7 +14,7 @@ describe("BoothController", () => {
       imports: [PublicBoothModule, GoodsOrderModule, UtilModule],
       controllers: [BoothController],
       providers: [BoothService],
-    }).compile();
+    }).overrideGuard(AdminAuthGuard).useValue({ canActivate: () => true }).compile();
 
     controller = module.get<BoothController>(BoothController);
   });

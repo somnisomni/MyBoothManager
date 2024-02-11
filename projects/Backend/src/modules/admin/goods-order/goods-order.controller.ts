@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, Patch } from "@nestjs/common";
-import { AuthData, SuperAdmin } from "../auth/auth.guard";
+import { Controller, Get, Post, Body, Param, Delete, Query, Patch, UseGuards } from "@nestjs/common";
+import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { GoodsOrderService } from "./goods-order.service";
 import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
 import { UpdateGoodsOrderStatusDTO } from "./dto/update-goods-order-status.dto";
 
+@UseGuards(AdminAuthGuard)
 @Controller("/admin/goods/order")
 export class GoodsOrderController {
   constructor(private readonly goodsOrderService: GoodsOrderService) {}

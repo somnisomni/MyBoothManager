@@ -1,12 +1,13 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Post, Body, Patch, Param, Delete, Query, Req } from "@nestjs/common";
-import { AuthData } from "../auth/auth.guard";
+import { Controller, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from "@nestjs/common";
+import { AuthData, AdminAuthGuard } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
 import { CreateGoodsCombinationDTO } from "./dto/create-goods-combination.dto";
 import { UpdateGoodsCombinationDTO } from "./dto/update-goods-combination.dto";
 import { GoodsCombinationService } from "./goods-combination.service";
 
+@UseGuards(AdminAuthGuard)
 @Controller("/admin/goods/combination")
 export class GoodsCombinationController {
   constructor(

@@ -3,6 +3,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { AccountModule } from "../account/account.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { AdminAuthGuard } from "./auth.guard";
 
 describe("AuthController", () => {
   let controller: AuthController;
@@ -15,7 +16,7 @@ describe("AuthController", () => {
       ],
       controllers: [AuthController],
       providers: [AuthService],
-    }).compile();
+    }).overrideGuard(AdminAuthGuard).useValue({ canActivate: () => true }).compile();
 
     controller = module.get<AuthController>(AuthController);
   });

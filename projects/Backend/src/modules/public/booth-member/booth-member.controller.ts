@@ -1,8 +1,6 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { Public } from "@/modules/admin/auth/auth.guard";
 import { PublicBoothMemberService } from "./booth-member.service";
 
-@Public()
 @Controller("/public/booth/:bId/member")
 export class PublicBoothMemberController {
   constructor(private readonly publicBoothMemberService: PublicBoothMemberService) {}
