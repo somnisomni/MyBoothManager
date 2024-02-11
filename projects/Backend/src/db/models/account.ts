@@ -56,7 +56,7 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   /* === Hooks === */
   @AfterFind
   static async setDefaultLastSelectedBoothId(instance: Account) {
-    if(!instance.lastSelectedBoothId) {
+    if(instance && !instance.lastSelectedBoothId) {
       const firstBooth = await Booth.findOne({ where: { ownerId: instance.id }, attributes: [ "id" ] });
       if(firstBooth) {
         instance.lastSelectedBoothId = firstBooth.id;
