@@ -1532,6 +1532,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^6.20.0"
     app-root-path: "npm:^3.1.0"
     argon2: "npm:=0.31.2"
+    chalk: "npm:^4"
     dotenv: "npm:^16.4.1"
     eslint: "npm:^8.56.0"
     eslint-import-resolver-typescript: "npm:^3.6.1"
@@ -3592,7 +3593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:4.1.2, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
+"chalk@npm:4.1.2, chalk@npm:^4, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:

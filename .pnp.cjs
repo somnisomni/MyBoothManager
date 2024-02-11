@@ -2162,6 +2162,7 @@ const RAW_RUNTIME_STATE =
           ["@typescript-eslint/parser", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:6.20.0"],\
           ["app-root-path", "npm:3.1.0"],\
           ["argon2", "npm:0.31.2"],\
+          ["chalk", "npm:4.1.2"],\
           ["dotenv", "npm:16.4.1"],\
           ["eslint", "npm:8.56.0"],\
           ["eslint-import-resolver-typescript", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:3.6.1"],\

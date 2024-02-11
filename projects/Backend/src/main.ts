@@ -9,6 +9,7 @@ import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilte
 import MBMSequelize from "./db/sequelize";
 import { insertTempDataIntoDB } from "./dev/temp-data";
 import { UtilService } from "./modules/admin/util/util.service";
+import { LoggingInterceptor } from "./modules/global/logging/logging.interceptor";
 
 let app: NestFastifyApplication;
 
@@ -39,7 +40,7 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  /* NestJS application */
+  /* NestJS application initialization */
   app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
@@ -63,11 +64,15 @@ async function bootstrap() {
   // dev
   if(process.env.NODE_ENV === "development") await dev();
 
+  /* Nest.js app globals */
   app.useGlobalFilters(
     new AllExceptionsFilter(),
     // new HttpExceptionFilter(),
     new RouteNotFoundExceptionFilter(),
     new TeapotExceptionFilter(),
+  );
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
   );
 
   app.enableCors();
