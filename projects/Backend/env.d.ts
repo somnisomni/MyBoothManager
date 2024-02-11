@@ -15,6 +15,7 @@ declare global {
       MYSQL_PASSWORD?: string,
       MYSQL_DATABASE?: string,
       SEQUELIZE_TIMEZONE?: string,
+      ENABLE_SEQUELIZE_LOGGING?: string,
     }
   }
 }
