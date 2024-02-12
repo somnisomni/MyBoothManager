@@ -18,7 +18,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if(contextClass === AppController && contextHandler === AppController.prototype.teapot) {
       return next.handle().pipe(tap({
         finalize: () => {
-          console.log(logFn("🍵", now, chalk`health check from {bold ${ip}}`));
+          console.log(logFn("🔄", now, chalk`health check from {bold ${ip}}`));
           console.log();
         },
       }));
