@@ -134,7 +134,7 @@ export default class GoodsItem extends Vue {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 
-  &.hover {
+  &.hover:not(:active) {
     transform: translateY(-3.3%);
   }
 
