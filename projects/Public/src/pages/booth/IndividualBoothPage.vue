@@ -2,7 +2,7 @@
   <VMain>
     <SharePanel v-if="!fetchError" :boothData="boothData" showHomeButton />
 
-    <VSlideYReverseTransition leave-absolute>
+    <VScrollYReverseTransition leave-absolute>
       <div v-if="isDataFetched && fetchError" class="position-fixed d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
         <h4 class="text-h4 text-center text-error">
           <VIcon class="mr-2">mdi-alert</VIcon>
@@ -18,11 +18,11 @@
 
       <div v-else-if="!isDataFetched" class="position-fixed d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
         <VProgressCircular indeterminate color="primary" size="x-large" class="my-2" />
-        <p class="mt-2 text-grey-darken-2">데이터를 불러오는 중...</p>
+        <p class="mt-2 text-grey-darken-2">부스 정보 불러오는 중...</p>
       </div>
-    </VSlideYReverseTransition>
+    </VScrollYReverseTransition>
 
-    <VSlideYReverseTransition leave-absolute>
+    <VScrollYReverseTransition leave-absolute>
       <div v-if="isDataFetched && !fetchError">
         <BoothInfoSection :boothData="boothData" />
 
@@ -33,7 +33,7 @@
               <VCheckbox v-model="autoRefreshEnabled"
                          hide-details
                          class="flex-grow-0"
-                         label="데이터 자동 업데이트" />
+                         label="정보 자동 업데이트" />
 
               <VBtn variant="outlined"
                     size="large"
@@ -48,7 +48,7 @@
             <VExpandTransition>
               <p v-if="dataPollingTimerId"
                  class="text-right text-primary"
-                 style="opacity: 0.5">※ 부스 데이터가 30초마다 자동 업데이트됩니다.</p>
+                 style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
             </VExpandTransition>
           </div>
 
@@ -95,7 +95,7 @@
           <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
         </VContainer>
       </div>
-    </VSlideYReverseTransition>
+    </VScrollYReverseTransition>
   </VMain>
 </template>
 

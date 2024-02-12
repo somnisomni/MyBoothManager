@@ -5,7 +5,7 @@
       <small>레이아웃 또는 기능이 수시로 변경될 수 있습니다.</small>
     </div>
 
-    <RouterView />
+    <RouterView v-if="!isServerNotAvailable" />
 
     <ServerNotRespondErrorDialog v-model="isServerNotAvailable" />
   </VApp>

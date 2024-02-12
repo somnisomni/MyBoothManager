@@ -1,29 +1,30 @@
 <template>
-  <div>
-    <VSheet v-for="booth in boothListNormalized"
-         :key="booth.id"
-         v-ripple
-         class="booth-item py-2 px-4"
-         @click.stop="() => onBoothItemClick(booth.id)">
-      {{ booth.name }}
-    </VSheet>
-  </div>
+  <VLayout class="d-flex flex-row flex-wrap overflow-visible">
+    <div v-if="!boothList || boothList.length < 0" class="d-inline-flex align-center text-disabled my-2">
+      <VIcon class="mr-1">mdi-information-outline</VIcon> 부스가 없습니다.
+    </div>
+
+    <BoothListItem v-for="booth in boothList"
+                   :key="booth.id"
+                   :boothData="booth"
+                   class="ma-2"
+                   @click="onBoothItemClick" />
+  </VLayout>
 </template>
 
 <script lang="ts">
-import { BoothStatus, type IBooth } from "@myboothmanager/common";
+import { type IBooth } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import BoothListItem from "./BoothListItem.vue";
 
 @Component({
+  components: {
+    BoothListItem,
+  },
   emits: ["boothItemClick"],
 })
 export default class BoothListView extends Vue {
-  @Prop({ type: Object, required: true }) boothList!: Array<IBooth>;
-
-  get boothListNormalized() {
-    // Don't list closed booths in the booth list view
-    return this.boothList.filter((booth) => booth.status !== BoothStatus.CLOSE);
-  }
+  @Prop({ type: Array, required: true }) boothList!: Array<IBooth>;
 
   @Emit("boothItemClick")
   onBoothItemClick(boothId: number) {
@@ -31,9 +32,3 @@ export default class BoothListView extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.booth-item {
-  cursor: pointer;
-}
-</style>
