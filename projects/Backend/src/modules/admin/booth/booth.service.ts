@@ -31,9 +31,11 @@ export class BoothService {
   }
 
   async findOne(id: number, setLast: boolean | null | undefined = false, callerAccountId: number): Promise<Booth> {
-    if(setLast) await (await Account.findByPk(callerAccountId))?.update({ lastSelectedBoothId: id });
+    const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 
-    return await this.findBoothBelongsToAccount(id, callerAccountId);
+    if(booth && setLast) await (await Account.findByPk(callerAccountId))?.update({ lastSelectedBoothId: id });
+
+    return booth;
   }
 
   async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {

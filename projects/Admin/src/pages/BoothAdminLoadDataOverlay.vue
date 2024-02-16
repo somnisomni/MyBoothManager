@@ -49,7 +49,16 @@ export default class BoothAdminLoadDataOverlay extends Vue {
 
     // Fetch account last selected booth data
     if($adminStore.isFirstLoad) {
-      $adminStore.changeBooth($adminStore.currentAccount?.lastSelectedBoothId ?? -1);
+      if(!$adminStore.currentAccount?.lastSelectedBoothId) {
+        $adminStore.currentBooth.booth = null;
+
+        // No booth available
+        this.$emit("completed");
+        return;
+      } else {
+        $adminStore.changeBooth($adminStore.currentAccount?.lastSelectedBoothId);
+      }
+
       $adminStore.isFirstLoad = false;
     }
 
