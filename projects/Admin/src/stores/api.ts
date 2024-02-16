@@ -156,6 +156,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.fetchAllMembersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.boothMembers) $adminStore.currentBooth.boothMembers = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.boothMembers);
         for(const member of response) $adminStore.currentBooth.boothMembers[member.id] = member;
       },
     );
@@ -208,6 +209,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.fetchAllGoodsOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.goods);
         for(const goods of response) $adminStore.currentBooth.goods[goods.id] = goods;
       },
     );
@@ -263,6 +265,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.fetchAllGoodsCombinationOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.goodsCombinations);
         for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = combination;
       },
     );
@@ -318,6 +321,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.fetchAllGoodsCategoriesOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.goodsCategories) $adminStore.currentBooth.goodsCategories = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.goodsCategories);
         for(const category of response) $adminStore.currentBooth.goodsCategories[category.id] = category;
       },
     );
@@ -369,6 +373,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.fetchAllGoodsOrdersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.goodsOrders) $adminStore.currentBooth.goodsOrders = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.goodsOrders);
         for(const order of response) $adminStore.currentBooth.goodsOrders[order.id] = order;
       },
     );
