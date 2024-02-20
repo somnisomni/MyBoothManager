@@ -2,7 +2,7 @@
   <VContainer class="pa-0 pa-sm-2 pa-md-6">
     <VLayout class="pa-2 d-flex align-center align-sm-end flex-column flex-sm-row">
       <div>
-        <div class="d-flex align-center text-body-2 text-disabled"><VIcon class="mr-1">mdi-information-box-outline</VIcon> 취소된 기록을 제외하여 계산된 값입니다.</div>
+        <div class="d-flex align-center text-body-2 text-disabled"><VIcon class="mr-1">mdi-information-box-outline</VIcon> 필터를 적용하지 않고 취소된 기록이 제외되어 계산된 값입니다.</div>
 
         <VLayout class="mt-2 d-flex align-center align-sm-center flex-column flex-sm-row">
           <VSheet class="mx-1"
@@ -38,8 +38,19 @@
 
     <VDivider class="my-2" />
 
-    <GoodsOrderListView v-if="Object.keys(boothGoodsOrders).length > 0" />
+    <VLayout class="pa-2">
+      <VBtn size="large"
+            variant="flat"
+            prepend-icon="mdi-filter"
+            @click="filterSettingDialogShown = true">필터 설정</VBtn>
+    </VLayout>
+    <GoodsOrderListView v-if="Object.keys(boothGoodsOrders).length > 0"
+                        :filter="filterSettings" />
     <h2 v-else-if="!dataLoading && Object.keys(boothGoodsOrders).length <= 0" class="text-center">등록된 판매 기록이 없습니다.</h2>
+
+    <OrderFilterSettingDialog v-model="filterSettingDialogShown"
+                              :selectedGoodsIds="filterSettings.targetGoodsIds"
+                              @primary="setOrderFilter" />
   </VContainer>
 </template>
 
@@ -48,16 +59,23 @@ import { Component, Setup, Vue } from "vue-facing-decorator";
 import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
-import GoodsOrderListView from "@/components/goods/GoodsOrderListView.vue";
+import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import { useAdminAPIStore } from "@/stores/api";
+import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDialog.vue";
 
 @Component({
   components: {
     GoodsOrderListView,
+    OrderFilterSettingDialog,
   },
 })
 export default class BoothAdminGoodsOrdersListPage extends Vue {
   dataLoading: boolean = true;
+
+  filterSettingDialogShown: boolean = false;
+  readonly filterSettings: IGoodsOrderFilterSetting = {
+    targetGoodsIds: [],
+  };
 
   @Setup(() => useDisplay().smAndUp)
   smAndUp!: boolean;
@@ -93,6 +111,10 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
     this.dataLoading = true;
     await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
     this.dataLoading = false;
+  }
+
+  setOrderFilter(selectedGoodsIds: Array<number>) {
+    this.filterSettings.targetGoodsIds = selectedGoodsIds;
   }
 }
 </script>

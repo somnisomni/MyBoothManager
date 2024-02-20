@@ -2,7 +2,9 @@
   <div class="mt-4">
     <RouterView v-slot="{ Component }">
       <VSlideXReverseTransition leave-absolute>
-        <component :is="Component" />
+        <KeepAlive>
+          <component :is="Component" />
+        </KeepAlive>
       </VSlideXReverseTransition>
     </RouterView>
   </div>

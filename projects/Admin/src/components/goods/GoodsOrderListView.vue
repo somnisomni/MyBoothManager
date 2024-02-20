@@ -13,10 +13,14 @@
 
 <script lang="ts">
 import type { IGoodsOrder } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
+
+export interface IGoodsOrderFilterSetting {
+  targetGoodsIds: Array<number>;
+}
 
 @Component({
   components: {
@@ -24,10 +28,17 @@ import GoodsOrderListItem from "./GoodsOrderListItem.vue";
   },
 })
 export default class GoodsOrderListView extends Vue {
+  @Prop({ type: Object, default: {} }) filter!: IGoodsOrderFilterSetting;
+
   get orderList(): Record<number, IGoodsOrder> {
-    return Object.values(useAdminStore().currentBooth.goodsOrders ?? {}).sort((a, b) =>
-      new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime(),
-    );
+    return Object.values(useAdminStore().currentBooth.goodsOrders ?? {})
+      .filter((order) => {
+        if(this.filter.targetGoodsIds.length > 0) {
+          return order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!));
+        }
+        return true;
+      })
+      .sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
   }
 
   onGoodsOrderItemClick(data: IGoodsOrder) {

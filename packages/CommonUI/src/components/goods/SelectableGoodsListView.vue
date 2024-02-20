@@ -6,7 +6,7 @@
                  :key="goods.id"
                  :disabled="goodsDisabledIdList.includes(goods.id)"
                  disabledReason="이미 다른 세트에 포함됨"
-                 :selectable="true"
+                 selectable
                  :goodsData="goods"
                  :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
                  :forceSmallSize="true"
