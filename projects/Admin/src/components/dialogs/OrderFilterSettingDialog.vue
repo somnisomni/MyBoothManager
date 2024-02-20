@@ -7,15 +7,18 @@
                 hideCloseButton
                 fullscreenOnSmallScreen
                 @primary="onDialogConfirm">
-    <SelectableGoodsListView v-model="selectedGoodsIds"
+    <SelectableGoodsListView v-model="filterSetting.targetGoodsIds"
                              :goodsList="goodsList"
                              :goodsImageUrlResolver="getUploadFilePath"
                              :currencySymbol="currencySymbol" />
+    <VCheckbox v-model="filterSetting.onlyShowOrdersWithFreeGoods"
+               label="무료 증정 굿즈가 포함된 기록만 표시" />
   </CommonDialog>
 </template>
 
 <script lang="ts">
 import type { IGoods } from "@myboothmanager/common";
+import type { IGoodsOrderFilterSetting } from "../goods/GoodsOrderListView.vue";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminStore } from "@/stores/admin";
@@ -27,7 +30,7 @@ export default class OrderFilterSettingDialog extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Array, default: [] }) selectedGoodsIds!: Array<number>;
+  @Prop({ type: Object, default: {} }) filterSetting!: IGoodsOrderFilterSetting;
 
   get goodsList(): Array<IGoods> {
     return Object.values(useAdminStore().currentBooth.goods ?? {});
@@ -40,7 +43,7 @@ export default class OrderFilterSettingDialog extends Vue {
   @Emit("primary")
   onDialogConfirm() {
     this.open = false;
-    return this.selectedGoodsIds;
+    return this.filterSetting;
   }
 }
 </script>

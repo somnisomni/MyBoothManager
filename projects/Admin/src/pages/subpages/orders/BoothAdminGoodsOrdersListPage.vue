@@ -49,7 +49,7 @@
     <h2 v-else-if="!dataLoading && Object.keys(boothGoodsOrders).length <= 0" class="text-center">등록된 판매 기록이 없습니다.</h2>
 
     <OrderFilterSettingDialog v-model="filterSettingDialogShown"
-                              :selectedGoodsIds="filterSettings.targetGoodsIds"
+                              :filterSetting="filterSettings"
                               @primary="setOrderFilter" />
   </VContainer>
 </template>
@@ -58,6 +58,7 @@
 import { Component, Setup, Vue } from "vue-facing-decorator";
 import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
+import { ref } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import { useAdminAPIStore } from "@/stores/api";
@@ -73,9 +74,10 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   dataLoading: boolean = true;
 
   filterSettingDialogShown: boolean = false;
-  readonly filterSettings: IGoodsOrderFilterSetting = {
+  readonly filterSettings = ref({
     targetGoodsIds: [],
-  };
+    onlyShowOrdersWithFreeGoods: false,
+  } as IGoodsOrderFilterSetting);
 
   @Setup(() => useDisplay().smAndUp)
   smAndUp!: boolean;
@@ -113,8 +115,8 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
     this.dataLoading = false;
   }
 
-  setOrderFilter(selectedGoodsIds: Array<number>) {
-    this.filterSettings.targetGoodsIds = selectedGoodsIds;
+  setOrderFilter(filterSetting: IGoodsOrderFilterSetting) {
+    this.filterSettings.value = filterSetting;
   }
 }
 </script>

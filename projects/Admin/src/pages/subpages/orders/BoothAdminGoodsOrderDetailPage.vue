@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
 import { useAdminAPIStore } from "@/stores/api";
@@ -63,15 +63,14 @@ import { useAdminAPIStore } from "@/stores/api";
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
   cancelOrderWarningDialogShown = false;
 
+  @Setup(() => useRoute().params.id)
+  readonly orderId!: number;
+
   async mounted() {
     if(!this.orderData) {
       // If order data is not fetched yet, try to fetch it
       await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
     }
-  }
-
-  get orderId(): number {
-    return parseInt(useRoute().params.id as string);
   }
 
   get orderData(): IGoodsOrder {

@@ -20,6 +20,7 @@ import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 
 export interface IGoodsOrderFilterSetting {
   targetGoodsIds: Array<number>;
+  onlyShowOrdersWithFreeGoods: boolean;
 }
 
 @Component({
@@ -32,12 +33,10 @@ export default class GoodsOrderListView extends Vue {
 
   get orderList(): Record<number, IGoodsOrder> {
     return Object.values(useAdminStore().currentBooth.goodsOrders ?? {})
-      .filter((order) => {
-        if(this.filter.targetGoodsIds.length > 0) {
-          return order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!));
-        }
-        return true;
-      })
+      .filter((order) => (
+        ((this.filter.targetGoodsIds.length > 0) ? order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!)) : true)
+        && ((this.filter.onlyShowOrdersWithFreeGoods) ? order.order.some((item) => Number(item.price) <= 0 || item.price === null || item.price === undefined) : true)
+      ))
       .sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
   }
 
