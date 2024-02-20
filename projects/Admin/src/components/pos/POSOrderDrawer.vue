@@ -219,7 +219,7 @@ export default class POSOrderDrawer extends Vue {
       await useAdminAPIStore().fetchGoodsOfCurrentBooth(),
       await useAdminAPIStore().fetchGoodsCombinationsOfCurrentBooth(),
     ];
-    if(results.every((res) => typeof res !== "string")) {
+    if(results.every((res) => res === true)) {
       this.$emit("orderCreationSuccess");
 
       // If API call success, request reset the order list
