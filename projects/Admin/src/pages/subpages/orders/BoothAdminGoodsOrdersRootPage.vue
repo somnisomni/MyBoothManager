@@ -2,7 +2,7 @@
   <div class="mt-4">
     <RouterView v-slot="{ Component }">
       <VSlideXReverseTransition leave-absolute>
-        <KeepAlive>
+        <KeepAlive :include="keepAliveIncludeNames">
           <component :is="Component" />
         </KeepAlive>
       </VSlideXReverseTransition>
@@ -12,7 +12,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
+import BoothAdminGoodsOrdersListPage from "./BoothAdminGoodsOrdersListPage.vue";
 
 @Component({})
-export default class BoothAdminGoodsOrdersRootPage extends Vue { }
+export default class BoothAdminGoodsOrdersRootPage extends Vue {
+  get keepAliveIncludeNames() {
+    return [ BoothAdminGoodsOrdersListPage.name ];
+  }
+}
 </script>
