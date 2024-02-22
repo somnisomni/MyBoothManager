@@ -7,32 +7,16 @@ import { default as fastifyStatic, FastifyStaticOptions } from "@fastify/static"
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
-import { insertTempDataIntoDB } from "./dev/temp-data";
 import { UtilService } from "./modules/admin/util/util.service";
 import { LoggingInterceptor } from "./modules/global/logging/logging.interceptor";
 
 let app: NestFastifyApplication;
 
-async function dev() {
-  if(process.env.NODE_ENV === "development") {
-    console.debug("dev env");
-
-    // await app.register(fastifyHelmet, {
-    //   crossOriginResourcePolicy: false,
-    //   contentSecurityPolicy: false,
-    // });
-
-    if(MBMSequelize.instance) {
-      await insertTempDataIntoDB();
-    }
-  }
-}
-
 async function bootstrap() {
-  /* dotenv configuration */
+  /* *** dotenv configuration *** */
   (await import("dotenv")).config();
 
-  /* DB connection */
+  /* *** DB connection *** */
   if(await MBMSequelize.setup()) {
     console.debug("Database connection set up.");
   } else {
@@ -40,7 +24,7 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  /* NestJS application initialization */
+  /* *** NestJS application initialization *** */
   app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({
@@ -48,7 +32,7 @@ async function bootstrap() {
     }),
   );
 
-  /* Fastify plugins */
+  /* *** Fastify plugins *** */
   await app.register(fastifyMultipart, {
     limits: {
       fileSize: MAX_UPLOAD_FILE_BYTES,
@@ -59,17 +43,17 @@ async function bootstrap() {
     prefix: "/uploads/",
     etag: true,
     cacheControl: true,
-    dotfiles: "deny",
+    dotfiles: "ignore",
+    serveDotFiles: false,
     index: false,
+    immutable: false,
   } as FastifyStaticOptions);
 
-  // dev
-  if(process.env.NODE_ENV === "development") await dev();
+  app.enableCors();
 
-  /* Nest.js app globals */
+  /* *** Nest.js app globals *** */
   app.useGlobalFilters(
     new AllExceptionsFilter(),
-    // new HttpExceptionFilter(),
     new RouteNotFoundExceptionFilter(),
     new TeapotExceptionFilter(),
   );
@@ -77,21 +61,19 @@ async function bootstrap() {
     new LoggingInterceptor(),
   );
 
-  app.enableCors();
-
+  /* *** Start the backend server *** */
   await app.listen(
     process.env.API_SERVER_PORT || 31111,
     process.env.API_SERVER_HOST || "127.0.0.1",
     (error, address) => {
       if(error) {
-        console.error("API server failed to start!");
+        console.error("*** ❌ API server failed to start! ***");
         console.error(error);
       } else {
-        console.info(`API server is running on ${address}`);
+        console.info(`*** 🌐 API server is running on ${address} ***\n`);
       }
     },
   );
-
 }
 
 bootstrap();

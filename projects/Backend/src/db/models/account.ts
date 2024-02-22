@@ -34,8 +34,8 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare loginCount: number;
 
-  @AllowNull(false)
-  @Default(DataTypes.NOW)
+  @AllowNull
+  @Default(null)
   @Column(DataTypes.DATE)
   declare lastLoginAt: Date;
 

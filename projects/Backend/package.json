@@ -13,6 +13,7 @@
     "start:prod:no-migrate": "NODE_ENV=production node dist/src/main",
     "migrate": "NODE_ENV=development ts-node -r tsconfig-paths/register scripts/db-migrator/migrate",
     "migrate:prod": "NODE_ENV=production node dist/scripts/db-migrator/migrate",
+    "seed": "NODE_ENV=development ts-node -r tsconfig-paths/register scripts/db-migrator/seed",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
