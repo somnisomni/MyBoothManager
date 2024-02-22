@@ -1,5 +1,5 @@
 <template>
-  <VList class="overflow-hidden bg-transparent">
+  <VList class="overflow-visible bg-transparent">
     <VSlideXReverseTransition leave-absolute group>
       <VListItem v-for="item in orderList"
                  :key="item.id"
