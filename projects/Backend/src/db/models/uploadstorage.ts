@@ -45,7 +45,7 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
 
   @Column(DataTypes.VIRTUAL)
   get filePath(): string {
-    return path.join(this.savePath!, this.fileName);
+    return path.normalize(path.join(this.savePath!, this.fileName));
   }
 
 
