@@ -54,8 +54,8 @@
 
 <script lang="ts">
 import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
-import { Component, Setup, Vue } from "vue-facing-decorator";
-import { useRoute } from "vue-router";
+import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
+import { useRoute, type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
 import { useAdminAPIStore } from "@/stores/api";
 
@@ -71,6 +71,11 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
       // If order data is not fetched yet, try to fetch it
       await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
     }
+  }
+
+  @Hook
+  beforeRouteLeave(to: RouteRecordRaw, from: RouteRecordRaw) {
+    to.meta = { previousScrollOffset: from.meta?.previousScrollOffset };
   }
 
   get orderData(): IGoodsOrder {

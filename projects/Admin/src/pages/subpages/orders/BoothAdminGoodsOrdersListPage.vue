@@ -45,6 +45,7 @@
             @click="filterSettingDialogShown = true">필터 설정</VBtn>
     </VLayout>
     <GoodsOrderListView v-if="Object.keys(boothGoodsOrders).length > 0"
+                        ref="goodsOrderListView"
                         :filter="filterSettings" />
     <h2 v-else-if="!dataLoading && Object.keys(boothGoodsOrders).length <= 0" class="text-center">등록된 판매 기록이 없습니다.</h2>
 
@@ -55,10 +56,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Setup, Vue } from "vue-facing-decorator";
+import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
 import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
 import { ref } from "vue";
+import { type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
 import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import { useAdminAPIStore } from "@/stores/api";
@@ -82,8 +84,33 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   @Setup(() => useDisplay().smAndUp)
   smAndUp!: boolean;
 
+  @Ref("goodsOrderListView") readonly goodsOrderListView!: GoodsOrderListView;
+
   async mounted() {
     await this.onRefreshClick();
+  }
+
+  @Hook
+  beforeRouteEnter(to: RouteRecordRaw, from: RouteRecordRaw, next: (callback?: (vm?: BoothAdminGoodsOrdersListPage) => void) => void) {
+    next((vm) => {
+      if(vm) {
+        if(to.meta?.previousId) {
+          // Need scroll to the previous position (by order ID)
+          vm.goodsOrderListView.scrollIntoOrderDOMById(Number(to.meta.previousId));
+        } else if(to.meta?.previousScrollOffset) {
+          // Need scroll to the previous position (by saved scroll offset)
+          // setTimeout is NEEDED to wait for the DOM to be fully rendered
+          setTimeout(() => {
+            window.scrollTo(0, Number(to.meta!.previousScrollOffset));
+          }, 0);
+        }
+      }
+    });
+  }
+
+  @Hook
+  beforeRouteLeave(to: RouteRecordRaw) {
+    to.meta = { previousScrollOffset: window.scrollY };
   }
 
   get boothGoodsOrders() {

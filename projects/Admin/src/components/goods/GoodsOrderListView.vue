@@ -2,6 +2,7 @@
   <VList class="overflow-visible bg-transparent">
     <VSlideXReverseTransition leave-absolute group>
       <VListItem v-for="item in orderList"
+                 ref="orderListDOMItems"
                  :key="item.id"
                  class="px-0 px-sm-4 py-0 py-sm-2 my-0 my-sm-2">
         <GoodsOrderListItem :orderData="item"
@@ -13,7 +14,8 @@
 
 <script lang="ts">
 import type { IGoodsOrder } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import type { VListItem } from "vuetify/components";
+import { Component, Prop, Ref, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
@@ -31,6 +33,8 @@ export interface IGoodsOrderFilterSetting {
 export default class GoodsOrderListView extends Vue {
   @Prop({ type: Object, default: {} }) filter!: IGoodsOrderFilterSetting;
 
+  @Ref("orderListDOMItems") readonly orderListItemsRefs!: Array<VListItem>;
+
   get orderList(): Record<number, IGoodsOrder> {
     return Object.values(useAdminStore().currentBooth.goodsOrders ?? {})
       .filter((order) => (
@@ -47,6 +51,23 @@ export default class GoodsOrderListView extends Vue {
         id: data.id,
       },
     });
+  }
+
+  public scrollIntoOrderDOMById(orderId: number) {
+    if(!this.orderListItemsRefs || this.orderListItemsRefs.length === 0) return;
+
+    const foundItem = this.orderListItemsRefs.find(((item) => Number(item.$.vnode.key) === orderId));
+    if(!foundItem) return;
+
+    // setTimeout is NEEDED to wait for the DOM to be fully rendered
+    setTimeout(() => {
+      const bound = foundItem.$el.getBoundingClientRect();
+
+      window.scrollTo({
+        top: bound.top - bound.height,
+        behavior: "instant",
+      });
+    }, 0);
   }
 }
 </script>
