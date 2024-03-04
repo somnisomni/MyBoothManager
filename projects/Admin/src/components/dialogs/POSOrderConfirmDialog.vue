@@ -32,7 +32,7 @@
               color="primary"
               size="large"
               prepend-icon="mdi-check"
-              @click="confirmOrder('cash')">판매 내역 등록</VBtn>
+              @click="confirmOrder(GoodsOrderPaymentMethod.CASH)">판매 내역 등록</VBtn>
       </VRow>
       <VRow v-else justify="center" align="start">
         <VCol v-for="(info, key) in paymentMethodsInfo"
@@ -52,26 +52,26 @@
 </template>
 
 <script lang="ts">
-import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
 import type { POSOrderList } from "@/pages/subpages/BoothPOSPage.lib";
+import { type IGoods, type IGoodsCombination, GoodsOrderPaymentMethod } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
-
-type OrderPaymentMethod = "cash" | "account" | "card" | "prepaid";
 
 @Component({
   emits: ["confirm"],
 })
 export default class POSOrderConfirmDialog extends Vue {
+  readonly GoodsOrderPaymentMethod = GoodsOrderPaymentMethod;
+
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Object, required: true }) orders!: POSOrderList;
 
-  readonly paymentMethodsInfo: Record<OrderPaymentMethod, any> = {
+  readonly paymentMethodsInfo: Record<GoodsOrderPaymentMethod, any> = {
     cash: {
       icon: "mdi-cash-multiple",
       text: "현금",
     },
-    account: {
+    transfer: {
       icon: "mdi-account-cash",
       text: "계좌 · QR 입금",
     },
@@ -105,7 +105,7 @@ export default class POSOrderConfirmDialog extends Vue {
   }
 
   @Emit("confirm")
-  confirmOrder(method: OrderPaymentMethod): OrderPaymentMethod {
+  confirmOrder(method: GoodsOrderPaymentMethod): GoodsOrderPaymentMethod {
     this.open = false;
 
     return method;

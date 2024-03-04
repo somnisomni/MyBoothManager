@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest, type IGoodsOrderDetailItemBase } from "@myboothmanager/common";
+import { APP_NAME, type GoodsOrderPaymentMethod, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest, type IGoodsOrderDetailItemBase } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/BoothPOSPage.lib";
 import { useAdminStore } from "@/stores/admin";
@@ -192,7 +192,7 @@ export default class POSOrderDrawer extends Vue {
       : useAdminStore().currentBooth.goods![id];
   }
 
-  async onOrderConfirm() {
+  async onOrderConfirm(paymentMethod: GoodsOrderPaymentMethod) {
     this.orderCreationInProgress = true;
     this.$emit("orderCreationStarted");
 
@@ -200,6 +200,7 @@ export default class POSOrderDrawer extends Vue {
       boothId: this.currentBooth.id,
       totalPrice: this.totalOrderWorth,
       order: [],
+      paymentMethod,
     };
 
     for(const [, order] of this.orderSimulationLayer.orderList.entries()) {

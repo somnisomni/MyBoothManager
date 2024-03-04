@@ -1,5 +1,5 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { type IGoodsOrder, type IGoodsOrderDetailItem, GoodsOrderStatus } from "@myboothmanager/common";
+import { type IGoodsOrder, type IGoodsOrderDetailItem, GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
@@ -40,6 +40,11 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
   @Column(DataTypes.INTEGER.UNSIGNED)
   get totalPrice(): number { return Math.floor(this.getDataValue("totalPrice")); }
   set totalPrice(value: number) { this.setDataValue("totalPrice", Math.floor(value)); }
+
+  @AllowNull
+  @Default(GoodsOrderPaymentMethod.CASH)
+  @Column(DataTypes.ENUM(...Object.values(GoodsOrderPaymentMethod)))
+  declare paymentMethod?: GoodsOrderPaymentMethod;
 
 
   /* === Relations === */

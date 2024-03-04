@@ -19,6 +19,7 @@
       <div>상태: {{ orderData.status }}</div>
       <div>총 판매 금액: {{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
       <div>생성 일자: {{ new Date(orderData.createdAt!).toLocaleString() }}</div>
+      <div>대금 지불 방법: {{ orderData.paymentMethod }}</div>
 
       <ul class="mt-4">
         <div>판매 굿즈 목록</div>
