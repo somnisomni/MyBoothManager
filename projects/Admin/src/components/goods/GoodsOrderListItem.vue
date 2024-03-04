@@ -26,7 +26,8 @@
       </div>
     </div>
 
-    <div class="px-2">
+    <div class="d-flex align-center px-2">
+      <span class="mr-1 text-disabled text-subtitle-2">#{{ orderData.id }}</span>
       <VIcon>mdi-chevron-right</VIcon>
     </div>
   </VSheet>
