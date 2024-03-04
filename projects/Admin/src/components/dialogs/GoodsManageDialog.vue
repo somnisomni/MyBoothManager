@@ -156,6 +156,14 @@ export default class GoodsManageDialog extends Vue {
       hint: "공개 페이지에서만 적용됩니다.",
       persistentHint: true,
     },
+    ownerMember: {
+      type: FormFieldType.SELECT,
+      label: "소유자 멤버",
+      optional: true,
+      get items() { return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(member => ({ title: member.name, id: member.id })); },
+      itemTitle: "title",
+      itemValue: "id",
+    },
   } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
   formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);
 
