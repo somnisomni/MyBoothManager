@@ -33,12 +33,12 @@
           </VBtn>
           <VBtn v-if="!hideCloseButton"
                 :disabled="progressActive || persistent"
-                title="닫기"
+                :title="dialogCancelText ?? '닫기'"
                 icon
                 variant="flat"
                 class="button-close mr-2"
                 @click.stop="onCloseButtonClick">
-            <VTooltip activator="parent" location="bottom">닫기</VTooltip>
+            <VTooltip activator="parent" location="bottom">{{ dialogCancelText ?? '닫기' }}</VTooltip>
             <VIcon>mdi-close</VIcon>
           </VBtn>
         </div>

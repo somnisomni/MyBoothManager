@@ -78,7 +78,7 @@
                 class="w-100"
                 :loading="orderCreationInProgress"
                 :disabled="isOrderListEmpty || orderCreationInProgress"
-                @click="showOrderConfirmDialog = true">판매 확인</VBtn>
+                @click="showOrderConfirmDialog = true">판매 등록</VBtn>
         </VListItem>
       </VList>
     </div>
