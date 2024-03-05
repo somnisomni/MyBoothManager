@@ -51,7 +51,7 @@
 <script lang="ts">
 import { ErrorCodes, GoodsStockVisibility, type IGoods, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
-import { reactive , readonly } from "vue";
+import { reactive , readonly, ref } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
@@ -89,6 +89,7 @@ export default class GoodsManageDialog extends Vue {
     stockInitial: 0,
     stockRemaining: 0,
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+    ownerMembers: ref([]),
   });
   readonly formFields = readonly({
     name: {
@@ -156,13 +157,14 @@ export default class GoodsManageDialog extends Vue {
       hint: "공개 페이지에서만 적용됩니다.",
       persistentHint: true,
     },
-    ownerMember: {
+    ownerMembers: {
       type: FormFieldType.SELECT,
       label: "소유자 멤버",
       optional: true,
       get items() { return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(member => ({ title: member.name, id: member.id })); },
       itemTitle: "title",
       itemValue: "id",
+      multiple: true,
     },
   } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
   formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);

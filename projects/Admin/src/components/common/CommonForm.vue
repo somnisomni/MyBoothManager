@@ -24,6 +24,7 @@
                  :max="isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :clearable="field.optional"
+                 :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
                  :items="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).items : undefined"
                  :item-title="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemTitle : undefined"
                  :item-value="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemValue : undefined"
@@ -168,6 +169,7 @@ export interface IFormFieldSelectOptions extends IFormFieldOptions {
   items: any[];
   itemTitle: string;
   itemValue: string;
+  multiple?: boolean;
   onSelectionChange?(): void;
 }
 
