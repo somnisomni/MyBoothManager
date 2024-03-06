@@ -1,4 +1,4 @@
-import { BoothStatus, GoodsOrderStatus, GoodsStatus } from "@myboothmanager/common";
+import { BoothStatus, GoodsOrderPaymentMethod, GoodsOrderStatus, GoodsStatus } from "@myboothmanager/common";
 
 export function getBoothStatusString(status: BoothStatus): string {
   switch(status) {
@@ -34,6 +34,21 @@ export function getGoodsOrderStatusString(status: GoodsOrderStatus): string {
       return "정상 기록됨";
     case GoodsOrderStatus.CANCELED:
       return "취소됨";
+    default:
+      return "알 수 없음";
+  }
+}
+
+export function getPaymentMethodString(paymentMethod: GoodsOrderPaymentMethod): string {
+  switch(paymentMethod) {
+    case GoodsOrderPaymentMethod.CARD:
+      return "카드";
+    case GoodsOrderPaymentMethod.CASH:
+      return "현금";
+    case GoodsOrderPaymentMethod.PREPAID:
+      return "사전 지불";
+    case GoodsOrderPaymentMethod.TRANSFER:
+      return "계좌 이체";
     default:
       return "알 수 없음";
   }

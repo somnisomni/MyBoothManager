@@ -19,7 +19,7 @@
       <div>상태: {{ orderData.status }}</div>
       <div>총 판매 금액: {{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
       <div>생성 일자: {{ new Date(orderData.createdAt!).toLocaleString() }}</div>
-      <div>대금 지불 방법: {{ orderData.paymentMethod }}</div>
+      <div v-if="orderData.paymentMethod">대금 지불 방법: {{ getPaymentMethodString(orderData.paymentMethod) }}</div>
 
       <ul class="mt-4">
         <div>판매 굿즈 목록</div>
@@ -59,9 +59,12 @@ import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
 import { useAdminAPIStore } from "@/stores/api";
+import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
+  readonly getPaymentMethodString = getPaymentMethodString;
+
   cancelOrderWarningDialogShown = false;
 
   @Setup(() => useRoute().params.id)
