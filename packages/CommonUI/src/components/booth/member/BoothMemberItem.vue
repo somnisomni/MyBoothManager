@@ -1,13 +1,15 @@
 <template>
-  <VSheet class="d-inline-flex flex-row align-center pa-2 pr-6 ma-4 bg-background text-start"
-          :class="{ 'rounded-s-pill': hasMemberImage }"
+  <VSheet class="d-inline-flex flex-row align-center pa-2 pr-6 ma-4 bg-background text-start rounded-s-pill"
           :style="{ 'cursor': editable ? 'pointer' : 'default' }"
           v-ripple
           height="7em"
           max-height="7em"
           :max-width="maxWidth"
           @click="$emit('click', member.id)">
-    <VAvatar v-if="member.memberImageUrl" :image="imageUrlResolver(member.memberImageUrl)" size="6em" class="no-interaction" />
+    <VAvatar :image="memberImageUrl ?? undefined"
+             :icon="!memberImageUrl ? 'mdi-account' : undefined"
+             size="6em"
+             class="no-interaction" />
 
     <div class="d-flex flex-column ml-4 overflow-hidden">
       <div class="d-flex align-center" style="white-space: nowrap">
@@ -48,6 +50,10 @@ export default class BoothMemberItem extends Vue {
 
   get hasMemberImage() {
     return !!this.member.memberImageUrl;
+  }
+
+  get memberImageUrl() {
+    return this.imageUrlResolver(this.member.memberImageUrl);
   }
 }
 </script>
