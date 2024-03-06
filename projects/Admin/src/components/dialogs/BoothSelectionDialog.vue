@@ -26,7 +26,7 @@
           <div class="booth-item-name">{{ booth.name }}</div>
           <div class="booth-item-desc">{{ booth.description }}</div>
         </VLayout>
-        <div class="flex-shrink-0">{{ getBoothOpenStatusString(booth.status) }}</div>
+        <div class="flex-shrink-0">{{ getBoothStatusString(booth.status) }}</div>
       </VLayout>
 
       <div v-if="booth.id === currentBoothId" class="booth-item-current-indicator bg-primary text-body-2">현재 관리 중인 부스</div>
@@ -39,12 +39,13 @@
 
 <script lang="ts">
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import { BoothStatus, type IBooth } from "@myboothmanager/common";
+import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { ref, type Ref as VueRef } from "vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminAPIStore } from "@/stores/api";
+import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
@@ -53,6 +54,8 @@ import BoothManageDialog from "./BoothManageDialog.vue";
   },
 })
 export default class BoothSelectionDialog extends Vue {
+  readonly getBoothStatusString = getBoothStatusString;
+
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   boothList: VueRef<Array<IBooth>> = ref([]);
@@ -79,16 +82,6 @@ export default class BoothSelectionDialog extends Vue {
   @Watch("boothItems", { immediate: true })
   onDialogOpen(value: boolean) {
     if(value) this.refreshBoothList();
-  }
-
-  getBoothOpenStatusString(status: BoothStatus): string {
-    switch(status) {
-      case BoothStatus.OPEN: return "운영 중";
-      case BoothStatus.PAUSE: return "일시 중지";
-      case BoothStatus.CLOSE: return "운영 종료";
-      case BoothStatus.PREPARE: return "운영 준비";
-      default: return "알 수 없음";
-    }
   }
 
   getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
