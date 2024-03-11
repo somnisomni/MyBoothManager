@@ -3,5 +3,9 @@
     "arcanis.vscode-zipfs",
     "dbaeumer.vscode-eslint",
     "Vue.vscode-typescript-vue-plugin"
+  ],
+  "unwantedRecommendations": [
+    "svelte.svelte-vscode",
+    "Vue.vscode-typescript-vue-plugin"
   ]
 }
