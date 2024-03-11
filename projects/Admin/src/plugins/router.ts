@@ -99,6 +99,11 @@ const router = createRouter({
               component: () => import("@/pages/subpages/BoothAdminAnalyticsPage.vue"),
             },
             {
+              path: "closing",
+              name: "admin-closing",
+              component: () => import("@/pages/subpages/BoothAdminClosingPage.vue"),
+            },
+            {
               path: "utility/price-calculator",
               name: "admin-utility-price-calculator",
               component: PlaceholderPage,

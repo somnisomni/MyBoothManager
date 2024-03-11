@@ -31,6 +31,8 @@
                    :to="{ name: 'admin-orders' }" exact />
         <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
                    :to="{ name: 'admin-analytics' }" exact />
+        <VListItem prepend-icon="mdi-cash-register" title="정산" value="closing"
+                   :to="{ name: 'admin-closing' }" exact />
 
         <VDivider />
 
