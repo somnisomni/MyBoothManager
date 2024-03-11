@@ -11,6 +11,7 @@ export interface IGoodsCombination extends IDataModelBase {
   stockInitial: number;  // <-- NOT IN DB; Calculated in backend (min of stockInitial of combined goods)
   stockRemaining: number;  // <-- NOT IN DB; Calculated in backend (min of stockRemaining of combined goods)
   stockVisibility: GoodsStockVisibility;
+  ownerMemberIds?: number[]; // <-- NOT IN DB; Calculated in backend (union of ownerMemberIds of combined goods)
   combinationImageUrl?: string;
 }
 export type IGoodsCombinationResponse = IGoodsCombination;

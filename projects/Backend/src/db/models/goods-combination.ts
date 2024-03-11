@@ -80,6 +80,15 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   }
 
   @Column(DataTypes.VIRTUAL)
+  get ownerMemberIds(): number[] {
+    if(this.combinedGoods && this.combinedGoods.length > 0) {
+      return this.combinedGoods.flatMap(g => (g.ownerMembersId ?? []).flat());
+    } else {
+      return [];
+    }
+  }
+
+  @Column(DataTypes.VIRTUAL)
   get combinationImageUrl(): string | null {
     if(this.combinationImage) {
       return this.combinationImage.filePath;
@@ -92,7 +101,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   /* === Relations === */
   @BelongsTo(() => Booth)
   declare ownerBooth: Booth;
-  
+
   @HasMany(() => Goods)
   declare combinedGoods: Goods[];
 
