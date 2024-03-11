@@ -10,4 +10,5 @@ export class CreateGoodsDTO implements IGoodsCreateRequest {
   declare stockInitial: number;
   declare stockRemaining: number;
   declare stockVisibility: GoodsStockVisibility;
+  declare ownerMembersId?: number[];
 }

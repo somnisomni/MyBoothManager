@@ -89,7 +89,7 @@ export default class GoodsManageDialog extends Vue {
     stockInitial: 0,
     stockRemaining: 0,
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
-    ownerMembers: ref([]),
+    ownerMembersId: ref([]),
   });
   readonly formFields = readonly({
     name: {
@@ -157,11 +157,15 @@ export default class GoodsManageDialog extends Vue {
       hint: "공개 페이지에서만 적용됩니다.",
       persistentHint: true,
     },
-    ownerMembers: {
+    ownerMembersId: {
       type: FormFieldType.SELECT,
       label: "소유자 멤버",
       optional: true,
-      get items() { return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(member => ({ title: member.name, id: member.id })); },
+      get items() {
+        return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(
+          member => ({ title: member.name, id: member.id }),
+        );
+      },
       itemTitle: "title",
       itemValue: "id",
       multiple: true,
@@ -212,6 +216,7 @@ export default class GoodsManageDialog extends Vue {
       this.formModels.stockInitial = this.currentGoods.stockInitial;
       this.formModels.stockRemaining = this.currentGoods.stockRemaining;
       this.formModels.stockVisibility = this.currentGoods.stockVisibility;
+      this.formModels.ownerMembersId = this.currentGoods.ownerMembersId;
     } else {
       this.formModels.name = "";
       this.formModels.description = "";
@@ -221,6 +226,7 @@ export default class GoodsManageDialog extends Vue {
       this.formModels.stockInitial = 0;
       this.formModels.stockRemaining = 0;
       this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
+      this.formModels.ownerMembersId = [];
     }
 
     this.formModelsInitial = deepClone(this.formModels);

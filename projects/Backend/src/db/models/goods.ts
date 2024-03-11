@@ -89,6 +89,11 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   declare stockVisibility: GoodsStockVisibility;
 
   @AllowNull
+  @Default([])
+  @Column(DataTypes.JSON)
+  declare ownerMembersId?: number[];
+
+  @AllowNull
   @Default(null)
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)

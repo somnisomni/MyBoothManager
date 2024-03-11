@@ -27,6 +27,7 @@ export interface IGoods extends IDataModelBase {
   stockRemaining: number;
   stockVisibility: GoodsStockVisibility;
   goodsImageUrl?: string;
+  ownerMembersId?: number[];
 }
 export type IGoodsResponse = IGoods;
 
@@ -34,8 +35,8 @@ export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
   goodsImageId?: number | null;
 }
 
-export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "stockVisibility";
+export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "stockVisibility" | "ownerMembersId";
 export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
 
-export type GoodsUpdateRequestKey = "categoryId" | "combinationId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "status" | "statusReason" | "stockVisibility";
+export type GoodsUpdateRequestKey = GoodsCreateRequestKey | "combinationId" | "status" | "statusReason";
 export type IGoodsUpdateRequest = Pick<IGoods, "boothId"> & Partial<Pick<IGoods, GoodsUpdateRequestKey>>;
