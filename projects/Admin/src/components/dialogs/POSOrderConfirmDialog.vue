@@ -35,8 +35,8 @@
               @click="confirmOrder(GoodsOrderPaymentMethod.CASH)">판매 내역 등록</VBtn>
       </VRow>
       <VRow v-else justify="center" align="start">
-        <VCol v-for="(info, key) in paymentMethodsInfo"
-              :key="key"
+        <VCol v-for="info in paymentMethodsInfo"
+              :key="info.key"
               class="text-center">
           <VBtn stacked
                 width="120px"
@@ -44,7 +44,7 @@
                 color="primary"
                 size="large"
                 :prepend-icon="info.icon"
-                @click="confirmOrder(key)">{{ info.text }}</VBtn>
+                @click="confirmOrder(info.key)">{{ info.text }}</VBtn>
         </VCol>
       </VRow>
     </div>
@@ -56,6 +56,7 @@ import type { POSOrderList } from "@/pages/subpages/BoothPOSPage.lib";
 import { type IGoods, type IGoodsCombination, GoodsOrderPaymentMethod } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/stores/admin";
+import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({
   emits: ["confirm"],
@@ -66,24 +67,17 @@ export default class POSOrderConfirmDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Object, required: true }) orders!: POSOrderList;
 
-  readonly paymentMethodsInfo: Record<GoodsOrderPaymentMethod, any> = {
-    cash: {
-      icon: "mdi-cash-multiple",
-      text: "현금",
-    },
-    transfer: {
-      icon: "mdi-account-cash",
-      text: "계좌 · QR 입금",
-    },
-    card: {
-      icon: "mdi-credit-card",
-      text: "신용 · 체크 카드",
-    },
-    prepaid: {
-      icon: "mdi-cash-fast",
-      text: "사전 지불 (선입금 등)",
-    },
-  };
+  get paymentMethodsInfo() {
+    const data = [];
+    for(const item of Object.values(GoodsOrderPaymentMethod)) {
+      data.push({
+        key: item,
+        icon: getPaymentMethodIcon(item),
+        text: getPaymentMethodString(item),
+      });
+    }
+    return data;
+  }
 
   get currencySymbol(): string {
     return useAdminStore().currentBooth.booth!.currencySymbol;

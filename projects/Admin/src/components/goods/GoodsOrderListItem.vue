@@ -18,7 +18,7 @@
                class="mr-2" />
         <span v-if="orderData.createdAt"><strong>{{ createdTimeHourMinuteString }}<small>{{ createdTimeSecondsString }}</small></strong> <small class="d-inline-block ml-2">{{ createdDateString }}</small></span>
       </div>
-      <div class="d-flex flex-row align-center text-sm-h6" :class="[`text-${statusIcon.textColor}`]"><VIcon class="mr-1">mdi-cash</VIcon> <strong>{{ totalPriceFormatted }}</strong></div>
+      <div class="d-flex flex-row align-center text-sm-h6" :class="[`text-${statusIcon.textColor}`]"><VIcon class="mr-2" :icon="paymentMethodIcon" /> <strong>{{ totalPriceFormatted }}</strong></div>
       <div class="text-subtitle-2 text-sm-body-1">
         <span v-if="totalCombinationItemCount > 0">세트 <strong>{{ totalCombinationItemCount.toLocaleString() }}종</strong> / </span>
         <span>굿즈 <strong>{{ totalGoodsItemCount.toLocaleString() }}종</strong> / </span>
@@ -34,10 +34,11 @@
 </template>
 
 <script lang="ts">
-import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
+import { getPaymentMethodIcon } from "@/lib/enum-to-string";
 
 @Component({
   emits: ["click"],
@@ -74,6 +75,10 @@ export default class GoodsOrderListItem extends Vue {
           class: "small",
         };
     }
+  }
+
+  get paymentMethodIcon(): string {
+    return getPaymentMethodIcon(this.orderData.paymentMethod ?? GoodsOrderPaymentMethod.CASH);
   }
 
   get currencySymbol(): string {
