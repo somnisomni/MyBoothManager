@@ -25,7 +25,7 @@
 
     <div class="d-flex flex-column py-2">
       <VRow v-if="isOrderTotalWorthZero" justify="center" align="start" class="pb-2">
-        <p class="text-caption-1 font-weight-light mb-2"><small>※ 합계 금액이 0원입니다. 아래 버튼을 눌러 판매 내역 등록을 진행하세요.</small></p>
+        <p class="text-caption-1 font-weight-light mb-2"><small>※ 합계 금액이 {{ currencySymbol }}0 입니다. 아래 버튼을 눌러 판매 내역 등록을 진행하세요.</small></p>
         <VBtn stacked
               width="150px"
               height="150px"
