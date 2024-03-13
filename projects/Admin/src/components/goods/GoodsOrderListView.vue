@@ -23,7 +23,7 @@ import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 export interface IGoodsOrderFilterSetting {
   targetGoodsIds: Array<number>;
   onlyShowOrdersWithFreeGoods: boolean;
-  paymentMethod?: GoodsOrderPaymentMethod | null;
+  paymentMethods?: Array<GoodsOrderPaymentMethod> | null;
 }
 
 @Component({
@@ -41,7 +41,7 @@ export default class GoodsOrderListView extends Vue {
       .filter((order) => (
         ((this.filter.targetGoodsIds.length > 0) ? order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!)) : true)
         && ((this.filter.onlyShowOrdersWithFreeGoods) ? order.order.some((item) => Number(item.price) <= 0 || item.price === null || item.price === undefined) : true)
-        && ((this.filter.paymentMethod) ? order.paymentMethod === this.filter.paymentMethod : true)
+        && ((this.filter.paymentMethods && this.filter.paymentMethods.length > 0) ? this.filter.paymentMethods.includes(order.paymentMethod!) : true)
       ))
       .sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
   }

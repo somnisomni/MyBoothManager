@@ -13,12 +13,18 @@
                              :currencySymbol="currencySymbol" />
     <VCheckbox v-model="filterSetting.onlyShowOrdersWithFreeGoods"
                label="무료 증정 굿즈가 포함된 기록만 표시" />
-    <VSelect v-model="filterSetting.paymentMethod"
-             :items="paymentMethods"
-             label="결제 수단"
-             item-title="label"
-             item-value="value"
-             clearable />
+
+    <h4>결제 수단</h4>
+    <VChipGroup v-model="filterSetting.paymentMethods"
+                selected-class="text-primary"
+                multiple
+                column>
+      <VChip v-for="item in paymentMethods"
+              :key="item.value"
+              :value="item.value">
+        <VIcon class="mr-1" :icon="item.icon" /> {{ item.label }}
+      </VChip>
+    </VChipGroup>
   </CommonDialog>
 </template>
 
@@ -28,7 +34,7 @@ import { GoodsOrderPaymentMethod, type IGoods } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminStore } from "@/stores/admin";
-import { getPaymentMethodString } from "@/lib/enum-to-string";
+import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({
   emits: ["primary"],
@@ -44,6 +50,7 @@ export default class OrderFilterSettingDialog extends Vue {
     const data = [];
     for(const item of Object.values(GoodsOrderPaymentMethod)) {
       data.push({
+        icon: getPaymentMethodIcon(item),
         label: getPaymentMethodString(item),
         value: item,
       });
