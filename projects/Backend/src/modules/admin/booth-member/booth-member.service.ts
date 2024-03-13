@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
-import { col, fn } from "sequelize";
-import { create, removeTarget } from "@/lib/common-functions";
+import { create, jsonContains, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
 import BoothMember from "@/db/models/booth-member";
@@ -84,7 +83,7 @@ export class BoothMemberService {
 
     // Remove the member from the goods
     const goodsOwned = await Goods.findAll({
-      where: fn("JSON_CONTAINS", col("ownerMembersId" as keyof Goods), id.toString()),
+      where: jsonContains<Goods>("ownerMembersId", id.toString()),
     });
     for(const goods of goodsOwned) {
       await goods.update({

@@ -3,10 +3,15 @@
 import { createHash, randomBytes } from "crypto";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
-import { BaseError, Includeable, Model, ModelDefined, Transaction, WhereOptions } from "sequelize";
+import { BaseError, Includeable, Model, ModelDefined, Transaction, WhereOptions, col, fn } from "sequelize";
+import { Fn } from "sequelize/types/utils";
 import { EntityNotFoundException } from "./exceptions";
 
 /* === Sequelize model util functions === */
+export function jsonContains<T extends Model<any, any>>(column: keyof T, containTarget: string): Fn {
+  return fn("JSON_CONTAINS", col(column as string), containTarget);
+}
+
 export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, includeModels?: Includeable[], transaction?: Transaction, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
   let target = null;
 
