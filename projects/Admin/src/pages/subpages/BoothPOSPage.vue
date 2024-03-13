@@ -67,6 +67,9 @@ export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFilePath = getUploadFilePath;
 
+  @Setup(() => useDisplay().mdAndUp)
+  readonly mdAndUp!: boolean;
+
   orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
   smDrawerHeight: number = 0;
@@ -76,9 +79,6 @@ export default class BoothPOSPage extends Vue {
   showPageLeaveConfirmDialog: boolean = false;
   pageLeaveConfirmed: boolean = false;
   private pageLeaveTarget: RouteLocationRaw | null = null;
-
-  @Setup(() => useDisplay().mdAndUp)
-  mdAndUp!: boolean;
 
   get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }

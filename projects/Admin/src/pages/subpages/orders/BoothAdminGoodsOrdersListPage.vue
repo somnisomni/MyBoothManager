@@ -82,9 +82,10 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   } as IGoodsOrderFilterSetting);
 
   @Setup(() => useDisplay().smAndUp)
-  smAndUp!: boolean;
+  readonly smAndUp!: boolean;
 
-  @Ref("goodsOrderListView") readonly goodsOrderListView!: GoodsOrderListView;
+  @Ref("goodsOrderListView")
+  readonly goodsOrderListView!: GoodsOrderListView;
 
   async mounted() {
     await this.onRefreshClick();

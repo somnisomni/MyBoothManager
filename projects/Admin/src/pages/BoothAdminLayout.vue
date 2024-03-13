@@ -86,15 +86,15 @@ import { Const } from "@/lib/const";
   },
 })
 export default class BoothAdminLayout extends Vue {
-  BoothStatus = BoothStatus;
+  readonly BoothStatus = BoothStatus;
   readonly APP_VERSION = Const.APP_VERSION;
   readonly GIT_HASH = Const.APP_GIT_HASH;
 
+  @Setup(() => useDisplay().mdAndUp)
+  readonly mdAndUp!: boolean;
+
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
-
-  @Setup(() => useDisplay().mdAndUp)
-  mdAndUp!: boolean;
 
   set navOpen(value: boolean) { this._navOpen = value; }
   get navOpen() {

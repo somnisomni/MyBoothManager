@@ -25,7 +25,7 @@ import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
   },
 })
 export default class BoothAdminDashboardPage extends Vue {
-  BoothStatus = BoothStatus;
+  readonly BoothStatus = BoothStatus;
 
   get currentBoothData(): IBooth {
     return useAdminStore().currentBooth.booth!;
