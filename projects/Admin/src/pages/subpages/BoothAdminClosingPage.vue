@@ -17,13 +17,13 @@
     </div>
 
     <h2>goods sell worth map</h2>
-    <div v-for="[ goodsId, worth ] in goodsSellWorthMap" :key="goodsId">
-      <p>goods #{{ goodsId }}: {{ worth }}</p>
+    <div v-for="[ goodsId, data ] in goodsSellWorthMap" :key="goodsId">
+      <p>goods #{{ goodsId }}: {{ data.quantity.toLocaleString() }}개 / {{ currencySymbol }}{{ data.total.toLocaleString() }}</p>
     </div>
 
     <h2>goods combination sell worth map</h2>
-    <div v-for="[ combinationId, worth ] in goodsCombinationSellWorthMap" :key="combinationId">
-      <p>combination #{{ combinationId }}: {{ worth }}</p>
+    <div v-for="[ combinationId, data ] in goodsCombinationSellWorthMap" :key="combinationId">
+      <p>combination #{{ combinationId }}: {{ data.quantity.toLocaleString() }} 개 / {{ currencySymbol }}{{ data.total.toLocaleString() }}</p>
     </div>
   </VContainer>
 </template>
@@ -36,8 +36,12 @@ import router from "@/plugins/router";
 
 @Component({})
 export default class BoothAdminClosingPage extends Vue {
-  get goodsSellWorthMap(): Map<number, number> {
-    const map = new Map<number, number>();
+  get currencySymbol(): string {
+    return useAdminStore().currentBooth.booth?.currencySymbol ?? "₩";
+  }
+
+  get goodsSellWorthMap(): Map<number, { quantity: number, total: number }> {
+    const map = new Map<number, { quantity: number, total: number }>();
 
     for(const item of Object.values(useAdminStore().currentBooth.goodsOrders!)) {
       for(const goods of Object.values(item.order)) {
@@ -46,9 +50,15 @@ export default class BoothAdminClosingPage extends Vue {
           const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
 
           if(map.has(goods.gId)) {
-            map.set(goods.gId, map.get(goods.gId)! + calculatedPrice);
+            map.set(goods.gId, {
+              quantity: map.get(goods.gId)!.quantity + goods.quantity,
+              total: map.get(goods.gId)!.total + calculatedPrice,
+            });
           } else {
-            map.set(goods.gId, calculatedPrice);
+            map.set(goods.gId, {
+              quantity: goods.quantity,
+              total: calculatedPrice,
+            });
           }
         }
       }
@@ -57,8 +67,8 @@ export default class BoothAdminClosingPage extends Vue {
     return map;
   }
 
-  get goodsCombinationSellWorthMap(): Map<number, number> {
-    const map = new Map<number, number>();
+  get goodsCombinationSellWorthMap(): Map<number, { quantity: number, total: number }> {
+    const map = new Map<number, { quantity: number, total: number }>();
 
     for(const item of Object.values(useAdminStore().currentBooth.goodsOrders!)) {
       for(const combination of Object.values(item.order)) {
@@ -67,9 +77,15 @@ export default class BoothAdminClosingPage extends Vue {
           const calculatedPrice = (combination.price ?? originalPrice) * combination.quantity;
 
           if(map.has(combination.cId)) {
-            map.set(combination.cId, map.get(combination.cId)! + calculatedPrice);
+            map.set(combination.cId, {
+              quantity: map.get(combination.cId)!.quantity + combination.quantity,
+              total: map.get(combination.cId)!.total + calculatedPrice,
+            });
           } else {
-            map.set(combination.cId, calculatedPrice);
+            map.set(combination.cId, {
+              quantity: combination.quantity,
+              total: calculatedPrice,
+            });
           }
         }
       }
