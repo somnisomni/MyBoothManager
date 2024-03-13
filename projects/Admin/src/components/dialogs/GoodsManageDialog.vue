@@ -51,7 +51,7 @@
 <script lang="ts">
 import { ErrorCodes, GoodsStockVisibility, type IGoods, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
-import { reactive , readonly, ref } from "vue";
+import { reactive , readonly, ref, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
@@ -191,7 +191,7 @@ export default class GoodsManageDialog extends Vue {
     };
   }
 
-  get currentGoods(): IGoods | null {
+  get currentGoods(): DeepReadonly<IGoods> | null {
     return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods![this.goodsId]) : null;
   }
 
@@ -216,7 +216,7 @@ export default class GoodsManageDialog extends Vue {
       this.formModels.stockInitial = this.currentGoods.stockInitial;
       this.formModels.stockRemaining = this.currentGoods.stockRemaining;
       this.formModels.stockVisibility = this.currentGoods.stockVisibility;
-      this.formModels.ownerMembersId = this.currentGoods.ownerMembersId;
+      this.formModels.ownerMembersId = this.currentGoods.ownerMembersId as number[] | undefined;
     } else {
       this.formModels.name = "";
       this.formModels.description = "";
