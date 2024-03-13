@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
+import { col, fn } from "sequelize";
 import { create, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
 import BoothMember from "@/db/models/booth-member";
 import { PublicBoothMemberService } from "@/modules/public/booth-member/booth-member.service";
+import Goods from "@/db/models/goods";
 import { UtilService } from "../util/util.service";
 import { UpdateBoothMemberDTO } from "./dto/update-booth-member.dto";
 import { CreateBoothMemberDTO } from "./dto/create-booth-member.dto";
@@ -80,7 +82,15 @@ export class BoothMemberService {
   async remove(boothId: number, id: number, callerAccountId: number): Promise<ISuccessResponse> {
     const member = await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId);
 
-    // TODO: first, remove the member from assigned goods to the member
+    // Remove the member from the goods
+    const goodsOwned = await Goods.findAll({
+      where: fn("JSON_CONTAINS", col("ownerMembersId" as keyof Goods), id.toString()),
+    });
+    for(const goods of goodsOwned) {
+      await goods.update({
+        ownerMembersId: goods.ownerMembersId!.filter((memberId: number) => memberId !== id),
+      });
+    }
 
     return await removeTarget(member, undefined, true);
   }
