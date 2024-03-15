@@ -155,7 +155,7 @@ export default class GoodsCombinationManageDialog extends Vue {
       ],
       itemTitle: "title",
       itemValue: "value",
-      hint: "공개 페이지에서만 적용됩니다.",
+      hint: "공개 페이지에서만 적용되며, 관리자 페이지에선 항상 모든 재고량 정보가 표시됩니다.",
       persistentHint: true,
     },
     _1: {

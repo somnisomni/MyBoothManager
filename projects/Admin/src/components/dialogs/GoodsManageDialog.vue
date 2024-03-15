@@ -144,19 +144,6 @@ export default class GoodsManageDialog extends Vue {
       onChange: this.resetValidation,
       rules: [ this.stockRemainingValidationRule ],
     },
-    stockVisibility: {
-      type: FormFieldType.SELECT,
-      label: "재고 표시 방법",
-      items: [
-        { title: "남은 재고량 및 전체 재고량 표시", value: GoodsStockVisibility.SHOW_ALL },
-        { title: "현재 남은 재고량만 표시", value: GoodsStockVisibility.SHOW_REMAINING_ONLY },
-        { title: "전부 숨기기", value: GoodsStockVisibility.HIDE_ALL },
-      ],
-      itemTitle: "title",
-      itemValue: "value",
-      hint: "공개 페이지에서만 적용됩니다.",
-      persistentHint: true,
-    },
     ownerMembersId: {
       type: FormFieldType.SELECT,
       label: "소유자 멤버",
@@ -169,6 +156,19 @@ export default class GoodsManageDialog extends Vue {
       itemTitle: "title",
       itemValue: "id",
       multiple: true,
+    },
+    stockVisibility: {
+      type: FormFieldType.SELECT,
+      label: "재고 표시 방법",
+      items: [
+        { title: "남은 재고량 및 전체 재고량 표시", value: GoodsStockVisibility.SHOW_ALL },
+        { title: "현재 남은 재고량만 표시", value: GoodsStockVisibility.SHOW_REMAINING_ONLY },
+        { title: "전부 숨기기", value: GoodsStockVisibility.HIDE_ALL },
+      ],
+      itemTitle: "title",
+      itemValue: "value",
+      hint: "공개 페이지에서만 적용되며, 관리자 페이지에선 항상 모든 재고량 정보가 표시됩니다.",
+      persistentHint: true,
     },
   } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
   formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);
