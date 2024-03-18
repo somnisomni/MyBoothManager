@@ -9,18 +9,18 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue({ template: { transformAssetUrls }}),
+    vue({ template: { transformAssetUrls } }),
     vuetify({ autoImport: true }),
-    dts({ insertTypesEntry: true, pathsToAliases: true /*, rollupTypes: true */ }),
+    dts({
+      insertTypesEntry: true,
+      pathsToAliases: true,
+    }),
     tsconfigPaths(),
   ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  },
-  optimizeDeps: {
-    include: ["vue"],
   },
   build: {
     target: "esnext",
@@ -31,6 +31,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
+      treeshake: "recommended",
       external: ["vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", "@myboothmanager/common"],
       output: {
         globals: {

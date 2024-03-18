@@ -7,7 +7,7 @@
   "scripts": {
     "build": "yarn clean && run-p type-check \"build-only {@}\" --",
     "clean": "rimraf ./dist",
-    "build-only": "vite build",
+    "build-only": "vite build && vue-tsc -p tsconfig.app.json --emitDeclarationOnly",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
