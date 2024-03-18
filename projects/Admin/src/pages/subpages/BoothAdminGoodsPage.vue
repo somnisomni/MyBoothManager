@@ -8,6 +8,7 @@
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    :goodsCombinationList="goodsCombinationList"
+                   :goodsItemComponent="ManageableGoodsItem"
                    forceShowAllGoodsStock
                    @goodsEditRequest="openGoodsEditDialog"
                    @goodsCategoryEditRequest="openGoodsCategoryEditDialog"
@@ -28,6 +29,8 @@
 <script lang="ts">
 import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
 import { Vue, Component } from "vue-facing-decorator";
+import { markRaw } from "vue";
+import { GoodsItem } from "@myboothmanager/common-ui";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
@@ -45,6 +48,7 @@ import { getUploadFilePath } from "@/lib/functions";
 })
 export default class BoothAdminGoodsPage extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
+  ManageableGoodsItem = markRaw(GoodsItem /* ManageableGoodsItem */);
 
   goodsEditDialogOpen = false;
   goodsCategoryEditDialogOpen = false;
