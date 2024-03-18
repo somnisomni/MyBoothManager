@@ -8,7 +8,7 @@ export { default as ServerDataLoadErrorDialog } from "./dialogs/errors/ServerDat
 export { default as ServerNotRespondErrorDialog } from "./dialogs/errors/ServerNotRespondErrorDialog.vue";
 export { default as DatePickerDialog } from "./dialogs/utils/DatePickerDialog.vue";
 
-export { default as GoodsItem } from "./goods/GoodsItem.vue";
+export { default as GoodsItem, type IGoodsItemMenuOption } from "./goods/GoodsItem.vue";
 export { default as GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";
 export { default as GoodsListView } from "./goods/GoodsListView.vue";
 export { default as SelectableGoodsListView } from "./goods/SelectableGoodsListView.vue";

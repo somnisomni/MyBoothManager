@@ -1,4 +1,4 @@
-import { type App } from "vue";
+import type { App } from "vue";
 import * as C from "./components";
 import "@/styles/styles.scss";
 
@@ -20,10 +20,5 @@ export default {
   },
 };
 
-export {
-  VUETIFY_COMMON_OPTIONS,
-  APP_PRIMARY_COLOR,
-  APP_SECONDARY_COLOR,
-  BREAKPOINT_XXS,
-  isDisplayXXS,
-} from "./plugins/vuetify";
+export * from "./plugins/vuetify";
+export * from "./components";

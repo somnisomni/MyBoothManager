@@ -15,7 +15,8 @@
              :key="combination.id"
              class="combination-container my-1 pa-1 d-flex flex-1-0-100 flex-row flex-wrap bg-teal-lighten-5 rounded-lg border-dashed border-sm">
           <!-- Goods Combination -->
-          <GoodsItem :editable="editable"
+          <component :is="goodsItemComponent"
+                     :editable="editable"
                      :combinationData="combination"
                      :currencySymbol="currencySymbol"
                      :representativeImageUrl="goodsImageUrlResolver(combination.combinationImageUrl)"
@@ -25,7 +26,8 @@
 
           <!-- Combinated Goods -->
           <VSlideYReverseTransition group leave-absolute>
-            <GoodsItem v-for="goods in findGoodsInCombination(combination.id)"
+            <component :is="goodsItemComponent"
+                       v-for="goods in findGoodsInCombination(combination.id)"
                        :key="goods.id"
                        :editable="editable"
                        :goodsData="goods"
@@ -40,7 +42,8 @@
 
       <!-- Goods (non-combinated only) -->
       <VSlideYReverseTransition group leave-absolute>
-        <GoodsItem v-for="goods in findGoodsInCategory(category.id, true)"
+        <component :is="goodsItemComponent"
+                   v-for="goods in findGoodsInCategory(category.id, true)"
                    :key="goods.id"
                    :editable="editable"
                    :goodsData="goods"
@@ -58,6 +61,7 @@
 <script lang="ts">
 import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import GoodsItem from "./GoodsItem.vue";
 
 @Component({
   emits: ["goodsClick", "goodsEditRequest", "combinationClick", "combinationEditRequest", "goodsCategoryClick", "goodsCategoryEditRequest"],
@@ -71,6 +75,7 @@ export default class GoodsListView extends Vue {
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
   @Prop({ type: Boolean, default: false }) readonly forceShowAllGoodsStock!: boolean;
+  @Prop({ type: typeof GoodsItem, default: GoodsItem }) readonly goodsItemComponent!: typeof GoodsItem;
 
   get goodsListAdjusted() {
     if(!this.goodsList) {
