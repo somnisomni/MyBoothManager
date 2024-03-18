@@ -24,6 +24,12 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        keep_classnames: true,
+      },
+    },
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
       name: "CommonUI",
