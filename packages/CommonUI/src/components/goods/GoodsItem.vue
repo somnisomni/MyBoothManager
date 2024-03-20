@@ -1,61 +1,64 @@
 <template>
-  <VSheet class="goods-item no-selection d-flex ma-2"
-          :class="{ 'no-interaction': disabled,
-                    'hover': isHovering || isSelected,
-                    'selectable': selectable,
-                    'selected': selectable && isSelected,
-                    'edit': editable,
-                    'combination-item': isGoodsCombination,
-                    'has-menu': menuOptions.length > 0,
-                    'sm': !mdAndUp,
-                    'ma-md-4': !forceSmallSize }"
+  <VSheet v-ripple
+          class="goods-item no-selection d-flex ma-2"
+          :class="{ 'combination-item': isCombination,
+                    'disabled no-interaction': disabled,
+                    'small': !displayMdAndUp,
+                    'ma-md-4': forceSize === 'small' }"
+          rounded="lg"
+          :elevation="elevation"
           :width="width"
           :height="height"
-          rounded="lg"
-          v-ripple
-          :elevation="elevation"
           @pointerenter="isHovering = true"
           @pointerleave="isHovering = false"
-          @click.stop="onItemClick">
-    <!-- Goods / Combination image -->
-    <VImg class="representative-image no-interaction" :src="representativeImageUrlComputed" cover />
-    <div class="representative-image-overlay"></div>
+          @click.stop="onClick">
+    <!-- *** Goods / Combination image *** -->
+    <VImg class="goods-item-image no-interaction"
+          :src="imageUrlComputed"
+          cover />
+    <div class="goods-item-image-overlay"></div>
 
-    <!-- Top indicator -->
-    <div v-if="isGoodsCombination" class="top-indicator goods-combination-indicator bg-teal">세트 구성</div>
-    <div v-if="editable" class="top-indicator click-to-edit-text"><VIcon class="mr-1">mdi-pencil</VIcon> 클릭하여 수정</div>
-    <VSlideYTransition leave-absolute>
-      <div v-if="isSelected" class="top-indicator selected-indicator"><VIcon class="mr-1">mdi-check</VIcon> 선택됨</div>
+    <!-- *** Top indicator *** -->
+    <VSlideYTransition leave-absolute group>
+      <div v-if="disabled && disabledReason"
+           class="top-indicator">{{ disabledReason }}</div>
+      <div v-if="!disabled && isCombination"
+           class="top-indicator">세트 구성</div>
+
+      <!-- *** Extra indicator slot for extensibility *** -->
+      <slot v-if="!disabled" name="extra-top-indicator"></slot>
     </VSlideYTransition>
-    <div v-if="disabled && disabledReason" class="top-indicator text-subtitle-2 bg-black">{{ disabledReason }}</div>
 
-    <!-- Menu options -->
-    <VLayout v-if="menuOptions.length > 0" class="position-absolute" style="top: 0; right: 0;">
-      <VBtn color="white" variant="text" icon>
-        <VIcon icon="mdi-dots-vertical" />
+    <!-- *** Extra slot for extensibility *** -->
+    <slot name="extra"></slot>
 
-        <VMenu activator="parent">
-          <VList>
-            <VListItem v-for="(option, index) in menuOptions"
-                      :key="index"
-                      :prepend-icon="option.icon"
-                      @click="option.onClick">{{ option.text }}</VListItem>
-          </VList>
-        </VMenu>
-      </VBtn>
-    </VLayout>
-
+    <!-- *** Bottom info area *** -->
     <VLayout class="d-flex flex-row align-self-end pa-2">
-      <!-- Goods / Combination info -->
       <VLayout class="goods-info d-flex flex-1-0 flex-column">
-        <div class="name"><VIcon v-if="isGoodsCombination">mdi-set-all</VIcon> {{ normalizedData.name }}</div>
+        <!-- Name -->
+        <div class="name">
+          <VIcon v-if="isCombination"
+                 icon="mdi-set-all" />
+          <span>{{ normalizedData.name }}</span>
+        </div>
 
-        <VLayout v-if="!showNameOnly" class="d-flex flex-row flex-wrap justify-space-between">
-          <div class="flex-0-0">{{ isGoodsCombination ? "세트" : "" }} {{ currencySymbol }}{{ normalizedData.price.toLocaleString() }}</div>
-          <div class="flex-1-0 text-right">
-            <span v-if="forceShowAllStock || (normalizedData.stockVisibility !== GoodsStockVisibility.HIDE_ALL)" class="goods-stock-current">{{ normalizedData.stockRemaining }}</span>
-            <span v-if="!forceShowAllStock && normalizedData.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY" style="font-weight: 300; font-size: 0.8em">개 남음</span>
-            <span v-if="forceShowAllStock || (normalizedData.stockVisibility === GoodsStockVisibility.SHOW_ALL)" class="goods-stock-initial"> / {{ normalizedData.stockInitial }}</span>
+        <!-- Details -->
+        <VLayout v-if="!hideDetails"
+                 class="d-flex flex-row flex-wrap justify-space-between">
+          <!-- Price -->
+          <div class="price flex-0-0">
+            <span v-if="isCombination">세트</span>
+            <span>{{ currencySymbol }}{{ normalizedData.price.toLocaleString() }}</span>
+          </div>
+
+          <!-- Stock -->
+          <div v-if="shouldHideStock" class="stock flex-1-0 text-right">
+            <span v-if="!shouldHideStock"
+                  class="remaining">{{ normalizedData.stockRemaining }}</span>
+            <span v-if="!shouldHideStock && shouldHideInitialStock"
+                  class="remaining-text">개 남음</span>
+            <span v-if="shouldHideInitialStock"
+                  class="initial"> / {{ normalizedData.stockInitial }}</span>
           </div>
         </VLayout>
       </VLayout>
@@ -65,124 +68,161 @@
 
 <script lang="ts">
 import { GoodsStockVisibility, type IGoods, type IGoodsCombination } from "@myboothmanager/common";
-import { Vue, Component, Prop, Model, Setup, Emit } from "vue-facing-decorator";
+import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { isDisplayXXS } from "@/plugins/vuetify";
 
-export interface IGoodsItemMenuOption {
-  icon: string;
-  text: string;
-  onClick: () => void;
+export interface GoodsItemProps {
+  readonly goodsData?: IGoods | null;
+  readonly combinationData?: IGoodsCombination | null;
+  readonly imagePathResolver: (input: string | null | undefined) => string | null | undefined;
+  readonly currencySymbol: string;
+  readonly disabled: boolean;
+  readonly disabledReason?: string | null;
+  readonly hideDetails: boolean;
+  readonly forceVisibility?: GoodsStockVisibility | null;
+  readonly forceSize: "auto" | "small" | "normal";
 }
 
 @Component({
-  emits: ["click", "editRequest"],
+  emits: ["click"],
 })
-export default class GoodsItem extends Vue {
-  readonly GoodsStockVisibility = GoodsStockVisibility;
-
-  @Model({ type: Boolean, default: false }) isSelected!: boolean;
-  @Prop({ type: Object }) goodsData!: IGoods | null | undefined;
-  @Prop({ type: Object }) combinationData!: IGoodsCombination | null | undefined;
-  @Prop({ type: String,  default: null  }) representativeImageUrl!: string | null;
-  @Prop({ type: String, required: true  }) currencySymbol!: string;
-  @Prop({ type: Boolean, default: false }) editable!: boolean;
-  @Prop({ type: Boolean, default: false }) selectable!: boolean;
-  @Prop({ type: Boolean, default: false }) disabled!: boolean;
-  @Prop({ type: String,  default: ""    }) disabledReason!: string;
-  @Prop({ type: Boolean, default: false }) forceSmallSize!: boolean;
-  @Prop({ type: Boolean, default: false }) showNameOnly!: boolean;
-  @Prop({ type: Boolean, default: false }) forceShowAllStock!: boolean;
+export default class GoodsItem extends Vue implements GoodsItemProps {
+  @Prop({ type: Object }) readonly goodsData?: IGoods | null;
+  @Prop({ type: Object }) readonly combinationData?: IGoodsCombination | null;
+  @Prop({ type: Function, default: (s: string) => s }) readonly imagePathResolver!: (input: string | null | undefined) => string | null | undefined;
+  @Prop({ type: String,  default: "₩"   }) readonly currencySymbol!: string;
+  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
+  @Prop({ type: String,  default: null  }) readonly disabledReason?: string | null;
+  @Prop({ type: Boolean, default: false }) readonly hideDetails!: boolean;
+  @Prop({ type: GoodsStockVisibility, default: null }) readonly forceVisibility?: GoodsStockVisibility | null;
+  @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
 
   readonly ELEVATION_NORMAL = 4;
   readonly ELEVATION_HOVER  = 8;
-  readonly WIDTH_NORMAL  = 200;
-  readonly HEIGHT_NORMAL = 250;
-  readonly WIDTH_SMALL   = 150;
-  readonly HEIGHT_SMALL  = 150;
+  readonly WIDTH_NORMAL     = 200;
+  readonly WIDTH_SMALL      = 150;
+  readonly HEIGHT_NORMAL    = 250;
+  readonly HEIGHT_SMALL     = 150;
 
-  menuOptions: IGoodsItemMenuOption[] = [];
+  @Setup(() => useDisplay().mdAndUp)
+  declare displayMdAndUp: boolean;
+
+  @Setup(() => useDisplay().width)
+  declare displayWidth: number;
 
   isHovering: boolean = false;
 
-  @Setup(() => useDisplay().mdAndUp)
-  mdAndUp!: boolean;
-
-  @Setup(() => useDisplay().width)
-  displayWidth!: number;
-
+  /***
+   * Returns dynamic elevation
+   */
   get elevation(): number {
-    return this.isHovering || (this.selectable && this.isSelected) ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL;
+    return this.isHovering ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL;
   }
+
+  /***
+   * Returns dynamic width
+   */
   get width(): number | string {
-    return this.mdAndUp && !this.forceSmallSize ? this.WIDTH_NORMAL : (!isDisplayXXS(this.displayWidth) ? this.WIDTH_SMALL : "100%");
-  }
-  get height(): number {
-    return this.mdAndUp && !this.forceSmallSize ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL;
+    if(this.forceSize === "normal") return this.WIDTH_NORMAL;
+    else if(this.forceSize === "small") return this.WIDTH_SMALL;
+
+    return this.displayMdAndUp
+      ? this.WIDTH_NORMAL
+      : (!isDisplayXXS(this.displayWidth) ? this.WIDTH_SMALL : "100%");
   }
 
-  get isGoodsCombination(): boolean {
-    return !!this.combinationData;
+  /***
+   * Returns dynamic height
+   */
+  get height(): number | string {
+    if(this.forceSize === "normal") return this.HEIGHT_NORMAL;
+    else if(this.forceSize === "small") return this.HEIGHT_SMALL;
+
+    return this.displayMdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL;
   }
 
-  get representativeImageUrlComputed(): string {
-    return this.representativeImageUrl ?? (this.normalizedData.representativeImageUrl ?? `https://picsum.photos/seed/${this.normalizedData.id}/200/200`);
-  }
-
+  /***
+   * Returns the normalized data for the goods or combination data.
+   */
   get normalizedData() {
     return {
-      id: (this.isGoodsCombination ? this.combinationData!.id : this.goodsData!.id),
-      name: (this.isGoodsCombination ? this.combinationData!.name : this.goodsData!.name),
-      description: (this.isGoodsCombination ? this.combinationData!.description : this.goodsData!.description),
-      price: (this.isGoodsCombination ? this.combinationData!.price : this.goodsData!.price),
-      stockInitial: (this.isGoodsCombination ? this.combinationData!.stockInitial : this.goodsData!.stockInitial),
-      stockRemaining: (this.isGoodsCombination ? this.combinationData!.stockRemaining : this.goodsData!.stockRemaining),
-      stockVisibility: (this.isGoodsCombination ? this.combinationData!.stockVisibility : this.goodsData!.stockVisibility),
-      representativeImageUrl: (this.isGoodsCombination ? this.combinationData!.combinationImageUrl : this.goodsData!.goodsImageUrl),
+      id: (this.combinationData || this.goodsData)!.id,
+      name: (this.combinationData || this.goodsData)!.name,
+      description: (this.combinationData || this.goodsData)!.description,
+      price: (this.combinationData || this.goodsData)!.price,
+      stockInitial: (this.combinationData || this.goodsData)!.stockInitial,
+      stockRemaining: (this.combinationData || this.goodsData)!.stockRemaining,
+      stockVisibility: this.forceVisibility ?? ((this.combinationData || this.goodsData)!.stockVisibility),
+      imageUrl: this.isCombination ? this.combinationData!.combinationImageUrl : this.goodsData!.goodsImageUrl,
     };
   }
 
-  @Emit("click")
-  onItemClick() {
-    if(this.disabled) return;
-
-    if(this.selectable) this.isSelected = !this.isSelected;
-    if(this.editable) this.requestEdit();
-
-    return this.normalizedData.id;
+  /***
+   * Returns whether the data is for a combination or not.
+   */
+  get isCombination(): boolean {
+    return !!this.combinationData;
   }
 
-  @Emit("editRequest")
-  requestEdit() {
+  /***
+   * Returns the resolved representative image URL of the goods or combination.
+   */
+  get imageUrlComputed(): string {
+    return this.imagePathResolver(this.normalizedData.imageUrl) ?? ""; /* TODO: default image */
+  }
+
+  /***
+   * Returns whether the stock details should be hidden or not.
+   */
+  get shouldHideStock(): boolean {
+    return this.normalizedData.stockVisibility === GoodsStockVisibility.HIDE_ALL;
+  }
+
+  /***
+   * Returns whether the initial stock information should be hidden or not.
+   */
+  get shouldHideInitialStock(): boolean {
+    return this.normalizedData.stockVisibility !== GoodsStockVisibility.SHOW_ALL;
+  }
+
+  /***
+   * Handle the click event on the goods item component.
+   * Emits `click` event with the ID of the goods or combination.
+   */
+  @Emit("click")
+  onClick(): number | null {
+    if(this.disabled) return null;
+
+    this.$emit("editRequest", this.normalizedData.id);
     return this.normalizedData.id;
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .goods-item {
   $transition-duration: 0.33s;
 
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: box-shadow $transition-duration, transform $transition-duration cubic-bezier(0, 0, 0, 1), opacity $transition-duration;
+  transition: box-shadow $transition-duration,
+              transform $transition-duration cubic-bezier(0, 0, 0, 1),
+              opacity $transition-duration;
   will-change: transform;
+
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 
-  &.hover {
+  background-color: black;
+
+  &:hover {
     transform: translateY(-3.3%);
   }
 
-  &.sm {
+  &.small {
     font-size: 90%;
-  }
-
-  &.selectable {
-    opacity: 0.75;
-
-    &.selected { opacity: 1; }
   }
 
   .top-indicator {
@@ -191,64 +231,42 @@ export default class GoodsItem extends Vue {
     align-items: center;
     justify-content: center;
 
-    position: absolute;
-    width: 100%;
-    text-align: center;
+    position: aboslute;
     left: 0;
     right: 0;
     top: 0;
+    width: 100%;
+    text-align: center;
     padding: 0.33em;
     font-size: 1.05em;
     font-weight: 500;
+    background-color: rgb(var(--v-theme-primary));
   }
 
-  &.has-menu .top-indicator {
-    height: 48px;  // Match menu button height
-    padding: 0.33em calc(48px + 0.33em) 0.33em 0.33em;
+  &.disabled {
+    opacity: 0.75;
+
+    .top-indicator {
+      background-color: black;
+    }
   }
 
-  .goods-combination-indicator {
-    color: white;
-  }
+  .goods-item-image {
+    @mixin absolute-fill {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+    @include absolute-fill;
 
-  .selected-indicator {
-    color: white;
-    background: rgba(var(--v-theme-success), 0.9);
-  }
-
-  .click-to-edit-text {
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    -webkit-backdrop-filter: blur(0.5em);
-            backdrop-filter: blur(0.5em);
-    transform: translateY(-4rem);
-    transition: transform $transition-duration cubic-bezier(0, 0, 0, 1);
-  }
-
-  &.edit:hover .click-to-edit-text {
-    transform: translateY(-0.05rem);
-  }
-
-
-  .representative-image {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-  }
-
-  .representative-image-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: linear-gradient(transparent 33%, rgba(0, 0, 0, 0.8));
+    &-overlay {
+      @include absolute-fill;
+      background: linear-gradient(transparent 33%, rgba(0, 0, 0, 0.8));
+    }
   }
 
   .goods-info {
@@ -256,23 +274,34 @@ export default class GoodsItem extends Vue {
 
     .name {
       display: -webkit-box;
-      overflow: hidden;
+      display:    -moz-box;
+      display:         box;
       -webkit-line-clamp: 2;
               line-clamp: 2;
       -webkit-box-orient: vertical;
-      word-break: keep-all;
+         -moz-box-orient: vertical;
+              box-orient: vertical;
 
+      overflow: hidden;
+      word-break: keep-all;
       font-size: 1.25em;
       font-weight: 700;
     }
 
-    .goods-stock-current {
-      font-weight: 600;
-    }
+    .stock {
+      .remaining {
+        font-weight: 600;
 
-    .goods-stock-initial {
-      font-weight: 300;
-      font-size: 0.8em;
+        &-text {
+          font-weight: 300;
+          font-size: 0.8em;
+        }
+      }
+
+      .initial {
+        font-weight: 300;
+        font-size: 0.8em;
+      }
     }
   }
 }

@@ -4,7 +4,7 @@
        class="my-4 mt-8">
     <!-- Goods Category -->
     <GoodsCategoryTitle :categoryData="category"
-                        :editable="editable && category.id !== -1"
+                        :editable="categoryEditable && category.id !== -1"
                         @click="onGoodsCategoryClick"
                         @editRequest="onGoodsCategoryEditRequest" />
 
@@ -15,43 +15,51 @@
              :key="combination.id"
              class="combination-container my-1 pa-1 d-flex flex-1-0-100 flex-row flex-wrap bg-teal-lighten-5 rounded-lg border-dashed border-sm">
           <!-- Goods Combination -->
-          <component :is="goodsItemComponent"
-                     :editable="editable"
-                     :combinationData="combination"
-                     :currencySymbol="currencySymbol"
-                     :representativeImageUrl="goodsImageUrlResolver(combination.combinationImageUrl)"
-                     :forceShowAllStock="forceShowAllGoodsStock"
-                     @click="onCombinationClick"
-                     @editRequest="onCombinationEditRequest" />
+          <slot name="goods-combination"
+                :combinationData="combination"
+                :currencySymbol="currencySymbol"
+                :imagePathResolver="goodsImageUrlResolver"
+                @click="onCombinationClick">
+            <GoodsItem :combinationData="combination"
+                       :currencySymbol="currencySymbol"
+                       :imagePathResolver="goodsImageUrlResolver"
+                       @click="onCombinationClick" />
+          </slot>
 
           <!-- Combinated Goods -->
           <VSlideYReverseTransition group leave-absolute>
-            <component :is="goodsItemComponent"
-                       v-for="goods in findGoodsInCombination(combination.id)"
-                       :key="goods.id"
-                       :editable="editable"
-                       :goodsData="goods"
-                       :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
-                       :currencySymbol="currencySymbol"
-                       :forceShowAllStock="forceShowAllGoodsStock"
-                       @click="onGoodsClick"
-                       @editRequest="onGoodsEditRequest" />
+            <div v-for="goods in findGoodsInCombination(combination.id)"
+                 :key="goods.id">
+              <slot name="goods"
+                    :goodsData="goods"
+                    :imagePathResolver="goodsImageUrlResolver"
+                    :currencySymbol="currencySymbol"
+                    @click="onGoodsClick">
+                <GoodsItem :goodsData="goods"
+                           :imagePathResolver="goodsImageUrlResolver"
+                           :currencySymbol="currencySymbol"
+                           @click="onGoodsClick" />
+              </slot>
+            </div>
           </VSlideYReverseTransition>
         </div>
       </VSlideYReverseTransition>
 
       <!-- Goods (non-combinated only) -->
       <VSlideYReverseTransition group leave-absolute>
-        <component :is="goodsItemComponent"
-                   v-for="goods in findGoodsInCategory(category.id, true)"
-                   :key="goods.id"
-                   :editable="editable"
-                   :goodsData="goods"
-                   :representativeImageUrl="goodsImageUrlResolver(goods.goodsImageUrl)"
-                   :currencySymbol="currencySymbol"
-                   :forceShowAllStock="forceShowAllGoodsStock"
-                   @click="onGoodsClick"
-                   @editRequest="onGoodsEditRequest" />
+        <div v-for="goods in findGoodsInCategory(category.id, true)"
+             :key="goods.id">
+          <slot name="goods"
+                :goodsData="goods"
+                :imagePathResolver="goodsImageUrlResolver"
+                :currencySymbol="currencySymbol"
+                @click="onGoodsClick">
+            <GoodsItem :goodsData="goods"
+                       :imagePathResolver="goodsImageUrlResolver"
+                       :currencySymbol="currencySymbol"
+                       @click="onGoodsClick" />
+          </slot>
+        </div>
       </VSlideYReverseTransition>
     </VRow>
     <h6 v-else class="d-inline-flex align-center text-h6 text-disabled mx-4 my-2"><VIcon class="mr-1">mdi-exclamation</VIcon> 카테고리에 등록된 굿즈가 없습니다.</h6>
@@ -61,10 +69,9 @@
 <script lang="ts">
 import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
-import GoodsItem from "./GoodsItem.vue";
 
 @Component({
-  emits: ["goodsClick", "goodsEditRequest", "combinationClick", "combinationEditRequest", "goodsCategoryClick", "goodsCategoryEditRequest"],
+  emits: ["goodsClick", "combinationClick", "goodsCategoryClick", "goodsCategoryEditRequest"],
 })
 export default class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
@@ -73,9 +80,7 @@ export default class GoodsListView extends Vue {
   @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
-  @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
-  @Prop({ type: Boolean, default: false }) readonly forceShowAllGoodsStock!: boolean;
-  @Prop({ default: GoodsItem }) readonly goodsItemComponent!: typeof GoodsItem;
+  @Prop({ type: Boolean, default: false }) readonly categoryEditable!: boolean;
 
   get goodsListAdjusted() {
     if(!this.goodsList) {

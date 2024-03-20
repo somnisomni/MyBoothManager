@@ -8,11 +8,16 @@
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    :goodsCombinationList="goodsCombinationList"
-                   :goodsItemComponent="ManageableGoodsItem"
-                   forceShowAllGoodsStock
                    @goodsEditRequest="openGoodsEditDialog"
                    @goodsCategoryEditRequest="openGoodsCategoryEditDialog"
-                   @combinationEditRequest="openGoodsCombinationEditDialog" />
+                   @combinationEditRequest="openGoodsCombinationEditDialog">
+      <template #goods="props">
+        <ManageableGoodsItem :props="props" />
+      </template>
+      <template #goods-combination="props">
+        <ManageableGoodsItem :props="props" />
+      </template>
+    </GoodsListView>
   </VContainer>
 
   <GoodsManageDialog v-model="goodsEditDialogOpen"
@@ -29,14 +34,13 @@
 <script lang="ts">
 import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
 import { Vue, Component } from "vue-facing-decorator";
-import { markRaw } from "vue";
-import { GoodsItem } from "@myboothmanager/common-ui";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
+import ManageableGoodsItem from "@/components/goods/ManageableGoodsItem.vue";
 
 @Component({
   components: {
@@ -44,11 +48,11 @@ import { getUploadFilePath } from "@/lib/functions";
     GoodsManageDialog,
     GoodsCategoryManageDialog,
     GoodsCombinationManageDialog,
+    ManageableGoodsItem,
   },
 })
 export default class BoothAdminGoodsPage extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
-  ManageableGoodsItem = markRaw(GoodsItem /* ManageableGoodsItem */);
 
   goodsEditDialogOpen = false;
   goodsCategoryEditDialogOpen = false;
