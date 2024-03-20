@@ -18,11 +18,11 @@
           <slot name="goods-combination"
                 :combinationData="combination"
                 :currencySymbol="currencySymbol"
-                :imagePathResolver="goodsImageUrlResolver"
+                :imageUrlResolver="goodsImageUrlResolver"
                 @click="onCombinationClick">
             <GoodsItem :combinationData="combination"
                        :currencySymbol="currencySymbol"
-                       :imagePathResolver="goodsImageUrlResolver"
+                       :imageUrlResolver="goodsImageUrlResolver"
                        @click="onCombinationClick" />
           </slot>
 
@@ -32,11 +32,11 @@
                  :key="goods.id">
               <slot name="goods"
                     :goodsData="goods"
-                    :imagePathResolver="goodsImageUrlResolver"
+                    :imageUrlResolver="goodsImageUrlResolver"
                     :currencySymbol="currencySymbol"
                     @click="onGoodsClick">
                 <GoodsItem :goodsData="goods"
-                           :imagePathResolver="goodsImageUrlResolver"
+                           :imageUrlResolver="goodsImageUrlResolver"
                            :currencySymbol="currencySymbol"
                            @click="onGoodsClick" />
               </slot>
@@ -51,11 +51,11 @@
              :key="goods.id">
           <slot name="goods"
                 :goodsData="goods"
-                :imagePathResolver="goodsImageUrlResolver"
+                :imageUrlResolver="goodsImageUrlResolver"
                 :currencySymbol="currencySymbol"
                 @click="onGoodsClick">
             <GoodsItem :goodsData="goods"
-                       :imagePathResolver="goodsImageUrlResolver"
+                       :imageUrlResolver="goodsImageUrlResolver"
                        :currencySymbol="currencySymbol"
                        @click="onGoodsClick" />
           </slot>
@@ -149,9 +149,7 @@ export default class GoodsListView extends Vue {
   }
 
   @Emit("goodsClick") onGoodsClick(goodsId: number) { return goodsId; }
-  @Emit("goodsEditRequest") onGoodsEditRequest(goodsId: number) { return goodsId; }
   @Emit("combinationClick") onCombinationClick(combinationId: number) { return combinationId; }
-  @Emit("combinationEditRequest") onCombinationEditRequest(combinationId: number) { return combinationId; }
   @Emit("goodsCategoryClick") onGoodsCategoryClick(categoryId: number) { return categoryId; }
   @Emit("goodsCategoryEditRequest") onGoodsCategoryEditRequest(categoryId: number) { return categoryId; }
 }

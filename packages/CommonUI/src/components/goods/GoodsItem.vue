@@ -30,16 +30,16 @@
     </VSlideYTransition>
 
     <!-- *** Extra slot for extensibility *** -->
-    <slot name="extra"></slot>
+    <slot></slot>
 
     <!-- *** Bottom info area *** -->
     <VLayout class="d-flex flex-row align-self-end pa-2">
-      <VLayout class="goods-info d-flex flex-1-0 flex-column">
+      <VLayout class="goods-info w-100 d-flex flex-column">
         <!-- Name -->
         <div class="name">
           <VIcon v-if="isCombination"
                  icon="mdi-set-all" />
-          <span>{{ normalizedData.name }}</span>
+          {{ normalizedData.name }}
         </div>
 
         <!-- Details -->
@@ -52,12 +52,12 @@
           </div>
 
           <!-- Stock -->
-          <div v-if="shouldHideStock" class="stock flex-1-0 text-right">
-            <span v-if="!shouldHideStock"
-                  class="remaining">{{ normalizedData.stockRemaining }}</span>
-            <span v-if="!shouldHideStock && shouldHideInitialStock"
-                  class="remaining-text">개 남음</span>
+          <div v-if="!shouldHideStock" class="stock flex-1-0">
+            <span class="remaining">{{ normalizedData.stockRemaining }}</span>
+
             <span v-if="shouldHideInitialStock"
+                  class="remaining-text">개 남음</span>
+            <span v-else
                   class="initial"> / {{ normalizedData.stockInitial }}</span>
           </div>
         </VLayout>
@@ -75,7 +75,7 @@ import { isDisplayXXS } from "@/plugins/vuetify";
 export interface GoodsItemProps {
   readonly goodsData?: IGoods | null;
   readonly combinationData?: IGoodsCombination | null;
-  readonly imagePathResolver: (input: string | null | undefined) => string | null | undefined;
+  readonly imageUrlResolver: (input: string | null | undefined) => string | null | undefined;
   readonly currencySymbol: string;
   readonly disabled: boolean;
   readonly disabledReason?: string | null;
@@ -90,12 +90,12 @@ export interface GoodsItemProps {
 export default class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: Object }) readonly goodsData?: IGoods | null;
   @Prop({ type: Object }) readonly combinationData?: IGoodsCombination | null;
-  @Prop({ type: Function, default: (s: string) => s }) readonly imagePathResolver!: (input: string | null | undefined) => string | null | undefined;
-  @Prop({ type: String,  default: "₩"   }) readonly currencySymbol!: string;
-  @Prop({ type: Boolean, default: false }) readonly disabled!: boolean;
-  @Prop({ type: String,  default: null  }) readonly disabledReason?: string | null;
-  @Prop({ type: Boolean, default: false }) readonly hideDetails!: boolean;
-  @Prop({ type: GoodsStockVisibility, default: null }) readonly forceVisibility?: GoodsStockVisibility | null;
+  @Prop({ type: Function, default: (s: string) => s }) readonly imageUrlResolver!: (input: string | null | undefined) => string | null | undefined;
+  @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
+  @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
+  @Prop({ type: String,  default: null   }) readonly disabledReason?: string | null;
+  @Prop({ type: Boolean, default: false  }) readonly hideDetails!: boolean;
+  @Prop({ type: String,  default: null   }) readonly forceVisibility?: GoodsStockVisibility | null;
   @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
 
   readonly ELEVATION_NORMAL = 4;
@@ -169,7 +169,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
    * Returns the resolved representative image URL of the goods or combination.
    */
   get imageUrlComputed(): string {
-    return this.imagePathResolver(this.normalizedData.imageUrl) ?? ""; /* TODO: default image */
+    return this.imageUrlResolver(this.normalizedData.imageUrl) ?? ""; /* TODO: default image */
   }
 
   /***
@@ -194,7 +194,6 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
   onClick(): number | null {
     if(this.disabled) return null;
 
-    this.$emit("editRequest", this.normalizedData.id);
     return this.normalizedData.id;
   }
 }
@@ -202,14 +201,14 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
 
 <style lang="scss">
 .goods-item {
-  $transition-duration: 0.33s;
+  --transition-duration: 0.33s;
 
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: box-shadow $transition-duration,
-              transform $transition-duration cubic-bezier(0, 0, 0, 1),
-              opacity $transition-duration;
+  transition: box-shadow var(--transition-duration),
+              transform var(--transition-duration) cubic-bezier(0, 0, 0, 1),
+              opacity var(--transition-duration);
   will-change: transform;
 
   -webkit-backface-visibility: hidden;
@@ -231,7 +230,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     align-items: center;
     justify-content: center;
 
-    position: aboslute;
+    position: absolute;
     left: 0;
     right: 0;
     top: 0;
@@ -240,6 +239,9 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     padding: 0.33em;
     font-size: 1.05em;
     font-weight: 500;
+    word-break: keep-all;
+
+    color: white;
     background-color: rgb(var(--v-theme-primary));
   }
 
@@ -289,6 +291,9 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     }
 
     .stock {
+      text-align: right;
+      margin-left: 0.5em;
+
       .remaining {
         font-weight: 600;
 

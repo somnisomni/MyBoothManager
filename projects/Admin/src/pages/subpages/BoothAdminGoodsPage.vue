@@ -2,20 +2,24 @@
   <VContainer class="mt-4 pa-2 pa-md-6">
     <GoodsManagePanel />
 
-    <GoodsListView editable
+    <GoodsListView categoryEditable
                    :currencySymbol="currencySymbol"
                    :goodsList="goodsList"
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    :goodsCombinationList="goodsCombinationList"
-                   @goodsEditRequest="openGoodsEditDialog"
-                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog"
-                   @combinationEditRequest="openGoodsCombinationEditDialog">
+                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog">
       <template #goods="props">
-        <ManageableGoodsItem :props="props" />
+        <ManageableGoodsItem v-bind="props"
+                             @click="openGoodsEditDialog"
+                             @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
+                             @menu:delete="openDeleteDialog(false, (props as GoodsItemProps).goodsData!.id)" />
       </template>
       <template #goods-combination="props">
-        <ManageableGoodsItem :props="props" />
+        <ManageableGoodsItem v-bind="props"
+                             @click="openGoodsCombinationEditDialog"
+                             @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
+                             @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).combinationData!.id)" />
       </template>
     </GoodsListView>
   </VContainer>
@@ -29,10 +33,13 @@
   <GoodsCombinationManageDialog v-model="goodsCombinationEditDialogOpen"
                                 :editMode="true"
                                 :combinationId="editDialogCombinationId" />
+  <ItemDeleteWarningDialog v-model="deleteDialogOpen"
+                           @primary="confirmDelete(deleteDialogTarget)" />
 </template>
 
 <script lang="ts">
 import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
+import type { GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Vue, Component } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
@@ -41,6 +48,7 @@ import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationM
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import ManageableGoodsItem from "@/components/goods/ManageableGoodsItem.vue";
+import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
@@ -48,6 +56,7 @@ import ManageableGoodsItem from "@/components/goods/ManageableGoodsItem.vue";
     GoodsManageDialog,
     GoodsCategoryManageDialog,
     GoodsCombinationManageDialog,
+    ItemDeleteWarningDialog,
     ManageableGoodsItem,
   },
 })
@@ -60,6 +69,8 @@ export default class BoothAdminGoodsPage extends Vue {
   editDialogGoodsId: number | null = null;
   editDialogCategoryId: number | null = null;
   editDialogCombinationId: number | null = null;
+  deleteDialogOpen = false;
+  deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
 
   get currencySymbol(): string {
     return useAdminStore().currentBooth.booth!.currencySymbol;
@@ -90,6 +101,25 @@ export default class BoothAdminGoodsPage extends Vue {
   openGoodsCategoryEditDialog(categoryId: number) {
     this.editDialogCategoryId = categoryId;
     this.goodsCategoryEditDialogOpen = true;
+  }
+
+  openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
+    alert("WIP: dry duplicate target goods #" + targetGoodsId);
+  }
+
+  openDeleteDialog(isCombination: boolean, id: number) {
+    this.deleteDialogTarget = { isCombination, id };
+    this.deleteDialogOpen = true;
+  }
+
+  confirmDelete(target: typeof this.deleteDialogTarget) {
+    if(target) {
+      if(target.isCombination) {
+        alert("WIP: dry delete combination #" + target.id);
+      } else {
+        alert("WIP: dry delete goods #" + target.id);
+      }
+    }
   }
 }
 </script>
