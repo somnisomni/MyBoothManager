@@ -75,7 +75,7 @@ export default class GoodsListView extends Vue {
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
   @Prop({ type: Boolean, default: false }) readonly forceShowAllGoodsStock!: boolean;
-  @Prop({ type: typeof GoodsItem, default: GoodsItem }) readonly goodsItemComponent!: typeof GoodsItem;
+  @Prop({ default: GoodsItem }) readonly goodsItemComponent!: typeof GoodsItem;
 
   get goodsListAdjusted() {
     if(!this.goodsList) {
