@@ -29,38 +29,11 @@
       </VList>
 
       <!-- Goods & Goods Combination pending list -->
-      <div class="d-flex flex-column flex-1-1 overflow-visible overflow-x-hidden">
-        <!-- Combinations first -->
-        <VList class="bg-transparent overflow-visible pb-1">
-          <VSlideXReverseTransition group leave-absolute>
-            <VListItem v-for="item in orderSimulationLayer.orderList.values('combination')"
-                       :key="item.id"
-                       class="pa-0"
-                       :height="sm && !smDrawerExpanded ? '48px' : '72px'">
-              <POSGoodsOrderListItem :item="item"
-                                     :isCombination="true"
-                                     :singleLine="sm && !smDrawerExpanded"
-                                     @click="onGoodsOrderItemClick"
-                                     @quantityChange="onGoodsOrderQuantityUpdateRequest" />
-            </VListItem>
-          </VSlideXReverseTransition>
-        </VList>
-
-        <!-- Goods after -->
-        <VList class="bg-transparent overflow-visible pt-1">
-          <VSlideXReverseTransition group leave-absolute>
-            <VListItem v-for="item in orderSimulationLayer.orderList.values('goods')"
-                      :key="item.id"
-                      class="pa-0"
-                      :height="sm && !smDrawerExpanded ? '48px' : '72px'">
-              <POSGoodsOrderListItem :item="item"
-                                     :singleLine="sm && !smDrawerExpanded"
-                                     @click="onGoodsOrderItemClick"
-                                     @quantityChange="onGoodsOrderQuantityUpdateRequest" />
-            </VListItem>
-          </VSlideXReverseTransition>
-        </VList>
-      </div>
+      <POSGoodsOrderListView class="flex-1-1"
+                             :orderList="orderSimulationLayer.orderList"
+                             :singleLine="sm && !smDrawerExpanded"
+                             @click:item="onGoodsOrderItemClick"
+                             @request:itemQuantityUpdate="onGoodsOrderQuantityUpdateRequest" />
 
       <VList nav class="flex-shrink-0 pa-0 pb-2">
         <VListItem v-show="!sm || smDrawerExpanded" class="px-2 py-1">
@@ -106,11 +79,11 @@ import { useAdminAPIStore } from "@/stores/api";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 import POSListResetConfirmDialog from "../dialogs/POSListResetConfirmDialog.vue";
 import POSOrderConfirmDialog from "../dialogs/POSOrderConfirmDialog.vue";
-import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
+import POSGoodsOrderListView from "./POSGoodsOrderListView.vue";
 
 @Component({
   components: {
-    POSGoodsOrderListItem,
+    POSGoodsOrderListView,
     POSGoodsAdvancedDialog,
     POSListResetConfirmDialog,
     POSOrderConfirmDialog,
