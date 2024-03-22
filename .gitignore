@@ -63,3 +63,12 @@ yarn-error.log
 # Documentation here: https://yarnpkg.com/features/zero-installs
 !.yarn/cache
 #.pnp.*
+
+# Ignore platform specific package caches
+.yarn/cache/*-win32-*
+.yarn/cache/*-win64-*
+.yarn/cache/*-linux-*
+.yarn/cache/*-android-*
+.yarn/cache/*-freebsd-*
+.yarn/cache/*-darwin-*
+.yarn/cache/fsevents-patch-*
