@@ -36,7 +36,9 @@ coverage/
 *.sublime-workspace
 
 # IDE - JetBrains
+**/.idea/*
 .idea/*
+!.idea/scopes
 !.idea/runConfigurations
 *.iml
 

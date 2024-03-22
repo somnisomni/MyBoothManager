@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="[Root]" pattern="file[MyBoothManager-Monorepo]:*/" />
+</component>

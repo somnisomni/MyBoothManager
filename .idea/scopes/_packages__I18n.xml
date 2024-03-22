@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="[packages] I18n" pattern="file[I18n]:*/" />
+</component>
