@@ -71,7 +71,7 @@ import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
-  emits: ["goodsClick", "combinationClick", "goodsCategoryClick", "goodsCategoryEditRequest"],
+  emits: ["click:goods", "click:combination", "click:category", "editRequest:category"],
 })
 export default class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
@@ -148,9 +148,9 @@ export default class GoodsListView extends Vue {
     return this.goodsCombinationListAdjusted.filter((combination) => combination.categoryId === categoryId);
   }
 
-  @Emit("goodsClick") onGoodsClick(goodsId: number) { return goodsId; }
-  @Emit("combinationClick") onCombinationClick(combinationId: number) { return combinationId; }
-  @Emit("goodsCategoryClick") onGoodsCategoryClick(categoryId: number) { return categoryId; }
-  @Emit("goodsCategoryEditRequest") onGoodsCategoryEditRequest(categoryId: number) { return categoryId; }
+  @Emit("click:goods") onGoodsClick(goodsId: number) { return goodsId; }
+  @Emit("click:combination") onCombinationClick(combinationId: number) { return combinationId; }
+  @Emit("click:category") onGoodsCategoryClick(categoryId: number) { return categoryId; }
+  @Emit("editRequest:category") onGoodsCategoryEditRequest(categoryId: number) { return categoryId; }
 }
 </script>

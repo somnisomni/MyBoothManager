@@ -1,6 +1,6 @@
 <template>
   <GoodsItem ref="base"
-             :forceVisibility="GoodsStockVisibility.SHOW_ALL"
+             :forceStockVisibility="forceStockVisibility"
              class="manageable">
     <template #extra-top-indicator>
       <!-- Click to edit indicator -->
@@ -46,8 +46,8 @@ export interface IGoodsItemMenuOption {
 @Component({
   emits: ["menu:duplicate", "menu:delete"],
 })
-export default class ManageableGoodsItem extends Vue {
-  readonly GoodsStockVisibility = GoodsStockVisibility;
+export default class GoodsItemManageable extends Vue {
+  readonly forceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   readonly menuOptions: IGoodsItemMenuOption[] = markRaw([
     {

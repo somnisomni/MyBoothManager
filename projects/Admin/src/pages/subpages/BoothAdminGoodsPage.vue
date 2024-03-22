@@ -8,15 +8,15 @@
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
                    :goodsCombinationList="goodsCombinationList"
-                   @goodsCategoryEditRequest="openGoodsCategoryEditDialog">
+                   @editRequest:category="openGoodsCategoryEditDialog">
       <template #goods="props">
-        <ManageableGoodsItem v-bind="props"
+        <GoodsItemManageable v-bind="props"
                              @click="openGoodsEditDialog"
                              @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(false, (props as GoodsItemProps).goodsData!.id)" />
       </template>
       <template #goods-combination="props">
-        <ManageableGoodsItem v-bind="props"
+        <GoodsItemManageable v-bind="props"
                              @click="openGoodsCombinationEditDialog"
                              @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).combinationData!.id)" />
@@ -47,7 +47,7 @@ import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageD
 import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
 import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
-import ManageableGoodsItem from "@/components/goods/ManageableGoodsItem.vue";
+import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
 
 @Component({
@@ -57,7 +57,7 @@ import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarni
     GoodsCategoryManageDialog,
     GoodsCombinationManageDialog,
     ItemDeleteWarningDialog,
-    ManageableGoodsItem,
+    GoodsItemManageable,
   },
 })
 export default class BoothAdminGoodsPage extends Vue {

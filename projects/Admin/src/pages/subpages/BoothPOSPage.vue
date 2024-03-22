@@ -22,10 +22,18 @@
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
                      :goodsCombinationList="boothGoodsCombinationList"
-                     forceShowAllGoodsStock
-                     omitEmptyGoodsCategory
-                     @goodsClick="(goodsId: number) => updateOrderListQuantity({ id: goodsId, delta: 1 })"
-                     @combinationClick="(combinationId: number) => updateOrderListQuantity({ id: combinationId, delta: 1, isCombination: true })" />
+                     omitEmptyGoodsCategory>
+        <template #goods="props">
+          <GoodsItem v-bind="props"
+                     :forceStockVisibility="goodsItemForceStockVisibility"
+                     @click="(goodsId: number) => updateOrderListQuantity({ id: goodsId, delta: 1 })" />
+        </template>
+        <template #goods-combination="props">
+          <GoodsItem v-bind="props"
+                     :forceStockVisibility="goodsItemForceStockVisibility"
+                     @click="(combinationId: number) => updateOrderListQuantity({ id: combinationId, delta: 1, isCombination: true })" />
+        </template>
+      </GoodsListView>
     </VLayout>
 
     <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
@@ -47,7 +55,7 @@
 
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
-import { APP_NAME, BoothStatus, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";
@@ -66,6 +74,7 @@ import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFilePath = getUploadFilePath;
+  readonly goodsItemForceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   @Setup(() => useDisplay().mdAndUp)
   readonly mdAndUp!: boolean;

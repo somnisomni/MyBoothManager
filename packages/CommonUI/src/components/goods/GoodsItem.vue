@@ -80,7 +80,7 @@ export interface GoodsItemProps {
   readonly disabled: boolean;
   readonly disabledReason?: string | null;
   readonly hideDetails: boolean;
-  readonly forceVisibility?: GoodsStockVisibility | null;
+  readonly forceStockVisibility?: GoodsStockVisibility | null;
   readonly forceSize: "auto" | "small" | "normal";
 }
 
@@ -95,7 +95,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
   @Prop({ type: String,  default: null   }) readonly disabledReason?: string | null;
   @Prop({ type: Boolean, default: false  }) readonly hideDetails!: boolean;
-  @Prop({ type: String,  default: null   }) readonly forceVisibility?: GoodsStockVisibility | null;
+  @Prop({ type: String,  default: null   }) readonly forceStockVisibility?: GoodsStockVisibility | null;
   @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
 
   readonly ELEVATION_NORMAL = 4;
@@ -153,7 +153,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
       price: (this.combinationData || this.goodsData)!.price,
       stockInitial: (this.combinationData || this.goodsData)!.stockInitial,
       stockRemaining: (this.combinationData || this.goodsData)!.stockRemaining,
-      stockVisibility: this.forceVisibility ?? ((this.combinationData || this.goodsData)!.stockVisibility),
+      stockVisibility: this.forceStockVisibility ?? ((this.combinationData || this.goodsData)!.stockVisibility),
       imageUrl: this.isCombination ? this.combinationData!.combinationImageUrl : this.goodsData!.goodsImageUrl,
     };
   }
