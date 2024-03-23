@@ -47,7 +47,7 @@
                  class="d-flex flex-row flex-wrap justify-space-between">
           <!-- Price -->
           <div class="price flex-0-0">
-            <span v-if="isCombination">세트</span>
+            <span v-if="isCombination" class="mr-1" style="font-size: smaller">세트</span>
             <span>{{ currencySymbol }}{{ normalizedData.price.toLocaleString() }}</span>
           </div>
 
