@@ -14,7 +14,7 @@
                 @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !isFormValid"
+                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
                 :closeOnCancel="false">
     <p v-if="!editMode" class="mb-2 text-warning">※ 굿즈 이미지는 먼저 굿즈를 추가한 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.</p>
     <VLayout class="d-flex flex-column flex-md-row">
@@ -75,8 +75,9 @@ type IGoodsManageFormField = Omit<IGoodsCreateRequest, "boothId">;
 })
 export default class GoodsManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Boolean, default: false }) editMode!: boolean;
-  @Prop({ type: Number, default: null }) goodsId!: number | null;
+  @Prop({ type: Number,  default: null  }) readonly goodsId?: number | null;
+  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
   @Ref("form") readonly form!: CommonForm;
 
@@ -207,7 +208,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   @Watch("open") mounted() {
-    if(this.editMode && this.currentGoods) {
+    if(this.currentGoods && (this.editMode || this.duplicate)) {
       this.formModels.name = this.currentGoods.name;
       this.formModels.description = this.currentGoods.description;
       this.formModels.categoryId = this.currentGoods.categoryId;

@@ -14,28 +14,30 @@
       </template>
       <template #goods="props">
         <GoodsItemManageable v-bind="props"
-                             @click="openGoodsEditDialog"
+                             @click="openGoodsManageDialog"
                              @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(false, (props as GoodsItemProps).goodsData!.id)" />
       </template>
       <template #goods-combination="props">
         <GoodsItemManageable v-bind="props"
-                             @click="openGoodsCombinationEditDialog"
+                             @click="openGoodsCombinationManageDialog"
                              @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).combinationData!.id)"
                              @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).combinationData!.id)" />
       </template>
     </GoodsListView>
   </VContainer>
 
-  <GoodsManageDialog v-model="goodsEditDialogOpen"
-                     :editMode="true"
-                     :goodsId="editDialogGoodsId" />
+  <GoodsManageDialog v-model="goodsManageDialogOpen"
+                     :editMode="!goodsManageDialogDuplicateMode"
+                     :duplicate="goodsManageDialogDuplicateMode"
+                     :goodsId="manageDialogGoodsId" />
   <GoodsCategoryManageDialog v-model="goodsCategoryEditDialogOpen"
-                             :editMode="true"
+                             editMode
                              :categoryId="editDialogCategoryId" />
-  <GoodsCombinationManageDialog v-model="goodsCombinationEditDialogOpen"
-                                :editMode="true"
-                                :combinationId="editDialogCombinationId" />
+  <GoodsCombinationManageDialog v-model="goodsCombinationManageDialogOpen"
+                                :editMode="!goodsCombinationManageDialogDuplicateMode"
+                                :duplicate="goodsCombinationManageDialogDuplicateMode"
+                                :combinationId="manageDialogCombinationId" />
   <ItemDeleteWarningDialog v-model="deleteDialogOpen"
                            @primary="confirmDelete(deleteDialogTarget)" />
 </template>
@@ -68,12 +70,16 @@ import GoodsCategoryTitleManageable from "@/components/goods/GoodsCategoryTitleM
 export default class BoothAdminGoodsPage extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
 
-  goodsEditDialogOpen = false;
+  goodsManageDialogOpen = false;
+  goodsManageDialogDuplicateMode = false;
+  manageDialogGoodsId: number | null = null;
+
+  goodsCombinationManageDialogOpen = false;
+  goodsCombinationManageDialogDuplicateMode = false;
+  manageDialogCombinationId: number | null = null;
+
   goodsCategoryEditDialogOpen = false;
-  goodsCombinationEditDialogOpen = false;
-  editDialogGoodsId: number | null = null;
   editDialogCategoryId: number | null = null;
-  editDialogCombinationId: number | null = null;
   deleteDialogOpen = false;
   deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
 
@@ -93,14 +99,16 @@ export default class BoothAdminGoodsPage extends Vue {
     return Object.values(useAdminStore().currentBooth.goodsCombinations ?? {});
   }
 
-  openGoodsEditDialog(goodsId: number) {
-    this.editDialogGoodsId = goodsId;
-    this.goodsEditDialogOpen = true;
+  openGoodsManageDialog(goodsId: number) {
+    this.manageDialogGoodsId = goodsId;
+    this.goodsManageDialogDuplicateMode = false;
+    this.goodsManageDialogOpen = true;
   }
 
-  openGoodsCombinationEditDialog(combinationId: number) {
-    this.editDialogCombinationId = combinationId;
-    this.goodsCombinationEditDialogOpen = true;
+  openGoodsCombinationManageDialog(combinationId: number) {
+    this.manageDialogCombinationId = combinationId;
+    this.goodsCombinationManageDialogDuplicateMode = false;
+    this.goodsCombinationManageDialogOpen = true;
   }
 
   openGoodsCategoryEditDialog(categoryId: number) {
@@ -108,12 +116,14 @@ export default class BoothAdminGoodsPage extends Vue {
     this.goodsCategoryEditDialogOpen = true;
   }
 
-  openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number) {
-    alert("WIP: dry duplicate target combination #" + targetCombinationId);
+  openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
+    this.openGoodsManageDialog(targetGoodsId);
+    this.goodsManageDialogDuplicateMode = true;
   }
 
-  openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
-    alert("WIP: dry duplicate target goods #" + targetGoodsId);
+  openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number) {
+    this.openGoodsCombinationManageDialog(targetCombinationId);
+    this.goodsCombinationManageDialogDuplicateMode = true;
   }
 
   openDeleteDialog(isCombination: boolean, id: number) {

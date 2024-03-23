@@ -14,7 +14,7 @@
                 @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !isFormValid"
+                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
                 :closeOnCancel="false">
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
@@ -61,11 +61,11 @@
     </VLayout>
   </CommonDialog>
 
-  <GoodsSelectionDialog      v-model="goodsSelectionDialogShown"
-                             v-model:selectedGoodsIds="formModels.goodsIds"
-                             :goodsList="boothGoodsList"
-                             :disabledIdList="alreadyCombinatedGoodsIdList"
-                             :categoryId="formModels.categoryId" />
+  <GoodsSelectionDialog v-model="goodsSelectionDialogShown"
+                        v-model:selectedGoodsIds="formModels.goodsIds"
+                        :goodsList="boothGoodsList"
+                        :disabledIdList="alreadyCombinatedGoodsIdList"
+                        :categoryId="formModels.categoryId" />
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @primary="() => { open = false; }" />
   <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
@@ -101,8 +101,9 @@ type IGoodsCombinationManageFormField
 })
 export default class GoodsCombinationManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Boolean, default: false }) editMode!: boolean;
-  @Prop({ type: Number, default: null }) combinationId!: number | string | null;
+  @Prop({ type: Number,  default: null  }) readonly combinationId?: number | string | null;
+  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
   @Ref("form") readonly form!: CommonForm;
 
@@ -219,16 +220,16 @@ export default class GoodsCombinationManageDialog extends Vue {
 
   get alreadyCombinatedGoodsIdList() {
     return Object.values(useAdminStore().currentBooth.goods ?? {})
-      .filter((goods) => goods.combinationId !== null && goods.combinationId !== Number(this.combinationId))
+      .filter((goods) => (this.duplicate && goods.combinationId === Number(this.combinationId)) || (goods.combinationId !== null && goods.combinationId !== Number(this.combinationId)))
       .map((goods) => goods.id);
   }
 
   get combinationImageUrl(): string | null {
-    return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)].combinationImageUrl ?? null : null;
+    return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)]?.combinationImageUrl ?? null : null;
   }
 
   @Watch("open") mounted() {
-    if(this.editMode && this.combinationId) {
+    if(this.combinationId && (this.editMode || this.duplicate)) {
       const combination = useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)];
 
       if(combination) {
@@ -236,7 +237,11 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.formModels.description = combination.description;
         this.formModels.categoryId = combination.categoryId;
         this.formModels.price = combination.price;
-        this.formModels.goodsIds = Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
+        if(!this.duplicate) {
+          this.formModels.goodsIds = Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
+        } else {
+          this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
+        }
         this.formModels.stockVisibility = combination.stockVisibility;
 
         this.formModelsInitial = deepClone(this.formModels);
