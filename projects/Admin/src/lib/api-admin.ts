@@ -158,13 +158,13 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
   }
 
-  static async uploadGoodsImage(goodsId: number, boothId: number, image: Blob) {
+  static async uploadGoodsImage(boothId: number, goodsId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
   }
 
-  static async uploadGoodsCombinationImage(combinationId: number, boothId: number, image: Blob) {
+  static async uploadGoodsCombinationImage(boothId: number, combinationId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
     return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));

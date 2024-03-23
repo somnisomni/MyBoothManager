@@ -23,12 +23,12 @@ export class GoodsController {
   }
 
   @Post(":id/image")
-  async uploadBannerImage(@Param("id") id: string, @Query("bId") boothId: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
+  async uploadImage(@Param("id") id: string, @Query("bId") boothId: string, @Req() req: FastifyRequest, @AuthData() authData: IAuthPayload) {
     return await this.goodsService.uploadImage(+id, +boothId, await this.utilService.getFileFromRequest(req), authData.id);
   }
 
   @Delete(":id/image")
-  async removeBannerImage(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
+  async removeImage(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
     return await this.goodsService.deleteImage(+id, +boothId, authData.id);
   }
 
