@@ -21,7 +21,7 @@
       <template #goods-combination="props">
         <GoodsItemManageable v-bind="props"
                              @click="openGoodsCombinationEditDialog"
-                             @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
+                             @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).combinationData!.id)"
                              @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).combinationData!.id)" />
       </template>
     </GoodsListView>
@@ -106,6 +106,10 @@ export default class BoothAdminGoodsPage extends Vue {
   openGoodsCategoryEditDialog(categoryId: number) {
     this.editDialogCategoryId = categoryId;
     this.goodsCategoryEditDialogOpen = true;
+  }
+
+  openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number) {
+    alert("WIP: dry duplicate target combination #" + targetCombinationId);
   }
 
   openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
