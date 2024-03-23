@@ -274,9 +274,10 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function createGoodsCombination(payload: C.IGoodsCombinationCreateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.createGoodsCombination(payload),
-      (response) => {
+      async (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
         $adminStore.currentBooth.goodsCombinations[response.id] = response;
+        await fetchGoodsOfCurrentBooth();
       },
     );
   }
