@@ -116,7 +116,14 @@ export default class GoodsItemManageable extends Vue {
     .menu-activator {
       width: $menu-activator-size;
       height: $menu-activator-size;
+
+      text-shadow: 0 0 0.2em rgba(0, 0, 0, 0.75);
+      opacity: 0.66;
     }
+  }
+
+  &:hover .menu .menu-activator {
+    opacity: 1;
   }
 }
 </style>

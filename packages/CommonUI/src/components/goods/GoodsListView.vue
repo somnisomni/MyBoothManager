@@ -3,10 +3,10 @@
        :key="category.id"
        class="my-4 mt-8">
     <!-- Goods Category -->
-    <GoodsCategoryTitle :categoryData="category"
-                        :editable="categoryEditable && category.id !== -1"
-                        @click="onGoodsCategoryClick"
-                        @editRequest="onGoodsCategoryEditRequest" />
+    <slot name="goods-category"
+          :categoryData="category">
+      <GoodsCategoryTitle :categoryData="category" />
+    </slot>
 
     <VRow v-if="findGoodsInCategory(category.id).length > 0" class="ma-0 justify-start">
       <!-- Goods Combination and combinated Goods -->
@@ -71,7 +71,7 @@ import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 
 @Component({
-  emits: ["click:goods", "click:combination", "click:category", "editRequest:category"],
+  emits: ["click:goods", "click:combination"],
 })
 export default class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
@@ -150,7 +150,5 @@ export default class GoodsListView extends Vue {
 
   @Emit("click:goods") onGoodsClick(goodsId: number) { return goodsId; }
   @Emit("click:combination") onCombinationClick(combinationId: number) { return combinationId; }
-  @Emit("click:category") onGoodsCategoryClick(categoryId: number) { return categoryId; }
-  @Emit("editRequest:category") onGoodsCategoryEditRequest(categoryId: number) { return categoryId; }
 }
 </script>

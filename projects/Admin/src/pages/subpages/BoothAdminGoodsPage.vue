@@ -7,8 +7,11 @@
                    :goodsList="goodsList"
                    :goodsImageUrlResolver="getUploadFilePath"
                    :goodsCategoryList="goodsCategoryList"
-                   :goodsCombinationList="goodsCombinationList"
-                   @editRequest:category="openGoodsCategoryEditDialog">
+                   :goodsCombinationList="goodsCombinationList">
+      <template #goods-category="props">
+        <GoodsCategoryTitleManageable v-bind="props"
+                                      @click="openGoodsCategoryEditDialog((props.categoryData as IGoodsCategory).id)" />
+      </template>
       <template #goods="props">
         <GoodsItemManageable v-bind="props"
                              @click="openGoodsEditDialog"
@@ -49,6 +52,7 @@ import { useAdminStore } from "@/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
+import GoodsCategoryTitleManageable from "@/components/goods/GoodsCategoryTitleManageable.vue";
 
 @Component({
   components: {
@@ -58,6 +62,7 @@ import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarni
     GoodsCombinationManageDialog,
     ItemDeleteWarningDialog,
     GoodsItemManageable,
+    GoodsCategoryTitleManageable,
   },
 })
 export default class BoothAdminGoodsPage extends Vue {

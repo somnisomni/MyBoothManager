@@ -75,13 +75,13 @@ import { isDisplayXXS } from "@/plugins/vuetify";
 export interface GoodsItemProps {
   readonly goodsData?: IGoods | null;
   readonly combinationData?: IGoodsCombination | null;
-  readonly imageUrlResolver: (input: string | null | undefined) => string | null | undefined;
   readonly currencySymbol: string;
   readonly disabled: boolean;
   readonly disabledReason?: string | null;
   readonly hideDetails: boolean;
   readonly forceStockVisibility?: GoodsStockVisibility | null;
   readonly forceSize: "auto" | "small" | "normal";
+  readonly imageUrlResolver: (input: string | null | undefined) => string | null | undefined;
 }
 
 @Component({
@@ -90,13 +90,13 @@ export interface GoodsItemProps {
 export default class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: Object }) readonly goodsData?: IGoods | null;
   @Prop({ type: Object }) readonly combinationData?: IGoodsCombination | null;
-  @Prop({ type: Function, default: (s: string) => s }) readonly imageUrlResolver!: (input: string | null | undefined) => string | null | undefined;
   @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
   @Prop({ type: String,  default: null   }) readonly disabledReason?: string | null;
   @Prop({ type: Boolean, default: false  }) readonly hideDetails!: boolean;
   @Prop({ type: String,  default: null   }) readonly forceStockVisibility?: GoodsStockVisibility | null;
   @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
+  @Prop({ type: Function, default: (s: string) => s }) readonly imageUrlResolver!: (input: string | null | undefined) => string | null | undefined;
 
   readonly ELEVATION_NORMAL = 4;
   readonly ELEVATION_HOVER  = 8;
@@ -113,14 +113,14 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
 
   isHovering: boolean = false;
 
-  /***
+  /**
    * Returns dynamic elevation
    */
   get elevation(): number {
     return this.isHovering ? this.ELEVATION_HOVER : this.ELEVATION_NORMAL;
   }
 
-  /***
+  /**
    * Returns dynamic width
    */
   get width(): number | string {
@@ -132,7 +132,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
       : (!isDisplayXXS(this.displayWidth) ? this.WIDTH_SMALL : "100%");
   }
 
-  /***
+  /**
    * Returns dynamic height
    */
   get height(): number | string {
@@ -142,7 +142,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     return this.displayMdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL;
   }
 
-  /***
+  /**
    * Returns the normalized data for the goods or combination data.
    */
   get normalizedData() {
@@ -158,35 +158,35 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     };
   }
 
-  /***
+  /**
    * Returns whether the data is for a combination or not.
    */
   get isCombination(): boolean {
     return !!this.combinationData;
   }
 
-  /***
+  /**
    * Returns the resolved representative image URL of the goods or combination.
    */
   get imageUrlComputed(): string {
     return this.imageUrlResolver(this.normalizedData.imageUrl) ?? ""; /* TODO: default image */
   }
 
-  /***
+  /**
    * Returns whether the stock details should be hidden or not.
    */
   get shouldHideStock(): boolean {
     return this.normalizedData.stockVisibility === GoodsStockVisibility.HIDE_ALL;
   }
 
-  /***
+  /**
    * Returns whether the initial stock information should be hidden or not.
    */
   get shouldHideInitialStock(): boolean {
     return this.normalizedData.stockVisibility !== GoodsStockVisibility.SHOW_ALL;
   }
 
-  /***
+  /**
    * Handle the click event on the goods item component.
    * Emits `click` event with the ID of the goods or combination.
    */
