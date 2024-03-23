@@ -77,10 +77,10 @@ export default class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
   @Prop({ type: Object, required: true })  readonly goodsCategoryList!: Array<IGoodsCategory>;
   @Prop({ type: Object, required: true })  readonly goodsCombinationList!: Array<IGoodsCombination>;
-  @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly categoryEditable!: boolean;
+  @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
 
   get goodsListAdjusted() {
     if(!this.goodsList) {

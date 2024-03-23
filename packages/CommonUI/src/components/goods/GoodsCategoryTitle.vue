@@ -15,7 +15,7 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class GoodsCategoryTitle extends Vue {
-  @Prop({ type: Object, required: true }) categoryData!: IGoodsCategory;
+  @Prop({ type: Object, required: true }) readonly categoryData!: IGoodsCategory;
 }
 </script>
 
