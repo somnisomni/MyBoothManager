@@ -9,9 +9,7 @@
                 @primary="open = false">
     <SelectableGoodsListView v-model="selectedGoodsIds"
                              :goodsList="goodsList"
-                             :goodsDisabledIdList="disabledIdList"
-                             :goodsImageUrlResolver="getUploadFilePath"
-                             :currencySymbol="currencySymbol" />
+                             :goodsDisabledIdList="disabledIdList" />
   </CommonDialog>
 </template>
 
@@ -20,8 +18,13 @@ import type { IGoods } from "@myboothmanager/common";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminStore } from "@/stores/admin";
+import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
 
-@Component({})
+@Component({
+  components: {
+    SelectableGoodsListView,
+  },
+})
 export default class GoodsSelectionDialog extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
 

@@ -1,7 +1,7 @@
 <template>
   <GoodsItem ref="base"
-             :forceStockVisibility="forceStockVisibility"
-             class="manageable">
+             class="manageable"
+             :forceStockVisibility="forceStockVisibility">
     <template #extra-top-indicator>
       <!-- Click to edit indicator -->
       <div class="top-indicator click-to-edit">

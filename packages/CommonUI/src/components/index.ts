@@ -11,4 +11,3 @@ export { default as DatePickerDialog } from "./dialogs/utils/DatePickerDialog.vu
 export { default as GoodsItem, type GoodsItemProps } from "./goods/GoodsItem.vue";
 export { default as GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";
 export { default as GoodsListView } from "./goods/GoodsListView.vue";
-export { default as SelectableGoodsListView } from "./goods/SelectableGoodsListView.vue";

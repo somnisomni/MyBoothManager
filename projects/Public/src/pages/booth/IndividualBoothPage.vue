@@ -60,7 +60,7 @@
             <div class="d-flex flex-row flex-wrap justify-center">
               <BoothMemberItem v-for="member in boothMemberList"
                                :key="member.id"
-                               :member="member"
+                               :memberData="member"
                                :imageUrlResolver="getUploadFilePath" />
             </div>
           </div>

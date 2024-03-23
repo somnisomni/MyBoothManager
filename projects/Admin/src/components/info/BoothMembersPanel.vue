@@ -4,7 +4,7 @@
       <VSlideYTransition group leave-absolute>
         <BoothMemberItem v-for="member in membersList"
                          :key="member.id"
-                         :member="member"
+                         :memberData="member"
                          :imageUrlResolver="getUploadFilePath"
                          editable
                          @click="onMemberEditButtonClick" />
