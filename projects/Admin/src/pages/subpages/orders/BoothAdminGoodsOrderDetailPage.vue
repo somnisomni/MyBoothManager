@@ -13,31 +13,94 @@
     <VDivider class="my-2" />
 
     <div v-if="orderData">
-      <h4 class="mb-2">LAYOUT IS WORK IN PROGRESS</h4>
+      <VContainer style="width: 500px; max-width: 100%;">
+        <!-- Topmost order ID / status -->
+        <div class="order-detail-inner">
+          <span class="text-grey font-weight-light">#{{ orderId }}</span>
 
-      <div>ID: {{ orderId }}</div>
-      <div>상태: {{ orderData.status }}</div>
-      <div>총 판매 금액: {{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
-      <div>생성 일자: {{ new Date(orderData.createdAt!).toLocaleString() }}</div>
-      <div v-if="orderData.paymentMethod">대금 지불 방법: {{ getPaymentMethodString(orderData.paymentMethod) }}</div>
+          <div class="font-weight-medium">
+            <span v-if="orderData.status === GoodsOrderStatus.RECORDED" class="d-inline-flex align-center text-green-darken-2"><VIcon icon="mdi-check" class="mr-1" /> 정상 기록됨</span>
+            <span v-else-if="orderData.status === GoodsOrderStatus.CANCELED" class="d-inline-flex align-center text-pink-lighten-2"><VIcon icon="mdi-undo-variant" class="mr-1" /> 취소됨</span>
+          </div>
+        </div>
 
-      <ul class="mt-4">
-        <div>판매 굿즈 목록</div>
+        <!-- Date / order total price -->
+        <div class="order-detail-inner my-4">
+          <div></div>
 
-        <li v-for="order in orderData.order" :key="(order.gId || order.cId)">
-          <span><VIcon v-if="order.cId" size="small">mdi-set-all</VIcon> {{ order.name }}</span> /
-          <span>{{ currencySymbol }}{{ order.price?.toLocaleString() }}</span> /
-          <span>{{ order.quantity.toLocaleString() }}개</span>
+          <div class="d-flex flex-column align-end justify-center text-right flex-1-0">
+            <div class="text-body-2">현재 판매 기록의 총 매출액</div>
+            <div class="text-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
+          </div>
+        </div>
 
-          <ul v-if="order.cId" style="margin-inline-start: 1em">
-            <li v-for="combinedGoods in order.combinedGoods" :key="combinedGoods.gId">
-              <span>{{ combinedGoods.name }}</span>
-            </li>
-          </ul>
-        </li>
-      </ul>
+        <VDivider class="my-2" />
 
-      <VBtn class="mt-4" @click="cancelOrderWarningDialogShown = true">판매 기록 취소</VBtn>
+        <!-- Order history created date -->
+        <div class="order-detail-inner">
+          <span class="font-weight-bold">판매 기록 일자</span>
+
+          <div class="d-flex align-center justify-end text-right flex-1-0">
+            <span style="font-size: 90%;">{{ new Date(orderData.createdAt!).toLocaleDateString() }}</span>
+            <span class="ml-1 font-weight-medium">{{ new Date(orderData.createdAt!).toLocaleTimeString() }}</span>
+          </div>
+        </div>
+
+        <!-- Payment method -->
+        <div v-if="orderData.paymentMethod"
+             class="order-detail-inner">
+          <span class="font-weight-bold">결제 방법</span>
+
+          <span>{{ getPaymentMethodString(orderData.paymentMethod) }}</span>
+        </div>
+
+        <VDivider class="my-2" />
+
+        <!-- Goods items header -->
+        <div class="order-detail-inner text-disabled my-2" style="font-size: 80%;">
+          <span>굿즈/세트명</span>
+          <span>단가 × 개수</span>
+        </div>
+
+        <!-- Goods items -->
+        <ul style="list-style: none; padding: 0 2em;">
+          <li v-for="order in orderData.order"
+              :key="(order.gId || order.cId)"
+              class="order-detail-inner px-0">
+            <div>
+              <div><VIcon v-if="order.cId" size="small">mdi-set-all</VIcon> {{ order.name }}</div>
+
+              <ul v-if="order.cId" style="margin-inline-start: 2em">
+                <li v-for="combinedGoods in order.combinedGoods" :key="combinedGoods.gId">
+                  <span>{{ combinedGoods.name }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="text-right flex-1-0">
+              <span class="font-weight-medium">{{ currencySymbol }}{{ order.price?.toLocaleString() }}</span>
+              <small> × {{ order.quantity.toLocaleString() }}개</small>
+            </div>
+          </li>
+        </ul>
+
+        <VDivider class="my-2" />
+
+        <!-- Summary -->
+        <div class="order-detail-inner">
+          <span class="font-weight-bold">총 소진 재고 개수 <small>(세트 포함)</small></span>
+          <span>{{ totalStockQuantity.toLocaleString() }}개</span>
+        </div>
+
+        <!-- Cancel order button -->
+        <div class="order-detail-inner">
+          <div></div>
+
+          <VBtn v-if="orderData.status !== GoodsOrderStatus.CANCELED"
+                class="mt-4"
+                @click="cancelOrderWarningDialogShown = true">판매 기록 취소</VBtn>
+        </div>
+      </VContainer>
     </div>
     <h2 v-else>유효하지 않은 판매 기록입니다.</h2>
 
@@ -63,6 +126,7 @@ import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
+  readonly GoodsOrderStatus = GoodsOrderStatus;
   readonly getPaymentMethodString = getPaymentMethodString;
 
   cancelOrderWarningDialogShown = false;
@@ -91,6 +155,17 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
     return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
+  get totalStockQuantity(): number {
+    return this.orderData.order.reduce((acc, cur) => {
+      let quantity = cur.quantity;
+      if(cur.cId && cur.combinedGoods) {
+        quantity = cur.combinedGoods?.length * cur.quantity;
+      }
+
+      return acc + quantity;
+    }, 0);
+  }
+
   async cancelOrder() {
     const response = await useAdminAPIStore().updateGoodsOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
 
@@ -104,3 +179,13 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.order-detail-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+</style>
