@@ -13,7 +13,7 @@
     <VDivider class="my-2" />
 
     <div v-if="orderData">
-      <VContainer style="width: 500px; max-width: 100%;">
+      <VContainer class="pa-0" style="width: 500px; max-width: 100%;">
         <div ref="orderContentDOM"
              class="pa-4">
           <!-- Topmost order ID / status -->
@@ -32,7 +32,7 @@
 
             <div class="d-flex flex-column align-end justify-center text-right flex-1-0">
               <div class="text-body-2">현재 판매 기록의 총 매출액</div>
-              <div class="text-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
+              <div class="text-h4 text-sm-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
             </div>
           </div>
 
@@ -68,7 +68,7 @@
           <ul style="list-style: none; padding: 0 2em;">
             <li v-for="order in ordersSorted"
                 :key="(order.gId || order.cId)"
-                class="order-detail-inner px-0">
+                class="order-detail-inner my-1 px-0">
               <div>
                 <div><VIcon v-if="order.cId" size="small">mdi-set-all</VIcon> {{ order.name }}</div>
 
@@ -93,17 +93,24 @@
             <span class="font-weight-bold">총 소진 재고 개수 <small>(세트 포함)</small></span>
             <span>{{ totalStockQuantity.toLocaleString() }}개</span>
           </div>
+
+          <!-- Capture detail -->
+          <div class="order-detail-inner capture-detail">
+            <span class="font-weight-bold">정보 기준 일시</span>
+            <span>{{ new Date().toLocaleString() }}</span>
+          </div>
         </div>
 
         <!-- Cancel order button -->
-        <div class="order-detail-inner">
-          <VBtn icon="mdi-image"
+        <div class="order-detail-inner mt-2">
+          <VBtn class="mt-2"
+                prepend-icon="mdi-image"
                 :loading="isCreatingOrderContentAsImage"
                 :disabled="isCreatingOrderContentAsImage"
-                @click="createOrderContentAsImage" />
+                @click="createOrderContentAsImage">이미지로 캡처</VBtn>
 
           <VBtn v-if="orderData.status !== GoodsOrderStatus.CANCELED"
-                class="mt-4"
+                class="mt-2"
                 @click="cancelOrderWarningDialogShown = true">판매 기록 취소</VBtn>
         </div>
       </VContainer>
@@ -157,6 +164,10 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
     to.meta = { previousScrollOffset: from.meta?.previousScrollOffset };
   }
 
+  get currentBoothName(): string {
+    return useAdminStore().currentBooth.booth!.name;
+  }
+
   get orderData(): IGoodsOrder {
     return useAdminStore().currentBooth.goodsOrders![this.orderId];
   }
@@ -203,11 +214,18 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
 
     const canvas = await html2canvas(this.orderContentDOM, {
       backgroundColor: "white",
+      width: 500,
+      windowWidth: 1000,
       scale: 2,
+      onclone(_, element) {
+        element.querySelectorAll(".capture-detail").forEach((el) => {
+          (el as HTMLElement).style.display = "flex";
+        });
+      },
     });
 
     const link = document.createElement("a");
-    link.download = `order-${this.orderId}.png`;
+    link.download = `${this.currentBoothName}-order-${this.orderId}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
 
@@ -223,5 +241,10 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 2rem;
+
+  &.capture-detail {
+    display: none;
+    opacity: 0.33;
+  }
 }
 </style>
