@@ -80,7 +80,10 @@
               </div>
 
               <div class="text-right flex-1-0">
-                <span class="font-weight-medium">{{ currencySymbol }}{{ order.price?.toLocaleString() }}</span>
+                <span v-if="order.price" class="font-weight-medium">{{ currencySymbol }}{{ order.price.toLocaleString() }}</span>
+                <span v-else-if="!order.price || order.price === 0" class="font-weight-medium">무료 증정</span>
+                <span v-else>?</span>
+
                 <small> × {{ order.quantity.toLocaleString() }}개</small>
               </div>
             </li>
