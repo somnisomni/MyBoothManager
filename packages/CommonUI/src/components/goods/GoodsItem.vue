@@ -4,7 +4,7 @@
           :class="{ 'combination-item': isCombination,
                     'disabled no-interaction': disabled,
                     'small': !displayMdAndUp,
-                    'ma-md-4': forceSize === 'small' }"
+                    'ma-md-4': forceSize !== 'small' }"
           rounded="lg"
           :elevation="elevation"
           :width="width"

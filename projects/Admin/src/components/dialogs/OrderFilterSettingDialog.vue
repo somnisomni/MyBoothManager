@@ -9,8 +9,7 @@
                 @primary="onDialogConfirm">
     <SelectableGoodsListView v-model="filterSetting.targetGoodsIds"
                              :goodsList="goodsList"
-                             :goodsImageUrlResolver="getUploadFilePath"
-                             :currencySymbol="currencySymbol" />
+                             :goodsImageUrlResolver="getUploadFilePath" />
     <VCheckbox v-model="filterSetting.onlyShowOrdersWithFreeGoods"
                label="무료 증정 굿즈가 포함된 기록만 표시" />
 
@@ -35,8 +34,12 @@ import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminStore } from "@/stores/admin";
 import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
+import SelectableGoodsListView from "../goods/SelectableGoodsListView.vue";
 
 @Component({
+  components: {
+    SelectableGoodsListView,
+  },
   emits: ["primary"],
 })
 export default class OrderFilterSettingDialog extends Vue {
