@@ -64,7 +64,7 @@
 
         <!-- Goods items -->
         <ul style="list-style: none; padding: 0 2em;">
-          <li v-for="order in orderData.order"
+          <li v-for="order in ordersSorted"
               :key="(order.gId || order.cId)"
               class="order-detail-inner px-0">
             <div>
@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderDetailItem } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/stores/admin";
@@ -148,6 +148,15 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
 
   get orderData(): IGoodsOrder {
     return useAdminStore().currentBooth.goodsOrders![this.orderId];
+  }
+
+  get ordersSorted(): Array<IGoodsOrderDetailItem> {
+    return this.orderData.order.sort((a, b) => {
+      if(a.cId && b.cId) return a.cId - b.cId;
+      else if(a.cId) return -1;
+      else if(b.cId) return 1;
+      else return (a.gId || 0) - (b.gId || 0);
+    });
   }
 
   get currencySymbol(): string {
