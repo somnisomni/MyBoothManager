@@ -96,7 +96,7 @@
 
           <!-- Capture detail -->
           <div class="order-detail-inner capture-detail">
-            <span class="font-weight-bold">정보 기준 일시</span>
+            <span class="font-weight-bold">기록 기준 일시</span>
             <span>{{ new Date().toLocaleString() }}</span>
           </div>
         </div>
