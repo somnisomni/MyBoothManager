@@ -20,7 +20,7 @@
           <div class="order-detail-inner">
             <span class="text-grey font-weight-light">#{{ orderId }}</span>
 
-            <div class="font-weight-medium">
+            <div class="font-weight-medium text-right flex-1-0">
               <span v-if="orderData.status === GoodsOrderStatus.RECORDED" class="d-inline-flex align-center text-green-darken-2"><VIcon icon="mdi-check" class="mr-1" /> 정상 기록됨</span>
               <span v-else-if="orderData.status === GoodsOrderStatus.CANCELED" class="d-inline-flex align-center text-pink-lighten-2"><VIcon icon="mdi-undo-variant" class="mr-1" /> 취소됨</span>
             </div>
@@ -31,7 +31,7 @@
             <div></div>
 
             <div class="d-flex flex-column align-end justify-center text-right flex-1-0">
-              <div class="text-body-2">현재 판매 기록의 총 매출액</div>
+              <div class="text-body-2">이 판매 기록의 총 매출액</div>
               <div class="text-h4 text-sm-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
             </div>
           </div>
@@ -61,7 +61,7 @@
           <!-- Goods items header -->
           <div class="order-detail-inner text-disabled my-2" style="font-size: 80%;">
             <span>굿즈/세트명</span>
-            <span>단가 × 개수</span>
+            <span>단가 <small>× 개수</small></span>
           </div>
 
           <!-- Goods items -->
@@ -94,13 +94,13 @@
           <!-- Summary -->
           <div class="order-detail-inner">
             <span class="font-weight-bold">총 소진 재고 개수 <small>(세트 포함)</small></span>
-            <span>{{ totalStockQuantity.toLocaleString() }}개</span>
+            <span class="text-right flex-1-0">{{ totalStockQuantity.toLocaleString() }}개</span>
           </div>
 
           <!-- Capture detail -->
           <div class="order-detail-inner capture-detail">
             <span class="font-weight-bold">기록 기준 일시</span>
-            <span>{{ new Date().toLocaleString() }}</span>
+            <span class="text-right flex-1-0">{{ new Date().toLocaleString() }}</span>
           </div>
         </div>
 
