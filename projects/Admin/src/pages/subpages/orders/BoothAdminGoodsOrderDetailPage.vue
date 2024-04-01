@@ -84,7 +84,7 @@
                 <span v-else-if="!order.price || order.price === 0" class="font-weight-medium">무료 증정</span>
                 <span v-else>?</span>
 
-                <small> × {{ order.quantity.toLocaleString() }}개</small>
+                <small> × {{ order.quantity.toLocaleString() }}</small>
               </div>
             </li>
           </ul>
