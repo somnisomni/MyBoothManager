@@ -99,8 +99,16 @@
 
           <!-- Capture detail -->
           <div class="order-detail-inner capture-detail">
-            <span class="font-weight-bold">기록 기준 일시</span>
+            <span class="font-weight-bold">기록 캡처 일시</span>
             <span class="text-right flex-1-0">{{ new Date().toLocaleString() }}</span>
+          </div>
+
+          <div class="order-detail-inner capture-detail mt-4">
+            <div></div>
+            <small class="text-right flex-1-0 font-weight-light">
+              <div>부스명: <span class="font-weight-bold">{{ currentBoothName }}</span></div>
+              <div>Created using <span class="font-weight-medium">{{ APP_NAME }}</span></div>
+            </small>
           </div>
         </div>
 
@@ -133,7 +141,7 @@
 </template>
 
 <script lang="ts">
-import { GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderDetailItem } from "@myboothmanager/common";
+import { APP_NAME, GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderDetailItem } from "@myboothmanager/common";
 import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import html2canvas from "html2canvas";
@@ -143,6 +151,7 @@ import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
 export default class BoothAdminGoodsOrderDetailPage extends Vue {
+  readonly APP_NAME = APP_NAME;
   readonly GoodsOrderStatus = GoodsOrderStatus;
   readonly getPaymentMethodString = getPaymentMethodString;
 
