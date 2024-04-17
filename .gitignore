@@ -8,6 +8,7 @@ uploads/
 # Compile output
 dist/
 node_modules/
+vite.config.*.timestamp-*
 
 # Logs
 logs
