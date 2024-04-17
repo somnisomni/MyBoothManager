@@ -1,12 +1,13 @@
 import type { Model } from "sequelize-typescript";
 import type { MultipartFile } from "@fastify/multipart";
 import type { FastifyRequest } from "fastify";
+import type { IUploadStorage } from "@/lib/types";
 import path from "path";
 import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { path as APP_ROOT_PATH } from "app-root-path";
-import { ISuccessResponse, IUploadStorage, IValueResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import UploadStorage from "@/db/models/uploadstorage";
 import { create, generateRandomDigestFileName } from "@/lib/common-functions";

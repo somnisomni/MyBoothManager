@@ -12,22 +12,25 @@ export enum GoodsStockVisibility {
   SHOW_ALL = "show_all",
 }
 
-export interface IGoods extends IDataModelBase {
+export interface IGoodsCommon extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
   categoryId?: number | null;  // Foreign key to GoodsCategory.id
-  combinationId?: number | null;  // Foreign key to GoodsCombination.id
   name: string;
   description?: string;
-  type?: string;
-  status: GoodsStatus;
-  statusReason?: string;
   price: number;
   stockInitial: number;
   stockRemaining: number;
   stockVisibility: GoodsStockVisibility;
-  goodsImageUrl?: string;
   ownerMembersId?: number[];
+}
+
+export interface IGoods extends IGoodsCommon {
+  combinationId?: number | null;  // Foreign key to GoodsCombination.id
+  type?: string;
+  status: GoodsStatus;
+  statusReason?: string | null;
+  goodsImageUrl?: string;
 }
 export type IGoodsResponse = IGoods;
 

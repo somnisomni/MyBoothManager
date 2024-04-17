@@ -1,5 +1,4 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import type { IUploadStorage } from "@myboothmanager/common";
+import type { IUploadStorage, InternalKeysWithId } from "@/lib/types";
 import path from "path";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, AllowNull, Default, HasOne } from "sequelize-typescript";

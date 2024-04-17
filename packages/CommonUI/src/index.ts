@@ -21,3 +21,4 @@ export default {
 
 export * from "./plugins/vuetify";
 export * from "./components";
+export * from "./entities";
