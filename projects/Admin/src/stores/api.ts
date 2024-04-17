@@ -1,4 +1,5 @@
 import * as C from "@myboothmanager/common";
+import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import $router from "@/plugins/router";
@@ -210,7 +211,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       (response) => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
         C.emptyNumberKeyObject($adminStore.currentBooth.goods);
-        for(const goods of response) $adminStore.currentBooth.goods[goods.id] = goods;
+        for(const goods of response) $adminStore.currentBooth.goods[goods.id] = new Goods(goods);
       },
     );
   }
@@ -220,7 +221,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.createGoods(payload),
       (response) => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
-        $adminStore.currentBooth.goods[response.id] = response;
+        $adminStore.currentBooth.goods[response.id] = new Goods(response);
       },
     );
   }
@@ -229,7 +230,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.updateGoodsInfo(goodsId, payload),
       async (response) => {
-        $adminStore.currentBooth.goods![goodsId] = response;
+        $adminStore.currentBooth.goods![goodsId].update(response);
         if(response.combinationId) await fetchGoodsCombinationsOfCurrentBooth();
       },
     );
@@ -266,7 +267,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
         C.emptyNumberKeyObject($adminStore.currentBooth.goodsCombinations);
-        for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = combination;
+        for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = new GoodsCombination(combination);
       },
     );
   }
@@ -276,7 +277,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.createGoodsCombination(payload),
       async (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
-        $adminStore.currentBooth.goodsCombinations[response.id] = response;
+        $adminStore.currentBooth.goodsCombinations[response.id] = new GoodsCombination(response);
         await fetchGoodsOfCurrentBooth();
       },
     );
@@ -286,7 +287,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.updateGoodsCombinationInfo(combinationId, payload),
       async (response) => {
-        $adminStore.currentBooth.goodsCombinations![combinationId] = response;
+        $adminStore.currentBooth.goodsCombinations![combinationId].update(response);
         await fetchGoodsOfCurrentBooth();
       },
     );

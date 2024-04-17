@@ -1,13 +1,14 @@
+import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { defineStore } from "pinia";
 import { ref, type ToRefs } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination, type IGoodsOrder } from "@myboothmanager/common";
+import { type IAccountUserland, type IBooth, type IBoothMember, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { useAdminAPIStore } from "./api";
 
 interface CurrentBoothStates {
   booth: IBooth | null;
   boothMembers: Record<number, IBoothMember> | null;
-  goods: Record<number, IGoods> | null;
-  goodsCombinations: Record<number, IGoodsCombination> | null;
+  goods: Record<number, Goods> | null;
+  goodsCombinations: Record<number, GoodsCombination> | null;
   goodsCategories: Record<number, IGoodsCategory> | null;
   goodsOrders: Record<number, IGoodsOrder> | null;
 }
