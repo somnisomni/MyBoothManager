@@ -1,7 +1,7 @@
 import type { IGoods, IGoodsCommon, IGoodsCombination } from "@myboothmanager/common";
 import { GoodsStatus, GoodsStockVisibility } from "@myboothmanager/common";
 
-export class GoodsBase implements IGoodsCommon {
+export abstract class GoodsBase implements IGoodsCommon {
   declare id: number;
   declare boothId: number;
   declare categoryId?: number | null | undefined;
@@ -14,7 +14,14 @@ export class GoodsBase implements IGoodsCommon {
   declare ownerMembersId?: number[] | undefined;
 
   protected constructor(data: IGoodsCommon) {
-    this.id = data.id;
+    this.update(data);
+  }
+
+  /**
+   * Update(Overwrite) the data of this instance.
+   * @param data - Data to update.
+   */
+  update(data: IGoodsCommon): void {
     this.boothId = data.boothId;
     this.categoryId = data.categoryId;
     this.name = data.name;
@@ -27,12 +34,12 @@ export class GoodsBase implements IGoodsCommon {
   }
 
   /**
-   * Increase or decrease stock count.
+   * Try increase or decrease stock count.
    * @param amount - Amount of stock to adjust.
    * @returns `number` - Remaining stock count after adjustment.
    * @returns `false` - If adjustment of stock count is not acceptable.
    */
-  adjustStock(amount: number): number | false {
+  tryAdjustStock(amount: number): number | false {
     if((this.stockRemaining + amount < 0)
       || (this.stockInitial < this.stockRemaining + amount)) {
       return false;
@@ -71,8 +78,15 @@ export class Goods extends GoodsBase implements IGoods {
 
   constructor(data: IGoods) {
     super(data);
+    this.update(data);
+  }
+
+  override update(data: IGoods): void {
+    super.update(data);
     this.combinationId = data.combinationId;
     this.type = data.type;
+    this.status = data.status;
+    this.statusReason = data.statusReason;
     this.goodsImageUrl = data.goodsImageUrl;
   }
 
@@ -93,6 +107,11 @@ export class GoodsCombination extends GoodsBase implements IGoodsCombination {
 
   constructor(data: IGoodsCombination) {
     super(data);
+    this.update(data);
+  }
+
+  override update(data: IGoodsCombination): void {
+    super.update(data);
     this.combinationImageUrl = data.combinationImageUrl;
   }
 
