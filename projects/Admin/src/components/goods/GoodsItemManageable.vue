@@ -71,7 +71,7 @@ export default class GoodsItemManageable extends Vue {
   }
 
   get normalizedId(): number {
-    return (this.baseProps.goodsData || this.baseProps.combinationData)!.id;
+    return this.baseProps.goodsData.id;
   }
 
   @Emit("menu:duplicate")

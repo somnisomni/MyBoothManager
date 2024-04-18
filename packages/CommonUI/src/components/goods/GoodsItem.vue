@@ -67,14 +67,14 @@
 </template>
 
 <script lang="ts">
-import { GoodsStockVisibility, type IGoods, type IGoodsCombination } from "@myboothmanager/common";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { isDisplayXXS } from "@/plugins/vuetify";
+import { Goods, GoodsBase, GoodsCombination } from "@/entities";
 
 export interface GoodsItemProps {
-  readonly goodsData?: IGoods | null;
-  readonly combinationData?: IGoodsCombination | null;
+  readonly goodsData: GoodsBase;
   readonly currencySymbol: string;
   readonly disabled: boolean;
   readonly disabledReason?: string | null;
@@ -88,8 +88,7 @@ export interface GoodsItemProps {
   emits: ["click"],
 })
 export default class GoodsItem extends Vue implements GoodsItemProps {
-  @Prop({ type: Object }) readonly goodsData?: IGoods | null;
-  @Prop({ type: Object }) readonly combinationData?: IGoodsCombination | null;
+  @Prop({ type: GoodsBase, required: true }) readonly goodsData!: GoodsBase;
   @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
   @Prop({ type: String,  default: null   }) readonly disabledReason?: string | null;
@@ -147,14 +146,14 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
    */
   get normalizedData() {
     return {
-      id: (this.combinationData || this.goodsData)!.id,
-      name: (this.combinationData || this.goodsData)!.name,
-      description: (this.combinationData || this.goodsData)!.description,
-      price: (this.combinationData || this.goodsData)!.price,
-      stockInitial: (this.combinationData || this.goodsData)!.stockInitial,
-      stockRemaining: (this.combinationData || this.goodsData)!.stockRemaining,
-      stockVisibility: this.forceStockVisibility ?? ((this.combinationData || this.goodsData)!.stockVisibility),
-      imageUrl: this.isCombination ? this.combinationData!.combinationImageUrl : this.goodsData!.goodsImageUrl,
+      id: this.goodsData.id,
+      name: this.goodsData.name,
+      description: this.goodsData.description,
+      price: this.goodsData.price,
+      stockInitial: this.goodsData.stockInitial,
+      stockRemaining: this.goodsData.stockRemaining,
+      stockVisibility: this.forceStockVisibility ?? this.goodsData.stockVisibility,
+      imageUrl: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageUrl : (this.goodsData as Goods).goodsImageUrl,
     };
   }
 
@@ -162,7 +161,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
    * Returns whether the data is for a combination or not.
    */
   get isCombination(): boolean {
-    return !!this.combinationData;
+    return this.goodsData instanceof GoodsCombination;
   }
 
   /**

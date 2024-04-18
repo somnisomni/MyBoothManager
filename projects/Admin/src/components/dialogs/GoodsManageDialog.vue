@@ -49,7 +49,8 @@
 </template>
 
 <script lang="ts">
-import { ErrorCodes, GoodsStockVisibility, type IGoods, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
+import type { Goods } from "@myboothmanager/common-ui";
+import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { reactive , readonly, ref, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
@@ -192,7 +193,7 @@ export default class GoodsManageDialog extends Vue {
     };
   }
 
-  get currentGoods(): DeepReadonly<IGoods> | null {
+  get currentGoods(): DeepReadonly<Goods> | null {
     return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods![this.goodsId]) : null;
   }
 

@@ -1,5 +1,5 @@
-import type { IGoods, IGoodsCommon, IGoodsCombination } from "@myboothmanager/common";
-import { GoodsStatus, GoodsStockVisibility } from "@myboothmanager/common";
+import type { IGoods, IGoodsCommon, IGoodsCombination, GoodsStockVisibility } from "@myboothmanager/common";
+import { GoodsStatus } from "@myboothmanager/common";
 
 export abstract class GoodsBase implements IGoodsCommon {
   declare id: number;

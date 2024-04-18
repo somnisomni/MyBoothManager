@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoods } from "@myboothmanager/common";
+import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import GoodsItemSelectable from "./GoodsItemSelectable.vue";
@@ -27,7 +27,7 @@ export default class SelectableGoodsListView extends Vue {
   readonly getUploadFilePath = getUploadFilePath;
 
   @Model({ type: Array, default: [] }) selectedGoodsIds!: Array<number>;
-  @Prop({ type: Array, required: true }) readonly goodsList!: Array<IGoods>;
+  @Prop({ type: Array, required: true }) readonly goodsList!: Array<Goods>;
   @Prop({ type: Array,  default: []   }) readonly goodsDisabledIdList!: Array<number>;
 
   selectedGoods: Record<number, boolean> = {};

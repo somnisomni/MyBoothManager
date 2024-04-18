@@ -16,11 +16,11 @@
              class="combination-container my-1 pa-1 d-flex flex-1-0-100 flex-row flex-wrap bg-teal-lighten-5 rounded-lg border-dashed border-sm">
           <!-- Goods Combination -->
           <slot name="goods-combination"
-                :combinationData="combination"
+                :goodsData="combination"
                 :currencySymbol="currencySymbol"
                 :imageUrlResolver="goodsImageUrlResolver"
                 @click="onCombinationClick">
-            <GoodsItem :combinationData="combination"
+            <GoodsItem :goodsData="combination"
                        :currencySymbol="currencySymbol"
                        :imageUrlResolver="goodsImageUrlResolver"
                        @click="onCombinationClick" />
@@ -67,38 +67,54 @@
 </template>
 
 <script lang="ts">
-import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
+import type { IGoodsCategory } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { Goods, GoodsCombination, type GoodsBase } from "@/entities";
 
 @Component({
   emits: ["click:goods", "click:combination"],
 })
 export default class GoodsListView extends Vue {
-  @Prop({ type: Object, required: true })  readonly goodsList!: Array<IGoods>;
+  @Prop({ type: Object, required: true })  readonly goodsList!: Array<GoodsBase>;
   @Prop({ type: Object, required: true })  readonly goodsCategoryList!: Array<IGoodsCategory>;
-  @Prop({ type: Object, required: true })  readonly goodsCombinationList!: Array<IGoodsCombination>;
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly categoryEditable!: boolean;
   @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
 
-  get goodsListAdjusted() {
+  get goodsListAdjusted(): Array<Goods> {
     if(!this.goodsList) {
       console.warn("[GoodsListView] goodsList is not provided!");
       return [];
     }
 
-    const list = [...this.goodsList];
+    const list = [...this.goodsList.filter((goods) => goods instanceof Goods)];
     for(const i in list) {
       if(!list[i].categoryId || list[i].categoryId! < 0) {
         list[i].categoryId = -1;
       }
     }
 
-    return list;
+    return list as Array<Goods>;
   }
 
-  get goodsCategoryListAdjusted() {
+  get goodsCombinationListAdjusted(): Array<GoodsCombination> {
+    if(!this.goodsList) {
+      console.warn("[GoodsListView] goodsList is not provided!");
+      return [];
+    }
+
+    const list = [...this.goodsList.filter((goods) => goods instanceof GoodsCombination)];
+    for(const i in list) {
+      if(!list[i].categoryId || list[i].categoryId! < 0) {
+        list[i].categoryId = -1;
+      }
+    }
+
+    return list as Array<GoodsCombination>;
+  }
+
+  get goodsCategoryListAdjusted(): Array<IGoodsCategory> {
     if(!this.goodsCategoryList) {
       console.warn("[GoodsListView] goodsCategoryList is not provided!");
       return [];
@@ -117,27 +133,11 @@ export default class GoodsListView extends Vue {
       list.push({ boothId: -1, id: -1, name: "미분류" });
     }
 
-    return list;
-  }
-
-  get goodsCombinationListAdjusted() {
-    if(!this.goodsCombinationList) {
-      console.warn("[GoodsListView] goodsCombinationList is not provided!");
-      return [];
-    }
-
-    const list = [...this.goodsCombinationList];
-    for(const i in list) {
-      if(!list[i].categoryId || list[i].categoryId! < 0) {
-        list[i].categoryId = -1;
-      }
-    }
-
-    return list;
+    return list as Array<IGoodsCategory>;
   }
 
   findGoodsInCategory(categoryId: number, nonCombinatedOnly: boolean = false) {
-    return this.goodsListAdjusted.filter((goods) => goods.categoryId === categoryId && !(nonCombinatedOnly && goods.combinationId));
+    return this.goodsListAdjusted.filter((goods) => (goods.categoryId === categoryId) && !(nonCombinatedOnly && goods.combinationId));
   }
 
   findGoodsInCombination(combinationId: number) {

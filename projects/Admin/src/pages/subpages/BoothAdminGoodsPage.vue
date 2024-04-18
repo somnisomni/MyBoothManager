@@ -6,8 +6,7 @@
                    :currencySymbol="currencySymbol"
                    :goodsList="goodsList"
                    :goodsImageUrlResolver="getUploadFilePath"
-                   :goodsCategoryList="goodsCategoryList"
-                   :goodsCombinationList="goodsCombinationList">
+                   :goodsCategoryList="goodsCategoryList">
       <template #goods-category="props">
         <GoodsCategoryTitleManageable v-bind="props"
                                       @click="openGoodsCategoryEditDialog((props.categoryData as IGoodsCategory).id)" />
@@ -21,8 +20,8 @@
       <template #goods-combination="props">
         <GoodsItemManageable v-bind="props"
                              @click="openGoodsCombinationManageDialog"
-                             @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).combinationData!.id)"
-                             @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).combinationData!.id)" />
+                             @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
+                             @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).goodsData!.id)" />
       </template>
     </GoodsListView>
   </VContainer>
@@ -43,8 +42,8 @@
 </template>
 
 <script lang="ts">
-import type { IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
-import type { GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
+import type { IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
+import type { Goods, GoodsCombination, GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Vue, Component } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
@@ -87,16 +86,15 @@ export default class BoothAdminGoodsPage extends Vue {
     return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
-  get goodsList(): Array<IGoods> {
-    return Object.values(useAdminStore().currentBooth.goods ?? {});
+  get goodsList(): Array<Goods | GoodsCombination> {
+    return [
+      ...Object.values(useAdminStore().currentBooth.goods ?? {}),
+      ...Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}),
+    ];
   }
 
   get goodsCategoryList(): Array<IGoodsCategory> {
     return Object.values(useAdminStore().currentBooth.goodsCategories ?? {});
-  }
-
-  get goodsCombinationList(): Array<IGoodsCombination> {
-    return Object.values(useAdminStore().currentBooth.goodsCombinations ?? {});
   }
 
   openGoodsManageDialog(goodsId: number) {

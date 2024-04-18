@@ -86,10 +86,9 @@
           <VDivider class="my-2" />
           <GoodsListView v-if="boothGoodsList.length > 0"
                         :currencySymbol="boothData?.currencySymbol"
-                        :goodsList="boothGoodsList"
-                        :goodsImageUrlResolver="getUploadFilePath"
+                        :goodsList="[...boothGoodsList, ...boothCombinationList]"
                         :goodsCategoryList="boothCategoryList"
-                        :goodsCombinationList="boothCombinationList"
+                        :goodsImageUrlResolver="getUploadFilePath"
                         :editable="false"
                         omitEmptyGoodsCategory />
           <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>

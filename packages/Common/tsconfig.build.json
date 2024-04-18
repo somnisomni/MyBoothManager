@@ -3,6 +3,6 @@
   "exclude": ["./dist", "node_modules", "**/__tests__/**"],
   "compilerOptions": {
     "module": "CommonJS",
-    "moduleResolution": "Node",
+    "moduleResolution": "Node"
   }
 }

@@ -18,10 +18,9 @@
              :class="{ 'sm': !mdAndUp }"
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
       <GoodsListView :currencySymbol="currencySymbol"
-                     :goodsList="Object.values(boothGoodsDict)"
+                     :goodsList="boothGoodsCombinedList"
                      :goodsImageUrlResolver="getUploadFilePath"
                      :goodsCategoryList="boothGoodsCategoryList"
-                     :goodsCombinationList="boothGoodsCombinationList"
                      omitEmptyGoodsCategory>
         <template #goods="props">
           <GoodsItem v-bind="props"
@@ -55,6 +54,7 @@
 
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
+import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
@@ -91,10 +91,13 @@ export default class BoothPOSPage extends Vue {
 
   get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().currentBooth.goods ?? {}; }
   get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().currentBooth.goodsCategories ?? {}); }
-  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().currentBooth.goodsCombinations ?? {}; }
-  get boothGoodsCombinationList(): Array<IGoodsCombination> { return Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}); }
+  get boothGoodsCombinedList(): Array<Goods | GoodsCombination> {
+    return [
+      ...Object.values(useAdminStore().currentBooth.goods ?? {}),
+      ...Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}),
+    ];
+  }
 
   mounted(): void {
     if(this.currentBooth.status !== BoothStatus.OPEN) {

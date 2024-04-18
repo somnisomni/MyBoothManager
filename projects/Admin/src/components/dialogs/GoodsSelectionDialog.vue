@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoods } from "@myboothmanager/common";
+import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
 import { useAdminStore } from "@/stores/admin";
@@ -33,7 +33,7 @@ export default class GoodsSelectionDialog extends Vue {
   @Prop({ type: Array, default: [] }) disabledIdList!: Array<number>;
   @Prop({ type: Number, default: null }) categoryId!: number | null | undefined;
 
-  get goodsList(): Array<IGoods> {
+  get goodsList(): Array<Goods> {
     if(this.categoryId) {
       return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === this.categoryId);
     } else {
