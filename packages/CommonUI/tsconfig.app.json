@@ -8,6 +8,7 @@
     "baseUrl": ".",
     "outDir": "./dist",
     "declarationDir": "./dist",
+    "module": "ESNext",
     "paths": {
       "@/*": ["./src/*"]
     },

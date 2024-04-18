@@ -1,34 +1,34 @@
 {
 	"folders": [
-		{
-			"path": ".",
-      "name": "[Root]"
-		},
-		{
-			"path": "packages/Common",
-      "name": "[packages] Common"
-		},
     {
-      "path": "packages/CommonUI",
-      "name": "[packages] Common UI"
+      "name": "[Root]",
+      "path": "."
     },
-		{
-			"path": "packages/I18n",
-      "name": "[packages] I18n"
-		},
-		{
-			"path": "projects/Admin",
-      "name": "[projects] Admin"
-		},
     {
-      "path": "projects/Public",
-      "name": "[projects] Public"
+      "name": "[packages] Common",
+      "path": "packages/Common"
     },
-		{
-			"path": "projects/Backend",
-      "name": "[projects] Backend"
-		}
-	],
+    {
+      "name": "[packages] Common UI",
+      "path": "packages/CommonUI"
+    },
+    {
+      "name": "[packages] I18n",
+      "path": "packages/I18n"
+    },
+    {
+      "name": "[projects] Admin",
+      "path": "projects/Admin"
+    },
+    {
+      "name": "[projects] Public",
+      "path": "projects/Public"
+    },
+    {
+      "name": "[projects] Backend",
+      "path": "projects/Backend"
+    }
+  ],
 	"settings": {
 		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
 		"typescript.enablePromptUseWorkspaceTsdk": true,

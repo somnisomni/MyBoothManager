@@ -23,7 +23,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@typescript-eslint/parser": "^7.6.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "concurrently": "^8.2.2",
     "eslint": "^8",
     "eslint-import-resolver-typescript": "^3.6.1",
