@@ -102,6 +102,7 @@
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/stores/public";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
@@ -125,9 +126,9 @@ export default class IndividualBoothPage extends Vue {
 
   boothData: IBooth | null = null;
   boothMemberList: Array<IBoothMember> = [];
-  boothGoodsList: Array<IGoods> = [];
+  boothGoodsList: Array<Goods> = [];
+  boothCombinationList: Array<GoodsCombination> = [];
   boothCategoryList: Array<IGoodsCategory> = [];
-  boothCombinationList: Array<IGoodsCombination> = [];
 
   boothInfoExpanded: boolean = true;
 
@@ -198,16 +199,16 @@ export default class IndividualBoothPage extends Vue {
     const responsePromises: Array<Promise<any>> = [
       usePublicStore().apiCaller.fetchAllMembersOfBooth(this.boothId),
       usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId),
-      usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId),
       usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId),
+      usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId),
     ];
 
     const responses = await Promise.all(responsePromises);
     if(responses.every((response) => !("errorCode" in response))) {
       this.boothMemberList = responses[0];
-      this.boothGoodsList = responses[1];
-      this.boothCategoryList = responses[2];
-      this.boothCombinationList = responses[3];
+      this.boothGoodsList = (responses[1] as Array<IGoods>).map((goods) => new Goods(goods));
+      this.boothCombinationList = (responses[2] as Array<IGoodsCombination>).map((combination) => new GoodsCombination(combination));
+      this.boothCategoryList = responses[3];
     }
   }
 
@@ -225,16 +226,16 @@ export default class IndividualBoothPage extends Vue {
     else errors[1] = boothMemberResponse.errorCode;
 
     const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
-    if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse;
+    if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse.map((goods) => new Goods(goods));
     else errors[2] = goodsResponse.errorCode;
+
+    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
+    if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse.map((combination) => new GoodsCombination(combination));
+    else errors[3] = combinationResponse.errorCode;
 
     const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
     if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
-    else errors[3] = categoryResponse.errorCode;
-
-    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
-    if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse;
-    else errors[4] = combinationResponse.errorCode;
+    else errors[4] = categoryResponse.errorCode;
 
     this.isDataLoading = false;
 
