@@ -22,6 +22,7 @@ export abstract class GoodsBase implements IGoodsCommon {
    * @param data - Data to update.
    */
   update(data: IGoodsCommon): void {
+    this.id = data.id;
     this.boothId = data.boothId;
     this.categoryId = data.categoryId;
     this.name = data.name;
