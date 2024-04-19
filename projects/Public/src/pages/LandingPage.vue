@@ -4,13 +4,13 @@
       <VLayout class="d-flex flex-column my-4 overflow-visible">
         <h5 class="text-h5 font-weight-bold my-1">현재 운영 중인 부스</h5>
         <BoothListView :boothList="boothListOpened"
-                      @boothItemClick="onBoothItemClick" />
+                      @click:boothItem="onBoothItemClick" />
       </VLayout>
 
       <VLayout class="d-flex flex-column my-4 overflow-visible">
         <h5 class="text-h5 font-weight-bold my-1">그 외 부스</h5>
         <BoothListView :boothList="boothListOthers"
-                      @boothItemClick="onBoothItemClick" />
+                      @click:boothItem="onBoothItemClick" />
       </VLayout>
     </VContainer>
 

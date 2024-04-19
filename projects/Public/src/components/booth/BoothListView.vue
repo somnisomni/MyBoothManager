@@ -21,12 +21,12 @@ import BoothListItem from "./BoothListItem.vue";
   components: {
     BoothListItem,
   },
-  emits: ["boothItemClick"],
+  emits: ["click:boothItem"],
 })
 export default class BoothListView extends Vue {
   @Prop({ type: Array, required: true }) boothList!: Array<IBooth>;
 
-  @Emit("boothItemClick")
+  @Emit("click:boothItem")
   onBoothItemClick(boothId: number) {
     return boothId;
   }
