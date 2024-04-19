@@ -1462,8 +1462,8 @@ __metadata:
   resolution: "@myboothmanager/admin@workspace:projects/Admin"
   dependencies:
     "@mdi/font": "npm:^7.4.47"
-    "@myboothmanager/common": "npm:*"
-    "@myboothmanager/common-ui": "npm:*"
+    "@myboothmanager/common": ../../packages/Common
+    "@myboothmanager/common-ui": ../../packages/CommonUI
     "@rushstack/eslint-patch": "npm:^1.10.2"
     "@tsconfig/node20": "npm:^20.1.4"
     "@types/clone-deep": "npm:^4.0.4"
@@ -1547,7 +1547,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@myboothmanager/common-ui@npm:*, @myboothmanager/common-ui@workspace:packages/CommonUI":
+"@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
+  version: 0.0.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=bcf8d8&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  peerDependencies:
+    "@mdi/font": ">=7"
+    "@myboothmanager/common": "*"
+    vue: ">=3"
+    vue-facing-decorator: ">=3"
+    vuetify: ">=3"
+  checksum: 10/c27b41a6f17a876569c558378646f8b83ce94f2c683337987791abd9e927e1f5ea43a40843202e53826259a9249976763381a1f0c064bd7ab4698305c73a6cb3
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
+  version: 0.0.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=bcf8d8&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  peerDependencies:
+    "@mdi/font": ">=7"
+    "@myboothmanager/common": "*"
+    vue: ">=3"
+    vue-facing-decorator: ">=3"
+    vuetify: ">=3"
+  checksum: 10/c27b41a6f17a876569c558378646f8b83ce94f2c683337987791abd9e927e1f5ea43a40843202e53826259a9249976763381a1f0c064bd7ab4698305c73a6cb3
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common-ui@workspace:packages/CommonUI":
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common-ui@workspace:packages/CommonUI"
   dependencies:
@@ -1582,6 +1608,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
+  version: 0.0.0
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=f1930e&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  dependencies:
+    currency-symbol-map: "npm:^5.1.0"
+  checksum: 10/a74865cd9493ffd2d792211cea2b67477ef2332b8e0e2091a88d5356f35b32c876fe2f9b002e49ecdceee4dcd0c5c7124ee48f1989c85fd26f317f0795627238
+  languageName: node
+  linkType: hard
+
+"@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
+  version: 0.0.0
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=f1930e&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  dependencies:
+    currency-symbol-map: "npm:^5.1.0"
+  checksum: 10/a74865cd9493ffd2d792211cea2b67477ef2332b8e0e2091a88d5356f35b32c876fe2f9b002e49ecdceee4dcd0c5c7124ee48f1989c85fd26f317f0795627238
+  languageName: node
+  linkType: hard
+
 "@myboothmanager/common@npm:*, @myboothmanager/common@workspace:packages/Common":
   version: 0.0.0-use.local
   resolution: "@myboothmanager/common@workspace:packages/Common"
@@ -1615,8 +1659,8 @@ __metadata:
   resolution: "@myboothmanager/public@workspace:projects/Public"
   dependencies:
     "@mdi/font": "npm:^7.4.47"
-    "@myboothmanager/common": "npm:*"
-    "@myboothmanager/common-ui": "npm:*"
+    "@myboothmanager/common": ../../packages/Common
+    "@myboothmanager/common-ui": ../../packages/CommonUI
     "@rushstack/eslint-patch": "npm:^1.10.2"
     "@tsconfig/node20": "npm:^20.1.4"
     "@types/node": "npm:^20.12.7"

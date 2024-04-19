@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "*",
-    "@myboothmanager/common-ui": "*",
+    "@myboothmanager/common": "../../packages/Common",
+    "@myboothmanager/common-ui": "../../packages/CommonUI",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qrcode": "^1.5.3",

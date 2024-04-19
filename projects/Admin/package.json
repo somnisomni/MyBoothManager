@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "*",
-    "@myboothmanager/common-ui": "*",
+    "@myboothmanager/common": "../../packages/Common",
+    "@myboothmanager/common-ui": "../../packages/CommonUI",
     "chart.js": "^4.4.2",
     "chartjs-adapter-moment": "^1.0.1",
     "clone-deep": "^4.0.1",
