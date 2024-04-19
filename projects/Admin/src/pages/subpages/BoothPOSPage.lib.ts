@@ -69,10 +69,10 @@ class POSOrderList {
 export class POSOrderSimulationLayer {
   private readonly _orderList: POSOrderList = new POSOrderList();
 
-  private _goodsListOriginal: Record<number, IGoods> = {};
+  private _goodsListOriginal: Readonly<Record<number, IGoods>> = {};
   private _goodsListSimulated: Record<number, IGoods> = {};
 
-  private _combinationListOriginal: Record<number, IGoodsCombination> = {};
+  private _combinationListOriginal: Readonly<Record<number, IGoodsCombination>> = {};
   private _combinationListSimulated: Record<number, IGoodsCombination> = {};
 
   constructor(
@@ -89,10 +89,10 @@ export class POSOrderSimulationLayer {
   reset(goodsList: Record<number, IGoods>, combinationList: Record<number, IGoodsCombination>) {
     this._orderList.clear();
 
-    this._goodsListOriginal = deepClone(goodsList);
+    this._goodsListOriginal = Object.seal(Object.freeze(deepClone(goodsList)));
     this._goodsListSimulated = deepClone(goodsList);
 
-    this._combinationListOriginal = deepClone(combinationList);
+    this._combinationListOriginal = Object.seal(Object.freeze(deepClone(combinationList)));
     this._combinationListSimulated = deepClone(combinationList);
   }
 
