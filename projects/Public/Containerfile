@@ -11,30 +11,23 @@ ENV VITE_BASE_PATH=${BASE_PATH}
 
 # Copy files
 WORKDIR /build
+COPY package.json .
 COPY packages/      packages/
 COPY projects/Public projects/Public
 
-# Build common package
-WORKDIR /build/packages/Common
-# Workaround
-RUN rm .containerignore
+# Build setup
 RUN yarn set version berry
 RUN yarn install
-RUN yarn build
+
+# Build common package
+RUN yarn common build
 
 # Build common UI package
-WORKDIR /build/packages/CommonUI
-# Workaround
-RUN rm .containerignore
-RUN yarn set version berry
 RUN yarn install
-RUN yarn build
+RUN yarn install && yarn commonui build
 
 # Build public frontend
-WORKDIR /build/projects/Public
-RUN yarn set version berry
-RUN yarn install
-RUN yarn build
+RUN yarn install && yarn public build
 
 ### PRODUCTION STAGE ###
 FROM node:lts-alpine as production

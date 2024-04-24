@@ -3,22 +3,19 @@ FROM node:lts-alpine as build
 
 # Copy files
 WORKDIR /build
-COPY packages/        packages/
+COPY package.json .
+COPY packages/Common  packages/Common
 COPY projects/Backend projects/Backend
 
-# Build common package
-WORKDIR /build/packages/Common
-# Workaround
-RUN rm .containerignore
+# Build setup
 RUN yarn set version berry
 RUN yarn install
-RUN yarn build
+
+# Build common package
+RUN yarn common build
 
 # Build backend
-WORKDIR /build/projects/Backend
-RUN yarn set version berry
-RUN yarn install
-RUN yarn build
+RUN yarn backend build
 
 ### PRODUCTION STAGE ###
 FROM node:lts-alpine as production
