@@ -17,7 +17,7 @@
 import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
 
 @Component({

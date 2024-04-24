@@ -37,7 +37,7 @@
 import { GoodsOrderPaymentMethod, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon } from "@/lib/enum-to-string";
 
 @Component({

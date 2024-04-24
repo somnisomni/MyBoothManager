@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import { usePublicStore } from "./stores/public";
+import { usePublicStore } from "@/plugins/stores/public";
 
 @Component({})
 export default class App extends Vue {
@@ -28,3 +28,4 @@ export default class App extends Vue {
   }
 }
 </script>
+./plugins/stores/public

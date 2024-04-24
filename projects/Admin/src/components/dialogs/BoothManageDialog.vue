@@ -80,8 +80,8 @@ import { reactive } from "vue";
 import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
 import { useDate } from "vuetify";
 import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
-import { useAdminStore } from "@/stores/admin";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {

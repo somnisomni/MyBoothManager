@@ -45,9 +45,9 @@
 <script lang="ts">
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialog.vue";
 

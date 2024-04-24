@@ -74,7 +74,7 @@ import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decora
 import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 
 export enum FormFieldType {
   TEXT = "text",

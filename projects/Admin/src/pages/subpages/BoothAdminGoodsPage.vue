@@ -49,7 +49,7 @@ import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";

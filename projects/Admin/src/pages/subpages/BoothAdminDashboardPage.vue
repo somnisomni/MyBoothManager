@@ -14,7 +14,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import BoothStatusPanel from "@/components/dashboard/BoothStatusPanel.vue";
 import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
 

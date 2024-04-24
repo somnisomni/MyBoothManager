@@ -42,8 +42,8 @@
 <script lang="ts">
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { useAdminStore } from "@/stores/admin";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({})
 export default class BoothStatusUpdateDialog extends Vue {

@@ -62,7 +62,7 @@ import { currencySymbolInfo } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import deepClone from "clone-deep";
 import { POSOrderSimulationLayer, type IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 
 @Component({
   emits: ["confirm", "deleteRequest"],

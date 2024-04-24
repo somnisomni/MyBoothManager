@@ -32,7 +32,7 @@ import type { IGoodsOrderFilterSetting } from "../goods/GoodsOrderListView.vue";
 import { GoodsOrderPaymentMethod, type IGoods } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { getUploadFilePath } from "@/lib/functions";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
 import SelectableGoodsListView from "../goods/SelectableGoodsListView.vue";
 

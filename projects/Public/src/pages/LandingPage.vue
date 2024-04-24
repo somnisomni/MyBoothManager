@@ -25,7 +25,7 @@
 import { BoothStatus, type ErrorCodes, type IBooth } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import BoothListView from "@/components/booth/BoothListView.vue";
-import { usePublicStore } from "@/stores/public";
+import { usePublicStore } from "@/plugins/stores/public";
 import router from "@/plugins/router";
 
 @Component({

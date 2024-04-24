@@ -54,10 +54,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothStatusUpdateDialog from "@/components/dialogs/BoothStatusUpdateDialog.vue";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import DashboardPanel from "./DashboardPanel.vue";
 
 @Component({

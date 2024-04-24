@@ -16,7 +16,7 @@
 import type { IAccountCreateRequest } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import AdminAPI from "@/lib/api-admin";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 
 @Component({})
 export default class SuperAdminPage extends Vue {

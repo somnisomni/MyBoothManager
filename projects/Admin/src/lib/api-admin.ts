@@ -1,5 +1,5 @@
 import * as CT from "@myboothmanager/common";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/plugins/stores/auth";
 
 export default class AdminAPI {
   private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthStore().authTokenData!.accessToken);

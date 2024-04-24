@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
 import { BoothStatus } from "@myboothmanager/common";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 
 @Component({})

@@ -54,9 +54,9 @@ import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoods
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { reactive , readonly, ref, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";

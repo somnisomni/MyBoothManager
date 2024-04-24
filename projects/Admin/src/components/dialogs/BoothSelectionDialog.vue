@@ -42,9 +42,9 @@ import { Vue, Component, Model, Watch } from "vue-facing-decorator";
 import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { ref, type Ref as VueRef } from "vue";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothManageDialog from "./BoothManageDialog.vue";
 

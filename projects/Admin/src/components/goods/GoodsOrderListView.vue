@@ -16,7 +16,7 @@
 import type { GoodsOrderPaymentMethod, IGoodsOrder } from "@myboothmanager/common";
 import type { VListItem } from "vuetify/components";
 import { Component, Prop, Ref, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 

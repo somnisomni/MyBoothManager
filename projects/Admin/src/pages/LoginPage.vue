@@ -66,8 +66,8 @@
 import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import router from "@/plugins/router";
-import { useAuthStore } from "@/stores/auth";
-import { useAdminStore } from "@/stores/admin";
+import { useAuthStore } from "@/plugins/stores/auth";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { Const } from "@/lib/const";
 
 @Component({})

@@ -74,8 +74,8 @@
 import { APP_NAME, type GoodsOrderPaymentMethod, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest, type IGoodsOrderDetailItemBase } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/BoothPOSPage.lib";
-import { useAdminStore } from "@/stores/admin";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
 import POSListResetConfirmDialog from "../dialogs/POSListResetConfirmDialog.vue";
 import POSOrderConfirmDialog from "../dialogs/POSOrderConfirmDialog.vue";

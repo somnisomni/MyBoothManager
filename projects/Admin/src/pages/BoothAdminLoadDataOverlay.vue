@@ -16,8 +16,8 @@
 <script lang="ts">
 import type { ErrorCodes } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({
   emits: ["completed"],

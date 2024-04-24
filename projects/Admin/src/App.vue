@@ -22,7 +22,7 @@
 import { Vue, Component } from "vue-facing-decorator";
 import { APP_PRIMARY_COLOR } from "@myboothmanager/common-ui";
 import AdminAPI from "@/lib/api-admin";
-import { useAdminAPIStore } from "./stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({})
 export default class App extends Vue {

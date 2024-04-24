@@ -27,7 +27,7 @@
 <script lang="ts">
 import type { IBoothMember } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";

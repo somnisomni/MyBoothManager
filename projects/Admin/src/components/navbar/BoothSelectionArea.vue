@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import BoothSelectionDialog from "@/components/dialogs/BoothSelectionDialog.vue";
 
 @Component({

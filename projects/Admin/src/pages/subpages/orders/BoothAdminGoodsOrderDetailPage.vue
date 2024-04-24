@@ -145,8 +145,8 @@ import { APP_NAME, GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderDetailIte
 import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import html2canvas from "html2canvas";
-import { useAdminStore } from "@/stores/admin";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})

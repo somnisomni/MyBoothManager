@@ -73,7 +73,7 @@
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
 import router from "@/plugins/router";
 import { Const } from "@/lib/const";

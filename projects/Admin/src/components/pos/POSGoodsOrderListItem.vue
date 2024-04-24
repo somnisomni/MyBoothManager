@@ -42,7 +42,7 @@
 import type { IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { getUploadFilePath } from "@/lib/functions";
 
 @Component({

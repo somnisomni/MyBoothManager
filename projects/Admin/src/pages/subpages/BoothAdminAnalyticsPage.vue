@@ -51,9 +51,9 @@ import "chartjs-adapter-moment";
 import { Component, Vue } from "vue-facing-decorator";
 import { Chart } from "vue-chartjs";
 import colors from "vuetify/util/colors";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 
 ChartJS.register();
 

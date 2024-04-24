@@ -10,8 +10,8 @@ import BoothAdminGoodsOrdersRootPage from "@/pages/subpages/orders/BoothAdminGoo
 import BoothAdminGoodsOrdersListPage from "@/pages/subpages/orders/BoothAdminGoodsOrdersListPage.vue";
 import BoothAdminGoodsOrderDetailPage from "@/pages/subpages/orders/BoothAdminGoodsOrderDetailPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
-import { useAdminStore } from "@/stores/admin";
-import { useAuthStore } from "@/stores/auth";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAuthStore } from "@/plugins/stores/auth";
 
 const isProd: boolean = import.meta.env.PROD;
 const placeholderRoute: RouteRecordRaw = {

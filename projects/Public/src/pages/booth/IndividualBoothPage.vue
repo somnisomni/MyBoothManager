@@ -104,10 +104,10 @@ import { useRoute } from "vue-router";
 import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import SharePanel from "@/components/booth/SharePanel.vue";
-import { usePublicStore } from "@/stores/public";
+import { usePublicStore } from "@/plugins/stores/public";
+import { useLocalStore } from "@/plugins/stores/local";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFilePath } from "@/lib/common-functions";
-import { useLocalStore } from "@/stores/local";
 
 @Component({
   components: {

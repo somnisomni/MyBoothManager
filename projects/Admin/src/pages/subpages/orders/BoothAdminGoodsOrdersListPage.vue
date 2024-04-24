@@ -61,9 +61,9 @@ import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
 import { ref } from "vue";
 import { type RouteRecordRaw } from "vue-router";
-import { useAdminStore } from "@/stores/admin";
+import { useAdminStore } from "@/plugins/stores/admin";
 import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
-import { useAdminAPIStore } from "@/stores/api";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDialog.vue";
 
 @Component({
