@@ -125,12 +125,12 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   get totalSaleCount(): number {
     return Object.values(this.boothGoodsOrders).filter((order) => order.status !== GoodsOrderStatus.CANCELED).reduce((acc, cur) =>
       acc + cur.order.reduce((orderAcc, orderCur) =>
-        orderAcc + new Number(orderCur.quantity).valueOf(), 0), 0);
+        orderAcc + (orderCur.cId ? orderCur.quantity * (orderCur.combinedGoods ?? []).length : orderCur.quantity), 0), 0);
   }
 
   get totalSalePrice(): number {
     return Object.values(this.boothGoodsOrders).filter((order) => order.status !== GoodsOrderStatus.CANCELED).reduce((acc, cur) =>
-      acc + new Number(cur.totalPrice).valueOf(), 0);
+      acc + Number(cur.totalPrice), 0);
   }
 
   get currencySymbol(): string {
