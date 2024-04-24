@@ -113,7 +113,7 @@ export default class BoothAdminClosingPage extends Vue {
     for(const member of Object.values(useAdminStore().currentBooth.boothMembers ?? {})) {
       map.set(member.id,
               Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}).filter(
-                (goods) => goods.ownerMemberIds?.includes(member.id),
+                (goods) => goods.ownerMembersId?.includes(member.id),
               ).map((goods) => goods.id));
     }
 
@@ -121,11 +121,11 @@ export default class BoothAdminClosingPage extends Vue {
   }
 
   beforeCreate() {
-    if(useAdminStore().currentBooth.booth && useAdminStore().currentBooth.booth!.status !== BoothStatus.CLOSE) {
+    /* if(useAdminStore().currentBooth.booth && useAdminStore().currentBooth.booth!.status !== BoothStatus.CLOSE) {
       alert("부스가 운영 종료 상태일 때만 접근할 수 있습니다.");
 
       router.back();
-    }
+    } */
   }
 }
 </script>

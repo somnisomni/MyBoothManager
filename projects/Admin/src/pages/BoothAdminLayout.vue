@@ -32,9 +32,7 @@
         <VListItem prepend-icon="mdi-chart-bar" title="통계" value="analytics"
                    :to="{ name: 'admin-analytics' }" exact />
         <VListItem prepend-icon="mdi-cash-register" title="정산" value="closing"
-                   :to="{ name: 'admin-closing' }" exact
-                   :disabled="!currentBoothIsClosed"
-                   :subtitle="!currentBoothIsClosed ? '부스가 운영 종료 상태이어야 합니다.' : undefined" />
+                   :to="{ name: 'admin-closing' }" exact />
 
         <VDivider />
 
