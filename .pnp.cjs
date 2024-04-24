@@ -2120,6 +2120,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"],\
           ["vite", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:5.2.9"],\
           ["vite-plugin-vuetify", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:2.0.3"],\
+          ["vite-plugin-webpackchunkname", "npm:1.0.1"],\
           ["vue", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:3.4.23"],\
           ["vue-chartjs", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:5.3.1"],\
           ["vue-facing-decorator", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:3.0.4"],\
@@ -2360,6 +2361,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"],\
           ["vite", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:5.2.9"],\
           ["vite-plugin-vuetify", "virtual:f75df62889f03326b2c11edbc1318b237cd8566a979191a3cc19e167bb72fc62e71fc9ff267d815ab01eafc7f54fc1f0311e61206b83ad25f9ff9e6cbfaa8516#npm:2.0.3"],\
+          ["vite-plugin-webpackchunkname", "npm:1.0.1"],\
           ["vue", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:3.4.23"],\
           ["vue-facing-decorator", "virtual:c068a2253f5cf6c090fa9be09d0bb47c9a88ff702c16831d0a0830dfe8b1cc4c60b060eaa0815f3ab336343198db5bd19d5eb62f6c8c3265d65922a5f0718ae3#npm:3.0.4"],\
           ["vue-router", "virtual:bcb0c8f53ab58abe8c9fc14008b3858742846e09b5083d2db4ebe76672378c61a920a523eec9f3259862f1c4b516b8212021605d957da1420766c447275f6f18#npm:4.3.1"],\
@@ -2762,6 +2764,29 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@pkgjs-parseargs-npm-0.11.0-cd2a3fe948-115e8ceeec.zip/node_modules/@pkgjs/parseargs/",\
         "packageDependencies": [\
           ["@pkgjs/parseargs", "npm:0.11.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@rollup/plugin-alias", [\
+      ["npm:5.1.0", {\
+        "packageLocation": "./.yarn/cache/@rollup-plugin-alias-npm-5.1.0-5f8a6a898f-2749f9563d.zip/node_modules/@rollup/plugin-alias/",\
+        "packageDependencies": [\
+          ["@rollup/plugin-alias", "npm:5.1.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:b69c9a1fa9871637d8184594d912590374b2c01fd768525cfe6a78c540bbfae98eaaa7b9b2874b885cec8f20107fe37da2133c6d04d3fcf96f403d1c06213e6c#npm:5.1.0", {\
+        "packageLocation": "./.yarn/__virtual__/@rollup-plugin-alias-virtual-18ee256475/0/cache/@rollup-plugin-alias-npm-5.1.0-5f8a6a898f-2749f9563d.zip/node_modules/@rollup/plugin-alias/",\
+        "packageDependencies": [\
+          ["@rollup/plugin-alias", "virtual:b69c9a1fa9871637d8184594d912590374b2c01fd768525cfe6a78c540bbfae98eaaa7b9b2874b885cec8f20107fe37da2133c6d04d3fcf96f403d1c06213e6c#npm:5.1.0"],\
+          ["@types/rollup", null],\
+          ["rollup", null],\
+          ["slash", "npm:4.0.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/rollup",\
+          "rollup"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -11403,6 +11428,13 @@ const RAW_RUNTIME_STATE =
           ["slash", "npm:3.0.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:4.0.0", {\
+        "packageLocation": "./.yarn/cache/slash-npm-4.0.0-ce4bbc4a80-da8e4af737.zip/node_modules/slash/",\
+        "packageDependencies": [\
+          ["slash", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["smart-buffer", [\
@@ -12673,6 +12705,19 @@ const RAW_RUNTIME_STATE =
           "vite",\
           "vue",\
           "vuetify"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["vite-plugin-webpackchunkname", [\
+      ["npm:1.0.1", {\
+        "packageLocation": "./.yarn/cache/vite-plugin-webpackchunkname-npm-1.0.1-b69c9a1fa9-256d02f6ff.zip/node_modules/vite-plugin-webpackchunkname/",\
+        "packageDependencies": [\
+          ["vite-plugin-webpackchunkname", "npm:1.0.1"],\
+          ["@rollup/plugin-alias", "virtual:b69c9a1fa9871637d8184594d912590374b2c01fd768525cfe6a78c540bbfae98eaaa7b9b2874b885cec8f20107fe37da2133c6d04d3fcf96f403d1c06213e6c#npm:5.1.0"],\
+          ["@rollup/pluginutils", "virtual:87b2a20ce9fad14e835761345f9a496a3570e210e7bc11638d541e97966d62df626f9938919b907e1a820866405f6d975ee424c19f459a267a27b979d2c61069#npm:5.1.0"],\
+          ["es-module-lexer", "npm:1.5.0"],\
+          ["magic-string", "npm:0.30.10"]\
         ],\
         "linkType": "HARD"\
       }]\

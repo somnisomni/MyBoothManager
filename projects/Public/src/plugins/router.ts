@@ -1,7 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-import NotFoundErrorPage from "@/pages/NotFoundErrorPage.vue";
-import LandingPage from "@/pages/LandingPage.vue";
-import IndividualBoothPage from "@/pages/booth/IndividualBoothPage.vue";
+
+/* Routes (lazy-loaded using Webpack code splitting) */
+const NotFoundErrorPage = () => import(/* webpackChunkName: "pages/fundamentals" */ "@/pages/NotFoundErrorPage.vue");
+
+const LandingPage = () => import(/* webpackChunkName: "pages/main", webpackPrefetch: true */ "@/pages/LandingPage.vue");
+
+const IndividualBoothPage = () => import(/* webpackChunkName: "pages/booth" */ "@/pages/booth/IndividualBoothPage.vue");
+/* === */
 
 /* Router definitions */
 const router = createRouter({

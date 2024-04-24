@@ -41,6 +41,7 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.9",
     "vite-plugin-vuetify": "^2.0.3",
+    "vite-plugin-webpackchunkname": "^1.0.1",
     "vue-facing-decorator": "^3.0.4",
     "vue-tsc": "^2.0.13"
   }

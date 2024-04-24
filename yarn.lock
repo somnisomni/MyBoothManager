@@ -1489,6 +1489,7 @@ __metadata:
     typescript: "npm:^5.4.5"
     vite: "npm:^5.2.9"
     vite-plugin-vuetify: "npm:^2.0.3"
+    vite-plugin-webpackchunkname: "npm:^1.0.1"
     vue: "npm:^3.4.23"
     vue-chartjs: "npm:^5.3.1"
     vue-facing-decorator: "npm:^3.0.4"
@@ -1680,6 +1681,7 @@ __metadata:
     typescript: "npm:^5.4.5"
     vite: "npm:^5.2.9"
     vite-plugin-vuetify: "npm:^2.0.3"
+    vite-plugin-webpackchunkname: "npm:^1.0.1"
     vue: "npm:^3.4.23"
     vue-facing-decorator: "npm:^3.0.4"
     vue-router: "npm:^4.3.1"
@@ -1941,7 +1943,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^5.1.0":
+"@rollup/plugin-alias@npm:*":
+  version: 5.1.0
+  resolution: "@rollup/plugin-alias@npm:5.1.0"
+  dependencies:
+    slash: "npm:^4.0.0"
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 10/2749f9563dba9274e4324fcd14ffe761fa66ee3baab307ba583d0348adfa2c1d2a164f59eac8c26a9ce7c713a99a991a831c072101e83697157ccf082c362310
+  languageName: node
+  linkType: hard
+
+"@rollup/pluginutils@npm:*, @rollup/pluginutils@npm:^5.1.0":
   version: 5.1.0
   resolution: "@rollup/pluginutils@npm:5.1.0"
   dependencies:
@@ -4550,7 +4566,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-module-lexer@npm:^1.2.1":
+"es-module-lexer@npm:*, es-module-lexer@npm:^1.2.1":
   version: 1.5.0
   resolution: "es-module-lexer@npm:1.5.0"
   checksum: 10/d0e198d8642cb42aa82d86f2c6830cb6786916171a3e693046c11500c0cb62e77703940e58757db8aafa8a86fa2a9cc1c493dcd22c0b03c4a72dede3ce5c7dd1
@@ -7265,21 +7281,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"magic-string@npm:*, magic-string@npm:^0.30.8":
+  version: 0.30.10
+  resolution: "magic-string@npm:0.30.10"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
+  checksum: 10/9f8bf6363a14c98a9d9f32ef833b194702a5c98fb931b05ac511b76f0b06fd30ed92beda6ca3261d2d52d21e39e891ef1136fbd032023f6cbb02d0b7d5767201
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:0.30.5":
   version: 0.30.5
   resolution: "magic-string@npm:0.30.5"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
   checksum: 10/c8a6b25f813215ca9db526f3a407d6dc0bf35429c2b8111d6f1c2cf6cf6afd5e2d9f9cd189416a0e3959e20ecd635f73639f9825c73de1074b29331fe36ace59
-  languageName: node
-  linkType: hard
-
-"magic-string@npm:^0.30.8":
-  version: 0.30.10
-  resolution: "magic-string@npm:0.30.10"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: 10/9f8bf6363a14c98a9d9f32ef833b194702a5c98fb931b05ac511b76f0b06fd30ed92beda6ca3261d2d52d21e39e891ef1136fbd032023f6cbb02d0b7d5767201
   languageName: node
   linkType: hard
 
@@ -9196,6 +9212,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"slash@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "slash@npm:4.0.0"
+  checksum: 10/da8e4af73712253acd21b7853b7e0dbba776b786e82b010a5bfc8b5051a1db38ed8aba8e1e8f400dd2c9f373be91eb1c42b66e91abb407ff42b10feece5e1d2d
+  languageName: node
+  linkType: hard
+
 "smart-buffer@npm:^4.2.0":
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
@@ -10156,6 +10179,18 @@ __metadata:
     vue: ^3.0.0
     vuetify: ^3.0.0
   checksum: 10/59ff2d8b47814eee5d8eeda267ac12ad9813d95b5ecd0334628e629600a706281f017bf22f715321bbd86ab5080ff480fafe0a98bfd7fbe183c8ab861f34a954
+  languageName: node
+  linkType: hard
+
+"vite-plugin-webpackchunkname@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "vite-plugin-webpackchunkname@npm:1.0.1"
+  dependencies:
+    "@rollup/plugin-alias": "npm:*"
+    "@rollup/pluginutils": "npm:*"
+    es-module-lexer: "npm:*"
+    magic-string: "npm:*"
+  checksum: 10/256d02f6ff2e2d0178afcf9e091014e85081c48d4c447749218d325d1521100a3b90ab546e3abcef15c0d2419f000dff0178a977a46e3f46f270e7def9979be0
   languageName: node
   linkType: hard
 

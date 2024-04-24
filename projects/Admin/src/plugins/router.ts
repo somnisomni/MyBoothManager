@@ -1,17 +1,29 @@
 import { createRouter, createWebHistory, type RouteRecordName, type RouteRecordRaw } from "vue-router";
-import NotFoundErrorPage from "@/pages/NotFoundErrorPage.vue";
-import PlaceholderPage from "@/pages/dev/PlaceholderPage.vue";
-import BoothAdminRoot from "@/pages/BoothAdminRoot.vue";
-import BoothAdminLayout from "@/pages/BoothAdminLayout.vue";
-import BoothAdminInfoPage from "@/pages/subpages/BoothAdminInfoPage.vue";
-import BoothAdminDashboardPage from "@/pages/subpages/BoothAdminDashboardPage.vue";
-import BoothAdminGoodsPage from "@/pages/subpages/BoothAdminGoodsPage.vue";
-import BoothAdminGoodsOrdersRootPage from "@/pages/subpages/orders/BoothAdminGoodsOrdersRootPage.vue";
-import BoothAdminGoodsOrdersListPage from "@/pages/subpages/orders/BoothAdminGoodsOrdersListPage.vue";
-import BoothAdminGoodsOrderDetailPage from "@/pages/subpages/orders/BoothAdminGoodsOrderDetailPage.vue";
-import LogoutPage from "@/pages/LogoutPage.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAuthStore } from "@/plugins/stores/auth";
+
+/* Routes (lazy-loaded using Webpack code splitting) */
+const NotFoundErrorPage = () => import(/* webpackChunkName: "pages/fundamentals" */ "@/pages/NotFoundErrorPage.vue");
+const LogoutPage        = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LogoutPage.vue");
+const LoginPage         = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LoginPage.vue");
+
+const PlaceholderPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/dev/PlaceholderPage.vue");
+const SuperAdminPage  = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/superadmin/SuperAdminPage.vue");
+
+const BoothAdminRoot          = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/BoothAdminRoot.vue");
+const BoothAdminLayout        = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/BoothAdminLayout.vue");
+const BoothPOSPage            = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothPOSPage.vue");
+const BoothAdminInfoPage      = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminInfoPage.vue");
+const BoothAdminDashboardPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminDashboardPage.vue");
+const BoothAdminAnalyticsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminAnalyticsPage.vue");
+const BoothAdminClosingPage   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminClosingPage.vue");
+
+const BoothAdminGoodsPage     = () => import(/* webpackChunkName: "pages/admin-goods" */ "@/pages/subpages/BoothAdminGoodsPage.vue");
+
+const BoothAdminGoodsOrdersRootPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrdersRootPage.vue");
+const BoothAdminGoodsOrdersListPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrdersListPage.vue");
+const BoothAdminGoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrderDetailPage.vue");
+/* === */
 
 const isProd: boolean = import.meta.env.PROD;
 const placeholderRoute: RouteRecordRaw = {
@@ -35,7 +47,7 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("@/pages/LoginPage.vue"),
+      component: LoginPage,
     },
     {
       path: "/logout",
@@ -47,7 +59,7 @@ const router = createRouter({
     {
       path: "/superadmin",
       name: "superadmin",
-      component: () => import("@/pages/superadmin/SuperAdminPage.vue"),
+      component: SuperAdminPage,
     },
 
     /* Admin Routes */
@@ -96,12 +108,12 @@ const router = createRouter({
             {
               path: "analytics",
               name: "admin-analytics",
-              component: () => import("@/pages/subpages/BoothAdminAnalyticsPage.vue"),
+              component: BoothAdminAnalyticsPage,
             },
             {
               path: "closing",
               name: "admin-closing",
-              component: () => import("@/pages/subpages/BoothAdminClosingPage.vue"),
+              component: BoothAdminClosingPage,
             },
             {
               path: "utility/price-calculator",
@@ -113,7 +125,7 @@ const router = createRouter({
         {
           path: "/pos",
           name: "admin-pos",
-          component: () => import("@/pages/subpages/BoothPOSPage.vue"),
+          component: BoothPOSPage,
         },
       ],
     },
