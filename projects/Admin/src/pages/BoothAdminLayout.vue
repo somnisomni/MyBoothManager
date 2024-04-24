@@ -38,11 +38,11 @@
 
         <VDivider />
 
-        <VListSubheader>도구</VListSubheader>
+        <!-- <VListSubheader>도구</VListSubheader>
         <VListItem prepend-icon="mdi-cash" title="굿즈 가격 계산기" value="price_calculator"
                    :to="{ name: 'admin-utility-price-calculator' }" exact />
 
-        <VDivider />
+        <VDivider /> -->
 
         <VListSubheader>계정</VListSubheader>
         <VListItem density="compact" min-height="30px">
