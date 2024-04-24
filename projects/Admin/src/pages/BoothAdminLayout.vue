@@ -1,7 +1,5 @@
 <template>
   <div class="root">
-    <img hidden class="bgimage no-interaction" src="@/res/images/bgimage_jeomo.png" />
-
     <VAppBar class="pr-6"
              :class="{ 'pl-6': navPersistent }">
       <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="내비게이션 메뉴 전환" />
