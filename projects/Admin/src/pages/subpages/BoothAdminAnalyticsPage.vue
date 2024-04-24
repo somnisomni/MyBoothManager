@@ -31,7 +31,11 @@
       <VDivider class="mb-6" />
 
       <Chart class="bg-background" type="line" :options="CHART_ANALYTICS_OPTIONS" :data="chartOrderHistoryDataOfSelectedDay" />
-      <p class="text-disabled text-body-2 text-right">취소된 판매 기록은 통계에 포함되지 않습니다.</p>
+      <p class="text-disabled text-body-2 text-right mt-2">※ 취소된 판매 기록은 통계에 포함되지 않습니다.</p>
+
+      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 기록 개수: {{ orderHistoryCountOfCurrentSelectedDay.toLocaleString() }}개</p>
+      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 굿즈 개수: {{ orderHistoryTotalStockQuantityOfCurrentSelectedDay.toLocaleString() }}개</p>
+      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 금액: {{ currencySymbol }}{{ orderHistoryTotalIncomeOfCurrentSelectedDay.toLocaleString() }}</p>
     </div>
     <div v-else>
       <h2 class="text-center">등록된 판매 기록이 없습니다.</h2>
@@ -257,6 +261,20 @@ export default class BoothAdminAnalyticsPage extends Vue {
         yAxisID: "price",
       }],
     };
+  }
+
+  get orderHistoryCountOfCurrentSelectedDay(): number {
+    return this.orderHistoryOfCurrentSelectedDay.length;
+  }
+
+  get orderHistoryTotalIncomeOfCurrentSelectedDay(): number {
+    return this.orderHistoryOfCurrentSelectedDay.reduce((acc, cur) => acc + cur.totalPrice, 0);
+  }
+
+  get orderHistoryTotalStockQuantityOfCurrentSelectedDay(): number {
+    return this.orderHistoryOfCurrentSelectedDay.reduce(
+      (acc, cur) => acc + cur.order.reduce(
+        (acc2, cur2) => acc2 + (cur2.cId ? cur2.quantity * (cur2.combinedGoods ?? []).length : cur2.quantity), 0), 0);
   }
 }
 </script>
