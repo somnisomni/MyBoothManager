@@ -129,10 +129,11 @@ const router = createRouter({
 
 /* Router global hooks */
 // Auth route guard
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const isTokenAvailable = !!useAuthStore().isAuthTokenValid;
   // const isAccountDataAvailable = !!useAdminStore().currentAccount;
-  const isAllAvailable = isTokenAvailable; /* && isAccountDataAvailable; */
+  // const isAuthValid = await useAuthStore().adminAuthCheck();
+  const isAllAvailable = isTokenAvailable; /* && (isAuthValid === true); */ /* && isAccountDataAvailable; */
 
   // SuperAdmin
   if(isAllAvailable

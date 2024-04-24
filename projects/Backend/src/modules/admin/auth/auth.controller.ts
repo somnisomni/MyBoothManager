@@ -1,4 +1,5 @@
-import { Controller, Post, HttpCode, Body, UseGuards } from "@nestjs/common";
+import { Controller, Post, HttpCode, Body, UseGuards, Get } from "@nestjs/common";
+import { ISuccessResponse } from "@myboothmanager/common";
 import { LoginDTO } from "./dto/login.dto";
 import { AuthService } from "./auth.service";
 import { AdminAuthGuard, Public } from "./auth.guard";
@@ -35,5 +36,11 @@ export class AuthController {
   @HttpCode(200)
   async refresh(@Body() refreshDto: RefreshDTO) {
     return await this.authService.refresh(refreshDto);
+  }
+
+  @Get("check")
+  @HttpCode(200)
+  check() {
+    return { success: true } as ISuccessResponse;
   }
 }

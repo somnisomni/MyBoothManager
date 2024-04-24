@@ -41,6 +41,10 @@ export default class AdminAPI {
     return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/refresh", payload));
   }
 
+  static async checkAuth() {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.GET("auth/check"));
+  }
+
   /* Fetch */
   static async fetchCurrentAccountInfo() {
     return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.GET("account"));

@@ -55,7 +55,7 @@
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
-import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoodsCategory } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/stores/admin";

@@ -1,4 +1,4 @@
-import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type IAccountLoginTokenData } from "@myboothmanager/common";
+import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type IAccountLoginTokenData, type ISuccessResponse } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
@@ -73,6 +73,19 @@ const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function adminAuthCheck(): Promise<boolean | ErrorCodes> {
+    if(!id.value || !authTokenData.value) return true;
+
+    const response = await AdminAPI.checkAuth();
+
+    if(!response || !(response as ISuccessResponse).success) {
+      invalidateLoginData();
+      return ErrorCodes.NEED_RELOGIN;
+    }
+
+    return true;
+  }
+
   function invalidateLoginData(): void {
     $adminStore.clearAllStates();
     id.value = null;
@@ -87,6 +100,7 @@ const useAuthStore = defineStore("auth", () => {
 
     adminLogin,
     adminAuthRefresh,
+    adminAuthCheck,
     invalidateLoginData,
   };
 }, {
