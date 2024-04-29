@@ -13,7 +13,7 @@ export function jsonContains<T extends Model<any, any>>(column: keyof T, contain
 }
 
 export async function findOneByPk<T extends Model<any, any>>(model: { new (): T }, pk: number, includeModels?: Includeable[], transaction?: Transaction, excludeSequelizeInternalKeys: boolean = true): Promise<T> {
-  let target = null;
+  let target: Model<any, any> | null = null;
 
   try {
     target = await (model as unknown as ModelDefined<any, any>).findByPk(pk, {
