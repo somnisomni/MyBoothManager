@@ -8,7 +8,7 @@ import UploadStorage from "./uploadstorage";
 import GoodsCombination from "./goods-combination";
 
 export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
-                               & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
+                                      & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
 
 @Table
 @DefaultScope(() => ({

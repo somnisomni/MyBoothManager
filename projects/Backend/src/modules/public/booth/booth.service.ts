@@ -1,7 +1,6 @@
-import type Goods from "@/db/models/goods";
 import type GoodsCategory from "@/db/models/goods-category";
 import { Injectable } from "@nestjs/common";
-import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { BoothStatus, IBooth, IGoods, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import { WhereOptions , Op } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
@@ -60,7 +59,7 @@ export class PublicBoothService {
     return { value: await Booth.count() };
   }
 
-  async findAllGoodsOfBooth(boothId: number): Promise<Array<Goods>> {
+  async findAllGoodsOfBooth(boothId: number): Promise<Array<IGoods>> {
     return await this.publicGoodsService.findAll(boothId);
   }
 

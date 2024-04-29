@@ -1611,19 +1611,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=fce53e&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=2a79c6&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/a09b789ddd0178835d8cf9c5da90ee92d983bb09769f589dbcbc1af9103cf859e094110a3f621f603ecdfa84cd6f4a8e0393fce2daa271f106e19bc19ca74363
+  checksum: 10/7833a80951865d87bfeb224f3b62bfcc26264d0830688f869b35bf6828185a951250ef108777c1a9dfdb02b22e74c370d01e4e327695c0684dd18f95fbc13fc6
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=fce53e&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=2a79c6&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/a09b789ddd0178835d8cf9c5da90ee92d983bb09769f589dbcbc1af9103cf859e094110a3f621f603ecdfa84cd6f4a8e0393fce2daa271f106e19bc19ca74363
+  checksum: 10/7833a80951865d87bfeb224f3b62bfcc26264d0830688f869b35bf6828185a951250ef108777c1a9dfdb02b22e74c370d01e4e327695c0684dd18f95fbc13fc6
   languageName: node
   linkType: hard
 

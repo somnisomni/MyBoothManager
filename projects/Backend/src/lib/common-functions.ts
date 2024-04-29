@@ -101,3 +101,11 @@ export function generateRandomDigestFileName() {
     },
   };
 }
+
+export function deleteKeys<T>(obj: T, keys: readonly (keyof T)[]): void {
+  // Delete keys from object in-place
+
+  for(const key of keys) {
+    delete obj[key];
+  }
+}

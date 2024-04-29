@@ -32,7 +32,16 @@ export interface IGoods extends IGoodsCommon {
   statusReason?: string | null;
   goodsImageUrl?: string;
 }
+
 export type IGoodsResponse = IGoods;
+
+export const GoodsWithoutAllStockInfoOmitKey = ["stockInitial", "stockRemaining"] as const;
+export type GoodsWithoutAllStockInfoOmitKey = "stockInitial" | "stockRemaining";
+export type IGoodsWithoutAllStockInfoResponse = Omit<IGoodsResponse, GoodsWithoutAllStockInfoOmitKey>;
+
+export const GoodsWithoutInitialStockInfoOmitKey = ["stockInitial"] as const;
+export type GoodsWithoutInitialStockInfoOmitKey = "stockInitial";
+export type IGoodsWithoutInitialStockInfoResponse = Omit<IGoodsResponse, GoodsWithoutInitialStockInfoOmitKey>;
 
 export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
   goodsImageId?: number | null;
