@@ -5,7 +5,6 @@ import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { PublicGoodsService } from "@/modules/public/goods/goods.service";
 import { UtilService } from "../util/util.service";
 import { UpdateGoodsDTO } from "./dto/update-goods.dto";
 import { CreateGoodsDTO } from "./dto/create-goods.dto";
@@ -13,9 +12,7 @@ import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } fro
 
 @Injectable()
 export class GoodsService {
-  constructor(
-    private readonly publicGoodsService: PublicGoodsService,
-    private readonly utilService: UtilService) { }
+  constructor(private readonly utilService: UtilService) { }
 
   private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
     const goods = await findOneByPk(Goods, goodsId);

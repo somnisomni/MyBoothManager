@@ -11,7 +11,11 @@ export default class APICaller {
     redirect: "error",
   };
 
-  constructor(private readonly apiHost: string, private readonly apiGroup: string = "", private readonly getAuthorizationToken: (() => string) | null | undefined = null, private readonly teapotPath: string = "teapot") {}
+  constructor(
+    private readonly apiHost: string,
+    private readonly apiGroup: string = "",
+    private readonly getAuthorizationToken: (() => string) | null | undefined = null,
+    private readonly teapotPath: string = "teapot") { }
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {

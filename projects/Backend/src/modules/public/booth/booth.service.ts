@@ -1,10 +1,11 @@
 import type GoodsCategory from "@/db/models/goods-category";
 import { Injectable } from "@nestjs/common";
-import { BoothStatus, IBooth, IGoods, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import { WhereOptions , Op } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
 import GoodsCombination from "@/db/models/goods-combination";
+import Goods from "@/db/models/goods";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
 import { PublicGoodsCombinationService } from "../goods-combination/goods-combination.service";
@@ -45,21 +46,19 @@ export class PublicBoothService {
       }),
     };
 
-    try {
-      return await Booth.findAll({
-        where,
-        attributes: {
-          exclude: SEQUELIZE_INTERNAL_KEYS,
-        },
-      });
-    } catch(err) { console.error(err); return []; }
+    return await Booth.findAll({
+      where,
+      attributes: {
+        exclude: SEQUELIZE_INTERNAL_KEYS,
+      },
+    });
   }
 
   async countAll(): Promise<IValueResponse> {
     return { value: await Booth.count() };
   }
 
-  async findAllGoodsOfBooth(boothId: number): Promise<Array<IGoods>> {
+  async findAllGoodsOfBooth(boothId: number): Promise<Array<Goods>> {
     return await this.publicGoodsService.findAll(boothId);
   }
 

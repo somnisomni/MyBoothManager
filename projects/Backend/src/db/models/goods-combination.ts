@@ -1,7 +1,8 @@
 import type { InternalKeysWithId } from "@/lib/types";
-import { GoodsStockVisibility, IGoodsCombinationModel } from "@myboothmanager/common";
+import { GoodsStockVisibility, GoodsWithoutAllStockInfoOmitKey, GoodsWithoutInitialStockInfoOmitKey, IGoodsCombinationModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany, DefaultScope } from "sequelize-typescript";
+import { deleteKeys } from "@/lib/common-functions";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
@@ -110,4 +111,18 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
 
   @BelongsTo(() => UploadStorage, "combinationImageId")
   declare combinationImage?: UploadStorage;
+
+
+  /* === Functions === */
+  getForPublic(): IGoodsCombinationModel {
+    const thisGet = this.get();
+
+    if(thisGet.stockVisibility === GoodsStockVisibility.HIDE_ALL) {
+      deleteKeys(thisGet as unknown as Record<string, unknown>, GoodsWithoutAllStockInfoOmitKey);
+    } else if(thisGet.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY) {
+      deleteKeys(thisGet as unknown as Record<string, unknown>, GoodsWithoutInitialStockInfoOmitKey);
+    }
+
+    return thisGet;
+  }
 }

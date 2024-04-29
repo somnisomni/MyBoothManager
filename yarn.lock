@@ -1526,6 +1526,7 @@ __metadata:
     app-root-path: "npm:^3.1.0"
     argon2: "npm:^0.40.1"
     chalk: "npm:^4"
+    class-transformer: "npm:^0.5.1"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^8"
     eslint-import-resolver-typescript: "npm:^3.6.1"
@@ -1611,19 +1612,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=2a79c6&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=f0c4e2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/7833a80951865d87bfeb224f3b62bfcc26264d0830688f869b35bf6828185a951250ef108777c1a9dfdb02b22e74c370d01e4e327695c0684dd18f95fbc13fc6
+  checksum: 10/f82dd32246a51b2a62eb956c31868e729f31cac8fbc0df330dd1bf59ca8907c2a97b68e1ebf334cd3e05ace780fca167d84d4a019c7069850db70024d5615eb5
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=2a79c6&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=f0c4e2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/7833a80951865d87bfeb224f3b62bfcc26264d0830688f869b35bf6828185a951250ef108777c1a9dfdb02b22e74c370d01e4e327695c0684dd18f95fbc13fc6
+  checksum: 10/f82dd32246a51b2a62eb956c31868e729f31cac8fbc0df330dd1bf59ca8907c2a97b68e1ebf334cd3e05ace780fca167d84d4a019c7069850db70024d5615eb5
   languageName: node
   linkType: hard
 
@@ -3824,6 +3825,13 @@ __metadata:
   version: 1.2.3
   resolution: "cjs-module-lexer@npm:1.2.3"
   checksum: 10/f96a5118b0a012627a2b1c13bd2fcb92509778422aaa825c5da72300d6dcadfb47134dd2e9d97dfa31acd674891dd91642742772d19a09a8adc3e56bd2f5928c
+  languageName: node
+  linkType: hard
+
+"class-transformer@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "class-transformer@npm:0.5.1"
+  checksum: 10/750327e3e9a5cf233c5234252f4caf6b06c437bf68a24acbdcfb06c8e0bfff7aa97c30428184813e38e08111b42871f20c5cf669ea4490f8ae837c09f08b31e7
   languageName: node
   linkType: hard
 
