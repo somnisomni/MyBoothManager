@@ -90,29 +90,36 @@
                         :goodsCategoryList="boothCategoryList"
                         :goodsImageUrlResolver="getUploadFilePath"
                         :editable="false"
-                        omitEmptyGoodsCategory />
+                        omitEmptyGoodsCategory
+                        @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
+                        @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)" />
           <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
         </VContainer>
       </div>
     </VScrollYReverseTransition>
   </VMain>
+
+  <GoodsItemDetailsDialog v-model="goodsItemDetailsDialogOpen"
+                          :data="goodsItemDetailsDialogTargetData" />
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
-import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
+import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/plugins/stores/public";
 import { useLocalStore } from "@/plugins/stores/local";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFilePath } from "@/lib/common-functions";
+import GoodsItemDetailsDialog from "@/components/dialogs/GoodsItemDetailsDialog.vue";
 
 @Component({
   components: {
     BoothInfoSection,
     SharePanel,
+    GoodsItemDetailsDialog,
   },
 })
 export default class IndividualBoothPage extends Vue {
@@ -131,6 +138,9 @@ export default class IndividualBoothPage extends Vue {
   boothCategoryList: Array<IGoodsCategory> = [];
 
   boothInfoExpanded: boolean = true;
+
+  goodsItemDetailsDialogOpen: boolean = false;
+  goodsItemDetailsDialogTargetData: GoodsBase | null = null;
 
   readonly dataPollingInterval: number = 30000; // 30 seconds
   dataPollingTimerId: NodeJS.Timeout | null = null;
@@ -240,6 +250,15 @@ export default class IndividualBoothPage extends Vue {
     this.isDataLoading = false;
 
     return errors.every((error) => error === ErrorCodes.SUCCESS) ? true : errors;
+  }
+
+  openGoodsItemDetailsDialog(id: number, isCombination: boolean = false) {
+    const targetData = isCombination ? this.boothCombinationList.find((combination) => combination.id === id) : this.boothGoodsList.find((goods) => goods.id === id);
+
+    if(targetData) {
+      this.goodsItemDetailsDialogTargetData = targetData;
+      this.goodsItemDetailsDialogOpen = true;
+    }
   }
 }
 </script>
