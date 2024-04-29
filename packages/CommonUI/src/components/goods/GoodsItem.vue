@@ -128,7 +128,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
 
     return this.displayMdAndUp
       ? this.WIDTH_NORMAL
-      : (!isDisplayXXS(this.displayWidth) ? this.WIDTH_SMALL : "100%");
+      : (isDisplayXXS(this.displayWidth) ? "100%" : this.WIDTH_SMALL);
   }
 
   /**

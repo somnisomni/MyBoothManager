@@ -28,38 +28,36 @@
 
           <!-- Combinated Goods -->
           <VSlideYReverseTransition group leave-absolute>
-            <div v-for="goods in findGoodsInCombination(combination.id)"
-                 :key="goods.id">
-              <slot name="goods"
-                    :goodsData="goods"
-                    :imageUrlResolver="goodsImageUrlResolver"
-                    :currencySymbol="currencySymbol"
-                    @click="onGoodsClick">
-                <GoodsItem :goodsData="goods"
-                           :imageUrlResolver="goodsImageUrlResolver"
-                           :currencySymbol="currencySymbol"
-                           @click="onGoodsClick" />
-              </slot>
-            </div>
+            <slot name="goods"
+                  v-for="goods in findGoodsInCombination(combination.id)"
+                  :key="goods.id"
+                  :goodsData="goods"
+                  :imageUrlResolver="goodsImageUrlResolver"
+                  :currencySymbol="currencySymbol"
+                  @click="onGoodsClick">
+              <GoodsItem :goodsData="goods"
+                         :imageUrlResolver="goodsImageUrlResolver"
+                         :currencySymbol="currencySymbol"
+                         @click="onGoodsClick" />
+            </slot>
           </VSlideYReverseTransition>
         </div>
       </VSlideYReverseTransition>
 
       <!-- Goods (non-combinated only) -->
       <VSlideYReverseTransition group leave-absolute>
-        <div v-for="goods in findGoodsInCategory(category.id, true)"
-             :key="goods.id">
-          <slot name="goods"
-                :goodsData="goods"
-                :imageUrlResolver="goodsImageUrlResolver"
-                :currencySymbol="currencySymbol"
-                @click="onGoodsClick">
-            <GoodsItem :goodsData="goods"
-                       :imageUrlResolver="goodsImageUrlResolver"
-                       :currencySymbol="currencySymbol"
-                       @click="onGoodsClick" />
-          </slot>
-        </div>
+        <slot name="goods"
+              v-for="goods in findGoodsInCategory(category.id, true)"
+              :key="goods.id"
+              :goodsData="goods"
+              :imageUrlResolver="goodsImageUrlResolver"
+              :currencySymbol="currencySymbol"
+              @click="onGoodsClick">
+          <GoodsItem :goodsData="goods"
+                     :imageUrlResolver="goodsImageUrlResolver"
+                     :currencySymbol="currencySymbol"
+                     @click="onGoodsClick" />
+        </slot>
       </VSlideYReverseTransition>
     </VRow>
     <h6 v-else class="d-inline-flex align-center text-h6 text-disabled mx-4 my-2"><VIcon class="mr-1">mdi-exclamation</VIcon> 카테고리에 등록된 굿즈가 없습니다.</h6>
