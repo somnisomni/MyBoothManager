@@ -41,9 +41,9 @@
         <VExpandTransition>
           <div v-if="formModels.goodsIds.length > 0" class="text-subtitle-2 mx-2">
             <div class="d-flex flex-row flex-wrap justify-end">
-              <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}개</b> 선택됨</span>
+              <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}종</b> 선택됨</span>
               <VSpacer />
-              <span class="text-right">세트 판매 가능한 재고량 <b>{{ minimumStockOfSelectedGoods.toLocaleString() }}개</b></span>
+              <span class="text-right">세트 판매 가능한 재고량 <b>{{ minimumStockOfSelectedGoods.toLocaleString() }}세트</b></span>
             </div>
             <div class="text-right">선택한 굿즈들의 가격 총합 <b>{{ currencySymbol }}{{ sumPriceOfSelectedGoods.toLocaleString() }}</b></div>
           </div>
