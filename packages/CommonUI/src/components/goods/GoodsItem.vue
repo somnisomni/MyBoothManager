@@ -56,7 +56,7 @@
             <span class="remaining">{{ normalizedData.stockRemaining }}</span>
 
             <span v-if="shouldHideInitialStock"
-                  class="remaining-text">개 남음</span>
+                  class="remaining-text">{{ stockRemainingTextString }}</span>
             <span v-else
                   class="initial"> / {{ normalizedData.stockInitial }}</span>
           </div>
@@ -161,9 +161,20 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
    * Returns the price string of the goods.
    */
   get priceString() {
-    if(this.normalizedData.price === 0) return "증정용";
+    if(this.normalizedData.price === 0) {
+      if((this.goodsData as Goods).combinationId) return "세트에 포함";
+      else return "증정용";
+    }
 
     return `${this.currencySymbol}${this.normalizedData.price.toLocaleString()}`;
+  }
+
+  /**
+   * Returns the stock remaining text string.
+   */
+  get stockRemainingTextString() {
+    if(this.isCombination) return "세트 가능";
+    else return "개 남음";
   }
 
   /**
