@@ -48,7 +48,7 @@
           <!-- Price -->
           <div class="price flex-0-0">
             <span v-if="isCombination" class="mr-1" style="font-size: smaller">세트</span>
-            <span>{{ currencySymbol }}{{ normalizedData.price.toLocaleString() }}</span>
+            <span><VIcon v-if="normalizedData.price === 0" icon="mdi-gift" size="x-small" /> {{ priceString }}</span>
           </div>
 
           <!-- Stock -->
@@ -155,6 +155,15 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
       stockVisibility: this.forceStockVisibility ?? this.goodsData.stockVisibility,
       imageUrl: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageUrl : (this.goodsData as Goods).goodsImageUrl,
     };
+  }
+
+  /**
+   * Returns the price string of the goods.
+   */
+  get priceString() {
+    if(this.normalizedData.price === 0) return "증정용";
+
+    return `${this.currencySymbol}${this.normalizedData.price.toLocaleString()}`;
   }
 
   /**
