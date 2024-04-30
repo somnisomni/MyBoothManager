@@ -7,6 +7,7 @@
             :src="normalizedImageUrl"
             :lazy-src="normalizedImageThumbnailData"
             :height="goodsImageHeight"
+            class="no-interaction"
             contain />
       <p>이름 : {{ data.name }}</p>
       <p>설명 : {{ data.description }}</p>
