@@ -17,6 +17,7 @@
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "../../packages/Common",
     "@myboothmanager/common-ui": "../../packages/CommonUI",
+    "@unhead/vue": "^1.9.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qrcode": "^1.5.3",

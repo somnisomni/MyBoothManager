@@ -106,8 +106,9 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
-import { BoothStatus, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
+import { useHead, useSeoMeta } from "@unhead/vue";
 import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/plugins/stores/public";
 import { useLocalStore } from "@/plugins/stores/local";
@@ -153,19 +154,52 @@ export default class IndividualBoothPage extends Vue {
   set autoRefreshEnabled(value: boolean) { useLocalStore().boothPageSettings.enableAutoRefresh = value; }
 
   async mounted() {
+    /* *** Fetch Data *** */
     this.isDataFetched = false;
     await this.fetchData();
     this.isDataFetched = true;
 
-    if(this.boothData) {
-      // Force execute onAutoRefreshEnabledChanged
-      this.onAutoRefreshEnabledChanged(this.autoRefreshEnabled);
-
-      useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
-      document.title = `${this.boothData.name} - 부스 정보`;
-    } else {
+    if(!this.boothData) {
       document.title = "오류";
+      return;
     }
+
+    /* *** Force execute onAutoRefreshEnabledChanged *** */
+    this.onAutoRefreshEnabledChanged(this.autoRefreshEnabled);
+
+    /* *** Set last visited booth id *** */
+    useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
+
+    /* *** Set document metadata *** */
+    useHead({
+      title: `${this.boothData.name} - 부스 정보`,
+    });
+    useSeoMeta({
+      title: `${this.boothData.name} - 부스 정보`,
+      description: this.boothData.description,
+      applicationName: APP_NAME,
+      generator: `${APP_NAME} v${import.meta.env.VITE__APP_VERSION}`,
+      mobileWebAppCapable: "yes",
+
+      get ogTitle() { return this.title?.toString(); },
+      get ogSiteName() { return this.applicationName?.toString(); },
+      get ogDescription() { return this.description?.toString(); },
+      ogType: "website",
+      ogImage: getUploadFilePath(this.boothData.bannerImageUrl),
+      ogImageAlt: `${this.boothData.name} - 부스 배너 이미지`,
+      ogUrl: window.location.href,
+
+      twitterCard: "summary_large_image",
+      twitterCreator: `@${DEVELOPER_TWITTER_HANDLE}`,
+      get twitterSite() { return this.twitterCreator?.toString(); },
+      get twitterTitle() { return this.title?.toString(); },
+      get twitterDescription() { return this.description?.toString(); },
+      get twitterImage() { return this.ogImage?.toString(); },
+      get twitterImageAlt() { return this.ogImageAlt?.toString(); },
+
+      appleMobileWebAppCapable: "yes",
+      get appleMobileWebAppTitle() { return this.title?.toString(); },
+    });
   }
 
   unmounted() {
