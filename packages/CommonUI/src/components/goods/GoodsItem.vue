@@ -23,7 +23,7 @@
       <div v-if="disabled && disabledReason"
            class="top-indicator">{{ disabledReason }}</div>
       <div v-if="!disabled && isCombination"
-           class="top-indicator">세트 구성</div>
+           class="top-indicator"><VIcon v-if="isCombination" icon="mdi-set-all" class="mr-1" /> 세트 구성</div>
 
       <!-- *** Extra indicator slot for extensibility *** -->
       <slot v-if="!disabled" name="extra-top-indicator"></slot>
@@ -36,11 +36,7 @@
     <VLayout class="d-flex flex-row align-self-end pa-2">
       <VLayout class="goods-info w-100 d-flex flex-column">
         <!-- Name -->
-        <div class="name">
-          <VIcon v-if="isCombination"
-                 icon="mdi-set-all" />
-          {{ normalizedData.name }}
-        </div>
+        <div class="name">{{ normalizedData.name }}</div>
 
         <!-- Details -->
         <VLayout v-if="!hideDetails"
