@@ -103,7 +103,16 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   @Column(DataTypes.VIRTUAL)
   get goodsImageUrl(): string | null {
     if(this.goodsImage) {
-      return this.goodsImage.filePath;
+      return this.goodsImage.filePath ?? null;
+    } else {
+      return null;
+    }
+  }
+
+  @Column(DataTypes.VIRTUAL)
+  get goodsImageThumbnailData(): string | null {
+    if(this.goodsImage) {
+      return this.goodsImage.imageThumbnailBase64 ?? null;
     } else {
       return null;
     }

@@ -16,7 +16,8 @@ export class GoodsResponseDto implements IGoodsResponse {
   @Expose() declare status: GoodsStatus;
   @Expose() declare statusReason?: string | null;
   @Expose() declare ownerMembersId?: number[];
-  @Expose() declare goodsImageUrl?: string;
+  @Expose() declare goodsImageUrl?: string | null;
+  @Expose() declare goodsImageThumbnailData?: string | null;
 
   @Exclude() declare boothId: number;
 

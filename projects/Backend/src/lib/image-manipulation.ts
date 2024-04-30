@@ -24,7 +24,7 @@ export default class ImageManipulator {
    * @returns {{ width: number, height: number }} Resized width and height
    * @throws {ImageManipulationException} When the image manipulation failed
    */
-  private async _resizeAndCrop(widthLimit: number, heightLimit: number, fit: "cover" | "outside" = "cover"): Promise<{ width: number, height: number }> {
+  private async _resizeAndCrop(widthLimit: number, heightLimit: number, fit: "cover" | "inside" | "outside" = "cover"): Promise<{ width: number, height: number }> {
     let width: number, height: number;
 
     try {

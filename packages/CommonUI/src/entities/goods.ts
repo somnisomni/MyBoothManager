@@ -1,4 +1,4 @@
-import type { IGoods, IGoodsCommon, IGoodsCombination, GoodsStockVisibility } from "@myboothmanager/common";
+import type { IGoods, IGoodsCommon, IGoodsCombination, GoodsStockVisibility, IGoodsResponse, IGoodsCombinationResponse } from "@myboothmanager/common";
 import { GoodsStatus } from "@myboothmanager/common";
 
 export abstract class GoodsBase implements IGoodsCommon {
@@ -70,28 +70,30 @@ export abstract class GoodsBase implements IGoodsCommon {
   }
 }
 
-export class Goods extends GoodsBase implements IGoods {
+export class Goods extends GoodsBase implements IGoodsResponse {
   declare combinationId?: number | null;
   declare type?: string;
   declare status: GoodsStatus;
   declare statusReason?: string | null;
-  declare goodsImageUrl?: string;
+  declare goodsImageUrl?: string | null;
+  declare goodsImageThumbnailData?: string | null;
 
-  constructor(data: IGoods) {
+  constructor(data: IGoodsResponse) {
     super(data);
     this.update(data);
   }
 
-  override update(data: IGoods): void {
+  override update(data: IGoodsResponse): void {
     super.update(data);
     this.combinationId = data.combinationId;
     this.type = data.type;
     this.status = data.status;
     this.statusReason = data.statusReason;
     this.goodsImageUrl = data.goodsImageUrl;
+    this.goodsImageThumbnailData = data.goodsImageThumbnailData;
   }
 
-  override toPlainObject(): IGoods {
+  override toPlainObject(): IGoodsResponse {
     return {
       ...super.toPlainObject(),
       combinationId: this.combinationId,
@@ -99,27 +101,30 @@ export class Goods extends GoodsBase implements IGoods {
       status: this.status,
       statusReason: this.statusReason,
       goodsImageUrl: this.goodsImageUrl,
+      goodsImageThumbnailData: this.goodsImageThumbnailData,
     } as IGoods;
   }
 }
 
-export class GoodsCombination extends GoodsBase implements IGoodsCombination {
-  declare combinationImageUrl?: string | undefined;
+export class GoodsCombination extends GoodsBase implements IGoodsCombinationResponse {
+  declare combinationImageUrl?: string | null;
+  declare combinationImageThumbnailData?: string | null;
 
-  constructor(data: IGoodsCombination) {
+  constructor(data: IGoodsCombinationResponse) {
     super(data);
     this.update(data);
   }
 
-  override update(data: IGoodsCombination): void {
+  override update(data: IGoodsCombinationResponse): void {
     super.update(data);
     this.combinationImageUrl = data.combinationImageUrl;
   }
 
-  override toPlainObject(): IGoodsCombination {
+  override toPlainObject(): IGoodsCombinationResponse {
     return {
       ...super.toPlainObject(),
       combinationImageUrl: this.combinationImageUrl,
+      combinationImageThumbnailData: this.combinationImageThumbnailData,
     } as IGoodsCombination;
   }
 }

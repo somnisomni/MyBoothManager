@@ -12,7 +12,8 @@ export class GoodsCombinationResponseDto implements IGoodsCombinationResponse {
   @Expose() declare stockRemaining: number;
   @Expose() declare stockVisibility: GoodsStockVisibility;
   @Expose() declare ownerMembersId?: number[];
-  @Expose() declare combinationImageUrl?: string;
+  @Expose() declare combinationImageUrl?: string | null;
+  @Expose() declare combinationImageThumbnailData?: string | null;
 
   @Exclude() declare boothId: number;
 

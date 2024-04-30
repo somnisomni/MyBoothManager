@@ -15,6 +15,7 @@
     <!-- *** Goods / Combination image *** -->
     <VImg class="goods-item-image no-interaction"
           :src="imageUrlComputed"
+          :lazy-src="normalizedData.thumbnailData"
           cover />
     <div class="goods-item-image-overlay"></div>
 
@@ -150,6 +151,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
       stockRemaining: this.goodsData.stockRemaining,
       stockVisibility: this.forceStockVisibility ?? this.goodsData.stockVisibility,
       imageUrl: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageUrl : (this.goodsData as Goods).goodsImageUrl,
+      thumbnailData: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageThumbnailData : (this.goodsData as Goods).goodsImageThumbnailData,
     };
   }
 

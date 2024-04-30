@@ -3,7 +3,11 @@
                 width="600px"
                 dialogTitle="굿즈 세부 정보">
     <div>
-      <VImg :src="normalizedImageUrl" />
+      <VImg v-if="normalizedImageUrl"
+            :src="normalizedImageUrl"
+            :lazy-src="normalizedImageThumbnailData"
+            :height="goodsImageHeight"
+            contain />
       <p>이름 : {{ data.name }}</p>
       <p>설명 : {{ data.description }}</p>
     </div>
@@ -13,6 +17,7 @@
 <script lang="ts">
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { getUploadFilePath } from "@/lib/common-functions";
 
 @Component({})
@@ -21,7 +26,15 @@ export default class GoodsItemDetailsDialog extends Vue {
   @Prop({ type: GoodsBase, required: true }) data!: GoodsBase;
 
   get normalizedImageUrl() {
-    return getUploadFilePath((this.data as Goods).goodsImageUrl || (this.data as GoodsCombination).combinationImageUrl || "");
+    return getUploadFilePath((this.data as Goods).goodsImageUrl || (this.data as GoodsCombination).combinationImageUrl || null);
+  }
+
+  get normalizedImageThumbnailData() {
+    return (this.data as Goods).goodsImageThumbnailData || (this.data as GoodsCombination).combinationImageThumbnailData || null;
+  }
+
+  get goodsImageHeight() {
+    return `${(IMAGE_SIZE_CONSTRAINTS.get(ImageSizeConstraintKey.GOODS)?.height) ?? 500}px`;
   }
 }
 </script>

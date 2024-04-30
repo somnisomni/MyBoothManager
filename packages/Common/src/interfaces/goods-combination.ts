@@ -1,11 +1,12 @@
 import { IGoodsCommon } from "./goods";
 
 export interface IGoodsCombination extends IGoodsCommon {
-  combinationImageUrl?: string;
+  combinationImageUrl?: string | null;
+  combinationImageThumbnailData?: string | null;
 }
 export type IGoodsCombinationResponse = IGoodsCombination;
 
-export interface IGoodsCombinationModel extends Omit<IGoodsCombination, "stockInitial" | "stockRemaining" | "combinationImageUrl"> {
+export interface IGoodsCombinationModel extends Omit<IGoodsCombination, "stockInitial" | "stockRemaining" | "combinationImageUrl" | "combinationImageThumbnailData"> {
   combinationImageId?: number | null;
 }
 

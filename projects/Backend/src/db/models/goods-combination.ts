@@ -92,7 +92,16 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   @Column(DataTypes.VIRTUAL)
   get combinationImageUrl(): string | null {
     if(this.combinationImage) {
-      return this.combinationImage.filePath;
+      return this.combinationImage.filePath ?? null;
+    } else {
+      return null;
+    }
+  }
+
+  @Column(DataTypes.VIRTUAL)
+  get combinationImageThumbnailData(): string | null {
+    if(this.combinationImage) {
+      return this.combinationImage.imageThumbnailBase64 ?? null;
     } else {
       return null;
     }

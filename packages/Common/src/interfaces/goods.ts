@@ -30,7 +30,8 @@ export interface IGoods extends IGoodsCommon {
   type?: string;
   status: GoodsStatus;
   statusReason?: string | null;
-  goodsImageUrl?: string;
+  goodsImageUrl?: string | null;
+  goodsImageThumbnailData?: string | null;
 }
 
 export type IGoodsResponse = IGoods;
@@ -43,7 +44,7 @@ export const GoodsWithoutInitialStockInfoOmitKey = ["stockInitial"] as const;
 export type GoodsWithoutInitialStockInfoOmitKey = "stockInitial";
 export type IGoodsWithoutInitialStockInfoResponse = Omit<IGoodsResponse, GoodsWithoutInitialStockInfoOmitKey>;
 
-export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl"> {
+export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl" | "goodsImageThumbnailData"> {
   goodsImageId?: number | null;
 }
 
