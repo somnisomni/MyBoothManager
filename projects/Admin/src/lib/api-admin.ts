@@ -60,27 +60,23 @@ export default class AdminAPI {
   }
 
   static async fetchAllMembersOfBooth(boothId: number) {
-    return await this.apiCallWrapper(() => this.API.fetchAllMembersOfBooth(boothId));
+    return await this.apiCallWrapper<Array<CT.IBoothMemberResponse>>(() => this.API.GET(`booth/${boothId}/member`));
   }
 
   static async fetchAllGoodsOfBooth(boothId: number) {
-    return await this.apiCallWrapper(() => this.API.fetchAllGoodsOfBooth(boothId));
+    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(() => this.API.GET(`booth/${boothId}/goods`));
   }
 
-  static async countAllGoodsOfBooth(boothId: number) {
-    return await this.apiCallWrapper(() => this.API.fetchCountAllGoodsOfBooth(boothId));
+  static async fetchAllGoodsCombinationOfBooth(boothId: number) {
+    return await this.apiCallWrapper<Array<CT.IGoodsCombinationResponse>>(() => this.API.GET(`booth/${boothId}/goods/combination`));
   }
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number) {
-    return await this.apiCallWrapper(() => this.API.fetchAllGoodsCategoryOfBooth(boothId));
+    return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(() => this.API.GET(`booth/${boothId}/goods/category`));
   }
 
   static async fetchAllGoodsOrdersOfBooth(boothId: number) {
     return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/goods/order`));
-  }
-
-  static async fetchAllGoodsCombinationOfBooth(boothId: number) {
-    return await this.apiCallWrapper(() => this.API.fetchAllGoodsCombinationOfBooth(boothId));
   }
 
   /* Update */

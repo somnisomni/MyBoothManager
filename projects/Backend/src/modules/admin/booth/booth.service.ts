@@ -5,7 +5,6 @@ import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import Account from "@/db/models/account";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UtilService } from "../util/util.service";
@@ -18,7 +17,6 @@ import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from
 export class BoothService {
   constructor(
     private readonly goodsOrderService: GoodsOrderService,
-    private readonly publicBoothService: PublicBoothService,
     private readonly utilService: UtilService,
   ) {}
 

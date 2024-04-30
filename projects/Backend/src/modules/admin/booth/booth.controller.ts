@@ -1,6 +1,7 @@
 import type { FastifyRequest } from "fastify";
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, ParseBoolPipe, UseGuards } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
+import { PublicBoothMemberService } from "@/modules/public/booth-member/booth-member.service";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
@@ -15,6 +16,7 @@ export class BoothController {
   constructor(
     private readonly boothService: BoothService,
     private readonly publicBoothService: PublicBoothService,
+    private readonly publicBoothMemberService: PublicBoothMemberService,
     private readonly utilService: UtilService) {}
 
   /* Normal routes */
@@ -28,6 +30,31 @@ export class BoothController {
                 @Query("setLast", new ParseBoolPipe({ optional: true })) setLast: boolean | null | undefined,
                 @AuthData() authData: IAuthPayload) {
     return await this.boothService.findOne(+id, setLast, authData.id);
+  }
+
+  @Get(":id/member")
+  async findAllBoothMember(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return this.publicBoothMemberService.findAll(+boothId);
+  }
+
+  @Get(":id/goods")
+  async findAllBoothGoods(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return this.publicBoothService.findAllGoodsOfBooth(+boothId);
+  }
+
+  @Get(":id/goods/combination")
+  async findAllBoothGoodsCombination(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return this.publicBoothService.findAllGoodsCombinationOfBooth(+boothId);
+  }
+
+  @Get(":id/goods/category")
+  async findAllBoothGoodsCategory(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return this.publicBoothService.findAllGoodsCategoryOfBooth(+boothId);
+  }
+
+  @Get(":id/goods/order")
+  async findAllBoothGoodsOrder(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
+    return await this.boothService.findAllGoodsOrderOfBooth(+boothId, authData.id);
   }
 
   @Post()
@@ -63,11 +90,6 @@ export class BoothController {
   @Patch(":id/status")
   async updateBoothStatus(@Param("id") id: string, @Body() updateBoothStatusDto: UpdateBoothStatusDTO, @AuthData() authData: IAuthPayload) {
     return await this.boothService.updateBoothStatus(+id, updateBoothStatusDto, authData.id);
-  }
-
-  @Get(":id/goods/order")
-  async findAllBoothGoodsOrder(@Param("id") boothId: string, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.findAllGoodsOrderOfBooth(+boothId, authData.id);
   }
 
   /* Super admin routes */
