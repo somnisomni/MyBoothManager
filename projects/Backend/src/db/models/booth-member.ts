@@ -67,6 +67,14 @@ export default class BoothMember extends Model<IBoothMemberModel, BoothMemberCre
     return null;
   }
 
+  @Column(DataTypes.VIRTUAL)
+  get memberImageThumbnailData(): string | null {
+    if(this.memberImage) {
+      return this.memberImage.imageThumbnailBase64 ?? null;
+    }
+    return null;
+  }
+
 
   /* === Relations === */
   @BelongsTo(() => Booth)

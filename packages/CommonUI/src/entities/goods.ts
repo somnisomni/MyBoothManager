@@ -118,6 +118,7 @@ export class GoodsCombination extends GoodsBase implements IGoodsCombinationResp
   override update(data: IGoodsCombinationResponse): void {
     super.update(data);
     this.combinationImageUrl = data.combinationImageUrl;
+    this.combinationImageThumbnailData = data.combinationImageThumbnailData;
   }
 
   override toPlainObject(): IGoodsCombinationResponse {

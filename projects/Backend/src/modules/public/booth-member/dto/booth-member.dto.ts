@@ -5,11 +5,12 @@ import { Exclude, Expose } from "class-transformer";
 export class BoothMemberResponseDto implements IBoothMemberResponse {
   @Expose() declare id: number;
   @Expose() declare name: string;
-  @Expose() declare descriptionShort?: string;
-  @Expose() declare role?: string;
-  @Expose() declare primaryColor?: string;
-  @Expose() declare url?: string;
-  @Expose() declare memberImageUrl?: string;
+  @Expose() declare descriptionShort?: string | null;
+  @Expose() declare role?: string | null;
+  @Expose() declare primaryColor?: string | null;
+  @Expose() declare url?: string | null;
+  @Expose() declare memberImageUrl?: string | null;
+  @Expose() declare memberImageThumbnailData?: string | null;
 
   @Exclude() declare boothId: number;
 

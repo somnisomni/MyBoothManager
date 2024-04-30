@@ -14,7 +14,7 @@ export class GoodsCombinationResponseDto implements IGoodsCombinationResponse {
   @Expose() declare ownerMembersId?: number[];
   @Expose() declare combinationImageUrl?: string | null;
   @Expose() declare combinationImageThumbnailData?: string | null;
-
+  combinationImageThumbnailData
   @Exclude() declare boothId: number;
 
   constructor(partial: Partial<IGoodsCombinationModel>) {

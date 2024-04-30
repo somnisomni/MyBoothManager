@@ -6,10 +6,13 @@
           max-height="7em"
           :max-width="maxWidth"
           @click="$emit('click', memberData.id)">
-    <VAvatar :image="memberImageUrl ?? undefined"
-             :icon="!memberImageUrl ? 'mdi-account' : undefined"
+    <VAvatar :icon="!memberImageUrl ? 'mdi-account' : undefined"
              size="6em"
-             class="no-interaction" />
+             class="no-interaction">
+      <VImg v-if="memberImageUrl"
+            :src="memberImageUrl"
+            :lazy-src="memberData.memberImageThumbnailData" />
+    </VAvatar>
 
     <div class="d-flex flex-column ml-4 overflow-hidden">
       <div class="d-flex align-center" style="white-space: nowrap">
@@ -39,17 +42,13 @@ import { useDisplay } from "vuetify";
 export default class BoothMemberItem extends Vue {
   @Prop({ type: Object,  required: true }) readonly memberData!: IBoothMember;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
-  @Prop({ type: Function, default: (s: any) => s }) readonly imageUrlResolver!: (rawImageUrl?: string) => string | null | undefined;
+  @Prop({ type: Function, default: (s: any) => s }) readonly imageUrlResolver!: (rawImageUrl?: string | null) => string | null | undefined;
 
   @Setup(() => useDisplay().smAndUp)
   declare smAndUp: boolean;
 
   get maxWidth(): number | string {
     return this.smAndUp ? "24em" : "100%";
-  }
-
-  get hasMemberImage() {
-    return !!this.memberData.memberImageUrl;
   }
 
   get memberImageUrl() {

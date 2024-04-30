@@ -4,15 +4,16 @@ export interface IBoothMember extends IDataModelBase {
   id: number;
   boothId: number;  // Foreign key to Booth.id
   name: string;
-  descriptionShort?: string;
-  role?: string;
-  primaryColor?: string;
-  url?: string;
-  memberImageUrl?: string;
+  descriptionShort?: string | null;
+  role?: string | null;
+  primaryColor?: string | null;
+  url?: string | null;
+  memberImageUrl?: string | null;
+  memberImageThumbnailData?: string | null;
 }
 export type IBoothMemberResponse = IBoothMember;
 
-export interface IBoothMemberModel extends Omit<IBoothMember, "memberImageUrl"> {
+export interface IBoothMemberModel extends Omit<IBoothMember, "memberImageUrl" | "memberImageThumbnailData"> {
   memberImageId?: number | null;
 }
 
