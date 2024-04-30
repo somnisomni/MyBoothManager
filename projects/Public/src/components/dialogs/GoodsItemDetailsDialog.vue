@@ -6,9 +6,11 @@
       <VImg v-if="normalizedImageUrl"
             :src="normalizedImageUrl"
             :lazy-src="normalizedImageThumbnailData"
-            :height="goodsImageHeight"
-            class="no-interaction"
+            width="100%"
+            :max-height="goodsImageHeight"
+            class="mb-2 no-interaction"
             contain />
+
       <p>이름 : {{ data.name }}</p>
       <p>설명 : {{ data.description }}</p>
     </div>
