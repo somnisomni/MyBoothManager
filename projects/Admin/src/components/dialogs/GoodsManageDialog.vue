@@ -3,7 +3,8 @@
                 :width="editMode ? '800px' : '500px'"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                hideCloseButton
+                :hideCloseButton="isFormEdited || updateInProgress"
+                fullscreenOnSmallScreen
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogPrimaryText="dynString.primaryText"
@@ -93,7 +94,7 @@ export default class GoodsManageDialog extends Vue {
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
     ownerMembersId: ref([]),
   });
-  readonly formFields = readonly({
+  readonly formFields = {
     name: {
       type: FormFieldType.TEXT,
       label: "굿즈 이름",
@@ -172,7 +173,7 @@ export default class GoodsManageDialog extends Vue {
       hint: "공개 페이지에서만 적용되며, 관리자 페이지에선 항상 모든 재고량 정보가 표시됩니다.",
       persistentHint: true,
     },
-  } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
+  } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>;
   formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);
 
   goodsCategoryManageDialogShown = false;

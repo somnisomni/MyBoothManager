@@ -32,7 +32,7 @@
                           ...(field.optional ? [] : RULE_MANDATORY),
                           ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
                  @change="() => {
-                            if(field.onChange) field.onChange();
+                            if(field.onChange) field.onChange(String(models[fieldname]));
                             if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname));
                           }"
                  @update:modelValue="() => {
@@ -140,7 +140,7 @@ export interface IFormFieldOptions {
   additionalButtons?: Array<IFormFieldAdditionalButtonOptions>;
 
   // Event
-  onChange?(): void;
+  onChange?(newValue: string): void;
 }
 
 export interface IFormFieldAdditionalButtonOptions {
