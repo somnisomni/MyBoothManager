@@ -12,7 +12,7 @@
             contain />
 
       <p>이름 : {{ data.name }}</p>
-      <p>설명 : {{ data.description }}</p>
+      <p v-if="data.description">설명 : {{ data.description }}</p>
     </div>
   </CommonDialog>
 </template>
