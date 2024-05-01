@@ -15,7 +15,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const ip = contextHttp.ips ? contextHttp.ips[contextHttp.ips.length - 1] : contextHttp.ip;
     const now = (new Date()).toISOString();
 
-    if(contextClass === AppController && contextHandler === AppController.prototype.teapot) {
+    if(contextClass === AppController && contextHandler === AppController.prototype.healthCheck) {
       return next.handle().pipe(tap({
         finalize: () => {
           console.log(logFn("🔄", now, chalk`health check from {bold ${ip}}`));

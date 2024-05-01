@@ -13,6 +13,6 @@ export interface IBackendErrorResponse extends IBackendErrorResponseBase {
 }
 
 export interface ISuccessResponse { success: true; }
-export const SUCCESS_RESPONSE: Readonly<ISuccessResponse> = Object.freeze({ success: true });
+export const SUCCESS_RESPONSE: Readonly<ISuccessResponse> = Object.freeze({ success: true } as const);
 
 export interface IValueResponse  { value: number | string; }

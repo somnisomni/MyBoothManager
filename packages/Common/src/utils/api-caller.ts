@@ -1,4 +1,13 @@
-import type { IBackendErrorResponse, IBoothMemberResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, IValueResponse } from "..";
+import {
+  HTTP_HEALTH_CHECK_STATUS_CODE,
+  type IBackendErrorResponse,
+  type IBoothMemberResponse,
+  type IBoothResponse,
+  type IGoodsCategoryResponse,
+  type IGoodsCombinationResponse,
+  type IGoodsResponse,
+  type IValueResponse,
+} from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -15,7 +24,7 @@ export default class APICaller {
     private readonly apiHost: string,
     private readonly apiGroup: string = "",
     private readonly getAuthorizationToken: (() => string) | null | undefined = null,
-    private readonly teapotPath: string = "teapot") { }
+    private readonly healthCheckPath: string = "healthcheck") { }
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
@@ -55,9 +64,9 @@ export default class APICaller {
   // Server
   public async checkAPIServerAlive(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.apiHost}/${this.teapotPath}`, APICaller.FETCH_COMMON_OPTIONS);
+      const response = await fetch(`${this.apiHost}/${this.healthCheckPath}`, APICaller.FETCH_COMMON_OPTIONS);
 
-      if(response && response.status === 418) return true;
+      if(response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE) return true;
       else return false;
     } catch(error) {
       console.debug("Can't connect to API server! ;(");

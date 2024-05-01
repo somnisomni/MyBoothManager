@@ -5,7 +5,7 @@ import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/m
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { default as fastifyStatic, FastifyStaticOptions } from "@fastify/static";
 import { AppModule } from "@/app.module";
-import { AllExceptionsFilter, RouteNotFoundExceptionFilter, TeapotExceptionFilter } from "./global-exception.filter";
+import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
 import { UtilService } from "./modules/admin/util/util.service";
 import { LoggingInterceptor } from "./modules/global/logging/logging.interceptor";
@@ -55,7 +55,6 @@ async function bootstrap() {
   app.useGlobalFilters(
     new AllExceptionsFilter(),
     new RouteNotFoundExceptionFilter(),
-    new TeapotExceptionFilter(),
   );
   app.useGlobalInterceptors(
     new LoggingInterceptor(),

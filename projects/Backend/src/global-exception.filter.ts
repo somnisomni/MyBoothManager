@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
-import { ArgumentsHost, Catch, ExceptionFilter, ImATeapotException as Nest__ImATeapotException, NotFoundException as Nest__NotFoundException } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException as Nest__NotFoundException } from "@nestjs/common";
 import BaseHttpException, { ApplicationUncaughtedException } from "./lib/exceptions";
 
 const SCREAM = [
@@ -66,24 +66,6 @@ export class RouteNotFoundExceptionFilter implements ExceptionFilter {
 
       ...new BaseHttpException(ErrorCodes.ROUTE_NOT_FOUND, statusCode).getResponse(),
       path: request.url,
-    } as IBackendErrorResponse);
-  }
-}
-
-@Catch(Nest__ImATeapotException)
-export class TeapotExceptionFilter implements ExceptionFilter {
-  catch(exception: Nest__ImATeapotException, host: ArgumentsHost) {
-    const context = host.switchToHttp();
-    const response = context.getResponse<FastifyReply>();
-    const request = context.getRequest<FastifyRequest>();
-    const statusCode = exception.getStatus();
-
-    response.status(statusCode).send({
-      message: "I'm a teapot! uwu",
-      timestamp: (new Date()).toISOString(),
-      path: request.url,
-      statusCode,
-      errorCode: ErrorCodes.SUCCESS,
     } as IBackendErrorResponse);
   }
 }

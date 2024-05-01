@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ImATeapotException, NotFoundException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
@@ -34,18 +35,8 @@ describe("AppController", () => {
     }
   });
 
-  it("should throw TeapotException", () => {
-    try {
-      controller.teapot();
-      fail("This should not be reached");
-    } catch(e) {
-      expect(e).toBeInstanceOf(ImATeapotException);
-      expect(e).toHaveProperty("message");
-      expect(e).toHaveProperty("getStatus");
-
-      if(e instanceof ImATeapotException) {
-        expect(e.getStatus()).toBe(418);
-      }
-    }
+  it("should have success response", () => {
+    const response = controller.healthCheck();
+    expect(response).toEqual(SUCCESS_RESPONSE);
   });
 });

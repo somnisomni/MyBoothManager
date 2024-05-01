@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Patch, Post, Put } from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode, Patch, Post, Put } from "@nestjs/common";
+import { HTTP_HEALTH_CHECK_STATUS_CODE, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { AppService } from "./app.service";
 import { Public } from "./modules/admin/auth/auth.guard";
 
@@ -16,8 +17,9 @@ export class AppController {
     this.appService.throwNotFoundException();
   }
 
-  @Get("/teapot")
-  teapot() {
-    this.appService.throwTeapotException();
+  @Get("/healthcheck")
+  @HttpCode(HTTP_HEALTH_CHECK_STATUS_CODE)
+  healthCheck() {
+    return SUCCESS_RESPONSE;
   }
 }
