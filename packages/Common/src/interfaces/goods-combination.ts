@@ -1,17 +1,27 @@
-import { IGoodsCommon } from "./goods";
+/* eslint-disable import/exports-last */
+// TODO: Intersection types is not working as expected
 
-export interface IGoodsCombination extends IGoodsCommon {
-  combinationImageUrl?: string | null;
-  combinationImageThumbnailData?: string | null;
+import { IGoodsAdminResponse, IGoodsCommon, IGoodsModel, IGoodsResponse } from "./goods";
+
+/* === Common === */
+interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId" | "type"> { }
+
+/* === Model for Backend (DB) === */
+type GoodsCombinationModelBase = IGoodsCombinationCommon & IGoodsModel;
+export interface IGoodsCombinationModel extends GoodsCombinationModelBase { }
+
+/* === Requests === */
+export interface IGoodsCombinationCreateRequest extends Omit<IGoodsCombinationCommon, "id"> {
+  goodsIds: Array<number>;
 }
-export type IGoodsCombinationResponse = IGoodsCombination;
 
-export interface IGoodsCombinationModel extends Omit<IGoodsCombination, "stockInitial" | "stockRemaining" | "combinationImageUrl" | "combinationImageThumbnailData"> {
-  combinationImageId?: number | null;
+export interface IGoodsCombinationUpdateRequest extends Partial<Omit<IGoodsCombinationCommon, "id" | "boothId">>, Pick<IGoodsCombinationCommon, "boothId"> {
+  goodsIds?: Array<number> | null;
 }
 
-export type GoodsCombinationCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockVisibility";
-export type IGoodsCombinationCreateRequest = Pick<IGoodsCombination, GoodsCombinationCreateRequestKey> & { goodsIds: number[] };
+/* === Responses === */
+type GoodsCombinationResponseBase = IGoodsCombinationCommon & IGoodsResponse;
+export interface IGoodsCombinationResponse extends GoodsCombinationResponseBase { }
 
-export type GoodsCombinationUpdateRequestKey = "categoryId" | "name" | "description" | "price" | "stockVisibility";
-export type IGoodsCombinationUpdateRequest = Pick<IGoodsCombination, "boothId"> & Partial<Pick<IGoodsCombination, GoodsCombinationUpdateRequestKey>> & { goodsIds?: number[] };
+type GoodsCombinationAdminResponseBase = IGoodsCombinationCommon & IGoodsAdminResponse;
+export interface IGoodsCombinationAdminResponse extends GoodsCombinationAdminResponseBase { }

@@ -1,5 +1,31 @@
-import type { IDataModelBase } from "./base";
+import { IImageUploadInfo } from "./base";
 
+/* === Common === */
+interface IBoothCommon {
+  id: number;
+  ownerId: number;
+  name: string;
+  currencySymbol: string;
+  description?: string | null;
+  location?: string | null;
+  boothNumber?: string | null;
+  dateOpen?: Date | null;
+  dateClose?: Date | null;
+  status: IBoothStatus;
+}
+
+export interface IBoothStatus {
+  status: BoothStatus;
+  reason?: string;
+  contentPublished?: boolean;
+}
+
+export interface IBoothExpense {
+  name: string;
+  price: number;
+}
+
+/* === Enums === */
 export enum BoothStatus {
   OPEN = "open",
   PAUSE = "pause",
@@ -7,40 +33,27 @@ export enum BoothStatus {
   PREPARE = "prepare",
 }
 
-export interface IBoothExpense extends IDataModelBase {
-  name: string;
-  price: number;
-}
-
-export interface IBooth extends IDataModelBase {
-  id: number;
-  ownerId: number;  // Foreign key to Account.id
-  name: string;
-  description?: string;
-  location: string;
-  boothNumber?: string;
-  currencySymbol: string;
-  expenses: Array<IBoothExpense>;  // 부대비용 (경비)
-  dateOpen: Date;
-  dateClose: Date;
+/* === Model for Backend (DB) === */
+export interface IBoothModel extends Omit<IBoothCommon, "status"> {
   status: BoothStatus;
-  statusReason?: string;
-  statusPublishContent?: boolean;
-  bannerImageUrl?: string;
-  infoImageUrl?: string;  // TODO: many images
-}
-export type IBoothResponse = IBooth;
-
-export interface IBoothModel extends Omit<IBooth, "bannerImageUrl" | "infoImageUrl"> {
+  statusReason?: string | null;
+  statusContentPublished?: boolean | null;
+  expenses: Array<IBoothExpense>;
   bannerImageId?: number | null;
-  infoImageId?: number | null;  // TODO: many images
+  infoImageId?: number | null;
 }
 
-export type BoothCreateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "dateOpen" | "dateClose";
-export type IBoothCreateRequest = Pick<IBooth, BoothCreateRequestKey>;
+/* === Requests === */
+export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status"> { }
+export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "status">> { }
+export interface IBoothStatusUpdateRequest extends IBoothStatus { }
 
-export type BoothUpdateRequestKey = "name" | "description" | "location" | "boothNumber" | "currencySymbol" | "expenses" | "dateOpen" | "dateClose";
-export type IBoothUpdateRequest = Partial<Pick<IBooth, BoothUpdateRequestKey>>;
+/* === Responses === */
+export interface IBoothResponse extends IBoothCommon {
+  bannerImage?: IImageUploadInfo | null;
+  infoImage?: IImageUploadInfo | null;
+}
 
-export type BoothStatusUpdateRequestKey = "status" | "statusReason" | "statusPublishContent";
-export type IBoothStatusUpdateRequest = Partial<Pick<IBooth, BoothStatusUpdateRequestKey>>;
+export interface IBoothAdminResponse extends IBoothResponse {
+  expenses: Array<IBoothExpense>;
+}

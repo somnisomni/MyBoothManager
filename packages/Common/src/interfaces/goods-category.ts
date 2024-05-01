@@ -1,14 +1,16 @@
-import type { IDataModelBase } from "./base";
-
-export interface IGoodsCategory extends IDataModelBase {
+/* === Common === */
+interface IGoodsCategoryCommon {
   id: number;
-  boothId: number;  // Foreign key to Booth.id
+  boothId: number;
   name: string;
 }
-export type IGoodsCategoryResponse = IGoodsCategory;
 
-export type GoodsCategoryCreateRequestKey = "boothId" | "name";
-export type IGoodsCategoryCreateRequest = Pick<IGoodsCategory, GoodsCategoryCreateRequestKey>;
+/* === Model for Backend (DB) === */
+export interface IGoodsCategoryModel extends IGoodsCategoryCommon { }
 
-export type GoodsCategoryUpdateRequestKey = "name";
-export type IGoodsCategoryUpdateRequest = Pick<IGoodsCategory, "boothId"> & Partial<Pick<IGoodsCategory, GoodsCategoryUpdateRequestKey>>;
+/* === Requests === */
+export interface IGoodsCategoryCreateRequest extends Omit<IGoodsCategoryCommon, "id"> { }
+export interface IGoodsCategoryUpdateRequest extends Partial<Omit<IGoodsCategoryCommon, "id" | "boothId">>, Pick<IGoodsCategoryCommon, "boothId"> { }
+
+/* === Responses === */
+export interface IGoodsCategoryResponse extends IGoodsCategoryCommon { }

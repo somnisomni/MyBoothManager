@@ -1,55 +1,49 @@
-import type { IDataModelBase } from "./base";
+import { IImageUploadInfo } from "./base";
 
-export enum GoodsStatus {
-  ON_SALE ="on_sale",
-  PAUSE = "pause",
-  SOLD_OUT = "sold_out",
+/* === Common === */
+export interface IGoodsCommon {
+  id: number;
+  boothId: number;
+  categoryId?: number | null;
+  combinationId?: number | null;
+  name: string;
+  description?: string | null;
+  type?: string;
+  price: number;
+  stock: IGoodsStock;
+  ownerMemberIds?: Array<number> | null;
 }
 
+export interface IGoodsStock {
+  visibility: GoodsStockVisibility;
+  initial?: number;
+  remaining?: number;
+}
+
+/* === Enums === */
 export enum GoodsStockVisibility {
   HIDE_ALL = "hide_all",
   SHOW_REMAINING_ONLY = "show_remaining_only",
   SHOW_ALL = "show_all",
 }
 
-export interface IGoodsCommon extends IDataModelBase {
-  id: number;
-  boothId: number;  // Foreign key to Booth.id
-  categoryId?: number | null;  // Foreign key to GoodsCategory.id
-  name: string;
-  description?: string;
-  price: number;
+/* === Model for Backend (DB) === */
+export interface IGoodsModel extends Omit<IGoodsCommon, "stock" | "ownerMemberIds"> {
+  stockVisibility: GoodsStockVisibility;
   stockInitial: number;
   stockRemaining: number;
-  stockVisibility: GoodsStockVisibility;
-  ownerMembersId?: number[];
-}
-
-export interface IGoods extends IGoodsCommon {
-  combinationId?: number | null;  // Foreign key to GoodsCombination.id
-  type?: string;
-  status: GoodsStatus;
-  statusReason?: string | null;
-  goodsImageUrl?: string | null;
-  goodsImageThumbnailData?: string | null;
-}
-
-export type IGoodsResponse = IGoods;
-
-export const GoodsWithoutAllStockInfoOmitKey = ["stockInitial", "stockRemaining"] as const;
-export type GoodsWithoutAllStockInfoOmitKey = "stockInitial" | "stockRemaining";
-export type IGoodsWithoutAllStockInfoResponse = Omit<IGoodsResponse, GoodsWithoutAllStockInfoOmitKey>;
-
-export const GoodsWithoutInitialStockInfoOmitKey = ["stockInitial"] as const;
-export type GoodsWithoutInitialStockInfoOmitKey = "stockInitial";
-export type IGoodsWithoutInitialStockInfoResponse = Omit<IGoodsResponse, GoodsWithoutInitialStockInfoOmitKey>;
-
-export interface IGoodsModel extends Omit<IGoods, "goodsImageUrl" | "goodsImageThumbnailData"> {
   goodsImageId?: number | null;
 }
 
-export type GoodsCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "type" | "price" | "stockInitial" | "stockRemaining" | "stockVisibility" | "ownerMembersId";
-export type IGoodsCreateRequest = Pick<IGoods, GoodsCreateRequestKey>;
+/* === Requests === */
+export interface IGoodsCreateRequest extends Omit<IGoodsCommon, "id" | "combinationId"> { }
+export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCommon, "id" | "combinationId">> { }
 
-export type GoodsUpdateRequestKey = GoodsCreateRequestKey | "combinationId" | "status" | "statusReason";
-export type IGoodsUpdateRequest = Pick<IGoods, "boothId"> & Partial<Pick<IGoods, GoodsUpdateRequestKey>>;
+/* === Responses === */
+export interface IGoodsResponse extends IGoodsCommon {
+  goodsImage?: IImageUploadInfo | null;
+}
+
+export interface IGoodsAdminResponse extends IGoodsResponse {
+  stock: Required<IGoodsStock>;
+}

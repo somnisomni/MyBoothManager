@@ -1,28 +1,37 @@
-import type { IDataModelBase } from "./base";
-
-export interface IAccount extends IDataModelBase {
+/* === Common === */
+interface IAccountCommon {
   id: number;
   name: string;
   loginId: string;
-  loginPassHash: string;
-  loginCount: number;
-  lastLoginAt: Date;
-  lastSelectedBoothId?: number;
+  lastSelectedBoothId?: number | null;
 }
-export type IAccountResponse = IAccount;
-export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount"> & { superAdmin?: boolean };
 
-export interface IAccountLoginTokenData {
+export interface IAccountAuthToken {
   accessToken: string;
   refreshToken: string;
 }
-export type IAccountLoginResponse = IAccountUserland & IAccountLoginTokenData;
+
+/* === Model for Backend (DB) === */
+export interface IAccountModel extends IAccountCommon {
+  loginCount: number;
+  loginPassHash: string;
+  lastLoginAt: Date;
+}
+
+/* === Requests === */
+export interface IAccountCreateRequest {
+  name: string;
+  loginId: string;
+  loginPass: string;
+}
+
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;
-  confirmLogoutExistingSession?: boolean;
+  confirmLogoutExistingSession?: boolean | null;
 }
 
-export interface IAccountCreateRequest extends Pick<IAccount, "name" | "loginId"> {
-  loginPass: string;
+/* === Responses === */
+export interface IAccountLoginResponse extends IAccountCommon, IAccountAuthToken {
+  superAdmin?: boolean | null;
 }
