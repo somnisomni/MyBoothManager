@@ -26,7 +26,7 @@
       <div v-if="isDataFetched && !fetchError">
         <BoothInfoSection :boothData="boothData" />
 
-        <VContainer>
+        <VContainer class="adjusted-vcontainer">
           <div>
             <div v-if="boothData?.status !== BoothStatus.CLOSE"
                  class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
@@ -76,7 +76,11 @@
             <VDivider class="mb-2" />
 
             <VExpandTransition>
-              <VImg v-show="boothInfoExpanded" :src="getUploadFilePath(boothData?.infoImageUrl)" class="w-100 no-interaction rounded-lg" cover position="top" />
+              <VImg v-show="boothInfoExpanded"
+                    :src="getUploadFilePath(boothData?.infoImageUrl)"
+                    class="booth-info-image w-100 no-interaction rounded-lg"
+                    cover
+                    position="top" />
             </VExpandTransition>
           </div>
 
@@ -296,3 +300,17 @@ export default class IndividualBoothPage extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.adjusted-vcontainer {
+  @media (min-width: 960px) { max-width: unset; }
+  @media (min-width: 1000px) { max-width: 980px; }
+  @media (min-width: 1280px) { max-width: 1205px; }
+  @media (min-width: 1920px) { max-width: 1670px; }
+
+  .booth-info-image {
+    max-width: 1280px;
+    margin: auto;
+  }
+}
+</style>
