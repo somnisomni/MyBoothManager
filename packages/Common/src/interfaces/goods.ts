@@ -37,7 +37,7 @@ export interface IGoodsAdmin extends IGoods {
 }
 
 /* === Model for Backend (DB) === */
-export interface IGoodsModel extends Omit<IGoodsCommon, "stock" | "ownerMemberIds"> {
+export interface IGoodsModel extends Omit<IGoodsCommon, "stock"> {
   stockVisibility: GoodsStockVisibility;
   stockInitial: number;
   stockRemaining: number;

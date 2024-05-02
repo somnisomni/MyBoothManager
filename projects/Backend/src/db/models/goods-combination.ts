@@ -1,24 +1,19 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import { GoodsStockVisibility, GoodsWithoutAllStockInfoOmitKey, GoodsWithoutInitialStockInfoOmitKey, IGoodsCombinationModel } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsCombinationAdminResponse, IGoodsCombinationCreateRequest, IGoodsCombinationModel, IGoodsCombinationResponse } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany, DefaultScope } from "sequelize-typescript";
-import { deleteKeys } from "@/lib/common-functions";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
 import Goods from "./goods";
 
-export type GoodsCombinationCreationAttributes = Omit<IGoodsCombinationModel, InternalKeysWithId | "description">
-                               & Partial<Pick<IGoodsCombinationModel, "description">>;
-
 @Table
 @DefaultScope(() => ({
   include: [
     { model: Goods, as: "combinedGoods" },
-    { model: UploadStorage, as: "combinationImage" },
+    { model: UploadStorage, as: "goodsImage" },
   ],
 }))
-export default class GoodsCombination extends Model<IGoodsCombinationModel, GoodsCombinationCreationAttributes> implements IGoodsCombinationModel {
+export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoodsCombinationCreateRequest> implements IGoodsCombinationModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -56,12 +51,6 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
   declare stockVisibility: GoodsStockVisibility;
 
-  @AllowNull
-  @Default(null)
-  @ForeignKey(() => UploadStorage)
-  @Column(DataTypes.INTEGER.UNSIGNED)
-  declare combinationImageId?: number | null;
-
   @Column(DataTypes.VIRTUAL)
   get stockInitial(): number {
     if(this.combinedGoods && this.combinedGoods.length > 0) {
@@ -83,29 +72,17 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   @Column(DataTypes.VIRTUAL)
   get ownerMemberIds(): number[] {
     if(this.combinedGoods && this.combinedGoods.length > 0) {
-      return this.combinedGoods.flatMap(g => (g.ownerMembersId ?? []).flat());
+      return this.combinedGoods.flatMap(g => (g.ownerMemberIds ?? []).flat());
     } else {
       return [];
     }
   }
 
-  @Column(DataTypes.VIRTUAL)
-  get combinationImageUrl(): string | null {
-    if(this.combinationImage) {
-      return this.combinationImage.filePath ?? null;
-    } else {
-      return null;
-    }
-  }
-
-  @Column(DataTypes.VIRTUAL)
-  get combinationImageThumbnailData(): string | null {
-    if(this.combinationImage) {
-      return this.combinationImage.imageThumbnailBase64 ?? null;
-    } else {
-      return null;
-    }
-  }
+  @AllowNull
+  @Default(null)
+  @ForeignKey(() => UploadStorage)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare goodsImageId?: number | null;
 
 
   /* === Relations === */
@@ -118,20 +95,43 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, Good
   @BelongsTo(() => GoodsCategory)
   declare assignedGoodsCategory?: GoodsCategory;
 
-  @BelongsTo(() => UploadStorage, "combinationImageId")
-  declare combinationImage?: UploadStorage;
+  @BelongsTo(() => UploadStorage, "goodsImageId")
+  declare goodsImage?: UploadStorage;
 
 
   /* === Functions === */
-  getForPublic(): IGoodsCombinationModel {
+  getResponseForPublic(): IGoodsCombinationResponse {
     const thisGet = this.get();
 
-    if(thisGet.stockVisibility === GoodsStockVisibility.HIDE_ALL) {
-      deleteKeys(thisGet as unknown as Record<string, unknown>, GoodsWithoutAllStockInfoOmitKey);
-    } else if(thisGet.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY) {
-      deleteKeys(thisGet as unknown as Record<string, unknown>, GoodsWithoutInitialStockInfoOmitKey);
-    }
+    const output: IGoodsCombinationResponse = {
+      id: thisGet.id,
+      boothId: thisGet.boothId,
+      categoryId: thisGet.categoryId,
+      name: thisGet.name,
+      description: thisGet.description,
+      price: thisGet.price,
+      stock: {
+        visibility: thisGet.stockVisibility,
+        initial: thisGet.stockVisibility === GoodsStockVisibility.SHOW_ALL ? thisGet.stockInitial : undefined,
+        remaining: thisGet.stockVisibility !== GoodsStockVisibility.HIDE_ALL ?  thisGet.stockRemaining : undefined,
+      },
+      ownerMemberIds: thisGet.ownerMemberIds,
+      goodsImage: thisGet.goodsImageId ? this.goodsImage?.toImageUploadInfo() : undefined,
+    };
 
-    return thisGet;
+    return output;
+  }
+
+  getResponseForAdmin(): IGoodsCombinationAdminResponse {
+    const output = this.getResponseForPublic();
+
+    return {
+      ...output,
+      stock: {
+        visibility: this.get("stockVisibility"),
+        initial: this.get("stockInitial"),
+        remaining: this.get("stockRemaining"),
+      },
+    };
   }
 }

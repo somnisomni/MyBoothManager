@@ -16,7 +16,7 @@ export interface IGoodsCombinationAdmin extends IGoodsCombination {
 }
 
 /* === Model for Backend (DB) === */
-export interface IGoodsCombinationModel extends Omit<IGoodsCombinationCommon, "stock" | "ownerMemberIds"> {
+export interface IGoodsCombinationModel extends Omit<IGoodsCombinationCommon, "stock"> {
   stockVisibility: GoodsStockVisibility;
   stockInitial: number;
   stockRemaining: number;

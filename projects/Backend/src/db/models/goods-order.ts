@@ -1,19 +1,16 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import { type IGoodsOrder, type IGoodsOrderDetailItem, GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
+import { type IGoodsOrder, type IGoodsOrderItem, GoodsOrderPaymentMethod, GoodsOrderStatus, IGoodsOrderCreateRequest, IGoodsOrderModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
 
-const orderSanitizerCallback = (order: IGoodsOrderDetailItem): IGoodsOrderDetailItem => {
+const orderSanitizerCallback = (order: IGoodsOrderItem): IGoodsOrderItem => {
   order.price = order.price ? parseFloat(new Number(order.price).toFixed(3)) : undefined;
   order.quantity = Math.floor(new Number(order.quantity).valueOf());
   return order;
 };
 
-export type GoodsOrderCreationAttributes = Omit<IGoodsOrder, InternalKeysWithId>;
-
 @Table
-export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAttributes> implements IGoodsOrder {
+export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequest> implements IGoodsOrderModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -28,8 +25,8 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
 
   @AllowNull(false)
   @Column(DataTypes.JSON)
-  get order(): Array<IGoodsOrderDetailItem> { return this.getDataValue("order").map(orderSanitizerCallback); }
-  set order(value: Array<IGoodsOrderDetailItem>) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
+  get order(): Array<IGoodsOrderItem> { return this.getDataValue("order").map(orderSanitizerCallback); }
+  set order(value: Array<IGoodsOrderItem>) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
 
   @AllowNull(false)
   @Default(GoodsOrderStatus.RECORDED)
@@ -38,8 +35,8 @@ export default class GoodsOrder extends Model<IGoodsOrder, GoodsOrderCreationAtt
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  get totalPrice(): number { return Math.floor(this.getDataValue("totalPrice")); }
-  set totalPrice(value: number) { this.setDataValue("totalPrice", Math.floor(value)); }
+  get totalRevenue(): number { return Math.floor(this.getDataValue("totalRevenue")); }
+  set totalRevenue(value: number) { this.setDataValue("totalRevenue", Math.floor(value)); }
 
   @AllowNull
   @Default(GoodsOrderPaymentMethod.CASH)

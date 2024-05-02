@@ -1,15 +1,10 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import { GoodsStatus, GoodsStockVisibility, GoodsWithoutAllStockInfoOmitKey, GoodsWithoutInitialStockInfoOmitKey, IGoodsModel } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsAdminResponse, IGoodsCreateRequest, IGoodsModel, IGoodsResponse } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
-import { deleteKeys } from "@/lib/common-functions";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
 import GoodsCombination from "./goods-combination";
-
-export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
-                                      & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
 
 @Table
 @DefaultScope(() => ({
@@ -20,7 +15,7 @@ export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "de
     },
   ],
 }))
-export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> implements IGoodsModel {
+export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> implements IGoodsModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -60,16 +55,6 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   declare type?: string;
 
   @AllowNull(false)
-  @Default(GoodsStatus.ON_SALE)
-  @Column(DataTypes.ENUM(...Object.values(GoodsStatus)))
-  declare status: GoodsStatus;
-
-  @AllowNull
-  @Default(null)
-  @Column(DataTypes.STRING(1024))
-  declare statusReason?: string;
-
-  @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
   get price(): number { return parseFloat(this.getDataValue("price").toFixed(3)); }
   set price(value: number) { this.setDataValue("price", parseFloat(new Number(value).toFixed(3))); }
@@ -92,7 +77,7 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   @AllowNull
   @Default([])
   @Column(DataTypes.JSON)
-  declare ownerMembersId?: number[];
+  declare ownerMemberIds?: number[];
 
   @AllowNull
   @Default(null)
@@ -134,15 +119,40 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
 
 
   /* === Functions === */
-  getForPublic(): IGoodsModel {
+  getResponseForPublic(): IGoodsResponse {
     const thisGet = this.get();
 
-    if(thisGet.stockVisibility === GoodsStockVisibility.HIDE_ALL) {
-      deleteKeys(thisGet, GoodsWithoutAllStockInfoOmitKey);
-    } else if(thisGet.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY) {
-      deleteKeys(thisGet, GoodsWithoutInitialStockInfoOmitKey);
-    }
+    const output: IGoodsResponse = {
+      id: thisGet.id,
+      boothId: thisGet.boothId,
+      categoryId: thisGet.categoryId,
+      combinationId: thisGet.combinationId,
+      name: thisGet.name,
+      description: thisGet.description,
+      type: thisGet.type,
+      price: thisGet.price,
+      stock: {
+        visibility: thisGet.stockVisibility,
+        initial: thisGet.stockVisibility === GoodsStockVisibility.SHOW_ALL ? thisGet.stockInitial : undefined,
+        remaining: thisGet.stockVisibility !== GoodsStockVisibility.HIDE_ALL ?  thisGet.stockRemaining : undefined,
+      },
+      ownerMemberIds: thisGet.ownerMemberIds,
+      goodsImage: thisGet.goodsImageId ? this.goodsImage?.toImageUploadInfo() : undefined,
+    };
 
-    return thisGet;
+    return output;
+  }
+
+  getResponseForAdmin(): IGoodsAdminResponse {
+    const output = this.getResponseForPublic();
+
+    return {
+      ...output,
+      stock: {
+        visibility: this.get("stockVisibility"),
+        initial: this.get("stockInitial"),
+        remaining: this.get("stockRemaining"),
+      },
+    };
   }
 }

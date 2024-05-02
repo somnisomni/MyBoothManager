@@ -1,9 +1,7 @@
-import { IDataModelBase } from "@myboothmanager/common";
-
 export type InternalKeys = "createdAt" | "updatedAt" | "deletedAt";
 export type InternalKeysWithId = InternalKeys | "id";
 
-export interface IUploadStorage extends IDataModelBase {
+export interface IUploadStorage {
   id: number;
   ownerId: number;  // Foreign key to Account.id
 

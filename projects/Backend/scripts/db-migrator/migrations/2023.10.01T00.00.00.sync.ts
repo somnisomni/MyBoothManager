@@ -5,7 +5,6 @@
 /* *** Timestamp of this file is bogus; not reflects actual time of change *** */
 
 import { DataTypes } from "sequelize";
-import { BoothStatus, GoodsStatus } from "@myboothmanager/common";
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
@@ -85,7 +84,7 @@ export const up: Migration = async ({ context }) => {
     status: {
       type: DataTypes.ENUM("open", "pause", "close", "prepare"),
       allowNull: false,
-      defaultValue: BoothStatus.PREPARE,
+      defaultValue: "prepare",
     },
     statusReason: {
       type: DataTypes.STRING(1024),
@@ -189,7 +188,7 @@ export const up: Migration = async ({ context }) => {
     status: {
       type: DataTypes.ENUM("on_sale", "pause", "sold_out"),
       allowNull: false,
-      defaultValue: GoodsStatus.ON_SALE,
+      defaultValue: "on_sale",
     },
     statusReason: {
       type: DataTypes.STRING(1024),

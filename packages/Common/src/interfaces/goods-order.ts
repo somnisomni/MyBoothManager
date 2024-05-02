@@ -38,6 +38,12 @@ export enum GoodsOrderPaymentMethod {
   PREPAID = "prepaid",
 }
 
+/* === Frontend === */
+export interface IGoodsOrder extends IGoodsOrderCommon { }
+
+/* === Model for Backend (DB) === */
+export interface IGoodsOrderModel extends IGoodsOrderCommon { }
+
 /* === Requests === */
 export interface IGoodsOrderCreateRequest extends Omit<IGoodsOrderCommon, "id" | "status" | "createdAt"> { }
 export interface IGoodsOrderStatusUpdateRequest extends Pick<IGoodsOrderCommon, "status"> { }

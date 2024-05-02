@@ -1,5 +1,4 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import { BoothStatus, type IBoothModel, IBoothExpense } from "@myboothmanager/common";
+import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest, IBoothResponse, IBoothAdminResponse } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Account from "./account";
@@ -9,9 +8,6 @@ import UploadStorage from "./uploadstorage";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
 import BoothMember from "./booth-member";
-
-export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "expenses" | "bannerImageId" | "infoImageId">
-                                     & Partial<Pick<IBoothModel, "description" | "boothNumber" | "status" | "statusReason" | "statusPublishContent" | "expenses" | "bannerImageId" | "infoImageId">>;
 
 @Table
 @DefaultScope(() => ({
@@ -23,7 +19,7 @@ export type BoothCreationAttributes = Omit<IBoothModel, InternalKeysWithId | "de
     model: UploadStorage,
   }],
 }))
-export default class Booth extends Model<IBoothModel, BoothCreationAttributes> implements IBoothModel {
+export default class Booth extends Model<IBoothModel, IBoothCreateRequest> implements IBoothModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -85,7 +81,7 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @AllowNull(false)
   @Default(false)
   @Column(DataTypes.BOOLEAN)
-  declare statusPublishContent?: boolean;
+  declare statusContentPublished?: boolean;
 
   @AllowNull
   @Default(null)
@@ -93,29 +89,11 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare bannerImageId?: number | null;
 
-  @Column(DataTypes.VIRTUAL)
-  get bannerImageUrl(): string | null {
-    if(this.bannerImage) {
-      return this.bannerImage.filePath;
-    } else {
-      return null;
-    }
-  }
-
   @AllowNull
   @Default(null)
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.JSON)
   declare infoImageId?: number | null;
-
-  @Column(DataTypes.VIRTUAL)
-  get infoImageUrl(): string | null {
-    if(this.infoImage) {
-      return this.infoImage.filePath;
-    } else {
-      return null;
-    }
-  }
 
 
   /* === Relations === */
@@ -142,4 +120,40 @@ export default class Booth extends Model<IBoothModel, BoothCreationAttributes> i
 
   @BelongsTo(() => UploadStorage, "infoImageId")
   declare infoImage?: UploadStorage;
+
+
+  /* === Functions === */
+  getResponseForPublic(): IBoothResponse {
+    const thisGet = this.get();
+
+    const output: IBoothResponse = {
+      id: thisGet.id,
+      ownerId: thisGet.ownerId,
+      name: thisGet.name,
+      description: thisGet.description,
+      location: thisGet.location,
+      boothNumber: thisGet.boothNumber,
+      currencySymbol: thisGet.currencySymbol,
+      dateOpen: thisGet.dateOpen,
+      dateClose: thisGet.dateClose,
+      status: {
+        status: thisGet.status,
+        reason: thisGet.statusReason ?? undefined,
+        contentPublished: thisGet.statusContentPublished ?? undefined,
+      },
+      bannerImage: thisGet.bannerImageId ? this.bannerImage?.toImageUploadInfo() : undefined,
+      infoImage: thisGet.infoImageId ? this.infoImage?.toImageUploadInfo() : undefined,
+    };
+
+    return output;
+  }
+
+  getResponseForAdmin(): IBoothAdminResponse {
+    const output = this.getResponseForPublic();
+
+    return {
+      ...output,
+      expenses: this.get("expenses"),
+    };
+  }
 }
