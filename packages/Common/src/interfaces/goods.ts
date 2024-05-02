@@ -27,6 +27,15 @@ export enum GoodsStockVisibility {
   SHOW_ALL = "show_all",
 }
 
+/* === Frontend === */
+export interface IGoods extends IGoodsCommon {
+  goodsImage?: IImageUploadInfo | null;
+}
+
+export interface IGoodsAdmin extends IGoods {
+  stock: Required<IGoodsStock>;
+}
+
 /* === Model for Backend (DB) === */
 export interface IGoodsModel extends Omit<IGoodsCommon, "stock" | "ownerMemberIds"> {
   stockVisibility: GoodsStockVisibility;
@@ -40,10 +49,5 @@ export interface IGoodsCreateRequest extends Omit<IGoodsCommon, "id" | "combinat
 export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCommon, "id" | "combinationId">> { }
 
 /* === Responses === */
-export interface IGoodsResponse extends IGoodsCommon {
-  goodsImage?: IImageUploadInfo | null;
-}
-
-export interface IGoodsAdminResponse extends IGoodsResponse {
-  stock: Required<IGoodsStock>;
-}
+export interface IGoodsResponse extends IGoods { }
+export interface IGoodsAdminResponse extends IGoodsAdmin { }

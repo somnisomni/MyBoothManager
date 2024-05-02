@@ -1,14 +1,27 @@
 /* eslint-disable import/exports-last */
-// TODO: Intersection types is not working as expected
 
-import { IGoodsAdminResponse, IGoodsCommon, IGoodsModel, IGoodsResponse } from "./goods";
+import { IImageUploadInfo } from "./base";
+import { GoodsStockVisibility, IGoodsCommon, IGoodsStock } from "./goods";
 
 /* === Common === */
 interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId" | "type"> { }
 
+/* === Frontend === */
+export interface IGoodsCombination extends IGoodsCombinationCommon {
+  goodsImage?: IImageUploadInfo | null;
+}
+
+export interface IGoodsCombinationAdmin extends IGoodsCombination {
+  stock: Required<IGoodsStock>;
+}
+
 /* === Model for Backend (DB) === */
-type GoodsCombinationModelBase = IGoodsCombinationCommon & IGoodsModel;
-export interface IGoodsCombinationModel extends GoodsCombinationModelBase { }
+export interface IGoodsCombinationModel extends Omit<IGoodsCombinationCommon, "stock" | "ownerMemberIds"> {
+  stockVisibility: GoodsStockVisibility;
+  stockInitial: number;
+  stockRemaining: number;
+  goodsImageId?: number | null;
+}
 
 /* === Requests === */
 export interface IGoodsCombinationCreateRequest extends Omit<IGoodsCombinationCommon, "id"> {
@@ -20,8 +33,5 @@ export interface IGoodsCombinationUpdateRequest extends Partial<Omit<IGoodsCombi
 }
 
 /* === Responses === */
-type GoodsCombinationResponseBase = IGoodsCombinationCommon & IGoodsResponse;
-export interface IGoodsCombinationResponse extends GoodsCombinationResponseBase { }
-
-type GoodsCombinationAdminResponseBase = IGoodsCombinationCommon & IGoodsAdminResponse;
-export interface IGoodsCombinationAdminResponse extends GoodsCombinationAdminResponseBase { }
+export interface IGoodsCombinationResponse extends IGoodsCombination { }
+export interface IGoodsCombinationAdminResponse extends IGoodsCombinationAdmin { }

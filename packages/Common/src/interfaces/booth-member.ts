@@ -11,6 +11,11 @@ interface IBoothMemberCommon {
   url?: string | null;
 }
 
+/* === Frontend === */
+export interface IBoothMember extends IBoothMemberCommon {
+  avatarImage?: IImageUploadInfo | null;
+}
+
 /* === Model for Backend (DB) === */
 export interface IBoothMemberModel extends IBoothMemberCommon {
   avatarImageId?: number | null;
@@ -21,6 +26,4 @@ export interface IBoothMemberCreateRequest extends Omit<IBoothMemberCommon, "id"
 export interface IBoothMemberUpdateRequest extends Partial<Omit<IBoothMemberCommon, "id" | "boothId">>, Pick<IBoothMemberCommon, "boothId">  { }
 
 /* === Responses === */
-export interface IBoothMemberResponse extends IBoothMemberCommon {
-  avatarImage?: IImageUploadInfo | null;
-}
+export interface IBoothMemberResponse extends IBoothMember { }

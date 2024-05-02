@@ -33,6 +33,16 @@ export enum BoothStatus {
   PREPARE = "prepare",
 }
 
+/* === Frontend === */
+export interface IBooth extends IBoothCommon {
+  bannerImage?: IImageUploadInfo | null;
+  infoImage?: IImageUploadInfo | null;
+}
+
+export interface IBoothAdmin extends IBooth {
+  expenses: Array<IBoothExpense>;
+}
+
 /* === Model for Backend (DB) === */
 export interface IBoothModel extends Omit<IBoothCommon, "status"> {
   status: BoothStatus;
@@ -49,11 +59,5 @@ export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "
 export interface IBoothStatusUpdateRequest extends IBoothStatus { }
 
 /* === Responses === */
-export interface IBoothResponse extends IBoothCommon {
-  bannerImage?: IImageUploadInfo | null;
-  infoImage?: IImageUploadInfo | null;
-}
-
-export interface IBoothAdminResponse extends IBoothResponse {
-  expenses: Array<IBoothExpense>;
-}
+export interface IBoothResponse extends IBooth { }
+export interface IBoothAdminResponse extends IBoothAdmin { }

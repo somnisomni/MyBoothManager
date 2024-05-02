@@ -1,12 +1,12 @@
-import { BoothStatus, IBooth } from "../../interfaces/booth";
+import { BoothStatus, IBoothAdmin } from "../../interfaces/booth";
 import { deleteSequelizeInternalKeys, WithSequelizeInternals } from "../internals";
 
-const testBooth: IBooth = {
+const testBooth: IBoothAdmin = {
   id: 1234,
   ownerId: 5678,
   currencySymbol: "$",
   name: "TEST BOOTH",
-  status: BoothStatus.OPEN,
+  status: { status: BoothStatus.OPEN },
   location: "SOMEWHERE",
   description: "DESCRIPTION",
   expenses: [],
@@ -14,7 +14,7 @@ const testBooth: IBooth = {
   dateClose: new Date(),
 };
 
-const testBoothWithInternals: WithSequelizeInternals<IBooth> = {
+const testBoothWithInternals: WithSequelizeInternals<IBoothAdmin> = {
   ...testBooth,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -25,7 +25,7 @@ describe("src/utils/internals.ts", () => {
     expect(testBoothWithInternals).toHaveProperty("createdAt");
     expect(testBoothWithInternals).toHaveProperty("updatedAt");
 
-    const result = deleteSequelizeInternalKeys<IBooth>(testBoothWithInternals);
+    const result = deleteSequelizeInternalKeys<IBoothAdmin>(testBoothWithInternals);
 
     expect(result).not.toHaveProperty("createdAt");
     expect(result).not.toHaveProperty("updatedAt");
@@ -37,7 +37,7 @@ describe("src/utils/internals.ts", () => {
     expect(testBooth).not.toHaveProperty("createdAt");
     expect(testBooth).not.toHaveProperty("updatedAt");
 
-    const result = deleteSequelizeInternalKeys<IBooth>(testBooth);
+    const result = deleteSequelizeInternalKeys<IBoothAdmin>(testBooth);
 
     expect(result).not.toHaveProperty("createdAt");
     expect(result).not.toHaveProperty("updatedAt");

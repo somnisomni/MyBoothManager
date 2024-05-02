@@ -11,6 +11,11 @@ export interface IAccountAuthToken {
   refreshToken: string;
 }
 
+/* === Frontend === */
+export interface IAccount extends IAccountCommon {
+  superAdmin?: boolean | null;
+}
+
 /* === Model for Backend (DB) === */
 export interface IAccountModel extends IAccountCommon {
   loginCount: number;
@@ -32,6 +37,4 @@ export interface IAccountLoginRequest {
 }
 
 /* === Responses === */
-export interface IAccountLoginResponse extends IAccountCommon, IAccountAuthToken {
-  superAdmin?: boolean | null;
-}
+export interface IAccountLoginResponse extends IAccount, IAccountAuthToken { }
