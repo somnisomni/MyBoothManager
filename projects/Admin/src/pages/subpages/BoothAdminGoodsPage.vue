@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import type { IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
+import type { ErrorCodes, IGoodsCategory } from "@myboothmanager/common";
 import type { Goods, GoodsCombination, GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Vue, Component } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
@@ -54,6 +54,7 @@ import { getUploadFilePath } from "@/lib/functions";
 import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
 import GoodsCategoryTitleManageable from "@/components/goods/GoodsCategoryTitleManageable.vue";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({
   components: {
@@ -129,13 +130,21 @@ export default class BoothAdminGoodsPage extends Vue {
     this.deleteDialogOpen = true;
   }
 
-  confirmDelete(target: typeof this.deleteDialogTarget) {
-    if(target) {
-      if(target.isCombination) {
-        alert("WIP: dry delete combination #" + target.id);
-      } else {
-        alert("WIP: dry delete goods #" + target.id);
-      }
+  async confirmDelete(target: typeof this.deleteDialogTarget) {
+    if(!target) return;
+
+    let response: true | ErrorCodes;
+
+    if(target.isCombination) {
+      response = await useAdminAPIStore().deleteGoodsCombination(target.id);
+    } else {
+      response = await useAdminAPIStore().deleteGoods(target.id);
+    }
+
+    if(typeof response === "boolean" && response === true) {
+      this.deleteDialogOpen = false;
+    } else {
+      alert("오류 " + response);
     }
   }
 }
