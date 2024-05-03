@@ -23,8 +23,8 @@ export class PublicBoothMemberService {
     else return member;
   }
 
-  async findAll(boothId: number): Promise<Array<BoothMember>> {
-    PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+  async findAll(boothId: number, isAdmin: boolean = false): Promise<Array<BoothMember>> {
+    if(!isAdmin) PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
 
     return await BoothMember.findAll({
       where: { boothId },

@@ -2,6 +2,9 @@ import type { FastifyRequest } from "fastify";
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query, ParseBoolPipe, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
 import { PublicBoothService } from "@/modules/public/booth/booth.service";
 import { PublicBoothMemberService } from "@/modules/public/booth-member/booth-member.service";
+import { PublicGoodsCombinationService } from "@/modules/public/goods-combination/goods-combination.service";
+import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
+import { PublicGoodsService } from "@/modules/public/goods/goods.service";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
@@ -23,6 +26,9 @@ export class BoothController {
     private readonly boothService: BoothService,
     private readonly publicBoothService: PublicBoothService,
     private readonly publicBoothMemberService: PublicBoothMemberService,
+    private readonly publicGoodsService: PublicGoodsService,
+    private readonly publicGoodsCombinationService: PublicGoodsCombinationService,
+    private readonly publicGoodsCategoryService: PublicGoodsCategoryService,
     private readonly utilService: UtilService) {}
 
   /* Normal routes */
@@ -44,25 +50,25 @@ export class BoothController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/member")
   async findAllBoothMember(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminBoothMemberResponseDto>> {
-    return (await this.publicBoothMemberService.findAll(+boothId))
+    return (await this.publicBoothMemberService.findAll(+boothId, true))
       .map((member) => new AdminBoothMemberResponseDto(member));
   }
 
   @Get(":id/goods")
   async findAllBoothGoods(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminGoodsResponseDto>> {
-    return (await this.publicBoothService.findAllGoodsOfBooth(+boothId))
+    return (await this.publicGoodsService.findAll(+boothId, true))
       .map((goods) => new AdminGoodsResponseDto(goods));
   }
 
   @Get(":id/goods/combination")
   async findAllBoothGoodsCombination(@Param("id") boothId: string, @AuthData() authData: IAuthPayload):Promise<Array<AdminGoodsCombinationResponseDto>> {
-    return (await this.publicBoothService.findAllGoodsCombinationOfBooth(+boothId))
+    return (await this.publicGoodsCombinationService.findAll(+boothId, true))
       .map((combination) => new AdminGoodsCombinationResponseDto(combination));
   }
 
   @Get(":id/goods/category")
   async findAllBoothGoodsCategory(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminGoodsCategoryResponseDto>> {
-    return (await this.publicBoothService.findAllGoodsCategoryOfBooth(+boothId))
+    return (await this.publicGoodsCategoryService.findAll(+boothId, true))
       .map((category) => new AdminGoodsCategoryResponseDto(category));
   }
 

@@ -14,8 +14,8 @@ export class PublicGoodsCombinationService {
     return combination;
   }
 
-  async findAll(boothId?: number): Promise<Array<GoodsCombination>> {
-    if(boothId) {
+  async findAll(boothId?: number, isAdmin: boolean = false): Promise<Array<GoodsCombination>> {
+    if(boothId && !isAdmin) {
       PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
     }
 
