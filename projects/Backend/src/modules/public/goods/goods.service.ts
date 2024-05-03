@@ -1,15 +1,24 @@
 import { Injectable } from "@nestjs/common";
-import { IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { ISingleValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import { findOneByPk } from "@/lib/common-functions";
+import { PublicCommon } from "../common";
 
 @Injectable()
 export class PublicGoodsService {
   async findOne(goodsId: number): Promise<Goods> {
-    return await findOneByPk(Goods, goodsId);
+    const goods = await findOneByPk(Goods, goodsId);
+
+    PublicCommon.throwIfBoothNotPublicilyAccessible(goods.boothId);
+
+    return goods;
   }
 
   async findAll(boothId?: number): Promise<Array<Goods>> {
+    if(boothId) {
+      PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+    }
+
     const where = boothId ? { boothId } : undefined;
 
     return await Goods.findAll({
@@ -20,7 +29,11 @@ export class PublicGoodsService {
     });
   }
 
-  async countAll(boothId?: number): Promise<IValueResponse> {
+  async countAll(boothId?: number): Promise<ISingleValueResponse<number>> {
+    if(boothId) {
+      PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+    }
+
     const where = boothId ? { boothId } : undefined;
     return { value: await Goods.count({ where }) };
   }

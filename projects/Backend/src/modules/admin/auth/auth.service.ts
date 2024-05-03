@@ -5,8 +5,8 @@ import { JwtService } from "@nestjs/jwt";
 import { InvalidRequestBodyException } from "@/lib/exceptions";
 import { AccountService } from "../account/account.service";
 import { IAuthPayload, generateAuthToken, generateAuthTokenSA, generateRefreshToken, verifyRefreshToken } from "./jwt";
-import { LoginDTO } from "./dto/login.dto";
-import { RefreshDTO } from "./dto/refresh.dto";
+import { LoginRequestDto } from "./dto/login.dto";
+import { RefreshRequestDto } from "./dto/refresh.dto";
 import AuthStorage from "./auth.storage";
 import { InvalidRefreshTokenException, LoginAccountNotFoundException, LoginSessionAlreadyExistsException, NeedReloginException, RefreshTokenExpiredException } from "./auth.exception";
 
@@ -36,7 +36,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDTO, updateLoginCount: boolean = true): Promise<IAccountLoginResponse> {
+  async login(loginDto: LoginRequestDto, updateLoginCount: boolean = true): Promise<IAccountLoginResponse> {
     const account = await this.accountService.findOneByLoginId(loginDto.loginId, false);
 
     if(!account || !(await argon2.verify(account.loginPassHash, loginDto.loginPass))) {
@@ -74,7 +74,7 @@ export class AuthService {
     return SUCCESS_RESPONSE;
   }
 
-  async refresh(refreshDto: RefreshDTO): Promise<IAccountLoginResponse> {
+  async refresh(refreshDto: RefreshRequestDto): Promise<IAccountLoginResponse> {
     if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
 
     const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);

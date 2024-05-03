@@ -1,4 +1,4 @@
-import { GoodsStockVisibility, IGoodsAdminResponse, IGoodsCreateRequest, IGoodsModel, IGoodsResponse } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsCreateRequest, IGoodsModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
@@ -47,12 +47,12 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(1024))
-  declare description?: string;
+  declare description?: string | null;
 
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(128))
-  declare type?: string;
+  declare type?: string | null;
 
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
@@ -70,7 +70,7 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(new Number(value).valueOf())); }
 
   @AllowNull(false)
-  @Default(GoodsStockVisibility.SHOW_ALL)
+  @Default(GoodsStockVisibility.SHOW_REMAINING_ONLY)
   @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
   declare stockVisibility: GoodsStockVisibility;
 
@@ -85,24 +85,6 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare goodsImageId?: number | null;
 
-  @Column(DataTypes.VIRTUAL)
-  get goodsImageUrl(): string | null {
-    if(this.goodsImage) {
-      return this.goodsImage.filePath ?? null;
-    } else {
-      return null;
-    }
-  }
-
-  @Column(DataTypes.VIRTUAL)
-  get goodsImageThumbnailData(): string | null {
-    if(this.goodsImage) {
-      return this.goodsImage.imageThumbnailBase64 ?? null;
-    } else {
-      return null;
-    }
-  }
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)
@@ -116,43 +98,4 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
 
   @BelongsTo(() => UploadStorage, "goodsImageId")
   declare goodsImage?: UploadStorage;
-
-
-  /* === Functions === */
-  getResponseForPublic(): IGoodsResponse {
-    const thisGet = this.get();
-
-    const output: IGoodsResponse = {
-      id: thisGet.id,
-      boothId: thisGet.boothId,
-      categoryId: thisGet.categoryId,
-      combinationId: thisGet.combinationId,
-      name: thisGet.name,
-      description: thisGet.description,
-      type: thisGet.type,
-      price: thisGet.price,
-      stock: {
-        visibility: thisGet.stockVisibility,
-        initial: thisGet.stockVisibility === GoodsStockVisibility.SHOW_ALL ? thisGet.stockInitial : undefined,
-        remaining: thisGet.stockVisibility !== GoodsStockVisibility.HIDE_ALL ?  thisGet.stockRemaining : undefined,
-      },
-      ownerMemberIds: thisGet.ownerMemberIds,
-      goodsImage: thisGet.goodsImageId ? this.goodsImage?.toImageUploadInfo() : undefined,
-    };
-
-    return output;
-  }
-
-  getResponseForAdmin(): IGoodsAdminResponse {
-    const output = this.getResponseForPublic();
-
-    return {
-      ...output,
-      stock: {
-        visibility: this.get("stockVisibility"),
-        initial: this.get("stockInitial"),
-        remaining: this.get("stockRemaining"),
-      },
-    };
-  }
 }

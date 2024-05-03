@@ -43,7 +43,7 @@ import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { ref, type Ref as VueRef } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothManageDialog from "./BoothManageDialog.vue";
@@ -85,7 +85,7 @@ export default class BoothSelectionDialog extends Vue {
   }
 
   getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
-    return getUploadFilePath(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
+    return getUploadFileUrl(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
   }
 
   showBoothAddDialog(): void {

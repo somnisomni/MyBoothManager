@@ -1,11 +1,11 @@
 import * as argon2 from "argon2";
-import { BoothStatus, GoodsStockVisibility } from "@myboothmanager/common";
+import { BoothStatus, GoodsStockVisibility, IAccountModel, IBoothModel, IGoodsCategoryModel, IGoodsCombinationModel, IGoodsModel } from "@myboothmanager/common";
 import { WhereOptions , Op } from "sequelize";
-import Account, { AccountCreationAttributes } from "@/db/models/account";
-import Booth, { BoothCreationAttributes } from "@/db/models/booth";
-import GoodsCategory, { GoodsCategoryCreationAttributes } from "@/db/models/goods-category";
-import Goods, { GoodsCreationAttributes } from "@/db/models/goods";
-import GoodsCombination, { GoodsCombinationCreationAttributes } from "@/db/models/goods-combination";
+import Account from "@/db/models/account";
+import Booth from "@/db/models/booth";
+import GoodsCategory from "@/db/models/goods-category";
+import Goods from "@/db/models/goods";
+import GoodsCombination from "@/db/models/goods-combination";
 import { Seeder } from "../umzug";
 
 export const up: Seeder = async ({ context }) => {
@@ -21,7 +21,7 @@ export const up: Seeder = async ({ context }) => {
       loginId: "empty",
       loginPassHash: await argon2.hash("empty"),
     },
-  ] as AccountCreationAttributes[]);
+  ] as IAccountModel[]);
 
   // Booth
   const testAccount = await Account.findOne({ where: { loginId: "test" } });
@@ -48,7 +48,7 @@ export const up: Seeder = async ({ context }) => {
         dateOpen: new Date("2023-03-01"),
         dateClose: new Date("2026-03-01"),
       },
-    ] as BoothCreationAttributes[]);
+    ] as IBoothModel[]);
   }
 
   // Goods Category
@@ -63,7 +63,7 @@ export const up: Seeder = async ({ context }) => {
         boothId: testBooth.id,
         name: "[T] Awesome Goods",
       },
-    ] as GoodsCategoryCreationAttributes[]);
+    ] as IGoodsCategoryModel[]);
   }
 
   // Goods Combination
@@ -77,7 +77,7 @@ export const up: Seeder = async ({ context }) => {
         price: 50000,
         stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
       },
-    ] as GoodsCombinationCreationAttributes[]);
+    ] as IGoodsCombinationModel[]);
   }
 
   // Goods
@@ -122,28 +122,28 @@ export const up: Seeder = async ({ context }) => {
         stockRemaining: 15,
         stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
       },
-    ] as GoodsCreationAttributes[]);
+    ] as IGoodsModel[]);
   }
 };
 
 export const down: Seeder = async ({ context }) => {
   await context.bulkDelete(Goods.name, {
     [Op.startsWith]: "[T]",
-  } as WhereOptions<GoodsCreationAttributes>);
+  } as WhereOptions<IGoodsModel>);
 
   await context.bulkDelete(GoodsCombination.name, {
     [Op.startsWith]: "[T]",
-  } as WhereOptions<GoodsCombinationCreationAttributes>);
+  } as WhereOptions<IGoodsCombinationModel>);
 
   await context.bulkDelete(GoodsCategory.name, {
     [Op.startsWith]: "[T]",
-  } as WhereOptions<GoodsCategoryCreationAttributes>);
+  } as WhereOptions<IGoodsCategoryModel>);
 
   await context.bulkDelete(Booth.name, {
     [Op.startsWith]: "[T]",
-  } as WhereOptions<BoothCreationAttributes>);
+  } as WhereOptions<IBoothModel>);
 
   await context.bulkDelete(Account.name, {
     [Op.startsWith]: "[T]",
-  } as WhereOptions<AccountCreationAttributes>);
+  } as WhereOptions<IAccountModel>);
 };

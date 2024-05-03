@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
+import { GoodsBase } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
 import { IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
-import { getUploadFilePath } from "@/lib/common-functions";
+import { getUploadFileUrl } from "@/lib/common-functions";
 
 @Component({})
 export default class GoodsItemDetailsDialog extends Vue {
@@ -29,11 +29,11 @@ export default class GoodsItemDetailsDialog extends Vue {
   @Prop({ type: GoodsBase, required: true }) data!: GoodsBase;
 
   get normalizedImageUrl() {
-    return getUploadFilePath((this.data as Goods).goodsImageUrl || (this.data as GoodsCombination).combinationImageUrl || null);
+    return getUploadFileUrl(this.data.goodsImage?.path);
   }
 
   get normalizedImageThumbnailData() {
-    return (this.data as Goods).goodsImageThumbnailData || (this.data as GoodsCombination).combinationImageThumbnailData || null;
+    return this.data.goodsImage?.thumbnailData;
   }
 
   get goodsImageHeight() {

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { GoodsOrderStatus, IGoodsOrderDetailItem, ISuccessResponse, IValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { GoodsOrderStatus, ISuccessResponse, ISingleValueResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE, IGoodsOrderItem } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
 import { create as createTarget, findOneByPk, removeTarget } from "@/lib/common-functions";
@@ -9,9 +9,9 @@ import Goods from "@/db/models/goods";
 import GoodsCombination from "@/db/models/goods-combination";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
-import { CreateGoodsOrderDTO } from "./dto/create-goods-order.dto";
+import { CreateGoodsOrderRequestDto } from "./dto/create-goods-order.dto";
 import { GoodsOrderCreateGoodsCombinationNotFoundException, GoodsOrderCreateGoodsNotFoundException, GoodsOrderCreateInvalidGoodsAmountException, GoodsOrderCreateInvalidGoodsCombinationException, GoodsOrderCreateOrderEmptyException, GoodsOrderParentBoothNotFoundException, GoodsOrderStatusUpdateFailedException, GoodsOrderStatusUpdateProhibitedException } from "./goods-order.exception";
-import { UpdateGoodsOrderStatusDTO } from "./dto/update-goods-order-status.dto";
+import { UpdateGoodsOrderStatusRequestDto } from "./dto/update-goods-order-status.dto";
 
 @Injectable()
 export class GoodsOrderService {
@@ -33,7 +33,7 @@ export class GoodsOrderService {
     return order;
   }
 
-  async create(createGoodsOrderDto: CreateGoodsOrderDTO, callerAccountId: number): Promise<GoodsOrder> {
+  async create(createGoodsOrderDto: CreateGoodsOrderRequestDto, callerAccountId: number): Promise<GoodsOrder> {
     if(!(await Booth.findOne({ where: { ownerId: callerAccountId } }))) {
       throw new GoodsOrderParentBoothNotFoundException();
     }
@@ -41,10 +41,8 @@ export class GoodsOrderService {
     // Check goods availability & build goods order entry
     if(!createGoodsOrderDto.order || createGoodsOrderDto.order.length <= 0) throw new GoodsOrderCreateOrderEmptyException();
 
-    // START TRANSACTION
-    const transaction = await MBMSequelize.createTransaction();
-    const goodsProcessFn = async (goods: Goods, order: IGoodsOrderDetailItem) => {
-
+    // Goods stock count process function
+    const goodsProcessFn = async (goods: Goods, order: IGoodsOrderItem) => {
       // Validate goods stock
       if(goods.stockRemaining < order.quantity) throw new GoodsOrderCreateInvalidGoodsAmountException();
 
@@ -58,6 +56,8 @@ export class GoodsOrderService {
       await goods.update({ stockRemaining: goods.stockRemaining - order.quantity }, { transaction });
     };
 
+    // START TRANSACTION
+    const transaction = await MBMSequelize.createTransaction();
     try {
       for(const order of createGoodsOrderDto.order) {
         if(order.gId) {
@@ -110,7 +110,7 @@ export class GoodsOrderService {
     }
   }
 
-  async updateStatus(orderId: number, boothId: number, updateGoodsOrderStatusDto: UpdateGoodsOrderStatusDTO, callerAccountId: number): Promise<ISuccessResponse> {
+  async updateStatus(orderId: number, boothId: number, updateGoodsOrderStatusDto: UpdateGoodsOrderStatusRequestDto, callerAccountId: number): Promise<ISuccessResponse> {
     const order = await this.findGoodsOrderBelongsToBooth(orderId, boothId, callerAccountId);
 
     /* Prohibit status update in some conditions */
@@ -174,7 +174,7 @@ export class GoodsOrderService {
     });
   }
 
-  async countAll(boothId?: number): Promise<IValueResponse> {
+  async countAll(boothId?: number): Promise<ISingleValueResponse<number>> {
     const where = boothId ? { boothId } : undefined;
 
     return { value: await GoodsOrder.count({ where }) };

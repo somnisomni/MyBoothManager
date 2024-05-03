@@ -16,7 +16,7 @@ export interface IGoodsCommon {
 
 interface IGoodsBase extends IGoodsCommon {
   combinationId?: number | null;
-  type?: string;
+  type?: string | null;
 }
 
 export interface IGoodsStock {
@@ -52,8 +52,12 @@ export interface IGoodsModel extends Omit<IGoodsBase, "stock"> {
 }
 
 /* === Requests === */
-export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinationId"> { }
-export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsBase, "id" | "combinationId">> { }
+export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinationId" | "stock"> {
+  stockVisibility: GoodsStockVisibility;
+  stockInitial: number;
+  stockRemaining: number;
+}
+export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCreateRequest, "boothId">>, Pick<IGoodsCreateRequest, "boothId"> { }
 
 /* === Responses === */
 export interface IGoodsResponse extends IGoods { }

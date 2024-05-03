@@ -1,13 +1,13 @@
 import type { MultipartFile } from "@fastify/multipart";
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
+import { ISuccessResponse, ISingleValueResponse, ImageSizeConstraintKey, IImageUploadInfo } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { UtilService } from "../util/util.service";
-import { UpdateGoodsDTO } from "./dto/update-goods.dto";
-import { CreateGoodsDTO } from "./dto/create-goods.dto";
+import { UpdateGoodsRequestDto } from "./dto/update-goods.dto";
+import { CreateGoodsRequestDto } from "./dto/create-goods.dto";
 import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
 
 @Injectable()
@@ -37,7 +37,7 @@ export class GoodsService {
     return goods;
   }
 
-  async create(createGoodsDto: CreateGoodsDTO, callerAccountId: number): Promise<Goods> {
+  async create(createGoodsDto: CreateGoodsRequestDto, callerAccountId: number): Promise<Goods> {
     if(!(await Booth.findOne({ where: { ownerId: callerAccountId } }))) {
       throw new GoodsParentBoothNotFoundException();
     }
@@ -53,13 +53,13 @@ export class GoodsService {
     return await create(Goods, createGoodsDto);
   }
 
-  async countAll(boothId?: number): Promise<IValueResponse> {
+  async countAll(boothId?: number): Promise<ISingleValueResponse<number>> {
     const where = boothId ? { boothId } : undefined;
 
     return { value: await Goods.count({ where }) };
   }
 
-  async uploadImage(goodsId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+  async uploadImage(goodsId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IImageUploadInfo> {
     return await this.utilService.processImageUpload(
       await this.findGoodsBelongsToBooth(goodsId, boothId, callerAccountId),
       "goodsImageId",
@@ -77,7 +77,7 @@ export class GoodsService {
     );
   }
 
-  async updateInfo(id: number, updateGoodsDto: UpdateGoodsDTO, callerAccountId: number): Promise<Goods> {
+  async updateInfo(id: number, updateGoodsDto: UpdateGoodsRequestDto, callerAccountId: number): Promise<Goods> {
     let goods = await this.findGoodsBelongsToBooth(id, updateGoodsDto.boothId!, callerAccountId);
     const categoryId = updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0 ? null : updateGoodsDto.categoryId;
 

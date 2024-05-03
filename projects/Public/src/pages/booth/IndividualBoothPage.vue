@@ -28,7 +28,7 @@
 
         <VContainer class="adjusted-vcontainer">
           <div>
-            <div v-if="boothData?.status !== BoothStatus.CLOSE"
+            <div v-if="boothData?.status.status !== BoothStatus.CLOSE"
                  class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
               <VCheckbox v-model="autoRefreshEnabled"
                          hide-details
@@ -61,13 +61,13 @@
               <BoothMemberItem v-for="member in boothMemberList"
                                :key="member.id"
                                :memberData="member"
-                               :imageUrlResolver="getUploadFilePath" />
+                               :imageUrlResolver="getUploadFileUrl" />
             </div>
           </div>
 
-          <VSpacer v-if="boothData?.infoImageUrl" class="my-8" />
+          <VSpacer v-if="infoImage.url" class="my-8" />
 
-          <div v-if="boothData?.infoImageUrl" class="w-100">
+          <div v-if="infoImage.url" class="w-100">
             <div v-ripple class="d-flex align-center pa-2" style="cursor: pointer" @click="boothInfoExpanded = !boothInfoExpanded">
               <h4 class="flex-grow-1 text-h4 text-left font-weight-medium">부스 인포</h4>
               <VIcon :icon="boothInfoExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="large" class="pa-2" />
@@ -77,7 +77,8 @@
 
             <VExpandTransition>
               <VImg v-show="boothInfoExpanded"
-                    :src="getUploadFilePath(boothData?.infoImageUrl)"
+                    :src="infoImage.url"
+                    :lazy-src="infoImage.thumbnail"
                     class="booth-info-image w-100 no-interaction rounded-lg"
                     cover
                     position="top" />
@@ -92,7 +93,7 @@
                         :currencySymbol="boothData?.currencySymbol"
                         :goodsList="[...boothGoodsList, ...boothCombinationList]"
                         :goodsCategoryList="boothCategoryList"
-                        :goodsImageUrlResolver="getUploadFilePath"
+                        :goodsImageUrlResolver="getUploadFileUrl"
                         :editable="false"
                         omitEmptyGoodsCategory
                         @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
@@ -117,7 +118,7 @@ import SharePanel from "@/components/booth/SharePanel.vue";
 import { usePublicStore } from "@/plugins/stores/public";
 import { useLocalStore } from "@/plugins/stores/local";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
-import { getUploadFilePath } from "@/lib/common-functions";
+import { getUploadFileUrl } from "@/lib/common-functions";
 import GoodsItemDetailsDialog from "@/components/dialogs/GoodsItemDetailsDialog.vue";
 
 @Component({
@@ -130,7 +131,7 @@ import GoodsItemDetailsDialog from "@/components/dialogs/GoodsItemDetailsDialog.
 export default class IndividualBoothPage extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly ErrorCodes = ErrorCodes;
-  readonly getUploadFilePath = getUploadFilePath;
+  readonly getUploadFileUrl = getUploadFileUrl;
 
   isDataFetched: boolean = false;
   isDataLoading: boolean = false;
@@ -152,6 +153,13 @@ export default class IndividualBoothPage extends Vue {
 
   get boothId(): number {
     return new Number(useRoute().params["boothId"] as string).valueOf();
+  }
+
+  get infoImage() {
+    return {
+      url: getUploadFileUrl(this.boothData?.infoImage?.path),
+      thumbnail: this.boothData?.infoImage?.thumbnailData,
+    };
   }
 
   get autoRefreshEnabled(): boolean { return useLocalStore().boothPageSettings.enableAutoRefresh; }
@@ -189,7 +197,7 @@ export default class IndividualBoothPage extends Vue {
       get ogSiteName() { return this.applicationName?.toString(); },
       get ogDescription() { return this.description?.toString(); },
       ogType: "website",
-      ogImage: getUploadFilePath(this.boothData.bannerImageUrl),
+      ogImage: getUploadFileUrl(this.boothData.bannerImage?.path),
       ogImageAlt: `${this.boothData.name} - 부스 배너 이미지`,
       ogUrl: window.location.href,
 
@@ -216,7 +224,7 @@ export default class IndividualBoothPage extends Vue {
   @Watch("autoRefreshEnabled", { immediate: true })
   onAutoRefreshEnabledChanged(value: boolean) {
     if(value) {
-      if(this.boothData && this.boothData.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
+      if(this.boothData && this.boothData.status.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
         this.dataPollingTimerId = setInterval(this.pollData, this.dataPollingInterval);
       }
     } else {

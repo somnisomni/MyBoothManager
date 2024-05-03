@@ -53,7 +53,7 @@ export abstract class GoodsBase implements IGoodsFrontendCommon {
 
 export class Goods extends GoodsBase implements IGoods {
   declare combinationId?: number | null;
-  declare type?: string;
+  declare type?: string | null;
 
   constructor(data: IGoods) {
     super(data);

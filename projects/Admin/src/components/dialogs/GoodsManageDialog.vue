@@ -88,11 +88,9 @@ export default class GoodsManageDialog extends Vue {
     categoryId: -1,
     type: "",
     price: 0,
-    stock: {
-      initial: 0,
-      remaining: 0,
-      visibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
-    },
+    stockInitial: 0,
+    stockRemaining: 0,
+    stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
     ownerMemberIds: ref([]),
   });
   readonly formFields = {
@@ -148,19 +146,6 @@ export default class GoodsManageDialog extends Vue {
       onChange: this.resetValidation,
       rules: [ this.stockRemainingValidationRule ],
     },
-    ownerMembersId: {
-      type: FormFieldType.SELECT,
-      label: "소유자 멤버",
-      optional: true,
-      get items() {
-        return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(
-          member => ({ title: member.name, id: member.id }),
-        );
-      },
-      itemTitle: "title",
-      itemValue: "id",
-      multiple: true,
-    },
     stockVisibility: {
       type: FormFieldType.SELECT,
       label: "재고 표시 방법",
@@ -173,6 +158,19 @@ export default class GoodsManageDialog extends Vue {
       itemValue: "value",
       hint: "공개 페이지에서만 적용되며, 관리자 페이지에선 항상 모든 재고량 정보가 표시됩니다.",
       persistentHint: true,
+    },
+    ownerMemberIds: {
+      type: FormFieldType.SELECT,
+      label: "소유자 멤버",
+      optional: true,
+      get items() {
+        return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(
+          member => ({ title: member.name, id: member.id }),
+        );
+      },
+      itemTitle: "title",
+      itemValue: "id",
+      multiple: true,
     },
   } as Record<keyof IGoodsCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
   formModelsInitial: IGoodsCreateRequest = deepClone(this.formModels);
@@ -219,7 +217,9 @@ export default class GoodsManageDialog extends Vue {
       this.formModels.categoryId = this.currentGoods.categoryId;
       this.formModels.type = this.currentGoods.type;
       this.formModels.price = this.currentGoods.price;
-      this.formModels.stock = { ...this.currentGoods.stock };
+      this.formModels.stockInitial = this.currentGoods.stock.initial;
+      this.formModels.stockRemaining = this.currentGoods.stock.remaining;
+      this.formModels.stockVisibility = this.currentGoods.stock.visibility;
       this.formModels.ownerMemberIds = deepClone(this.currentGoods.ownerMemberIds) as number[] | null;
     } else {
       this.formModels.name = "";
@@ -227,11 +227,9 @@ export default class GoodsManageDialog extends Vue {
       this.formModels.categoryId = -1;
       this.formModels.type = "";
       this.formModels.price = 0;
-      this.formModels.stock = {
-        initial: 0,
-        remaining: 0,
-        visibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
-      };
+      this.formModels.stockInitial = 0;
+      this.formModels.stockRemaining = 0;
+      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
       this.formModels.ownerMemberIds = [];
     }
 
@@ -317,7 +315,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   stockRemainingValidationRule() {
-    if(this.formModels.stock.remaining! > this.formModels.stock.initial!) {
+    if(this.formModels.stockRemaining! > this.formModels.stockInitial!) {
       return "현재 재고량은 초기 재고량보다 클 수 없습니다.";
     } else {
       return true;

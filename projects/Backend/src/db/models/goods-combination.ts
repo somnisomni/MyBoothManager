@@ -1,4 +1,4 @@
-import { GoodsStockVisibility, IGoodsCombinationAdminResponse, IGoodsCombinationCreateRequest, IGoodsCombinationModel, IGoodsCombinationResponse } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsCombinationCreateRequest, IGoodsCombinationModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
@@ -39,7 +39,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(1024))
-  declare description?: string;
+  declare description?: string | null;
 
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
@@ -47,7 +47,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   set price(value: number) { this.setDataValue("price", parseFloat(new Number(value).toFixed(3))); }
 
   @AllowNull(false)
-  @Default(GoodsStockVisibility.SHOW_ALL)
+  @Default(GoodsStockVisibility.SHOW_REMAINING_ONLY)
   @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
   declare stockVisibility: GoodsStockVisibility;
 
@@ -70,7 +70,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   }
 
   @Column(DataTypes.VIRTUAL)
-  get ownerMemberIds(): number[] {
+  get ownerMemberIds(): Array<number> {
     if(this.combinedGoods && this.combinedGoods.length > 0) {
       return this.combinedGoods.flatMap(g => (g.ownerMemberIds ?? []).flat());
     } else {
@@ -97,41 +97,4 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
 
   @BelongsTo(() => UploadStorage, "goodsImageId")
   declare goodsImage?: UploadStorage;
-
-
-  /* === Functions === */
-  getResponseForPublic(): IGoodsCombinationResponse {
-    const thisGet = this.get();
-
-    const output: IGoodsCombinationResponse = {
-      id: thisGet.id,
-      boothId: thisGet.boothId,
-      categoryId: thisGet.categoryId,
-      name: thisGet.name,
-      description: thisGet.description,
-      price: thisGet.price,
-      stock: {
-        visibility: thisGet.stockVisibility,
-        initial: thisGet.stockVisibility === GoodsStockVisibility.SHOW_ALL ? thisGet.stockInitial : undefined,
-        remaining: thisGet.stockVisibility !== GoodsStockVisibility.HIDE_ALL ?  thisGet.stockRemaining : undefined,
-      },
-      ownerMemberIds: thisGet.ownerMemberIds,
-      goodsImage: thisGet.goodsImageId ? this.goodsImage?.toImageUploadInfo() : undefined,
-    };
-
-    return output;
-  }
-
-  getResponseForAdmin(): IGoodsCombinationAdminResponse {
-    const output = this.getResponseForPublic();
-
-    return {
-      ...output,
-      stock: {
-        visibility: this.get("stockVisibility"),
-        initial: this.get("stockInitial"),
-        remaining: this.get("stockRemaining"),
-      },
-    };
-  }
 }

@@ -1,7 +1,7 @@
 import type GoodsCategory from "@/db/models/goods-category";
 import { Injectable } from "@nestjs/common";
-import { BoothStatus, IBooth, IValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
-import { WhereOptions , Op } from "sequelize";
+import { BoothStatus, IBoothModel, ISingleValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { WhereOptions } from "sequelize";
 import Booth from "@/db/models/booth";
 import { findOneByPk } from "@/lib/common-functions";
 import GoodsCombination from "@/db/models/goods-combination";
@@ -9,6 +9,7 @@ import Goods from "@/db/models/goods";
 import { PublicGoodsService } from "../goods/goods.service";
 import { PublicGoodsCategoryService } from "../goods-category/goods-category.service";
 import { PublicGoodsCombinationService } from "../goods-combination/goods-combination.service";
+import { PublicCommon } from "../common";
 import { BoothNotPublishedException } from "./booth.exception";
 
 @Injectable()
@@ -18,19 +19,10 @@ export class PublicBoothService {
     private publicGoodsCategoryService: PublicGoodsCategoryService,
     private publicGoodsCombinationService: PublicGoodsCombinationService) { }
 
-  private readonly PUBLIC_WHERE_OPTIONS: WhereOptions<IBooth> = {
-    [Op.not]: {
-      [Op.and]: {
-        status: BoothStatus.PREPARE,
-        statusPublishContent: false,
-      },
-    },
-  };
-
   async findOne(boothId: number): Promise<Booth> {
     const booth = await findOneByPk(Booth, boothId);
 
-    if(booth.status === BoothStatus.PREPARE && !booth.statusPublishContent) {
+    if(booth.status === BoothStatus.PREPARE && !booth.statusContentPublished) {
       throw new BoothNotPublishedException();
     }
 
@@ -38,11 +30,11 @@ export class PublicBoothService {
   }
 
   async findAll(accountId?: number): Promise<Array<Booth>> {
-    const where: WhereOptions<IBooth> = {
+    const where: WhereOptions<IBoothModel> = {
       ...(accountId ? {
         ownerId: accountId,
       } : {
-        ...this.PUBLIC_WHERE_OPTIONS,
+        ...PublicCommon.PUBLIC_ALL_BOOTH_WHERE_OPTIONS,
       }),
     };
 
@@ -54,7 +46,7 @@ export class PublicBoothService {
     });
   }
 
-  async countAll(): Promise<IValueResponse> {
+  async countAll(): Promise<ISingleValueResponse<number>> {
     return { value: await Booth.count() };
   }
 
@@ -62,7 +54,7 @@ export class PublicBoothService {
     return await this.publicGoodsService.findAll(boothId);
   }
 
-  async countAllGoodsOfBooth(boothId: number): Promise<IValueResponse> {
+  async countAllGoodsOfBooth(boothId: number): Promise<ISingleValueResponse<number>> {
     return await this.publicGoodsService.countAll(boothId);
   }
 
@@ -70,7 +62,7 @@ export class PublicBoothService {
     return await this.publicGoodsCategoryService.findAll(boothId);
   }
 
-  async countAllGoodsCategoryOfBooth(boothId: number): Promise<IValueResponse> {
+  async countAllGoodsCategoryOfBooth(boothId: number): Promise<ISingleValueResponse<number>> {
     return await this.publicGoodsCategoryService.countAll(boothId);
   }
 
@@ -78,7 +70,7 @@ export class PublicBoothService {
     return await this.publicGoodsCombinationService.findAll(boothId);
   }
 
-  async countAllGoodsCombinationOfBooth(boothId: number): Promise<IValueResponse> {
+  async countAllGoodsCombinationOfBooth(boothId: number): Promise<ISingleValueResponse<number>> {
     return await this.publicGoodsCombinationService.countAll(boothId);
   }
 }

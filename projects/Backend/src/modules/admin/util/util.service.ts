@@ -7,7 +7,7 @@ import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { path as APP_ROOT_PATH } from "app-root-path";
-import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { ISuccessResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE, IImageUploadInfo } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import UploadStorage from "@/db/models/uploadstorage";
 import { create, generateRandomDigestFileName } from "@/lib/common-functions";
@@ -145,7 +145,7 @@ export class UtilService {
     file: MultipartFile,
     fileSaveSubpath: string,
     imageSizeConstraint: ImageSizeConstraintKey,
-    callerAccountId: number): Promise<IValueResponse> {
+    callerAccountId: number): Promise<IImageUploadInfo> {
     /* #1. Remove existing image if exists */
     if(targetModelInstance[targetModelImageIdColumnKey]) {
       // Do not try-catch here; ignore the file nonexistence
@@ -188,9 +188,7 @@ export class UtilService {
 
       await targetModelInstance.update({ [targetModelImageIdColumnKey]: upload.id });
 
-      return {
-        value: upload.filePath,
-      };
+      return upload.toImageUploadInfo();
     } catch(err) {
       console.error(err);
       throw new InternalServerErrorException();  // TODO: custom exception

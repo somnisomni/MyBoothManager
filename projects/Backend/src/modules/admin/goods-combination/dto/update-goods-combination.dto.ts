@@ -1,8 +1,7 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { GoodsStockVisibility, IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
-import { CreateGoodsCombinationDTO } from "./create-goods-combination.dto";
+import { IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
+import { CreateGoodsCombinationRequestDto } from "./create-goods-combination.dto";
 
-export class UpdateGoodsCombinationDTO extends PartialType(CreateGoodsCombinationDTO) implements IGoodsCombinationUpdateRequest {
+export class UpdateGoodsCombinationRequestDto extends PartialType(CreateGoodsCombinationRequestDto) implements IGoodsCombinationUpdateRequest {
   declare boothId: number;
-  declare stockVisibility?: GoodsStockVisibility;
 }

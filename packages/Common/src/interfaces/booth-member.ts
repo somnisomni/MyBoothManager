@@ -7,8 +7,8 @@ interface IBoothMemberCommon {
   name: string;
   descriptionShort?: string | null;
   role?: string | null;
-  primaryColor?: string | null;
   url?: string | null;
+  primaryColor?: string | null;
 }
 
 /* === Frontend === */

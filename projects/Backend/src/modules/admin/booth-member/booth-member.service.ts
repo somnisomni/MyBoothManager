@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
+import { ISuccessResponse, ImageSizeConstraintKey, IImageUploadInfo } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
 import { create, jsonContains, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
@@ -8,8 +8,8 @@ import BoothMember from "@/db/models/booth-member";
 import { PublicBoothMemberService } from "@/modules/public/booth-member/booth-member.service";
 import Goods from "@/db/models/goods";
 import { UtilService } from "../util/util.service";
-import { UpdateBoothMemberDTO } from "./dto/update-booth-member.dto";
-import { CreateBoothMemberDTO } from "./dto/create-booth-member.dto";
+import { UpdateBoothMemberRequestDto } from "./dto/update-booth-member.dto";
+import { CreateBoothMemberRequestDto } from "./dto/create-booth-member.dto";
 import { BoothMemberInfoUpdateFailedException, BoothMemberParentBoothNotFoundException } from "./booth-member.exception";
 
 @Injectable()
@@ -36,7 +36,7 @@ export class BoothMemberService {
     return member;
   }
 
-  async create(boothId: number, createBoothMemberDTO: CreateBoothMemberDTO, callerAccountId: number): Promise<BoothMember> {
+  async create(boothId: number, createBoothMemberDTO: CreateBoothMemberRequestDto, callerAccountId: number): Promise<BoothMember> {
     if(!(await Booth.findOne({ where: { id: boothId, ownerId: callerAccountId } }))) {
       throw new BoothMemberParentBoothNotFoundException();
     }
@@ -47,7 +47,7 @@ export class BoothMemberService {
     });
   }
 
-  async update(boothId: number, id: number, updateBoothMemberDTO: UpdateBoothMemberDTO, callerAccountId: number): Promise<BoothMember> {
+  async update(boothId: number, id: number, updateBoothMemberDTO: UpdateBoothMemberRequestDto, callerAccountId: number): Promise<BoothMember> {
     const member = await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId);
 
     try {
@@ -60,10 +60,10 @@ export class BoothMemberService {
     }
   }
 
-  async uploadMemberImage(boothId: number, id: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+  async uploadMemberImage(boothId: number, id: number, file: MultipartFile, callerAccountId: number): Promise<IImageUploadInfo> {
     return await this.utilService.processImageUpload(
       await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId),
-      "memberImageId",
+      "avatarImageId",
       file,
       "booth/member",
       ImageSizeConstraintKey.BOOTH_MEMBER_AVATAR,
@@ -74,7 +74,7 @@ export class BoothMemberService {
   async deleteMemberImage(boothId: number, id: number, callerAccountId: number): Promise<ISuccessResponse> {
     return await this.utilService.processImageDelete(
       await this.findBoothMemberBelongsToBooth(id, boothId, callerAccountId),
-      "memberImageId",
+      "avatarImageId",
     );
   }
 
@@ -83,11 +83,11 @@ export class BoothMemberService {
 
     // Remove the member from the goods
     const goodsOwned = await Goods.findAll({
-      where: jsonContains<Goods>("ownerMembersId", id.toString()),
+      where: jsonContains<Goods>("ownerMemberIds", id.toString()),
     });
     for(const goods of goodsOwned) {
       await goods.update({
-        ownerMembersId: goods.ownerMembersId!.filter((memberId: number) => memberId !== id),
+        ownerMemberIds: goods.ownerMemberIds!.filter((memberId: number) => memberId !== id),
       });
     }
 

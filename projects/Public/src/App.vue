@@ -28,4 +28,3 @@ export default class App extends Vue {
   }
 }
 </script>
-./plugins/stores/public

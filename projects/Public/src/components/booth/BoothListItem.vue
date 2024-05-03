@@ -31,14 +31,14 @@
             <span>{{ boothData.boothNumber }}</span>
           </div>
 
-          <div v-if="boothData.status !== BoothStatus.OPEN">
+          <div v-if="boothData.status.status !== BoothStatus.OPEN">
             <VTooltip activator="parent" location="bottom" transition="fade-transition">
-              <span      v-if="boothData.status === BoothStatus.PAUSE">운영 일시 중지 중</span>
-              <span v-else-if="boothData.status === BoothStatus.PREPARE">운영 준비 중</span>
+              <span      v-if="boothData.status.status === BoothStatus.PAUSE">운영 일시 중지 중</span>
+              <span v-else-if="boothData.status.status === BoothStatus.PREPARE">운영 준비 중</span>
             </VTooltip>
 
-            <VIcon v-if="boothData.status === BoothStatus.PAUSE"   size="x-small">mdi-pause-circle-outline</VIcon>
-            <VIcon v-if="boothData.status === BoothStatus.PREPARE" size="x-small">mdi-store-cog</VIcon>
+            <VIcon v-if="boothData.status.status === BoothStatus.PAUSE"   size="x-small" icon="mdi-pause-circle-outline" />
+            <VIcon v-if="boothData.status.status === BoothStatus.PREPARE" size="x-small" icon="mdi-store-cog" />
           </div>
         </div>
       </div>
@@ -49,7 +49,7 @@
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Component, Prop, Vue } from "vue-facing-decorator";
-import { getUploadFilePath } from "@/lib/common-functions";
+import { getUploadFileUrl } from "@/lib/common-functions";
 
 @Component({
   emits: ["click"],
@@ -68,16 +68,16 @@ export default class BoothListItem extends Vue {
   }
 
   get bannerImageUrl() {
-    return getUploadFilePath(this.boothData.bannerImageUrl)
+    return getUploadFileUrl(this.boothData.bannerImage?.path)
       ?? `https://picsum.photos/seed/${this.boothData.id}/800/400`;
   }
 
-  get shouldShowExtraInfo() {
-    return this.boothData.boothNumber || this.boothData.status !== BoothStatus.OPEN;
+  get shouldShowExtraInfo(): boolean {
+    return !!this.boothData.boothNumber || this.boothData.status.status !== BoothStatus.OPEN;
   }
 
-  get shouldShowExtraInfoDivider() {
-    return this.boothData.boothNumber && this.boothData.status !== BoothStatus.OPEN;
+  get shouldShowExtraInfoDivider(): boolean {
+    return !!this.boothData.boothNumber && this.boothData.status.status !== BoothStatus.OPEN;
   }
 }
 </script>

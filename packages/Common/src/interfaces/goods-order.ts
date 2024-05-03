@@ -21,7 +21,7 @@ interface IGoodsOrderItemBase {
   name: string;
   quantity: number;
   price?: number | null;
-  combinedGoods?: Array<Omit<IGoodsOrderItem, "cId" | "combinedGoods">>;
+  combinedGoods?: Array<Omit<IGoodsOrderItem, "cId" | "combinedGoods" | "quantity">>;
 }
 export type IGoodsOrderItem = MutualExclusive<IGoodsOrderItemBase, "gId", "cId" | "combinedGoods">;
 

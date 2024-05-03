@@ -47,7 +47,7 @@ export interface IBoothAdmin extends IBooth {
 export interface IBoothModel extends Omit<IBoothCommon, "status"> {
   status: BoothStatus;
   statusReason?: string | null;
-  statusContentPublished?: boolean | null;
+  statusContentPublished: boolean;
   expenses: Array<IBoothExpense>;
   bannerImageId?: number | null;
   infoImageId?: number | null;

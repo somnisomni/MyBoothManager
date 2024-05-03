@@ -13,14 +13,14 @@ export interface IAccountAuthToken {
 
 /* === Frontend === */
 export interface IAccount extends IAccountCommon {
-  superAdmin?: boolean | null;
+  superAdmin?: boolean;
 }
 
 /* === Model for Backend (DB) === */
 export interface IAccountModel extends IAccountCommon {
-  loginCount: number;
   loginPassHash: string;
-  lastLoginAt: Date;
+  loginCount: number;
+  lastLoginAt?: Date | null;
 }
 
 /* === Requests === */
@@ -30,10 +30,12 @@ export interface IAccountCreateRequest {
   loginPass: string;
 }
 
+export interface IAccountUpdateRequest extends Partial<Omit<IAccountCreateRequest, "loginId">> { }
+
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;
-  confirmLogoutExistingSession?: boolean | null;
+  confirmLogoutExistingSession?: boolean;
 }
 
 /* === Responses === */

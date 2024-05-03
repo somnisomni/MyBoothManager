@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, IValueResponse, ImageSizeConstraintKey, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { ISuccessResponse, ImageSizeConstraintKey, SUCCESS_RESPONSE, IImageUploadInfo } from "@myboothmanager/common";
 import { MultipartFile } from "@fastify/multipart";
 import Booth from "@/db/models/booth";
 import GoodsOrder from "@/db/models/goods-order";
@@ -8,9 +8,9 @@ import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import Account from "@/db/models/account";
 import { GoodsOrderService } from "../goods-order/goods-order.service";
 import { UtilService } from "../util/util.service";
-import { UpdateBoothDTO } from "./dto/update-booth.dto";
-import { CreateBoothDTO } from "./dto/create-booth.dto";
-import { UpdateBoothStatusDTO } from "./dto/update-booth-status.dto";
+import { UpdateBoothRequestDto } from "./dto/update-booth.dto";
+import { CreateBoothRequestDto } from "./dto/create-booth.dto";
+import { UpdateBoothStatusRequestDto } from "./dto/update-booth-status.dto";
 import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from "./booth.exception";
 
 @Injectable()
@@ -36,7 +36,7 @@ export class BoothService {
     return booth;
   }
 
-  async create(createBoothDto: CreateBoothDTO, ownerId: number): Promise<Booth> {
+  async create(createBoothDto: CreateBoothRequestDto, ownerId: number): Promise<Booth> {
     return await create(Booth, createBoothDto, undefined, { ownerId });
   }
 
@@ -47,7 +47,7 @@ export class BoothService {
     return await this.goodsOrderService.findAll(boothId);
   }
 
-  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+  async uploadBannerImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IImageUploadInfo> {
     return await this.utilService.processImageUpload(
       await this.findBoothBelongsToAccount(boothId, callerAccountId),
       "bannerImageId",
@@ -58,7 +58,7 @@ export class BoothService {
     );
   }
 
-  async uploadInfoImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+  async uploadInfoImage(boothId: number, file: MultipartFile, callerAccountId: number): Promise<IImageUploadInfo> {
     return await this.utilService.processImageUpload(
       await this.findBoothBelongsToAccount(boothId, callerAccountId),
       "infoImageId",
@@ -83,7 +83,7 @@ export class BoothService {
     );
   }
 
-  async updateBoothInfo(id: number, updateBoothDto: UpdateBoothDTO, callerAccountId: number): Promise<Booth> {
+  async updateBoothInfo(id: number, updateBoothDto: UpdateBoothRequestDto, callerAccountId: number): Promise<Booth> {
     let booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 
     try {
@@ -96,7 +96,7 @@ export class BoothService {
     return booth;
   }
 
-  async updateBoothStatus(id: number, updateBoothStatusDto: UpdateBoothStatusDTO, callerAccountId: number): Promise<ISuccessResponse> {
+  async updateBoothStatus(id: number, updateBoothStatusDto: UpdateBoothStatusRequestDto, callerAccountId: number): Promise<ISuccessResponse> {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 
     try {

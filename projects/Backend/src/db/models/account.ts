@@ -34,12 +34,12 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   @AllowNull
   @Default(null)
   @Column(DataTypes.DATE)
-  declare lastLoginAt: Date;
+  declare lastLoginAt?: Date | null;
 
   @AllowNull
   @Default(null)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare lastSelectedBoothId?: number;
+  declare lastSelectedBoothId?: number | null;
 
 
   /* === Relations === */

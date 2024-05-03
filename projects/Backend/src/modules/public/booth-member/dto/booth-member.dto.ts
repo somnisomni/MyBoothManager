@@ -1,20 +1,28 @@
-import { IBoothMemberModel, IBoothMemberResponse } from "@myboothmanager/common";
+import { IBoothMemberResponse, IImageUploadInfo } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
+import BoothMember from "@/db/models/booth-member";
 
 @Exclude()
-export class BoothMemberResponseDto implements IBoothMemberResponse {
+export class PublicBoothMemberResponseDto implements IBoothMemberResponse {
   @Expose() declare id: number;
   @Expose() declare name: string;
   @Expose() declare descriptionShort?: string | null;
   @Expose() declare role?: string | null;
   @Expose() declare primaryColor?: string | null;
   @Expose() declare url?: string | null;
-  @Expose() declare memberImageUrl?: string | null;
-  @Expose() declare memberImageThumbnailData?: string | null;
+  @Expose() declare avatarImage?: IImageUploadInfo | null;
 
-  @Exclude() declare boothId: number;
+  @Exclude() boothId = NaN;
 
-  constructor(partial: Partial<IBoothMemberModel>) {
-    Object.assign(this, partial);
+  constructor(model: BoothMember) {
+    const values = model.get();
+
+    this.id = values.id;
+    this.name = values.name;
+    this.descriptionShort = values.descriptionShort;
+    this.role = values.role;
+    this.primaryColor = values.primaryColor;
+    this.url = values.url;
+    this.avatarImage = model.avatarImage?.toImageUploadInfo();
   }
 }

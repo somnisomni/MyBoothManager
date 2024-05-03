@@ -1,4 +1,4 @@
-import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest, IBoothResponse, IBoothAdminResponse } from "@myboothmanager/common";
+import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Account from "./account";
@@ -36,37 +36,40 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Column(DataTypes.STRING(256))
   declare name: string;
 
-  @AllowNull
-  @Default(null)
-  @Column(DataTypes.STRING(1024))
-  declare description?: string;
-
-  @AllowNull(false)
-  @Column(DataTypes.STRING(512))
-  declare location: string;
-
-  @AllowNull
-  @Default(null)
-  @Column(DataTypes.STRING(1024))
-  declare boothNumber?: string;
-
   @AllowNull(false)
   @Default("₩")
   @Column(DataTypes.STRING(8))
   declare currencySymbol: string;
 
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(1024))
+  declare description?: string | null;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(512))
+  declare location?: string | null;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.STRING(32))
+  declare boothNumber?: string | null;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.DATEONLY)
+  declare dateOpen?: Date | null;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.DATEONLY)
+  declare dateClose?: Date | null;
+
   @AllowNull(false)
   @Default([])
   @Column(DataTypes.JSON)
   declare expenses: IBoothExpense[];
-
-  @AllowNull(false)
-  @Column(DataTypes.DATEONLY)
-  declare dateOpen: Date;
-
-  @AllowNull(false)
-  @Column(DataTypes.DATEONLY)
-  declare dateClose: Date;
 
   @AllowNull(false)
   @Default(BoothStatus.PREPARE)
@@ -76,12 +79,12 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(1024))
-  declare statusReason?: string;
+  declare statusReason?: string | null;
 
   @AllowNull(false)
   @Default(false)
   @Column(DataTypes.BOOLEAN)
-  declare statusContentPublished?: boolean;
+  declare statusContentPublished: boolean;
 
   @AllowNull
   @Default(null)
@@ -120,40 +123,4 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
 
   @BelongsTo(() => UploadStorage, "infoImageId")
   declare infoImage?: UploadStorage;
-
-
-  /* === Functions === */
-  getResponseForPublic(): IBoothResponse {
-    const thisGet = this.get();
-
-    const output: IBoothResponse = {
-      id: thisGet.id,
-      ownerId: thisGet.ownerId,
-      name: thisGet.name,
-      description: thisGet.description,
-      location: thisGet.location,
-      boothNumber: thisGet.boothNumber,
-      currencySymbol: thisGet.currencySymbol,
-      dateOpen: thisGet.dateOpen,
-      dateClose: thisGet.dateClose,
-      status: {
-        status: thisGet.status,
-        reason: thisGet.statusReason ?? undefined,
-        contentPublished: thisGet.statusContentPublished ?? undefined,
-      },
-      bannerImage: thisGet.bannerImageId ? this.bannerImage?.toImageUploadInfo() : undefined,
-      infoImage: thisGet.infoImageId ? this.infoImage?.toImageUploadInfo() : undefined,
-    };
-
-    return output;
-  }
-
-  getResponseForAdmin(): IBoothAdminResponse {
-    const output = this.getResponseForPublic();
-
-    return {
-      ...output,
-      expenses: this.get("expenses"),
-    };
-  }
 }

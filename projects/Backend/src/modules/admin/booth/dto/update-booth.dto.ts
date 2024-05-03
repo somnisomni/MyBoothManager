@@ -1,7 +1,7 @@
 import type { IBoothExpense, IBoothUpdateRequest } from "@myboothmanager/common";
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateBoothDTO } from "./create-booth.dto";
+import { CreateBoothRequestDto } from "./create-booth.dto";
 
-export class UpdateBoothDTO extends PartialType(CreateBoothDTO) implements IBoothUpdateRequest {
-  expenses?: Array<IBoothExpense>;
+export class UpdateBoothRequestDto extends PartialType(CreateBoothRequestDto) implements IBoothUpdateRequest {
+  declare expenses?: Array<IBoothExpense>;
 }

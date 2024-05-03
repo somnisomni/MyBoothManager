@@ -43,7 +43,7 @@ import type { IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 
 @Component({
   emits: ["quantityChange", "click"],
@@ -69,7 +69,7 @@ export default class POSGoodsOrderListItem extends Vue {
   }
 
   get currentTargetImageUrl() {
-    return getUploadFilePath(this.isCombination
+    return getUploadFileUrl(this.isCombination
       ? this.boothGoodsCombinationDict[this.item.id].goodsImage?.path
       : this.boothGoodsDict[this.item.id].goodsImage?.path,
     );

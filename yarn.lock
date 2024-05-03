@@ -1475,6 +1475,7 @@ __metadata:
     chart.js: "npm:^4.4.2"
     chartjs-adapter-moment: "npm:^1.0.1"
     clone-deep: "npm:^4.0.1"
+    deep-object-diff: "npm:^1.1.9"
     eslint: "npm:^8"
     eslint-import-resolver-typescript: "npm:^3.6.1"
     eslint-plugin-import: "npm:^2.29.1"
@@ -1517,6 +1518,7 @@ __metadata:
     "@nestjs/testing": "npm:^10.3.7"
     "@rushstack/eslint-patch": "npm:^1.10.2"
     "@tsconfig/node20": "npm:^20.1.4"
+    "@types/clone-deep": "npm:^4.0.4"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.12.7"
     "@types/sequelize": "npm:^4.28.20"
@@ -1527,6 +1529,7 @@ __metadata:
     argon2: "npm:^0.40.1"
     chalk: "npm:^4"
     class-transformer: "npm:^0.5.1"
+    clone-deep: "npm:^4.0.1"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^8"
     eslint-import-resolver-typescript: "npm:^3.6.1"
@@ -1551,7 +1554,7 @@ __metadata:
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.1
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=606229&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=0cb1cc&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     clone-deep: "npm:^4.0.1"
   peerDependencies:
@@ -1560,13 +1563,13 @@ __metadata:
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/fd67ac8a719752471e1f18b70392c0955dbb2f60c022d4c9dcfac779ae01a9a099219dbd7dc4070cea0403e04e26971f19bc240e6a725771190c231f37d0fcc5
+  checksum: 10/f02f9e503c4be241931cb3d8ebfde88073455855b070b04c16cd676b365f605d2bd5470682b1f613e20aeb4a21525a8d0d7e8a0e7de6d5ca9eea2e676d0a3620
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.1
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=606229&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=0cb1cc&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     clone-deep: "npm:^4.0.1"
   peerDependencies:
@@ -1575,7 +1578,7 @@ __metadata:
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/fd67ac8a719752471e1f18b70392c0955dbb2f60c022d4c9dcfac779ae01a9a099219dbd7dc4070cea0403e04e26971f19bc240e6a725771190c231f37d0fcc5
+  checksum: 10/f02f9e503c4be241931cb3d8ebfde88073455855b070b04c16cd676b365f605d2bd5470682b1f613e20aeb4a21525a8d0d7e8a0e7de6d5ca9eea2e676d0a3620
   languageName: node
   linkType: hard
 
@@ -1618,19 +1621,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=06df6d&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=961958&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/8ce85f35182d0e956a19b167b93dfe725440af09d313c4c3dc23ff469957b88352a11ff5abcfd67355a5a226d7df16d66ad24e8ddfdce8c6aa3e698e06d125b0
+  checksum: 10/94bdbfefaacab95068c529636bbfd02b24c18b11e320041480375ea3e54ca69b67ff64898e4752f7ce809e42f6d49f870ae89c21c1a975f77c2d9aeead1bf06f
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=06df6d&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=961958&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/8ce85f35182d0e956a19b167b93dfe725440af09d313c4c3dc23ff469957b88352a11ff5abcfd67355a5a226d7df16d66ad24e8ddfdce8c6aa3e698e06d125b0
+  checksum: 10/94bdbfefaacab95068c529636bbfd02b24c18b11e320041480375ea3e54ca69b67ff64898e4752f7ce809e42f6d49f870ae89c21c1a975f77c2d9aeead1bf06f
   languageName: node
   linkType: hard
 
@@ -4323,6 +4326,13 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10/ec12d074aef5ae5e81fa470b9317c313142c9e8e2afe3f8efa124db309720db96d1d222b82b84c834e5f87e7a614b44a4684b6683583118b87c833b3be40d4d8
+  languageName: node
+  linkType: hard
+
+"deep-object-diff@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "deep-object-diff@npm:1.1.9"
+  checksum: 10/b9771cc1ca08a34e408309eaab967bd2ab697684abdfa1262f4283ced8230a9ace966322f356364ff71a785c6e9cc356b7596582e900da5726e6b87d4b2a1463
   languageName: node
   linkType: hard
 
