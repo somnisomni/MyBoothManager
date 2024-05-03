@@ -37,4 +37,5 @@ export interface IAccountLoginRequest {
 }
 
 /* === Responses === */
+export interface IAccountResponse extends IAccount { }
 export interface IAccountLoginResponse extends IAccount, IAccountAuthToken { }

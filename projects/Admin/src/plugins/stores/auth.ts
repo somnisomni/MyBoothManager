@@ -1,4 +1,4 @@
-import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type IAccountLoginTokenData, type ISuccessResponse } from "@myboothmanager/common";
+import { ErrorCodes, type IAccountAuthToken, type IAccountLoginRequest, type IAccountLoginResponse, type ISuccessResponse } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
@@ -10,7 +10,7 @@ const useAuthStore = defineStore("auth", () => {
 
   /* States */
   const id = ref<number | null>(null);
-  const authTokenData = ref<IAccountLoginTokenData | null>(null);
+  const authTokenData = ref<IAccountAuthToken | null>(null);
 
   /* Computed */
   const isAuthTokenValid = computed<boolean>(() =>

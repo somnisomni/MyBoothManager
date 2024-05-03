@@ -21,7 +21,7 @@
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
-                       :existingSrc="goodsImageUrl"
+                       :existingSrc="goodsImagePath"
                        contextName="굿즈"
                        width="200px"
                        height="250px"
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import type { Goods } from "@myboothmanager/common-ui";
+import type { GoodsAdmin } from "@/lib/classes";
 import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { reactive , readonly, ref, type DeepReadonly } from "vue";
@@ -63,8 +63,6 @@ import ImageWithUpload from "../common/ImageWithUpload.vue";
 import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
-
-type IGoodsManageFormField = Omit<IGoodsCreateRequest, "boothId">;
 
 @Component({
   components: {
@@ -83,16 +81,19 @@ export default class GoodsManageDialog extends Vue {
 
   @Ref("form") readonly form!: CommonForm;
 
-  readonly formModels: IGoodsManageFormField = reactive({
+  readonly formModels: IGoodsCreateRequest = reactive({
+    boothId: -1,
     name: "",
     description: "",
     categoryId: -1,
     type: "",
     price: 0,
-    stockInitial: 0,
-    stockRemaining: 0,
-    stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
-    ownerMembersId: ref([]),
+    stock: {
+      initial: 0,
+      remaining: 0,
+      visibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+    },
+    ownerMemberIds: ref([]),
   });
   readonly formFields = {
     name: {
@@ -173,8 +174,8 @@ export default class GoodsManageDialog extends Vue {
       hint: "공개 페이지에서만 적용되며, 관리자 페이지에선 항상 모든 재고량 정보가 표시됩니다.",
       persistentHint: true,
     },
-  } as Record<keyof IGoodsManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>;
-  formModelsInitial: IGoodsManageFormField = deepClone(this.formModels);
+  } as Record<keyof IGoodsCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
+  formModelsInitial: IGoodsCreateRequest = deepClone(this.formModels);
 
   goodsCategoryManageDialogShown = false;
   openAddCategoryDialog() { this.goodsCategoryManageDialogShown = true; }
@@ -194,12 +195,12 @@ export default class GoodsManageDialog extends Vue {
     };
   }
 
-  get currentGoods(): DeepReadonly<Goods> | null {
+  get currentGoods(): DeepReadonly<GoodsAdmin> | null {
     return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods![this.goodsId]) : null;
   }
 
-  get goodsImageUrl(): string | null {
-    return this.editMode && this.currentGoods ? this.currentGoods.goodsImageUrl ?? null : null;
+  get goodsImagePath(): string | null {
+    return this.editMode && this.currentGoods ? this.currentGoods.goodsImage?.path ?? null : null;
   }
 
   get allCategoryData() {
@@ -210,26 +211,28 @@ export default class GoodsManageDialog extends Vue {
   }
 
   @Watch("open") mounted() {
+    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+
     if(this.currentGoods && (this.editMode || this.duplicate)) {
       this.formModels.name = this.currentGoods.name;
       this.formModels.description = this.currentGoods.description;
       this.formModels.categoryId = this.currentGoods.categoryId;
       this.formModels.type = this.currentGoods.type;
       this.formModels.price = this.currentGoods.price;
-      this.formModels.stockInitial = this.currentGoods.stockInitial;
-      this.formModels.stockRemaining = this.currentGoods.stockRemaining;
-      this.formModels.stockVisibility = this.currentGoods.stockVisibility;
-      this.formModels.ownerMembersId = this.currentGoods.ownerMembersId as number[] | undefined;
+      this.formModels.stock = { ...this.currentGoods.stock };
+      this.formModels.ownerMemberIds = deepClone(this.currentGoods.ownerMemberIds) as number[] | null;
     } else {
       this.formModels.name = "";
       this.formModels.description = "";
       this.formModels.categoryId = -1;
       this.formModels.type = "";
       this.formModels.price = 0;
-      this.formModels.stockInitial = 0;
-      this.formModels.stockRemaining = 0;
-      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
-      this.formModels.ownerMembersId = [];
+      this.formModels.stock = {
+        initial: 0,
+        remaining: 0,
+        visibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+      };
+      this.formModels.ownerMemberIds = [];
     }
 
     this.formModelsInitial = deepClone(this.formModels);
@@ -314,7 +317,7 @@ export default class GoodsManageDialog extends Vue {
   }
 
   stockRemainingValidationRule() {
-    if(this.formModels.stockRemaining > this.formModels.stockInitial) {
+    if(this.formModels.stock.remaining! > this.formModels.stock.initial!) {
       return "현재 재고량은 초기 재고량보다 클 수 없습니다.";
     } else {
       return true;

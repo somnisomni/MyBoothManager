@@ -1,9 +1,9 @@
 import * as C from "@myboothmanager/common";
-import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import $router from "@/plugins/router";
 import AdminAPI from "@/lib/api-admin";
+import { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { useAdminStore } from "./admin";
 import { useAuthStore } from "./auth";
 
@@ -119,35 +119,35 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function updateCurrentBoothStatus(payload: C.IBoothStatusUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothStatus($adminStore.currentBooth.booth!.id, payload),
-      () => $adminStore.currentBooth.booth! = { ...$adminStore.currentBooth.booth!, ...payload },
+      () => $adminStore.currentBooth.booth! = { ...$adminStore.currentBooth.booth!, status: { ...payload } },
     );
   }
 
   async function uploadBoothBannerImage(payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothBannerImage($adminStore.currentBooth.booth!.id, payload),
-      (response) => $adminStore.currentBooth.booth!.bannerImageUrl = response.value as string,
+      () => fetchSingleBoothOfCurrentAccount($adminStore.currentBooth.booth!.id),
     );
   }
 
   async function deleteBoothBannerImage(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothBannerImage($adminStore.currentBooth.booth!.id),
-      () => delete $adminStore.currentBooth.booth!.bannerImageUrl,
+      () => delete $adminStore.currentBooth.booth!.bannerImage,
     );
   }
 
   async function uploadBoothInfoImage(payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothInfoImage($adminStore.currentBooth.booth!.id, payload),
-      (response) => $adminStore.currentBooth.booth!.infoImageUrl = response.value as string,
+      () => fetchSingleBoothOfCurrentAccount($adminStore.currentBooth.booth!.id),
     );
   }
 
   async function deleteBoothInfoImage(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothInfoImage($adminStore.currentBooth.booth!.id),
-      () => delete $adminStore.currentBooth.booth!.infoImageUrl,
+      () => delete $adminStore.currentBooth.booth!.infoImage,
     );
   }
 
@@ -183,14 +183,14 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function uploadBoothMemberImage(memberId: number, payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothMemberImage($adminStore.currentBooth.booth!.id, memberId, payload),
-      (response) => $adminStore.currentBooth.boothMembers![memberId].memberImageUrl = response.value as string,
+      () => fetchBoothMembersOfCurrentBooth(),
     );
   }
 
   async function deleteBoothMemberImage(memberId: number): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothMemberImage($adminStore.currentBooth.booth!.id, memberId),
-      () => delete $adminStore.currentBooth.boothMembers![memberId].memberImageUrl,
+      () => delete $adminStore.currentBooth.boothMembers![memberId].avatarImage,
     );
   }
 
@@ -211,7 +211,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       (response) => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
         C.emptyNumberKeyObject($adminStore.currentBooth.goods);
-        for(const goods of response) $adminStore.currentBooth.goods[goods.id] = new Goods(goods);
+        for(const goods of response) $adminStore.currentBooth.goods[goods.id] = new GoodsAdmin(goods);
       },
     );
   }
@@ -221,7 +221,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.createGoods(payload),
       (response) => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
-        $adminStore.currentBooth.goods[response.id] = new Goods(response);
+        $adminStore.currentBooth.goods[response.id] = new GoodsAdmin(response);
       },
     );
   }
@@ -239,14 +239,14 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function uploadGoodsImage(goodsId: number, payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadGoodsImage($adminStore.currentBooth.booth!.id, goodsId, payload),
-      (response) => $adminStore.currentBooth.goods![goodsId].goodsImageUrl = response.value as string,
+      () => fetchGoodsOfCurrentBooth(),
     );
   }
 
   async function deleteGoodsImage(goodsId: number): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.deleteGoodsImage(goodsId, $adminStore.currentBooth.booth!.id),
-      () => delete $adminStore.currentBooth.goods![goodsId].goodsImageUrl,
+      () => delete $adminStore.currentBooth.goods![goodsId].goodsImage,
     );
   }
 
@@ -267,7 +267,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
         C.emptyNumberKeyObject($adminStore.currentBooth.goodsCombinations);
-        for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = new GoodsCombination(combination);
+        for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = new GoodsCombinationAdmin(combination);
       },
     );
   }
@@ -277,7 +277,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.createGoodsCombination(payload),
       async (response) => {
         if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
-        $adminStore.currentBooth.goodsCombinations[response.id] = new GoodsCombination(response);
+        $adminStore.currentBooth.goodsCombinations[response.id] = new GoodsCombinationAdmin(response);
         await fetchGoodsOfCurrentBooth();
       },
     );
@@ -296,14 +296,14 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function uploadGoodsCombinationImage(combinationId: number, payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadGoodsCombinationImage($adminStore.currentBooth.booth!.id, combinationId, payload),
-      (response) => $adminStore.currentBooth.goodsCombinations![combinationId].combinationImageUrl = response.value as string,
+      () => fetchGoodsCombinationsOfCurrentBooth(),
     );
   }
 
   async function deleteGoodsCombinationImage(combinationId: number): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.deleteGoodsCombinationImage(combinationId, $adminStore.currentBooth.booth!.id),
-      () => delete $adminStore.currentBooth.goodsCombinations![combinationId].combinationImageUrl,
+      () => delete $adminStore.currentBooth.goodsCombinations![combinationId].goodsImage,
     );
   }
 

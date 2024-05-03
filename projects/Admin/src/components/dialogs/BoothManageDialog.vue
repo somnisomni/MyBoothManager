@@ -109,8 +109,6 @@ export default class BoothManageDialog extends Vue {
   formValid = false;
   cancelWarningDialogShown = false;
 
-
-
   get today(): string {
     const today = new Date();
     return useDate().toISO(today);
@@ -167,8 +165,8 @@ export default class BoothManageDialog extends Vue {
 
       this.formData = reactive({
         ...boothData,
-        dateOpen: new Date(boothData.dateOpen),
-        dateClose: new Date(boothData.dateClose),
+        dateOpen: new Date(boothData.dateOpen!),
+        dateClose: new Date(boothData.dateClose!),
       } as IBoothUpdateRequest);
     } else {
       this.formData = reactive({

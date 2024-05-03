@@ -1,4 +1,4 @@
-import { BoothStatus, GoodsOrderPaymentMethod, GoodsOrderStatus, GoodsStatus } from "@myboothmanager/common";
+import { BoothStatus, GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 
 export function getBoothStatusString(status: BoothStatus): string {
   return {
@@ -6,14 +6,6 @@ export function getBoothStatusString(status: BoothStatus): string {
     [BoothStatus.OPEN]: "운영 중",
     [BoothStatus.PAUSE]: "운영 일시 중지",
     [BoothStatus.PREPARE]: "운영 준비 중",
-  }[status];
-}
-
-export function getGoodsStatusString(status: GoodsStatus): string {
-  return {
-    [GoodsStatus.ON_SALE]: "판매 중",
-    [GoodsStatus.SOLD_OUT]: "품절",
-    [GoodsStatus.PAUSE]: "판매 일시 중지",
   }[status];
 }
 

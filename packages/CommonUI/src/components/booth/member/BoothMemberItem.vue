@@ -8,9 +8,9 @@
           @click="$emit('click', memberData.id)">
     <VAvatar size="6em"
              class="no-interaction">
-      <VImg v-if="memberImageUrl"
-            :src="memberImageUrl"
-            :lazy-src="memberData.memberImageThumbnailData" />
+      <VImg v-if="avatarImageUrl"
+            :src="avatarImageUrl"
+            :lazy-src="memberData.avatarImage?.thumbnailData" />
       <VIcon v-else
              icon="mdi-account"
              size="3em" />
@@ -53,8 +53,8 @@ export default class BoothMemberItem extends Vue {
     return this.smAndUp ? "24em" : "100%";
   }
 
-  get memberImageUrl() {
-    return this.imageUrlResolver(this.memberData.memberImageUrl);
+  get avatarImageUrl() {
+    return this.imageUrlResolver(this.memberData.avatarImage?.path);
   }
 }
 </script>

@@ -32,7 +32,7 @@
 
             <div class="d-flex flex-column align-end justify-center text-right flex-1-0">
               <div class="text-body-2">이 판매 기록의 총 매출액</div>
-              <div class="text-h4 text-sm-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalPrice.toLocaleString() }}</div>
+              <div class="text-h4 text-sm-h3 font-weight-bold">{{ currencySymbol }}{{ orderData.totalRevenue.toLocaleString() }}</div>
             </div>
           </div>
 
@@ -141,7 +141,7 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderDetailItem } from "@myboothmanager/common";
+import { APP_NAME, GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderItem } from "@myboothmanager/common";
 import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import html2canvas from "html2canvas";
@@ -184,7 +184,7 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
     return useAdminStore().currentBooth.goodsOrders![this.orderId];
   }
 
-  get ordersSorted(): Array<IGoodsOrderDetailItem> {
+  get ordersSorted(): Array<IGoodsOrderItem> {
     return this.orderData.order.sort((a, b) => {
       if(a.cId && b.cId) return a.cId - b.cId;
       else if(a.cId) return -1;

@@ -1,12 +1,12 @@
 import {
   HTTP_HEALTH_CHECK_STATUS_CODE,
-  type IBackendErrorResponse,
+  type IErrorResponse,
   type IBoothMemberResponse,
   type IBoothResponse,
   type IGoodsCategoryResponse,
   type IGoodsCombinationResponse,
   type IGoodsResponse,
-  type IValueResponse,
+  type ISingleValueResponse,
 } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -27,7 +27,7 @@ export default class APICaller {
     private readonly healthCheckPath: string = "healthcheck") { }
 
   /* Basic fetch function */
-  private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
+  private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
     const url: string = `${this.apiHost}${this.apiGroup.length > 0 ? `/${this.apiGroup}` : ""}/${path}`;
 
     const response = await fetch(url, {
@@ -43,7 +43,7 @@ export default class APICaller {
     return await response.json() as T;
   }
 
-  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IBackendErrorResponse> {
+  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
     return this.callAPIInternal<T>(method, path, payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS, containAuthCredential);
   }
 
@@ -54,7 +54,7 @@ export default class APICaller {
   public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("PATCH", path, payload, containAuthCredential); }
   public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("DELETE", path, payload, containAuthCredential); }
 
-  public async POSTMultipart<T>(path: string, payload: FormData): Promise<T | IBackendErrorResponse> {
+  public async POSTMultipart<T>(path: string, payload: FormData): Promise<T | IErrorResponse> {
     return this.callAPIInternal<T>("POST", path, payload, undefined, true);
   }
 
@@ -80,7 +80,7 @@ export default class APICaller {
   }
 
   public async fetchCountAllBooths() {
-    const response = await this.createPublicAPI().GET<IValueResponse>("booth/count");
+    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>("booth/count");
 
     if("value" in response) return +response.value;
     else return response;
@@ -95,7 +95,7 @@ export default class APICaller {
   }
 
   public async fetchCountAllGoodsOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/count`);
+    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/count`);
 
     if("value" in response) return +response.value;
     else return response;
@@ -106,7 +106,7 @@ export default class APICaller {
   }
 
   public async fetchCountAllGoodsCategoryOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/category/count`);
+    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/category/count`);
 
     if("value" in response) return +response.value;
     else return response;
@@ -117,7 +117,7 @@ export default class APICaller {
   }
 
   public async fetchCountAllGoodsCombinationOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<IValueResponse>(`booth/${boothId}/goods/combination/count`);
+    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/combination/count`);
 
     if("value" in response) return +response.value;
     else return response;

@@ -62,11 +62,11 @@ export default class GoodsOverviewPanel extends Vue {
     };
 
     for(const goods of Object.values(useAdminStore().currentBooth.goods ?? {})) {
-      data.totalSumStockCount += Number(goods.stockInitial);
-      data.remainingSumStockCount += Number(goods.stockRemaining);
-      data.totalSumStockValue += Number(goods.price) * Number(goods.stockInitial);
-      data.totalSumSoldCount += Number(goods.stockInitial) - Number(goods.stockRemaining);
-      data.totalSumSoldValue += Number(goods.price) * (Number(goods.stockInitial) - Number(goods.stockRemaining));
+      data.totalSumStockCount += Number(goods.stock.initial);
+      data.remainingSumStockCount += Number(goods.stock.remaining);
+      data.totalSumStockValue += Number(goods.price) * Number(goods.stock.initial);
+      data.totalSumSoldCount += Number(goods.stock.initial) - Number(goods.stock.remaining);
+      data.totalSumSoldValue += Number(goods.price) * (Number(goods.stock.initial) - Number(goods.stock.remaining));
     }
 
     return data;

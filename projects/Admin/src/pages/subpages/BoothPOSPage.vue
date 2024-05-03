@@ -100,7 +100,7 @@ export default class BoothPOSPage extends Vue {
   }
 
   mounted(): void {
-    if(this.currentBooth.status !== BoothStatus.OPEN) {
+    if(this.currentBooth.status.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
       return;
     }

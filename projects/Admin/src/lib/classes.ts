@@ -1,3 +1,22 @@
+import type { IGoodsAdmin, IGoodsCombinationAdmin, IGoodsStock } from "@myboothmanager/common";
+import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
+
+export class GoodsAdmin extends Goods implements IGoodsAdmin {
+  declare stock: Required<IGoodsStock>;
+
+  override toPlainObject(): IGoodsAdmin {
+    return { ...super.toPlainObject() } as IGoodsAdmin;
+  }
+}
+
+export class GoodsCombinationAdmin extends GoodsCombination implements IGoodsCombinationAdmin {
+  declare stock: Required<IGoodsStock>;
+
+  override toPlainObject(): IGoodsCombinationAdmin {
+    return { ...super.toPlainObject() } as IGoodsCombinationAdmin;
+  }
+}
+
 export class Dateonly {
   constructor(private _year: number, private _month: number, private _day: number) { }
 

@@ -68,11 +68,11 @@ export default class POSGoodsOrderListItem extends Vue {
       : this.boothGoodsDict[this.item.id];
   }
 
-  get currentTargetImageUrl(): string {
+  get currentTargetImageUrl() {
     return getUploadFilePath(this.isCombination
-      ? this.boothGoodsCombinationDict[this.item.id].combinationImageUrl
-      : this.boothGoodsDict[this.item.id].goodsImageUrl,
-    ) ?? `https://picsum.photos/seed/${this.currentTarget.id}/200/250`;
+      ? this.boothGoodsCombinationDict[this.item.id].goodsImage?.path
+      : this.boothGoodsDict[this.item.id].goodsImage?.path,
+    );
   }
 
   get calculatedTargetPrice(): number {

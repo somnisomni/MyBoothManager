@@ -1,3 +1,5 @@
+/* eslint-disable import/exports-last */
+
 import { IImageUploadInfo } from "./base";
 
 /* === Common === */
@@ -5,19 +7,26 @@ export interface IGoodsCommon {
   id: number;
   boothId: number;
   categoryId?: number | null;
-  combinationId?: number | null;
   name: string;
   description?: string | null;
-  type?: string;
   price: number;
   stock: IGoodsStock;
   ownerMemberIds?: Array<number> | null;
+}
+
+interface IGoodsBase extends IGoodsCommon {
+  combinationId?: number | null;
+  type?: string;
 }
 
 export interface IGoodsStock {
   visibility: GoodsStockVisibility;
   initial?: number;
   remaining?: number;
+}
+
+export interface IGoodsFrontendCommon extends IGoodsBase {
+  goodsImage?: IImageUploadInfo | null;
 }
 
 /* === Enums === */
@@ -28,16 +37,14 @@ export enum GoodsStockVisibility {
 }
 
 /* === Frontend === */
-export interface IGoods extends IGoodsCommon {
-  goodsImage?: IImageUploadInfo | null;
-}
+export interface IGoods extends IGoodsFrontendCommon { }
 
 export interface IGoodsAdmin extends IGoods {
   stock: Required<IGoodsStock>;
 }
 
 /* === Model for Backend (DB) === */
-export interface IGoodsModel extends Omit<IGoodsCommon, "stock"> {
+export interface IGoodsModel extends Omit<IGoodsBase, "stock"> {
   stockVisibility: GoodsStockVisibility;
   stockInitial: number;
   stockRemaining: number;
@@ -45,8 +52,8 @@ export interface IGoodsModel extends Omit<IGoodsCommon, "stock"> {
 }
 
 /* === Requests === */
-export interface IGoodsCreateRequest extends Omit<IGoodsCommon, "id" | "combinationId"> { }
-export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCommon, "id" | "combinationId">> { }
+export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinationId"> { }
+export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsBase, "id" | "combinationId">> { }
 
 /* === Responses === */
 export interface IGoodsResponse extends IGoods { }
