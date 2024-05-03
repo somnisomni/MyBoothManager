@@ -116,7 +116,7 @@ export class GoodsCombinationService {
       dto.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
     }
 
-    const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId!, callerAccountId);
+    const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId, callerAccountId);
 
     if(dto.goodsIds) {
       // Remove combination ID from existing goods
@@ -138,7 +138,7 @@ export class GoodsCombinationService {
         },
       });
       for(const g of targetGoods) {
-        if(g.categoryId !== dto.categoryId) {
+        if(g.categoryId !== (dto.categoryId || combination.categoryId)) {
           await (g.set("combinationId", null)).save();
           dto.goodsIds.splice(dto.goodsIds.indexOf(g.id), 1);
         }

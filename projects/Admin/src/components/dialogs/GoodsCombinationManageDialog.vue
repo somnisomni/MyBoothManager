@@ -77,6 +77,8 @@ import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsC
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
+import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -275,8 +277,11 @@ export default class GoodsCombinationManageDialog extends Vue {
 
     if(this.editMode) {
       const requestData: IGoodsCombinationUpdateRequest = {
-        ...this.formModels,
+        ...diff(this.formModelsInitial, this.formModels),
         boothId: useAdminStore().currentBooth.booth!.id,
+
+        // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
+        goodsIds: !deepEqual(this.formModelsInitial.goodsIds, this.formModels.goodsIds) ? deepClone(this.formModels.goodsIds) : undefined,
       };
       const result = await useAdminAPIStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 

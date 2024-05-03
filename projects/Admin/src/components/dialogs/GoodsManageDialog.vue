@@ -55,6 +55,8 @@ import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoods
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { reactive , readonly, ref, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
+import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -261,8 +263,11 @@ export default class GoodsManageDialog extends Vue {
       // UPDATE
 
       const requestData: IGoodsUpdateRequest = {
-        ...this.formModels,
+        ...diff(this.formModelsInitial, this.formModels),
         boothId: useAdminStore().currentBooth.booth!.id,
+
+        // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
+        ownerMemberIds: !deepEqual(this.formModelsInitial.ownerMemberIds, this.formModels.ownerMemberIds) ? deepClone(this.formModels.ownerMemberIds) : undefined,
       };
 
       result = await useAdminAPIStore().updateGoodsInfo(Number(this.goodsId!), requestData);

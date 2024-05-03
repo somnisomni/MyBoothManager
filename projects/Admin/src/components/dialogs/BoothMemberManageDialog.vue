@@ -50,6 +50,7 @@ import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
+import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -180,7 +181,8 @@ export default class BoothMemberManageDialog extends Vue {
       // UPDATE
 
       const requestData: IBoothMemberUpdateRequest = {
-        ...this.formModels,
+        ...diff(this.formModelsInitial, this.formModels),
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
       result = await useAdminAPIStore().updateBoothMemberInfo(this.boothMemberId, requestData);
@@ -189,6 +191,7 @@ export default class BoothMemberManageDialog extends Vue {
 
       const requestData: IBoothMemberCreateRequest = {
         ...this.formModels,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
       result = await useAdminAPIStore().createBoothMember(requestData);
