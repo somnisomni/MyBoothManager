@@ -1,4 +1,5 @@
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
+import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { reactive } from "vue";
 import deepClone from "clone-deep";
 
@@ -76,8 +77,8 @@ export class POSOrderSimulationLayer {
   private _combinationListSimulated: Record<number, IGoodsCombination> = {};
 
   constructor(
-    goodsList: Record<number, IGoods>,
-    combinationList: Record<number, IGoodsCombination>,
+    goodsList: Record<number, Goods>,
+    combinationList: Record<number, GoodsCombination>,
   ) {
     this.reset(goodsList, combinationList);
   }
@@ -86,14 +87,17 @@ export class POSOrderSimulationLayer {
   get simulatedGoodsList() { return this._goodsListSimulated; }
   get simulatedCombinationList() { return this._combinationListSimulated; }
 
-  reset(goodsList: Record<number, IGoods>, combinationList: Record<number, IGoodsCombination>) {
+  reset(goodsList: Record<number, Goods>, combinationList: Record<number, GoodsCombination>) {
     this._orderList.clear();
 
-    this._goodsListOriginal = Object.seal(Object.freeze(deepClone(goodsList)));
-    this._goodsListSimulated = deepClone(goodsList);
+    const plainGoodsList = Object.fromEntries(Object.entries(goodsList).map(([id, goods]) => [id, goods.toPlainObject()]));
+    const plainCombinationList = Object.fromEntries(Object.entries(combinationList).map(([id, combination]) => [id, combination.toPlainObject()]));
 
-    this._combinationListOriginal = Object.seal(Object.freeze(deepClone(combinationList)));
-    this._combinationListSimulated = deepClone(combinationList);
+    this._goodsListOriginal = Object.seal(Object.freeze(deepClone(plainGoodsList)));
+    this._goodsListSimulated = deepClone(plainGoodsList);
+
+    this._combinationListOriginal = Object.seal(Object.freeze(deepClone(plainCombinationList)));
+    this._combinationListSimulated = deepClone(plainCombinationList);
   }
 
   getMaxAvailableQuantity(what: POSOrderListWhat, id: number) {

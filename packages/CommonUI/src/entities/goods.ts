@@ -51,8 +51,8 @@ export abstract class GoodsBase implements IGoodsCommon {
   }
 
   /**
-   * Convert this instance to a plain object.
-   * @returns Plain object of the instance.
+   * Convert this instance to a deeply copied plain object.
+   * @returns Deeply copied plain object of the instance.
    */
   toPlainObject(): IGoodsCommon {
     return {
