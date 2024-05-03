@@ -6,12 +6,14 @@
           max-height="7em"
           :max-width="maxWidth"
           @click="$emit('click', memberData.id)">
-    <VAvatar :icon="!memberImageUrl ? 'mdi-account' : undefined"
-             size="6em"
+    <VAvatar size="6em"
              class="no-interaction">
       <VImg v-if="memberImageUrl"
             :src="memberImageUrl"
             :lazy-src="memberData.memberImageThumbnailData" />
+      <VIcon v-else
+             icon="mdi-account"
+             size="3em" />
     </VAvatar>
 
     <div class="d-flex flex-column ml-4 overflow-hidden">
@@ -24,7 +26,7 @@
       <div>
         <VBtn v-if="memberData.url" :href="memberData.url" target="_blank" icon variant="flat" size="28px" @click.stop>
           <VIcon size="24px">mdi-web</VIcon>
-          <VTooltip activator="parent" location="bottom">{{ memberData.url }}</VTooltip>
+          <VTooltip activator="parent" location="bottom" transition="fade-transition">{{ memberData.url }}</VTooltip>
         </VBtn>
       </div>
     </div>
