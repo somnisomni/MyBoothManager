@@ -19,7 +19,7 @@
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
       <GoodsListView :currencySymbol="currencySymbol"
                      :goodsList="boothGoodsCombinedList"
-                     :goodsImageUrlResolver="getUploadFilePath"
+                     :goodsImageUrlResolver="getUploadFileUrl"
                      :goodsCategoryList="boothGoodsCategoryList"
                      omitEmptyGoodsCategory>
         <template #goods="props">
@@ -62,7 +62,7 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
 
 @Component({
@@ -73,7 +73,7 @@ import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
 })
 export default class BoothPOSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  readonly getUploadFilePath = getUploadFilePath;
+  readonly getUploadFileUrl = getUploadFileUrl;
   readonly goodsItemForceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   @Setup(() => useDisplay().mdAndUp)
@@ -100,7 +100,7 @@ export default class BoothPOSPage extends Vue {
   }
 
   mounted(): void {
-    if(this.currentBooth.status !== BoothStatus.OPEN) {
+    if(this.currentBooth.status.status !== BoothStatus.OPEN) {
       router.replace({ name: "admin" });
       return;
     }

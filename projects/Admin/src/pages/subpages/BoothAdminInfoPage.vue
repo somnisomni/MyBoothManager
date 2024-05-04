@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ImageWithUpload :existingSrc="boothBannerImageUrl"
+    <ImageWithUpload :existingSrc="boothBannerImagePath"
                      contextName="배너"
                      width="100%"
                      height="300px"
@@ -12,7 +12,7 @@
       <BoothInfoPanel class="mb-4" />
       <BoothMembersPanel class="my-4" />
 
-      <ImageWithUpload :existingSrc="boothInfoImageUrl"
+      <ImageWithUpload :existingSrc="boothInfoImagePath"
                        contextName="인포"
                        width="100%"
                        height="auto"
@@ -39,12 +39,12 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
   },
 })
 export default class BoothAdminInfoPage extends Vue {
-  get boothBannerImageUrl(): string | null {
-    return useAdminStore().currentBooth.booth!.bannerImageUrl ?? null;
+  get boothBannerImagePath(): string | null {
+    return useAdminStore().currentBooth.booth!.bannerImage?.path ?? null;
   }
 
-  get boothInfoImageUrl(): string | null {
-    return useAdminStore().currentBooth.booth!.infoImageUrl ?? null;
+  get boothInfoImagePath(): string | null {
+    return useAdminStore().currentBooth.booth!.infoImage?.path ?? null;
   }
 
   async boothBannerImageUploadCallback(file: File | Blob | null) {

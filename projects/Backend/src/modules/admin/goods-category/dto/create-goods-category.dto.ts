@@ -1,6 +1,6 @@
 import { IGoodsCategoryCreateRequest } from "@myboothmanager/common";
 
-export class CreateGoodsCategoryDTO implements IGoodsCategoryCreateRequest {
-  boothId!: number;
-  name!: string;
+export class CreateGoodsCategoryRequestDto implements IGoodsCategoryCreateRequest {
+  declare boothId: number;
+  declare name: string;
 }

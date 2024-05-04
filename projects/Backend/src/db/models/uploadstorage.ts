@@ -2,6 +2,7 @@ import type { IUploadStorage, InternalKeysWithId } from "@/lib/types";
 import path from "path";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, AllowNull, Default, HasOne } from "sequelize-typescript";
+import { IImageUploadInfo } from "@myboothmanager/common";
 import Account from "./account";
 import Booth from "./booth";
 import Goods from "./goods";
@@ -58,12 +59,21 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
   @HasOne(() => Booth, "infoImageId")
   declare boothInfoImageParent?: Booth;
 
-  @HasOne(() => BoothMember, "memberImageId")
+  @HasOne(() => BoothMember, "avatarImageId")
   declare boothMemberImageParent?: BoothMember;
 
   @HasOne(() => Goods, "goodsImageId")
   declare goodsImageParent?: Goods;
 
-  @HasOne(() => GoodsCombination, "combinationImageId")
+  @HasOne(() => GoodsCombination, "goodsImageId")
   declare goodsCombinationImageParent?: GoodsCombination;
+
+
+  /* === Functions === */
+  toImageUploadInfo(): IImageUploadInfo {
+    return {
+      path: this.get("filePath"),
+      thumbnailData: this.get("imageThumbnailBase64"),
+    };
+  }
 }

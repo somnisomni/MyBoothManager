@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-facing-decorator";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import FileInputButton, { FileInputAccepts } from "./FileInputButton.vue";
 
 @Component({
@@ -56,8 +56,8 @@ export default class ImageWithUpload extends Vue {
   @Prop({ type: String, default: "auto" }) width!: string;
   @Prop({ type: String, default: "300px" }) height!: string;
   @Prop({ type: String, default: "1/1" }) aspectRatio!: string;
-  @Prop({ type: Promise, default: async () => true }) uploadCallback!: (file: File | Blob | null) => Promise<boolean>;
-  @Prop({ type: Promise, default: async () => true }) deleteCallback!: () => Promise<boolean>;
+  @Prop({ type: Function, default: async () => true }) uploadCallback!: (file: File | Blob | null) => Promise<boolean>;
+  @Prop({ type: Function, default: async () => true }) deleteCallback!: () => Promise<boolean>;
 
   imageUpdateInProgress: boolean = false;
   imageUpdateOK: boolean = false;
@@ -125,7 +125,7 @@ export default class ImageWithUpload extends Vue {
   get imageSource(): string | null {
     if(this.imageWillBeDeleted) return null;
 
-    return this.imageFilePickedObjectURL ?? getUploadFilePath(this.existingSrc);
+    return this.imageFilePickedObjectURL ?? getUploadFileUrl(this.existingSrc);
   }
 }
 </script>

@@ -5,11 +5,11 @@ export default class AdminAPI {
   private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthStore().authTokenData!.accessToken);
 
   /* Admin FE specific API call wrapper */
-  private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IBackendErrorResponse>): Promise<T | CT.ErrorCodes> {
-    const response = await callee() as T | CT.IBackendErrorResponse;
+  private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {
+    const response = await callee() as T | CT.IErrorResponse;
 
-    if((response as CT.IBackendErrorResponse).errorCode) {
-      return (response as CT.IBackendErrorResponse).errorCode as CT.ErrorCodes;
+    if((response as CT.IErrorResponse).errorCode) {
+      return (response as CT.IErrorResponse).errorCode as CT.ErrorCodes;
     } else {
       return response as T;
     }
@@ -109,7 +109,7 @@ export default class AdminAPI {
   }
 
   /* Create */
-  static async createAccount(currentUserData: CT.IAccountUserland, payload: CT.IAccountCreateRequest) {
+  static async createAccount(currentUserData: CT.IAccount, payload: CT.IAccountCreateRequest) {
     if(currentUserData.superAdmin)
       return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.POST("account", payload));
     else return CT.ErrorCodes.NO_ACCESS;
@@ -143,31 +143,31 @@ export default class AdminAPI {
   static async uploadBoothBannerImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
   }
 
   static async uploadBoothInfoImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
   }
 
   static async uploadBoothMemberImage(boothId: number, memberId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
   }
 
   static async uploadGoodsImage(boothId: number, goodsId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
   }
 
   static async uploadGoodsCombinationImage(boothId: number, combinationId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.IValueResponse>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));
   }
 
   /* Delete */

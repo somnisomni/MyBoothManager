@@ -16,13 +16,13 @@
       <VLayout v-if="currentBoothStatus === BoothStatus.PREPARE" class="mt-6 text-center flex-column">
         <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
         <VLayout class="flex-row justify-stretch mt-1">
-          <VBtn :variant="currentBoothStatusContentPublish ? 'flat' : 'outlined'"
-                :disabled="currentBoothStatusContentPublish || contentPublishStatusUpdateProgress"
+          <VBtn :variant="currentBoothStatusContentPublished ? 'flat' : 'outlined'"
+                :disabled="currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
                 color="green" class="mr-1 flex-grow-1"
                 @click.stop="updateContentPublishStatus(true)">공개</VBtn>
-          <VBtn :variant="!currentBoothStatusContentPublish ? 'flat' : 'outlined'"
-                :disabled="!currentBoothStatusContentPublish || contentPublishStatusUpdateProgress"
+          <VBtn :variant="!currentBoothStatusContentPublished ? 'flat' : 'outlined'"
+                :disabled="!currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
                 color="grey" class="ml-1 flex-grow-1"
                 @click.stop="updateContentPublishStatus(false)">비공개</VBtn>
@@ -99,15 +99,15 @@ export default class BoothStatusPanel extends Vue {
   statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
   get currentBoothStatus(): BoothStatus {
-    return useAdminStore().currentBooth.booth!.status;
+    return useAdminStore().currentBooth.booth!.status.status;
   }
 
   get currentBoothStatusReason(): string {
-    return useAdminStore().currentBooth.booth!.statusReason || "";
+    return useAdminStore().currentBooth.booth!.status.reason || "";
   }
 
-  get currentBoothStatusContentPublish(): boolean {
-    return useAdminStore().currentBooth.booth!.statusPublishContent || false;
+  get currentBoothStatusContentPublished(): boolean {
+    return useAdminStore().currentBooth.booth!.status.contentPublished || false;
   }
 
   onBoothStatusUpdateButtonClick(newStatus: BoothStatus): void {
@@ -119,11 +119,9 @@ export default class BoothStatusPanel extends Vue {
     this.contentPublishStatusUpdateProgress = true;
 
     const response = await useAdminAPIStore().updateCurrentBoothStatus({
-      ...{
-        status: this.currentBoothStatus,
-        statusReason: this.currentBoothStatusReason,
-      },
-      statusPublishContent: publish,
+      status: this.currentBoothStatus,
+      reason: this.currentBoothStatusReason,
+      contentPublished: publish,
     });
 
     if(response !== true) {

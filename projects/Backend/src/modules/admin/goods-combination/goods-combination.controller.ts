@@ -1,11 +1,12 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Param, Delete, Query, Req, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
 import { AuthData, AdminAuthGuard } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
-import { CreateGoodsCombinationDTO } from "./dto/create-goods-combination.dto";
-import { UpdateGoodsCombinationDTO } from "./dto/update-goods-combination.dto";
+import { CreateGoodsCombinationRequestDto } from "./dto/create-goods-combination.dto";
+import { UpdateGoodsCombinationRequestDto } from "./dto/update-goods-combination.dto";
 import { GoodsCombinationService } from "./goods-combination.service";
+import { AdminGoodsCombinationResponseDto } from "./dto/goods-combination.dto";
 
 @UseGuards(AdminAuthGuard)
 @Controller("/admin/goods/combination")
@@ -16,9 +17,10 @@ export class GoodsCombinationController {
   ) {}
 
   /* Normal routes */
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async create(@Body() dto: CreateGoodsCombinationDTO, @AuthData() authData: IAuthPayload) {
-    return await this.goodsCombinationService.create(dto, authData.id);
+  async create(@Body() dto: CreateGoodsCombinationRequestDto, @AuthData() authData: IAuthPayload): Promise<AdminGoodsCombinationResponseDto> {
+    return new AdminGoodsCombinationResponseDto(await this.goodsCombinationService.create(dto, authData.id));
   }
 
   @Post(":id/image")
@@ -31,9 +33,10 @@ export class GoodsCombinationController {
     return await this.goodsCombinationService.deleteImage(+id, +boothId, authData.id);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(":id")
-  async updateInfo(@Param("id") id: string, @Body() dto: UpdateGoodsCombinationDTO, @AuthData() authData: IAuthPayload) {
-    return await this.goodsCombinationService.updateInfo(+id, dto, authData.id);
+  async updateInfo(@Param("id") id: string, @Body() dto: UpdateGoodsCombinationRequestDto, @AuthData() authData: IAuthPayload): Promise<AdminGoodsCombinationResponseDto> {
+    return new AdminGoodsCombinationResponseDto(await this.goodsCombinationService.updateInfo(+id, dto, authData.id));
   }
 
   @Delete(":id")

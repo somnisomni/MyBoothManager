@@ -1,6 +1,6 @@
 import { IGoodsCombinationCreateRequest, GoodsStockVisibility } from "@myboothmanager/common";
 
-export class CreateGoodsCombinationDTO implements IGoodsCombinationCreateRequest {
+export class CreateGoodsCombinationRequestDto implements IGoodsCombinationCreateRequest {
   declare boothId: number;
   declare categoryId?: number | null;
   declare name: string;

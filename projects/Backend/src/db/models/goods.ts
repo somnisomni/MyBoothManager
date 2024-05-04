@@ -1,15 +1,10 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import { GoodsStatus, GoodsStockVisibility, GoodsWithoutAllStockInfoOmitKey, GoodsWithoutInitialStockInfoOmitKey, IGoodsModel } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsCreateRequest, IGoodsModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
-import { deleteKeys } from "@/lib/common-functions";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
 import GoodsCombination from "./goods-combination";
-
-export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "description" | "type" | "status" | "statusReason">
-                                      & Partial<Pick<IGoodsModel, "description" | "type" | "status" | "statusReason">>;
 
 @Table
 @DefaultScope(() => ({
@@ -20,7 +15,7 @@ export type GoodsCreationAttributes = Omit<IGoodsModel, InternalKeysWithId | "de
     },
   ],
 }))
-export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> implements IGoodsModel {
+export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> implements IGoodsModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -52,22 +47,12 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(1024))
-  declare description?: string;
+  declare description?: string | null;
 
   @AllowNull
   @Default(null)
   @Column(DataTypes.STRING(128))
-  declare type?: string;
-
-  @AllowNull(false)
-  @Default(GoodsStatus.ON_SALE)
-  @Column(DataTypes.ENUM(...Object.values(GoodsStatus)))
-  declare status: GoodsStatus;
-
-  @AllowNull
-  @Default(null)
-  @Column(DataTypes.STRING(1024))
-  declare statusReason?: string;
+  declare type?: string | null;
 
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
@@ -85,38 +70,20 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
   set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(new Number(value).valueOf())); }
 
   @AllowNull(false)
-  @Default(GoodsStockVisibility.SHOW_ALL)
+  @Default(GoodsStockVisibility.SHOW_REMAINING_ONLY)
   @Column(DataTypes.ENUM(...Object.values(GoodsStockVisibility)))
   declare stockVisibility: GoodsStockVisibility;
 
   @AllowNull
   @Default([])
   @Column(DataTypes.JSON)
-  declare ownerMembersId?: number[];
+  declare ownerMemberIds?: number[];
 
   @AllowNull
   @Default(null)
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare goodsImageId?: number | null;
-
-  @Column(DataTypes.VIRTUAL)
-  get goodsImageUrl(): string | null {
-    if(this.goodsImage) {
-      return this.goodsImage.filePath ?? null;
-    } else {
-      return null;
-    }
-  }
-
-  @Column(DataTypes.VIRTUAL)
-  get goodsImageThumbnailData(): string | null {
-    if(this.goodsImage) {
-      return this.goodsImage.imageThumbnailBase64 ?? null;
-    } else {
-      return null;
-    }
-  }
 
 
   /* === Relations === */
@@ -131,18 +98,4 @@ export default class Goods extends Model<IGoodsModel, GoodsCreationAttributes> i
 
   @BelongsTo(() => UploadStorage, "goodsImageId")
   declare goodsImage?: UploadStorage;
-
-
-  /* === Functions === */
-  getForPublic(): IGoodsModel {
-    const thisGet = this.get();
-
-    if(thisGet.stockVisibility === GoodsStockVisibility.HIDE_ALL) {
-      deleteKeys(thisGet, GoodsWithoutAllStockInfoOmitKey);
-    } else if(thisGet.stockVisibility === GoodsStockVisibility.SHOW_REMAINING_ONLY) {
-      deleteKeys(thisGet, GoodsWithoutInitialStockInfoOmitKey);
-    }
-
-    return thisGet;
-  }
 }

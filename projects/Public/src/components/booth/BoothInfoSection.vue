@@ -24,10 +24,10 @@
 
     <!-- Booth open status area -->
     <VScrollXTransition leave-absolute>
-      <VSheet      v-if="boothData.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="blue"           >정상 운영 중!</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="red-darken-1"   >운영을 종료한 부스입니다.</VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="orange-darken-1">운영이 일시 중지되었습니다.<br /><span v-if="boothData.statusReason">사유 : {{ boothData.statusReason }}</span></VSheet>
-      <VSheet v-else-if="boothData.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="green"          >준비 중인 부스입니다.</VSheet>
+      <VSheet      v-if="boothData.status.status === BoothStatus.OPEN"    class="booth-status-section pa-2" color="blue"           >정상 운영 중!</VSheet>
+      <VSheet v-else-if="boothData.status.status === BoothStatus.CLOSE"   class="booth-status-section pa-2" color="red-darken-1"   >운영을 종료한 부스입니다.</VSheet>
+      <VSheet v-else-if="boothData.status.status === BoothStatus.PAUSE"   class="booth-status-section pa-2" color="orange-darken-1">운영이 일시 중지되었습니다.<br /><span v-if="boothData.status.reason">사유 : {{ boothData.status.reason }}</span></VSheet>
+      <VSheet v-else-if="boothData.status.status === BoothStatus.PREPARE" class="booth-status-section pa-2" color="green"          >준비 중인 부스입니다.</VSheet>
     </VScrollXTransition>
   </section>
 </template>
@@ -35,7 +35,7 @@
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Component, Prop, Vue } from "vue-facing-decorator";
-import { getUploadFilePath } from "@/lib/common-functions";
+import { getUploadFileUrl } from "@/lib/common-functions";
 
 @Component({})
 export default class BoothInfoSection extends Vue {
@@ -43,9 +43,8 @@ export default class BoothInfoSection extends Vue {
 
   @Prop({ type: Object, required: true }) boothData!: IBooth;
 
-  get bannerImageUrl(): string {
-    return  getUploadFilePath(this.boothData.bannerImageUrl)
-      ?? `https://picsum.photos/seed/${this.boothData.id}/800/400`;
+  get bannerImageUrl() {
+    return getUploadFileUrl(this.boothData.bannerImage?.path);
   }
 }
 </script>

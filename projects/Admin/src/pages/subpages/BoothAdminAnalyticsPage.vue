@@ -35,7 +35,7 @@
 
       <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 기록 개수: {{ orderHistoryCountOfCurrentSelectedDay.toLocaleString() }}개</p>
       <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 굿즈 개수: {{ orderHistoryTotalStockQuantityOfCurrentSelectedDay.toLocaleString() }}개</p>
-      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 금액: {{ currencySymbol }}{{ orderHistoryTotalIncomeOfCurrentSelectedDay.toLocaleString() }}</p>
+      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 금액: {{ currencySymbol }}{{ orderHistoryTotalRevenueOfCurrentSelectedDay.toLocaleString() }}</p>
     </div>
     <div v-else>
       <h2 class="text-center">등록된 판매 기록이 없습니다.</h2>
@@ -216,7 +216,7 @@ export default class BoothAdminAnalyticsPage extends Vue {
       if(!merged[targetTimestamp]) merged[targetTimestamp] = { quantity: 0, price: 0 };
 
       merged[targetTimestamp].quantity += item.order.reduce((acc, cur) => acc + cur.quantity, 0);
-      merged[targetTimestamp].price += item.totalPrice;
+      merged[targetTimestamp].price += item.totalRevenue;
     });
 
     return merged;
@@ -267,8 +267,8 @@ export default class BoothAdminAnalyticsPage extends Vue {
     return this.orderHistoryOfCurrentSelectedDay.length;
   }
 
-  get orderHistoryTotalIncomeOfCurrentSelectedDay(): number {
-    return this.orderHistoryOfCurrentSelectedDay.reduce((acc, cur) => acc + cur.totalPrice, 0);
+  get orderHistoryTotalRevenueOfCurrentSelectedDay(): number {
+    return this.orderHistoryOfCurrentSelectedDay.reduce((acc, cur) => acc + cur.totalRevenue, 0);
   }
 
   get orderHistoryTotalStockQuantityOfCurrentSelectedDay(): number {

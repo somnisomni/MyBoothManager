@@ -1,5 +1,5 @@
 import { GoodsOrderStatus, IGoodsOrderStatusUpdateRequest } from "@myboothmanager/common";
 
-export class UpdateGoodsOrderStatusDTO implements IGoodsOrderStatusUpdateRequest {
-  status!: GoodsOrderStatus;
+export class UpdateGoodsOrderStatusRequestDto implements IGoodsOrderStatusUpdateRequest {
+  declare status: GoodsOrderStatus;
 }

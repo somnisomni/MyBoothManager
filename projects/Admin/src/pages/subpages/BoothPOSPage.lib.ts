@@ -1,5 +1,5 @@
-import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
-import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
+import type { IGoodsAdmin, IGoodsCombinationAdmin } from "@myboothmanager/common";
+import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { reactive } from "vue";
 import deepClone from "clone-deep";
 
@@ -70,15 +70,15 @@ class POSOrderList {
 export class POSOrderSimulationLayer {
   private readonly _orderList: POSOrderList = new POSOrderList();
 
-  private _goodsListOriginal: Readonly<Record<number, IGoods>> = {};
-  private _goodsListSimulated: Record<number, IGoods> = {};
+  private _goodsListOriginal: Readonly<Record<number, IGoodsAdmin>> = {};
+  private _goodsListSimulated: Record<number, IGoodsAdmin> = {};
 
-  private _combinationListOriginal: Readonly<Record<number, IGoodsCombination>> = {};
-  private _combinationListSimulated: Record<number, IGoodsCombination> = {};
+  private _combinationListOriginal: Readonly<Record<number, IGoodsCombinationAdmin>> = {};
+  private _combinationListSimulated: Record<number, IGoodsCombinationAdmin> = {};
 
   constructor(
-    goodsList: Record<number, Goods>,
-    combinationList: Record<number, GoodsCombination>,
+    goodsList: Record<number, GoodsAdmin>,
+    combinationList: Record<number, GoodsCombinationAdmin>,
   ) {
     this.reset(goodsList, combinationList);
   }
@@ -87,7 +87,7 @@ export class POSOrderSimulationLayer {
   get simulatedGoodsList() { return this._goodsListSimulated; }
   get simulatedCombinationList() { return this._combinationListSimulated; }
 
-  reset(goodsList: Record<number, Goods>, combinationList: Record<number, GoodsCombination>) {
+  reset(goodsList: Record<number, GoodsAdmin>, combinationList: Record<number, GoodsCombinationAdmin>) {
     this._orderList.clear();
 
     const plainGoodsList = Object.fromEntries(Object.entries(goodsList).map(([id, goods]) => [id, goods.toPlainObject()]));
@@ -101,7 +101,7 @@ export class POSOrderSimulationLayer {
   }
 
   getMaxAvailableQuantity(what: POSOrderListWhat, id: number) {
-    const simulatedStockRemainig = what === "combination" ? this._combinationListSimulated[id].stockRemaining : this._goodsListSimulated[id].stockRemaining;
+    const simulatedStockRemainig = what === "combination" ? this._combinationListSimulated[id].stock.remaining : this._goodsListSimulated[id].stock.remaining;
     const order = this._orderList.get(what, id);
     return simulatedStockRemainig + (order?.quantity ?? 0);
   }
@@ -123,31 +123,31 @@ export class POSOrderSimulationLayer {
    */
   handleQuantityUpdate(what: POSOrderListWhat, id: number, quantityDelta: number) {
     if(what === "combination") {
-      if(this._combinationListSimulated[id].stockRemaining - quantityDelta < 0) throw "UpperLimitExceeded";
+      if(this._combinationListSimulated[id].stock.remaining - quantityDelta < 0) throw "UpperLimitExceeded";
 
       const combinedGoods = Object.values(this._goodsListSimulated).filter((goods) => goods.combinationId && goods.combinationId === id);
       for(const goods of combinedGoods) {
-        if(goods.stockRemaining - quantityDelta < 0) throw "UpperLimitExceeded";
+        if(goods.stock.remaining - quantityDelta < 0) throw "UpperLimitExceeded";
       }
 
       for(const goods of combinedGoods) {
-        goods.stockRemaining -= quantityDelta;
+        goods.stock.remaining -= quantityDelta;
       }
-      this._combinationListSimulated[id].stockRemaining -= quantityDelta;
+      this._combinationListSimulated[id].stock.remaining -= quantityDelta;
     } else if(what === "goods") {
       const goods = this._goodsListSimulated[id];
 
-      if(goods.stockRemaining - quantityDelta < 0) throw "UpperLimitExceeded";
-      goods.stockRemaining -= quantityDelta;
+      if(goods.stock.remaining - quantityDelta < 0) throw "UpperLimitExceeded";
+      goods.stock.remaining -= quantityDelta;
 
       if(goods.combinationId) {
         const combination = this._combinationListSimulated[goods.combinationId];
         const combinedGoods = Object.values(this._goodsListSimulated).filter((goods) => goods.combinationId && goods.combinationId === combination.id);
-        combination.stockRemaining = Math.min(...combinedGoods.map(goods => goods.stockRemaining));
+        combination.stock.remaining = Math.min(...combinedGoods.map(goods => goods.stock.remaining));
       }
     }
 
-    const upperLimit = what === "combination" ? this._combinationListOriginal[id].stockRemaining : this._goodsListOriginal[id].stockRemaining;
+    const upperLimit = what === "combination" ? this._combinationListOriginal[id].stock.remaining : this._goodsListOriginal[id].stock.remaining;
     this._orderList.updateQuantity(what, id, quantityDelta, upperLimit);
   }
 }

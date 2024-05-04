@@ -1,12 +1,13 @@
 import type { FastifyRequest } from "fastify";
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
 import { PublicGoodsService } from "@/modules/public/goods/goods.service";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
 import { GoodsService } from "./goods.service";
-import { CreateGoodsDTO } from "./dto/create-goods.dto";
-import { UpdateGoodsDTO } from "./dto/update-goods.dto";
+import { CreateGoodsRequestDto } from "./dto/create-goods.dto";
+import { UpdateGoodsRequestDto } from "./dto/update-goods.dto";
+import { AdminGoodsResponseDto } from "./dto/goods.dto";
 
 @UseGuards(AdminAuthGuard)
 @Controller("/admin/goods")
@@ -17,9 +18,10 @@ export class GoodsController {
     private readonly utilService: UtilService) {}
 
   /* Normal routes */
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async create(@Body() createGoodDto: CreateGoodsDTO, @AuthData() authData: IAuthPayload) {
-    return await this.goodsService.create(createGoodDto, authData.id);
+  async create(@Body() createGoodDto: CreateGoodsRequestDto, @AuthData() authData: IAuthPayload): Promise<AdminGoodsResponseDto> {
+    return new AdminGoodsResponseDto(await this.goodsService.create(createGoodDto, authData.id));
   }
 
   @Post(":id/image")
@@ -32,9 +34,10 @@ export class GoodsController {
     return await this.goodsService.deleteImage(+id, +boothId, authData.id);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(":id")
-  async updateInfo(@Param("id") id: string, @Body() updateGoodsDto: UpdateGoodsDTO, @AuthData() authData: IAuthPayload) {
-    return await this.goodsService.updateInfo(+id, updateGoodsDto, authData.id);
+  async updateInfo(@Param("id") id: string, @Body() updateGoodsDto: UpdateGoodsRequestDto, @AuthData() authData: IAuthPayload): Promise<AdminGoodsResponseDto> {
+    return new AdminGoodsResponseDto(await this.goodsService.updateInfo(+id, updateGoodsDto, authData.id));
   }
 
   @Delete(":id")
@@ -44,9 +47,10 @@ export class GoodsController {
 
   /* SuperAdmin routes */
   @SuperAdmin()
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll() {
-    return await this.publicGoodsService.findAll();
+    return (await this.publicGoodsService.findAll()).map((goods) => new AdminGoodsResponseDto(goods));
   }
 
   @SuperAdmin()

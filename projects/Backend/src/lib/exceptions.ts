@@ -1,7 +1,7 @@
-import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
+import { ErrorCodes, IErrorResponse } from "@myboothmanager/common";
 import { HttpException, HttpStatus } from "@nestjs/common";
 
-export type IBackendException = Omit<IBackendErrorResponse, "path">;
+export type IBackendException = Omit<IErrorResponse, "path">;
 
 export default class BaseHttpException extends HttpException implements IBackendException {
   timestamp: string;

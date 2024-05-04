@@ -30,9 +30,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
-import router from "@/plugins/router";
 
 @Component({})
 export default class BoothAdminClosingPage extends Vue {
@@ -100,7 +98,7 @@ export default class BoothAdminClosingPage extends Vue {
     for(const member of Object.values(useAdminStore().currentBooth.boothMembers ?? {})) {
       map.set(member.id,
               Object.values(useAdminStore().currentBooth.goods ?? {}).filter(
-                (goods) => goods.ownerMembersId?.includes(member.id),
+                (goods) => goods.ownerMemberIds?.includes(member.id),
               ).map((goods) => goods.id));
     }
 
@@ -113,7 +111,7 @@ export default class BoothAdminClosingPage extends Vue {
     for(const member of Object.values(useAdminStore().currentBooth.boothMembers ?? {})) {
       map.set(member.id,
               Object.values(useAdminStore().currentBooth.goodsCombinations ?? {}).filter(
-                (goods) => goods.ownerMembersId?.includes(member.id),
+                (goods) => goods.ownerMemberIds?.includes(member.id),
               ).map((goods) => goods.id));
     }
 

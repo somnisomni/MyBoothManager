@@ -107,15 +107,15 @@ export default class BoothAdminLayout extends Vue {
   }
 
   get currentBoothIsOpened(): boolean {
-    return this.currentBooth.status === BoothStatus.OPEN;
+    return this.currentBooth.status.status === BoothStatus.OPEN;
   }
 
   get currentBoothIsClosed(): boolean {
-    return this.currentBooth.status === BoothStatus.CLOSE;
+    return this.currentBooth.status.status === BoothStatus.CLOSE;
   }
 
   get currentBoothIsNotPublished(): boolean {
-    return this.currentBooth.status === BoothStatus.PREPARE && !this.currentBooth.statusPublishContent;
+    return this.currentBooth.status.status === BoothStatus.PREPARE && !this.currentBooth.status.contentPublished;
   }
 
   get boothPublicPageHref(): string {

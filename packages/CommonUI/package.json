@@ -21,6 +21,7 @@
     "@myboothmanager/common": "*",
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.4",
+    "@types/clone-deep": "^4.0.4",
     "@types/node": "^20.12.7",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -46,5 +47,8 @@
     "vue": ">=3",
     "vue-facing-decorator": ">=3",
     "vuetify": ">=3"
+  },
+  "dependencies": {
+    "clone-deep": "^4.0.1"
   }
 }

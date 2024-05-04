@@ -1,28 +1,43 @@
-import type { IDataModelBase } from "./base";
-
-export interface IAccount extends IDataModelBase {
+/* === Common === */
+interface IAccountCommon {
   id: number;
   name: string;
   loginId: string;
-  loginPassHash: string;
-  loginCount: number;
-  lastLoginAt: Date;
-  lastSelectedBoothId?: number;
+  lastSelectedBoothId?: number | null;
 }
-export type IAccountResponse = IAccount;
-export type IAccountUserland = Omit<IAccount, "loginPassHash" | "lastLoginAt" | "loginCount"> & { superAdmin?: boolean };
 
-export interface IAccountLoginTokenData {
+export interface IAccountAuthToken {
   accessToken: string;
   refreshToken: string;
 }
-export type IAccountLoginResponse = IAccountUserland & IAccountLoginTokenData;
+
+/* === Frontend === */
+export interface IAccount extends IAccountCommon {
+  superAdmin?: boolean;
+}
+
+/* === Model for Backend (DB) === */
+export interface IAccountModel extends IAccountCommon {
+  loginPassHash: string;
+  loginCount: number;
+  lastLoginAt?: Date | null;
+}
+
+/* === Requests === */
+export interface IAccountCreateRequest {
+  name: string;
+  loginId: string;
+  loginPass: string;
+}
+
+export interface IAccountUpdateRequest extends Partial<Omit<IAccountCreateRequest, "loginId">> { }
+
 export interface IAccountLoginRequest {
   loginId: string;
   loginPass: string;
   confirmLogoutExistingSession?: boolean;
 }
 
-export interface IAccountCreateRequest extends Pick<IAccount, "name" | "loginId"> {
-  loginPass: string;
-}
+/* === Responses === */
+export interface IAccountResponse extends IAccount { }
+export interface IAccountLoginResponse extends IAccount, IAccountAuthToken { }

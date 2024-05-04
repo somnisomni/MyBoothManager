@@ -1,14 +1,14 @@
-import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
+import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
 import { ref, type ToRefs } from "vue";
-import { type IAccountUserland, type IBooth, type IBoothMember, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { type IAccount, type IBooth, type IBoothMember, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { useAdminAPIStore } from "./api";
 
 interface CurrentBoothStates {
   booth: IBooth | null;
   boothMembers: Record<number, IBoothMember> | null;
-  goods: Record<number, Goods> | null;
-  goodsCombinations: Record<number, GoodsCombination> | null;
+  goods: Record<number, GoodsAdmin> | null;
+  goodsCombinations: Record<number, GoodsCombinationAdmin> | null;
   goodsCategories: Record<number, IGoodsCategory> | null;
   goodsOrders: Record<number, IGoodsOrder> | null;
 }
@@ -18,7 +18,7 @@ const useAdminStore = defineStore("admin", () => {
   const $apiStore = useAdminAPIStore();
 
   /* *** States *** */
-  const currentAccount = ref<IAccountUserland | null>(null);
+  const currentAccount = ref<IAccount | null>(null);
   const currentBooth: ToRefs<CurrentBoothStates> = {
     booth: ref(null),
     boothMembers: ref(null),

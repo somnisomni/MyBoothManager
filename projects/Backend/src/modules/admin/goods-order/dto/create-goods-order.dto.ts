@@ -1,8 +1,8 @@
-import { GoodsOrderPaymentMethod, IGoodsOrderCreateRequest, IGoodsOrderDetailItem } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, IGoodsOrderCreateRequest, IGoodsOrderItem } from "@myboothmanager/common";
 
-export class CreateGoodsOrderDTO implements IGoodsOrderCreateRequest {
-  boothId!: number;
-  order!: Array<IGoodsOrderDetailItem>;
-  totalPrice!: number;
-  paymentMethod?: GoodsOrderPaymentMethod;
+export class CreateGoodsOrderRequestDto implements IGoodsOrderCreateRequest {
+  declare boothId: number;
+  declare order: Array<IGoodsOrderItem>;
+  declare totalRevenue: number;
+  declare paymentMethod?: GoodsOrderPaymentMethod;
 }

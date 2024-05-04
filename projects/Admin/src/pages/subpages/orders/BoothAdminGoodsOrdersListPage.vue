@@ -19,7 +19,7 @@
                  @click.prevent>
             <VLayout class="px-2 d-inline-flex flex-column align-center">
               <small>총 매출액</small>
-              <span class="text-h5 font-weight-bold">{{ currencySymbol }}{{ totalSalePrice.toLocaleString() }}</span>
+              <span class="text-h5 font-weight-bold">{{ currencySymbol }}{{ totalSaleRevenue.toLocaleString() }}</span>
             </VLayout>
           </VSheet>
         </VLayout>
@@ -128,9 +128,9 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
         orderAcc + (orderCur.cId ? orderCur.quantity * (orderCur.combinedGoods ?? []).length : orderCur.quantity), 0), 0);
   }
 
-  get totalSalePrice(): number {
+  get totalSaleRevenue(): number {
     return Object.values(this.boothGoodsOrders).filter((order) => order.status !== GoodsOrderStatus.CANCELED).reduce((acc, cur) =>
-      acc + Number(cur.totalPrice), 0);
+      acc + Number(cur.totalRevenue), 0);
   }
 
   get currencySymbol(): string {

@@ -16,7 +16,7 @@
 <script lang="ts">
 import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue } from "vue-facing-decorator";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import { useAdminStore } from "@/plugins/stores/admin";
 import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
 
@@ -26,7 +26,7 @@ import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.
   },
 })
 export default class GoodsSelectionDialog extends Vue {
-  readonly getUploadFilePath = getUploadFilePath;
+  readonly getUploadFileUrl = getUploadFileUrl;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Model({ name: "selectedGoodsIds", type: Array }) selectedGoodsIds!: Array<number>;

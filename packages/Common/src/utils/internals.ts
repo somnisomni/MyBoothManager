@@ -1,5 +1,3 @@
-import type { IDataModelBase } from "../interfaces";
-
 interface ISequelizeInternals {
   createdAt: Date,
   updatedAt: Date,
@@ -21,7 +19,7 @@ export const SEQUELIZE_INTERNAL_KEYS = ["createdAt", "updatedAt", "deletedAt"];
  */
 export type WithSequelizeInternals<T> = T & ISequelizeInternals;
 
-export function deleteSequelizeInternalKeys<T extends IDataModelBase>(dataModelObj: T & Partial<ISequelizeInternals>): T {
+export function deleteSequelizeInternalKeys<T>(dataModelObj: T & Partial<ISequelizeInternals>): T {
   const newObj = { ...dataModelObj } as unknown as Record<string, unknown>;
 
   for(const key of SEQUELIZE_INTERNAL_KEYS) {

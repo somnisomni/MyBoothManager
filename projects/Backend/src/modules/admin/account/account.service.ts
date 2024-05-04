@@ -6,7 +6,7 @@ import { create, removeOne } from "@/lib/common-functions";
 import { EntityNotFoundException } from "@/lib/exceptions";
 import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
-import { UpdateAccountDTO } from "./dto/update-account.dto";
+import { UpdateAccountDto } from "./dto/update-account.dto";
 
 @Injectable()
 export class AccountService {
@@ -67,8 +67,8 @@ export class AccountService {
     else throw new EntityNotFoundException();
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDTO) {
-    throw new NotImplementedException("ACCOUNT DATA UPDATE NOT IMPLEMENTED");
+  update(id: number, updateAccountDto: UpdateAccountDto) {
+    throw new NotImplementedException("ACCOUNT UPDATE NOT IMPLEMENTED");
   }
 
   async remove(id: number): Promise<ISuccessResponse> {

@@ -5,7 +5,7 @@
     <GoodsListView categoryEditable
                    :currencySymbol="currencySymbol"
                    :goodsList="goodsList"
-                   :goodsImageUrlResolver="getUploadFilePath"
+                   :goodsImageUrlResolver="getUploadFileUrl"
                    :goodsCategoryList="goodsCategoryList">
       <template #goods-category="props">
         <GoodsCategoryTitleManageable v-bind="props"
@@ -50,7 +50,7 @@ import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
 import GoodsCategoryTitleManageable from "@/components/goods/GoodsCategoryTitleManageable.vue";
@@ -68,7 +68,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
   },
 })
 export default class BoothAdminGoodsPage extends Vue {
-  readonly getUploadFilePath = getUploadFilePath;
+  readonly getUploadFileUrl = getUploadFileUrl;
 
   goodsManageDialogOpen = false;
   goodsManageDialogDuplicateMode = false;

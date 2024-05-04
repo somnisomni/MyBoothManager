@@ -1,19 +1,18 @@
-import type { IGoods, IGoodsCommon, IGoodsCombination, GoodsStockVisibility, IGoodsResponse, IGoodsCombinationResponse } from "@myboothmanager/common";
-import { GoodsStatus } from "@myboothmanager/common";
+import type { IGoods, IGoodsFrontendCommon, IGoodsCombination, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
+import deepClone from "clone-deep";
 
-export abstract class GoodsBase implements IGoodsCommon {
+export abstract class GoodsBase implements IGoodsFrontendCommon {
   declare id: number;
   declare boothId: number;
-  declare categoryId?: number | null | undefined;
+  declare categoryId?: number | null;
   declare name: string;
-  declare description?: string | undefined;
+  declare description?: string | null;
   declare price: number;
-  declare stockInitial: number;
-  declare stockRemaining: number;
-  declare stockVisibility: GoodsStockVisibility;
-  declare ownerMembersId?: number[] | undefined;
+  declare stock: IGoodsStock;
+  declare ownerMemberIds?: number[] | null;
+  declare goodsImage?: IImageUploadInfo | null;
 
-  protected constructor(data: IGoodsCommon) {
+  protected constructor(data: IGoodsFrontendCommon) {
     this.update(data);
   }
 
@@ -21,40 +20,23 @@ export abstract class GoodsBase implements IGoodsCommon {
    * Update(Overwrite) the data of this instance.
    * @param data - Data to update.
    */
-  update(data: IGoodsCommon): void {
+  update(data: IGoods): void {
     this.id = data.id;
     this.boothId = data.boothId;
     this.categoryId = data.categoryId;
     this.name = data.name;
     this.description = data.description;
     this.price = data.price;
-    this.stockInitial = data.stockInitial;
-    this.stockRemaining = data.stockRemaining;
-    this.stockVisibility = data.stockVisibility;
-    this.ownerMembersId = Array.from(data.ownerMembersId ?? []);
-  }
-
-  /**
-   * Try increase or decrease stock count.
-   * @param amount - Amount of stock to adjust.
-   * @returns `number` - Remaining stock count after adjustment.
-   * @returns `false` - If adjustment of stock count is not acceptable.
-   */
-  tryAdjustStock(amount: number): number | false {
-    if((this.stockRemaining + amount < 0)
-      || (this.stockInitial < this.stockRemaining + amount)) {
-      return false;
-    }
-
-    this.stockRemaining += amount;
-    return this.stockRemaining;
+    this.stock = deepClone(data.stock);
+    this.ownerMemberIds = deepClone(data.ownerMemberIds);
+    this.goodsImage = deepClone(data.goodsImage);
   }
 
   /**
    * Convert this instance to a deeply copied plain object.
    * @returns Deeply copied plain object of the instance.
    */
-  toPlainObject(): IGoodsCommon {
+  toPlainObject(): IGoodsFrontendCommon {
     return {
       id: this.id,
       boothId: this.boothId,
@@ -62,70 +44,50 @@ export abstract class GoodsBase implements IGoodsCommon {
       name: this.name,
       description: this.description,
       price: this.price,
-      stockInitial: this.stockInitial,
-      stockRemaining: this.stockRemaining,
-      stockVisibility: this.stockVisibility,
-      ownerMembersId: Array.from(this.ownerMembersId ?? []),
-    } as IGoodsCommon;
+      stock: deepClone(this.stock),
+      ownerMemberIds: deepClone(this.ownerMemberIds),
+      goodsImage: deepClone(this.goodsImage),
+    } as IGoodsFrontendCommon;
   }
 }
 
-export class Goods extends GoodsBase implements IGoodsResponse {
+export class Goods extends GoodsBase implements IGoods {
   declare combinationId?: number | null;
-  declare type?: string;
-  declare status: GoodsStatus;
-  declare statusReason?: string | null;
-  declare goodsImageUrl?: string | null;
-  declare goodsImageThumbnailData?: string | null;
+  declare type?: string | null;
 
-  constructor(data: IGoodsResponse) {
+  constructor(data: IGoods) {
     super(data);
     this.update(data);
   }
 
-  override update(data: IGoodsResponse): void {
+  override update(data: IGoods): void {
     super.update(data);
     this.combinationId = data.combinationId;
     this.type = data.type;
-    this.status = data.status;
-    this.statusReason = data.statusReason;
-    this.goodsImageUrl = data.goodsImageUrl;
-    this.goodsImageThumbnailData = data.goodsImageThumbnailData;
   }
 
-  override toPlainObject(): IGoodsResponse {
+  override toPlainObject(): IGoods {
     return {
       ...super.toPlainObject(),
       combinationId: this.combinationId,
       type: this.type,
-      status: this.status,
-      statusReason: this.statusReason,
-      goodsImageUrl: this.goodsImageUrl,
-      goodsImageThumbnailData: this.goodsImageThumbnailData,
     } as IGoods;
   }
 }
 
-export class GoodsCombination extends GoodsBase implements IGoodsCombinationResponse {
-  declare combinationImageUrl?: string | null;
-  declare combinationImageThumbnailData?: string | null;
-
-  constructor(data: IGoodsCombinationResponse) {
+export class GoodsCombination extends GoodsBase implements IGoodsCombination {
+  constructor(data: IGoodsCombination) {
     super(data);
     this.update(data);
   }
 
-  override update(data: IGoodsCombinationResponse): void {
+  override update(data: IGoodsCombination): void {
     super.update(data);
-    this.combinationImageUrl = data.combinationImageUrl;
-    this.combinationImageThumbnailData = data.combinationImageThumbnailData;
   }
 
-  override toPlainObject(): IGoodsCombinationResponse {
+  override toPlainObject(): IGoodsCombination {
     return {
       ...super.toPlainObject(),
-      combinationImageUrl: this.combinationImageUrl,
-      combinationImageThumbnailData: this.combinationImageThumbnailData,
     } as IGoodsCombination;
   }
 }

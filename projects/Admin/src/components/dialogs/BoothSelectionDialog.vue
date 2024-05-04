@@ -17,7 +17,7 @@
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
-        <VImg :src="getBoothBannerImageURL(booth.bannerImageUrl, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
+        <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
         <div class="booth-item-image-overlay"></div>
       </div>
 
@@ -26,7 +26,7 @@
           <div class="booth-item-name">{{ booth.name }}</div>
           <div class="booth-item-desc">{{ booth.description }}</div>
         </VLayout>
-        <div class="flex-shrink-0">{{ getBoothStatusString(booth.status) }}</div>
+        <div class="flex-shrink-0">{{ getBoothStatusString(booth.status.status) }}</div>
       </VLayout>
 
       <div v-if="booth.id === currentBoothId" class="booth-item-current-indicator bg-primary text-body-2">현재 관리 중인 부스</div>
@@ -43,7 +43,7 @@ import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { ref, type Ref as VueRef } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothManageDialog from "./BoothManageDialog.vue";
@@ -85,7 +85,7 @@ export default class BoothSelectionDialog extends Vue {
   }
 
   getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
-    return getUploadFilePath(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
+    return getUploadFileUrl(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
   }
 
   showBoothAddDialog(): void {

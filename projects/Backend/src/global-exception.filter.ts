@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorCodes, IBackendErrorResponse } from "@myboothmanager/common";
+import { ErrorCodes, IErrorResponse } from "@myboothmanager/common";
 import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException as Nest__NotFoundException } from "@nestjs/common";
 import BaseHttpException, { ApplicationUncaughtedException } from "./lib/exceptions";
 
@@ -29,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     response.status(statusCode).send({
       ...exc.getResponse(),
       path: request.url,
-    } as IBackendErrorResponse);
+    } as IErrorResponse);
   }
 }
 
@@ -49,7 +49,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 //       path: request.url,
 //       statusCode,
 //       errorCode: ErrorCodes.UNKNOWN_ERROR,
-//     } as IBackendErrorResponse);
+//     } as IErrorResponse);
 //   }
 // }
 
@@ -66,6 +66,6 @@ export class RouteNotFoundExceptionFilter implements ExceptionFilter {
 
       ...new BaseHttpException(ErrorCodes.ROUTE_NOT_FOUND, statusCode).getResponse(),
       path: request.url,
-    } as IBackendErrorResponse);
+    });
   }
 }

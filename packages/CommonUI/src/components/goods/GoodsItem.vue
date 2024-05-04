@@ -15,7 +15,7 @@
     <!-- *** Goods / Combination image *** -->
     <VImg class="goods-item-image no-interaction"
           :src="imageUrlComputed"
-          :lazy-src="normalizedData.thumbnailData"
+          :lazy-src="normalizedData.imageThumbnailData"
           cover />
     <div class="goods-item-image-overlay"></div>
 
@@ -147,11 +147,11 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
       name: this.goodsData.name,
       description: this.goodsData.description,
       price: this.goodsData.price,
-      stockInitial: this.goodsData.stockInitial,
-      stockRemaining: this.goodsData.stockRemaining,
-      stockVisibility: this.forceStockVisibility ?? this.goodsData.stockVisibility,
-      imageUrl: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageUrl : (this.goodsData as Goods).goodsImageUrl,
-      thumbnailData: this.isCombination ? (this.goodsData as GoodsCombination).combinationImageThumbnailData : (this.goodsData as Goods).goodsImageThumbnailData,
+      stockInitial: this.goodsData.stock.initial,
+      stockRemaining: this.goodsData.stock.remaining,
+      stockVisibility: this.forceStockVisibility ?? this.goodsData.stock.visibility,
+      imagePath: this.goodsData.goodsImage?.path,
+      imageThumbnailData: this.goodsData.goodsImage?.thumbnailData,
     };
   }
 
@@ -186,7 +186,7 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
    * Returns the resolved representative image URL of the goods or combination.
    */
   get imageUrlComputed(): string {
-    return this.imageUrlResolver(this.normalizedData.imageUrl) ?? ""; /* TODO: default image */
+    return this.imageUrlResolver(this.normalizedData.imagePath) ?? ""; /* TODO: default image */
   }
 
   /**

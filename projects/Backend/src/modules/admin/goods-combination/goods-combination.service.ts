@@ -1,14 +1,14 @@
 import type { MultipartFile } from "@fastify/multipart";
 import { Injectable } from "@nestjs/common";
-import { GoodsStockVisibility, ISuccessResponse, IValueResponse, ImageSizeConstraintKey } from "@myboothmanager/common";
+import { GoodsStockVisibility, ISuccessResponse, ImageSizeConstraintKey, IImageUploadInfo } from "@myboothmanager/common";
 import Booth from "@/db/models/booth";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import GoodsCombination from "@/db/models/goods-combination";
 import Goods from "@/db/models/goods";
 import { UtilService } from "../util/util.service";
-import { UpdateGoodsCombinationDTO } from "./dto/update-goods-combination.dto";
-import { CreateGoodsCombinationDTO } from "./dto/create-goods-combination.dto";
+import { UpdateGoodsCombinationRequestDto } from "./dto/update-goods-combination.dto";
+import { CreateGoodsCombinationRequestDto } from "./dto/create-goods-combination.dto";
 import { GoodsCombinationInfoUpdateFailedException, GoodsCombinationParentBoothNotFoundException } from "./goods-combination.exception";
 
 @Injectable()
@@ -39,7 +39,7 @@ export class GoodsCombinationService {
     return combination;
   }
 
-  async create(dto: CreateGoodsCombinationDTO, callerAccountId: number): Promise<GoodsCombination> {
+  async create(dto: CreateGoodsCombinationRequestDto, callerAccountId: number): Promise<GoodsCombination> {
     if(!(await Booth.findOne({ where: { id: dto.boothId, ownerId: callerAccountId } }))) {
       throw new GoodsCombinationParentBoothNotFoundException();
     }
@@ -87,10 +87,10 @@ export class GoodsCombinationService {
     return await combination.reload();
   }
 
-  async uploadImage(combinationId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IValueResponse> {
+  async uploadImage(combinationId: number, boothId: number, file: MultipartFile, callerAccountId: number): Promise<IImageUploadInfo> {
     return await this.utilService.processImageUpload(
       await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId),
-      "combinationImageId",
+      "goodsImageId",
       file,
       "goods-combination/rep",
       ImageSizeConstraintKey.GOODS,
@@ -101,11 +101,11 @@ export class GoodsCombinationService {
   async deleteImage(combinationId: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
     return await this.utilService.processImageDelete(
       await this.findGoodsCombinationBelongsToBooth(combinationId, boothId, callerAccountId),
-      "combinationImageId",
+      "goodsImageId",
     );
   }
 
-  async updateInfo(id: number, dto: UpdateGoodsCombinationDTO, callerAccountId: number): Promise<GoodsCombination> {
+  async updateInfo(id: number, dto: UpdateGoodsCombinationRequestDto, callerAccountId: number): Promise<GoodsCombination> {
     // Set category ID to null if not provided or -1
     if(dto.categoryId && dto.categoryId < 0) {
       dto.categoryId = null;
@@ -116,7 +116,7 @@ export class GoodsCombinationService {
       dto.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
     }
 
-    const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId!, callerAccountId);
+    const combination = await this.findGoodsCombinationBelongsToBooth(id, dto.boothId, callerAccountId);
 
     if(dto.goodsIds) {
       // Remove combination ID from existing goods
@@ -138,7 +138,7 @@ export class GoodsCombinationService {
         },
       });
       for(const g of targetGoods) {
-        if(g.categoryId !== dto.categoryId) {
+        if(g.categoryId !== (dto.categoryId || combination.categoryId)) {
           await (g.set("combinationId", null)).save();
           dto.goodsIds.splice(dto.goodsIds.indexOf(g.id), 1);
         }
@@ -188,7 +188,7 @@ export class GoodsCombinationService {
     }
 
     // Delete image
-    if(combination.combinationImageId) {
+    if(combination.goodsImageId) {
       // TODO: calling this.deleteImage() will execute find query again, which already found above.
       await this.deleteImage(id, boothId, callerAccountId);
     }

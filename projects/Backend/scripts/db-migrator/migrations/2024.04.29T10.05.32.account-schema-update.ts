@@ -3,8 +3,8 @@
 /* *** Make `lastLoginAt` column nullable *** */
 
 import { DataTypes } from "sequelize";
-import { Migration } from "../umzug";
 import Account from "@/db/models/account";
+import { Migration } from "../umzug";
 
 export const up: Migration = async ({ context }) => {
   return await context.changeColumn(Account.name, "lastLoginAt", {

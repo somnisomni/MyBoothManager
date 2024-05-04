@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { GoodsCategoryService } from "./goods-category.service";
-import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
-import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
+import { CreateGoodsCategoryRequestDto } from "./dto/create-goods-category.dto";
+import { UpdateGoodsCategoryRequestDto } from "./dto/update-goods-category.dto";
+import { AdminGoodsCategoryResponseDto } from "./dto/goods-category.dto";
 
 @UseGuards(AdminAuthGuard)
 @Controller("/admin/goods/category")
@@ -14,13 +15,14 @@ export class GoodsCategoryController {
     private readonly publicGoodsCategoryService: PublicGoodsCategoryService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createGoodsCategoryDto: CreateGoodsCategoryDTO) {
-    return this.goodsCategoryService.create(createGoodsCategoryDto);
+  async create(@Body() createGoodsCategoryDto: CreateGoodsCategoryRequestDto): Promise<AdminGoodsCategoryResponseDto> {
+    return new AdminGoodsCategoryResponseDto(await this.goodsCategoryService.create(createGoodsCategoryDto));
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateGoodsCategoryDTO: UpdateGoodsCategoryDTO, @AuthData() authData: IAuthPayload) {
+  update(@Param("id") id: string, @Body() updateGoodsCategoryDTO: UpdateGoodsCategoryRequestDto, @AuthData() authData: IAuthPayload) {
     return this.goodsCategoryService.updateInfo(+id, updateGoodsCategoryDTO, authData.id);
   }
 
@@ -31,9 +33,10 @@ export class GoodsCategoryController {
 
   /* SuperAdmin routes */
   @SuperAdmin()
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll() {
-    return await this.publicGoodsCategoryService.findAll();
+    return (await this.publicGoodsCategoryService.findAll()).map((goodsCategory) => new AdminGoodsCategoryResponseDto(goodsCategory));
   }
 
   @SuperAdmin()

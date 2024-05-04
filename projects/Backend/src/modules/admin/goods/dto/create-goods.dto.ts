@@ -1,6 +1,6 @@
 import { GoodsStockVisibility, IGoodsCreateRequest } from "@myboothmanager/common";
 
-export class CreateGoodsDTO implements IGoodsCreateRequest {
+export class CreateGoodsRequestDto implements IGoodsCreateRequest {
   declare boothId: number;
   declare categoryId?: number;
   declare name: string;
@@ -10,5 +10,5 @@ export class CreateGoodsDTO implements IGoodsCreateRequest {
   declare stockInitial: number;
   declare stockRemaining: number;
   declare stockVisibility: GoodsStockVisibility;
-  declare ownerMembersId?: number[];
+  declare ownerMemberIds?: number[];
 }

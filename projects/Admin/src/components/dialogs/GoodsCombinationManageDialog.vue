@@ -19,7 +19,7 @@
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
-                       :existingSrc="combinationImageUrl"
+                       :existingSrc="combinationImagePath"
                        contextName="굿즈 세트"
                        width="200px"
                        height="250px"
@@ -73,10 +73,12 @@
 </template>
 
 <script lang="ts">
-import { GoodsStockVisibility, type IGoodsCombination, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
+import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
+import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -84,10 +86,6 @@ import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
-
-type IGoodsCombinationManageFormField
-  = Pick<IGoodsCombination, "name" | "description" | "categoryId" | "price" | "stockVisibility">
-    & { goodsIds: number[] };
 
 @Component({
   components: {
@@ -107,13 +105,14 @@ export default class GoodsCombinationManageDialog extends Vue {
 
   @Ref("form") readonly form!: CommonForm;
 
-  readonly formModels: IGoodsCombinationManageFormField = reactive({
+  readonly formModels: IGoodsCombinationCreateRequest = reactive({
+    boothId: -1,
+    categoryId: -1,
     name: "",
     description: "",
-    categoryId: -1,
     price: 0,
-    goodsIds: [],
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+    goodsIds: [],
   });
   readonly formFields = readonly({
     name: {
@@ -178,8 +177,8 @@ export default class GoodsCombinationManageDialog extends Vue {
       prependIcon: "mdi-selection-drag",
       onClick: this.openGoodsSelectionDialog,
     },
-  } as Record<keyof IGoodsCombinationManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
-  formModelsInitial: IGoodsCombinationManageFormField = deepClone(this.formModels);
+  } as Record<keyof IGoodsCombinationCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>);
+  formModelsInitial: IGoodsCombinationCreateRequest = deepClone(this.formModels);
 
   goodsSelectionDialogShown = false;
   openGoodsSelectionDialog() { this.goodsSelectionDialogShown = true; }
@@ -203,7 +202,7 @@ export default class GoodsCombinationManageDialog extends Vue {
   set isFormValid(value: boolean) { this._isFormValid = value; }
 
   get minimumStockOfSelectedGoods() {
-    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().currentBooth.goods![goodsId].stockRemaining));
+    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().currentBooth.goods![goodsId].stock.remaining));
   }
 
   get sumPriceOfSelectedGoods() {
@@ -224,11 +223,13 @@ export default class GoodsCombinationManageDialog extends Vue {
       .map((goods) => goods.id);
   }
 
-  get combinationImageUrl(): string | null {
-    return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)]?.combinationImageUrl ?? null : null;
+  get combinationImagePath(): string | null {
+    return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)]?.goodsImage?.path ?? null : null;
   }
 
   @Watch("open") mounted() {
+    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+
     if(this.combinationId && (this.editMode || this.duplicate)) {
       const combination = useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)];
 
@@ -242,7 +243,7 @@ export default class GoodsCombinationManageDialog extends Vue {
         } else {
           this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
         }
-        this.formModels.stockVisibility = combination.stockVisibility;
+        this.formModels.stockVisibility = combination.stock.visibility;
 
         this.formModelsInitial = deepClone(this.formModels);
       }
@@ -276,8 +277,11 @@ export default class GoodsCombinationManageDialog extends Vue {
 
     if(this.editMode) {
       const requestData: IGoodsCombinationUpdateRequest = {
-        ...this.formModels,
+        ...diff(this.formModelsInitial, this.formModels),
         boothId: useAdminStore().currentBooth.booth!.id,
+
+        // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
+        goodsIds: !deepEqual(this.formModelsInitial.goodsIds, this.formModels.goodsIds) ? deepClone(this.formModels.goodsIds) : undefined,
       };
       const result = await useAdminAPIStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 

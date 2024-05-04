@@ -1,14 +1,11 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import type { IAccount } from "@myboothmanager/common";
+import type { IAccountCreateRequest, IAccountModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull, AfterFind } from "sequelize-typescript";
 import Booth from "./booth";
 import UploadStorage from "./uploadstorage";
 
-export type AccountCreationAttributes = Omit<IAccount, InternalKeysWithId | "loginCount" | "lastLoginAt">;
-
 @Table
-export default class Account extends Model<IAccount, AccountCreationAttributes> implements IAccount {
+export default class Account extends Model<IAccountModel, IAccountCreateRequest> implements IAccountModel {
   @PrimaryKey
   @Unique
   @AutoIncrement
@@ -37,12 +34,12 @@ export default class Account extends Model<IAccount, AccountCreationAttributes> 
   @AllowNull
   @Default(null)
   @Column(DataTypes.DATE)
-  declare lastLoginAt: Date;
+  declare lastLoginAt?: Date | null;
 
   @AllowNull
   @Default(null)
   @Column(DataTypes.INTEGER.UNSIGNED)
-  declare lastSelectedBoothId?: number;
+  declare lastSelectedBoothId?: number | null;
 
 
   /* === Relations === */

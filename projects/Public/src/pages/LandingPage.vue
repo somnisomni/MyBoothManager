@@ -41,11 +41,11 @@ export default class LandingPage extends Vue {
   get boothList() { return this._boothList; }
   set boothList(value: Array<IBooth>) {
     // Don't include closed booths in the booth list view
-    this._boothList = value.filter((booth) => booth.status !== BoothStatus.CLOSE);
+    this._boothList = value.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
   }
 
   get boothListOpened() {
-    return this.boothList.filter((booth) => booth.status === BoothStatus.OPEN);
+    return this.boothList.filter((booth) => booth.status.status === BoothStatus.OPEN);
   }
 
   get boothListOthers() {

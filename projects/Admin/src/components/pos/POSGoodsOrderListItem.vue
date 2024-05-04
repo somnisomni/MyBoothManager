@@ -43,7 +43,7 @@ import type { IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFilePath } from "@/lib/functions";
+import { getUploadFileUrl } from "@/lib/functions";
 
 @Component({
   emits: ["quantityChange", "click"],
@@ -68,11 +68,11 @@ export default class POSGoodsOrderListItem extends Vue {
       : this.boothGoodsDict[this.item.id];
   }
 
-  get currentTargetImageUrl(): string {
-    return getUploadFilePath(this.isCombination
-      ? this.boothGoodsCombinationDict[this.item.id].combinationImageUrl
-      : this.boothGoodsDict[this.item.id].goodsImageUrl,
-    ) ?? `https://picsum.photos/seed/${this.currentTarget.id}/200/250`;
+  get currentTargetImageUrl() {
+    return getUploadFileUrl(this.isCombination
+      ? this.boothGoodsCombinationDict[this.item.id].goodsImage?.path
+      : this.boothGoodsDict[this.item.id].goodsImage?.path,
+    );
   }
 
   get calculatedTargetPrice(): number {

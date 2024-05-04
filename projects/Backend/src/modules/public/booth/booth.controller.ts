@@ -1,10 +1,9 @@
 import { ClassSerializerInterceptor, Controller, Get, Param, UseInterceptors } from "@nestjs/common";
-import { BoothStatus } from "@myboothmanager/common";
-import { GoodsResponseDto } from "../goods/dto/goods.dto";
-import { GoodsCombinationResponseDto } from "../goods-combination/dto/goods-combination.dto";
-import { GoodsCategoryResponseDto } from "../goods-category/dto/goods-category.dto";
+import { PublicGoodsResponseDto } from "../goods/dto/goods.dto";
+import { PublicGoodsCombinationResponseDto } from "../goods-combination/dto/goods-combination.dto";
+import { PublicGoodsCategoryResponseDto } from "../goods-category/dto/goods-category.dto";
 import { PublicBoothService } from "./booth.service";
-import { BoothResponseDto } from "./dto/booth.dto";
+import { PublicBoothResponseDto } from "./dto/booth.dto";
 
 @Controller("/public/booth")
 export class PublicBoothController {
@@ -12,10 +11,9 @@ export class PublicBoothController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(): Promise<Array<BoothResponseDto>> {
+  async findAll(): Promise<Array<PublicBoothResponseDto>> {
     return (await this.publicBoothService.findAll())
-      .filter((booth) => (booth.status !== BoothStatus.CLOSE) && !(booth.status === BoothStatus.PREPARE && !booth.statusPublishContent))
-      .map((booth) => new BoothResponseDto(booth.get()));
+      .map((booth) => new PublicBoothResponseDto(booth));
   }
 
   @Get("count")
@@ -25,15 +23,15 @@ export class PublicBoothController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id")
-  async findOne(@Param("id") id: string): Promise<BoothResponseDto> {
-    return new BoothResponseDto((await this.publicBoothService.findOne(+id)).get());
+  async findOne(@Param("id") id: string): Promise<PublicBoothResponseDto> {
+    return new PublicBoothResponseDto(await this.publicBoothService.findOne(+id));
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods")
-  async findAllBoothGoods(@Param("id") boothId: string): Promise<Array<GoodsResponseDto>> {
+  async findAllBoothGoods(@Param("id") boothId: string): Promise<Array<PublicGoodsResponseDto>> {
     return (await this.publicBoothService.findAllGoodsOfBooth(+boothId))
-      .map((goods) => new GoodsResponseDto(goods.getForPublic()));
+      .map((goods) => new PublicGoodsResponseDto(goods));
   }
 
   @Get(":id/goods/count")
@@ -43,9 +41,9 @@ export class PublicBoothController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods/category")
-  async findAllBoothGoodsCategory(@Param("id") boothId: string): Promise<Array<GoodsCategoryResponseDto>> {
+  async findAllBoothGoodsCategory(@Param("id") boothId: string): Promise<Array<PublicGoodsCategoryResponseDto>> {
     return (await this.publicBoothService.findAllGoodsCategoryOfBooth(+boothId))
-      .map((category) => new GoodsCategoryResponseDto(category.get()));
+      .map((category) => new PublicGoodsCategoryResponseDto(category));
   }
 
   @Get(":id/goods/category/count")
@@ -55,9 +53,9 @@ export class PublicBoothController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods/combination")
-  async findAllBoothGoodsCombination(@Param("id") boothId: string): Promise<Array<GoodsCombinationResponseDto>> {
+  async findAllBoothGoodsCombination(@Param("id") boothId: string): Promise<Array<PublicGoodsCombinationResponseDto>> {
     return (await this.publicBoothService.findAllGoodsCombinationOfBooth(+boothId))
-      .map((combination) => new GoodsCombinationResponseDto(combination.getForPublic()));
+      .map((combination) => new PublicGoodsCombinationResponseDto(combination));
   }
 
   @Get(":id/goods/combination/count")

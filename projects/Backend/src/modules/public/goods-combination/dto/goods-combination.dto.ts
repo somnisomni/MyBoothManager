@@ -1,23 +1,35 @@
-import { GoodsStockVisibility, IGoodsCombinationModel, IGoodsCombinationResponse } from "@myboothmanager/common";
+import { IGoodsCombinationResponse, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
+import deepClone from "clone-deep";
+import GoodsCombination from "@/db/models/goods-combination";
 
 @Exclude()
-export class GoodsCombinationResponseDto implements IGoodsCombinationResponse {
+export class PublicGoodsCombinationResponseDto implements IGoodsCombinationResponse {
   @Expose() declare id: number;
   @Expose() declare categoryId?: number | null;
   @Expose() declare name: string;
-  @Expose() declare description?: string;
+  @Expose() declare description?: string | null;
   @Expose() declare price: number;
-  @Expose() declare stockInitial: number;
-  @Expose() declare stockRemaining: number;
-  @Expose() declare stockVisibility: GoodsStockVisibility;
-  @Expose() declare ownerMembersId?: number[];
-  @Expose() declare combinationImageUrl?: string | null;
-  @Expose() declare combinationImageThumbnailData?: string | null;
+  @Expose() declare stock: IGoodsStock;
+  @Expose() declare ownerMemberIds?: number[] | null;
+  @Expose() declare goodsImage?: IImageUploadInfo | null;
 
-  @Exclude() declare boothId: number;
+  @Exclude() boothId = NaN;
 
-  constructor(partial: Partial<IGoodsCombinationModel>) {
-    Object.assign(this, partial);
+  constructor(model: GoodsCombination) {
+    const values = model.get();
+
+    this.id = values.id;
+    this.categoryId = values.categoryId;
+    this.name = values.name;
+    this.description = values.description;
+    this.price = values.price;
+    this.stock = {
+      visibility: values.stockVisibility,
+      initial: values.stockInitial,
+      remaining: values.stockRemaining,
+    };
+    this.ownerMemberIds = deepClone(values.ownerMemberIds);
+    this.goodsImage = model.goodsImage?.toImageUploadInfo();
   }
 }

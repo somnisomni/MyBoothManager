@@ -7,8 +7,8 @@ import Goods from "@/db/models/goods";
 import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
 import GoodsCombination from "@/db/models/goods-combination";
-import { CreateGoodsCategoryDTO } from "./dto/create-goods-category.dto";
-import { UpdateGoodsCategoryDTO } from "./dto/update-goods-category.dto";
+import { CreateGoodsCategoryRequestDto } from "./dto/create-goods-category.dto";
+import { UpdateGoodsCategoryRequestDto } from "./dto/update-goods-category.dto";
 import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoundException } from "./goods-category.exception";
 
 @Injectable()
@@ -33,7 +33,7 @@ export class GoodsCategoryService {
     return category;
   }
 
-  async create(createGoodsCategoryDto: CreateGoodsCategoryDTO): Promise<GoodsCategory> {
+  async create(createGoodsCategoryDto: CreateGoodsCategoryRequestDto): Promise<GoodsCategory> {
     const existence = await GoodsCategory.findOne({
       where: {
         boothId: createGoodsCategoryDto.boothId,
@@ -48,7 +48,7 @@ export class GoodsCategoryService {
     }
   }
 
-  async updateInfo(id: number, updateGoodsCategoryDTO: UpdateGoodsCategoryDTO, callerAccountId: number) {
+  async updateInfo(id: number, updateGoodsCategoryDTO: UpdateGoodsCategoryRequestDto, callerAccountId: number) {
     let category = await this.findGoodsCategoryBelongsToBooth(id, updateGoodsCategoryDTO.boothId!, callerAccountId);
 
     try {

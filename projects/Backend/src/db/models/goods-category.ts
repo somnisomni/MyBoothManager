@@ -1,12 +1,9 @@
-import type { InternalKeysWithId } from "@/lib/types";
-import type { IGoodsCategory } from "@myboothmanager/common";
+import type { IGoodsCategoryCreateRequest, IGoodsCategoryModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, HasMany, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
-
-export type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysWithId>;
 
 @Table({
   indexes: [
@@ -16,7 +13,7 @@ export type GoodsCategoryCreationAttributes = Omit<IGoodsCategory, InternalKeysW
     },
   ],
 })
-export default class GoodsCategory extends Model<IGoodsCategory, GoodsCategoryCreationAttributes> implements IGoodsCategory {
+export default class GoodsCategory extends Model<IGoodsCategoryModel, IGoodsCategoryCreateRequest> implements IGoodsCategoryModel {
   @PrimaryKey
   @Unique
   @AutoIncrement

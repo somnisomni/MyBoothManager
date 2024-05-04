@@ -19,7 +19,7 @@
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
-                       :existingSrc="memberImageUrl"
+                       :existingSrc="avatarImagePath"
                        contextName="멤버"
                        width="200px"
                        height="200px"
@@ -50,15 +50,13 @@ import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
+import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
-
-export type IBoothMemberManageFormField
-  = Pick<IBoothMember, "name" | "descriptionShort" | "url" | "role" | "primaryColor">;
 
 @Component({
   components: {
@@ -76,7 +74,8 @@ export default class BoothMemberManageDialog extends Vue {
 
   @Ref("form") readonly form!: CommonForm;
 
-  readonly formModels: IBoothMemberManageFormField = reactive({
+  readonly formModels: IBoothMemberCreateRequest = reactive({
+    boothId: -1,
     name: "",
     descriptionShort: "",
     url: "",
@@ -115,8 +114,8 @@ export default class BoothMemberManageDialog extends Vue {
       label: "멤버 역할 (또는 참여 형태)",
       placeholder: "부스장, 위탁 등...",
     },
-  } as Record<keyof IBoothMemberManageFormField, FormFieldOptions> | Record<string, FormFieldOptions>);
-  formModelsInitial: IBoothMemberManageFormField = deepClone(this.formModels);
+  } as Record<keyof IBoothMemberCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>);
+  formModelsInitial: IBoothMemberCreateRequest = deepClone(this.formModels);
 
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
@@ -138,11 +137,13 @@ export default class BoothMemberManageDialog extends Vue {
     return (this.boothMemberId && (this.boothMemberId in useAdminStore().currentBooth.boothMembers!)) ? readonly(useAdminStore().currentBooth.boothMembers![this.boothMemberId]) : null;
   }
 
-  get memberImageUrl(): string | null {
-    return this.editMode && this.currentMember ? this.currentMember.memberImageUrl ?? null : null;
+  get avatarImagePath(): string | null {
+    return this.editMode && this.currentMember ? this.currentMember.avatarImage?.path ?? null : null;
   }
 
   @Watch("open") mounted() {
+    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+
     if(this.editMode && this.currentMember) {
       this.formModels.name = this.currentMember.name;
       this.formModels.descriptionShort = this.currentMember.descriptionShort;
@@ -180,7 +181,8 @@ export default class BoothMemberManageDialog extends Vue {
       // UPDATE
 
       const requestData: IBoothMemberUpdateRequest = {
-        ...this.formModels,
+        ...diff(this.formModelsInitial, this.formModels),
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
       result = await useAdminAPIStore().updateBoothMemberInfo(this.boothMemberId, requestData);
@@ -189,6 +191,7 @@ export default class BoothMemberManageDialog extends Vue {
 
       const requestData: IBoothMemberCreateRequest = {
         ...this.formModels,
+        boothId: useAdminStore().currentBooth.booth!.id,
       };
 
       result = await useAdminAPIStore().createBoothMember(requestData);

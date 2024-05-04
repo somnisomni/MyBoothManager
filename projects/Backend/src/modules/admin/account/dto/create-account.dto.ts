@@ -1,7 +1,7 @@
 import { IAccountCreateRequest } from "@myboothmanager/common";
 
 export class CreateAccountDTO implements IAccountCreateRequest {
-  name!: string;
-  loginId!: string;
-  loginPass!: string;
+  declare name: string;
+  declare loginId: string;
+  declare loginPass: string;
 }

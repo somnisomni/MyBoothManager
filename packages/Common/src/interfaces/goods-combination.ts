@@ -1,17 +1,35 @@
-import { IGoodsCommon } from "./goods";
+/* eslint-disable import/exports-last */
 
-export interface IGoodsCombination extends IGoodsCommon {
-  combinationImageUrl?: string | null;
-  combinationImageThumbnailData?: string | null;
+import { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
+
+/* === Common === */
+interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId"> { }
+
+/* === Frontend === */
+export interface IGoodsCombination extends Omit<IGoodsFrontendCommon, "combinationId" | "type"> { }
+
+export interface IGoodsCombinationAdmin extends IGoodsCombination {
+  stock: Required<IGoodsStock>;
 }
-export type IGoodsCombinationResponse = IGoodsCombination;
 
-export interface IGoodsCombinationModel extends Omit<IGoodsCombination, "stockInitial" | "stockRemaining" | "combinationImageUrl" | "combinationImageThumbnailData"> {
-  combinationImageId?: number | null;
+/* === Model for Backend (DB) === */
+export interface IGoodsCombinationModel extends Omit<IGoodsCombinationCommon, "stock"> {
+  stockVisibility: GoodsStockVisibility;
+  stockInitial: number;
+  stockRemaining: number;
+  goodsImageId?: number | null;
 }
 
-export type GoodsCombinationCreateRequestKey = "boothId" | "categoryId" | "name" | "description" | "price" | "stockVisibility";
-export type IGoodsCombinationCreateRequest = Pick<IGoodsCombination, GoodsCombinationCreateRequestKey> & { goodsIds: number[] };
+/* === Requests === */
+export interface IGoodsCombinationCreateRequest extends Omit<IGoodsCombinationCommon, "id" | "stock" | "ownerMemberIds"> {
+  stockVisibility: GoodsStockVisibility;
+  goodsIds: Array<number>;
+}
 
-export type GoodsCombinationUpdateRequestKey = "categoryId" | "name" | "description" | "price" | "stockVisibility";
-export type IGoodsCombinationUpdateRequest = Pick<IGoodsCombination, "boothId"> & Partial<Pick<IGoodsCombination, GoodsCombinationUpdateRequestKey>> & { goodsIds?: number[] };
+export interface IGoodsCombinationUpdateRequest extends Partial<Omit<IGoodsCombinationCommon, "id" | "boothId" | "ownerMemberIds">>, Pick<IGoodsCombinationCommon, "boothId"> {
+  goodsIds?: Array<number> | null;
+}
+
+/* === Responses === */
+export interface IGoodsCombinationResponse extends IGoodsCombination { }
+export interface IGoodsCombinationAdminResponse extends IGoodsCombinationAdmin { }
