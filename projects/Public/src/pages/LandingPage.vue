@@ -1,13 +1,13 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
     <VContainer v-if="boothList && !isLoadingBoothList" class="d-flex flex-column">
-      <VLayout class="d-flex flex-column my-4 overflow-visible">
+      <VLayout class="d-flex flex-0-0 flex-column my-4 overflow-visible">
         <h5 class="text-h5 font-weight-bold my-1">현재 운영 중인 부스</h5>
         <BoothListView :boothList="boothListOpened"
                       @click:boothItem="onBoothItemClick" />
       </VLayout>
 
-      <VLayout class="d-flex flex-column my-4 overflow-visible">
+      <VLayout class="d-flex flex-0-0 flex-column my-4 overflow-visible">
         <h5 class="text-h5 font-weight-bold my-1">그 외 부스</h5>
         <BoothListView :boothList="boothListOthers"
                       @click:boothItem="onBoothItemClick" />
