@@ -19,7 +19,7 @@
                  :density="sm ? 'compact' : 'default'" />
     </VList>
 
-    <div class="inner overflow-hidden d-flex flex-column h-100">
+    <div class="inner overflow-hidden d-flex flex-column h-100" style="min-height: 200px">
       <VList v-show="!sm" nav class="flex-shrink-0">
         <VListItem class="text-center">
           <div class="appname text-grey">{{ APP_NAME }}</div>
