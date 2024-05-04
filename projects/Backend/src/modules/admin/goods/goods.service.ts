@@ -79,7 +79,7 @@ export class GoodsService {
 
   async updateInfo(id: number, updateGoodsDto: UpdateGoodsRequestDto, callerAccountId: number): Promise<Goods> {
     let goods = await this.findGoodsBelongsToBooth(id, updateGoodsDto.boothId!, callerAccountId);
-    const categoryId = updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0 ? null : updateGoodsDto.categoryId;
+    const categoryId = updateGoodsDto.categoryId && updateGoodsDto.categoryId < 0 ? null : (updateGoodsDto.categoryId || goods.categoryId);
 
     try {
       // Handling category change if the goods is combined
