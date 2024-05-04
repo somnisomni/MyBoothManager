@@ -1,3 +1,4 @@
+import { APP_NAME } from "@myboothmanager/common";
 import { createRouter, createWebHistory } from "vue-router";
 
 /* Routes (lazy-loaded using Webpack code splitting) */
@@ -15,7 +16,7 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "404",
-      meta: { title: "404 | MyBoothManager" },
+      meta: { title: "404" },
       component: NotFoundErrorPage,
     },
 
@@ -26,7 +27,6 @@ const router = createRouter({
         {
           path: "",
           name: "landing",
-          meta: { title: "MyBoothManager" },
           component: LandingPage,
         },
       ],
@@ -34,14 +34,14 @@ const router = createRouter({
     {
       path: "/booth/:boothId",
       name: "booth-individual",
-      meta: { title: "부스 정보 | MyBoothManager" },
+      meta: { title: "부스 정보" },
       component: IndividualBoothPage,
     },
   ],
 });
 
 router.afterEach((to) => {
-  document.title = to.meta.title as string ?? "MyBoothManager";
+  document.title = to.meta.title ? `${to.meta.title as string} | ${APP_NAME}` : APP_NAME;
 });
 
 export default router;

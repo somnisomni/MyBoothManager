@@ -4,7 +4,7 @@
              :class="{ 'pl-6': navPersistent }">
       <VAppBarNavIcon v-if="!navPersistent" @click.stop="navOpen = !navOpen" title="내비게이션 메뉴 전환" />
 
-      <VAppBarTitle class="ml-1"><strong>MyBoothManager</strong> | 부스 관리</VAppBarTitle>
+      <VAppBarTitle class="ml-1"><strong>{{ APP_NAME }}</strong> | 부스 관리</VAppBarTitle>
 
       <BoothSelectionArea />
     </VAppBar>
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { BoothStatus, type IBooth } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IBooth } from "@myboothmanager/common";
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -83,6 +83,7 @@ import { Const } from "@/lib/const";
 })
 export default class BoothAdminLayout extends Vue {
   readonly BoothStatus = BoothStatus;
+  readonly APP_NAME = APP_NAME;
   readonly APP_VERSION = Const.APP_VERSION;
   readonly GIT_HASH = Const.APP_GIT_HASH;
 
