@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordName, type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { useAuthStore } from "@/plugins/stores/auth";
+import { useAuthLocalStore, useAuthStore } from "@/plugins/stores/auth";
 
 /* Routes (lazy-loaded using Webpack code splitting) */
 const NotFoundErrorPage = () => import(/* webpackChunkName: "pages/fundamentals" */ "@/pages/NotFoundErrorPage.vue");
@@ -142,18 +142,16 @@ const router = createRouter({
 /* Router global hooks */
 // Auth route guard
 router.beforeEach(async (to, from, next) => {
-  const isTokenAvailable = !!useAuthStore().isAuthTokenValid;
-  // const isAccountDataAvailable = !!useAdminStore().currentAccount;
-  // const isAuthValid = await useAuthStore().adminAuthCheck();
-  const isAllAvailable = isTokenAvailable; /* && (isAuthValid === true); */ /* && isAccountDataAvailable; */
+  let authTokenAvailable = !!useAuthLocalStore().accessToken;
+  const authIdAvailable = !!useAuthStore().id;
 
   // SuperAdmin
-  if(isAllAvailable
+  if(authTokenAvailable
      && useAdminStore().currentAccount?.superAdmin
      && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
     next({ name: "superadmin" });
     return;
-  } else if(isAllAvailable
+  } else if(authTokenAvailable
             && !useAdminStore().currentAccount?.superAdmin
             && to.name === "superadmin") {
     next({ name: "admin" });
@@ -161,9 +159,19 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // Normal
-  if(isAllAvailable && to.name === "login") {
+  if(!authTokenAvailable && authIdAvailable) {
+    try {
+      await useAuthStore().adminAuthRefresh();
+      authTokenAvailable = !!useAuthLocalStore().accessToken;
+    } catch(err) {
+      console.error(err);
+      useAuthStore().invalidateLoginData();
+    }
+  }
+
+  if(authTokenAvailable && to.name === "login") {
     next({ name: "admin" });
-  } else if(!isAllAvailable && to.name !== "login") {
+  } else if(!authTokenAvailable && to.name !== "login") {
     next({ name: "login" });
   } else {
     next();

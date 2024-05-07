@@ -1,4 +1,4 @@
-import { ErrorCodes, type IAccountAuthToken, type IAccountLoginRequest, type IAccountLoginResponse, type ISuccessResponse } from "@myboothmanager/common";
+import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type ISuccessResponse } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
@@ -28,14 +28,11 @@ const useAuthStore = defineStore("auth", () => {
 
   /* States */
   const id = ref<number | null>(null);
-  const authTokenData = ref<IAccountAuthToken | null>(null);
 
   /* Computed */
   const isAuthTokenValid = computed<boolean>(() =>
     !!id.value &&
-    !!authTokenData.value &&
-    !!authTokenData.value.accessToken &&
-    !!authTokenData.value.refreshToken);
+    !!$authLocalStore.accessToken);
 
   /* Actions */
   function registerAuthData(data: IAccountLoginResponse): void {
@@ -48,10 +45,6 @@ const useAuthStore = defineStore("auth", () => {
     };
     if(data.superAdmin) $adminStore.currentAccount.superAdmin = data.superAdmin;
 
-    authTokenData.value = ({
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
-    });
     $authLocalStore.accessToken = data.accessToken;
   }
 
@@ -68,11 +61,10 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   async function adminAuthRefresh(): Promise<boolean | ErrorCodes> {
-    if(!id.value || !authTokenData.value) return false;
+    if(!id.value) return false;
 
     const response = await AdminAPI.refreshAuth({
       id: id.value,
-      refreshToken: authTokenData.value.refreshToken!,
     });
 
     if(response && typeof response === "object") {
@@ -93,7 +85,7 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   async function adminAuthCheck(): Promise<boolean | ErrorCodes> {
-    if(!id.value || !authTokenData.value) return true;
+    if(!id.value) return true;
 
     const response = await AdminAPI.checkAuth();
 
@@ -110,12 +102,10 @@ const useAuthStore = defineStore("auth", () => {
     $authLocalStore.clear();
 
     id.value = null;
-    authTokenData.value = null;
   }
 
   return {
     id,
-    authTokenData,
 
     isAuthTokenValid,
 

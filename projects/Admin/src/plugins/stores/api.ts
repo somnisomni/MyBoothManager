@@ -26,6 +26,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     try {
       result = await func();
     } catch(err) {
+      console.error(err);
+
       isAPIFetchError.value = true;
       return C.ErrorCodes.UNKNOWN_ERROR;
     }

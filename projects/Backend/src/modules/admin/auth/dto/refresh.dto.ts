@@ -1,4 +1,5 @@
-export class RefreshRequestDto {
-  id!: number;
-  refreshToken!: string;
+import { IAccountAuthRefreshRequest } from "@myboothmanager/common";
+
+export class RefreshRequestDto implements IAccountAuthRefreshRequest {
+  declare id: number;
 }

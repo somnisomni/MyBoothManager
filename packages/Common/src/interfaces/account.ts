@@ -6,11 +6,6 @@ interface IAccountCommon {
   lastSelectedBoothId?: number | null;
 }
 
-export interface IAccountAuthToken {
-  accessToken: string;
-  refreshToken: string;
-}
-
 /* === Frontend === */
 export interface IAccount extends IAccountCommon {
   superAdmin?: boolean;
@@ -38,6 +33,12 @@ export interface IAccountLoginRequest {
   confirmLogoutExistingSession?: boolean;
 }
 
+export interface IAccountAuthRefreshRequest {
+  id: number;  // Account ID
+}
+
 /* === Responses === */
 export interface IAccountResponse extends IAccount { }
-export interface IAccountLoginResponse extends IAccount, IAccountAuthToken { }
+export interface IAccountLoginResponse extends IAccount {
+  accessToken: string;
+}

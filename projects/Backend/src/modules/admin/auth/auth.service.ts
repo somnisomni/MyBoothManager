@@ -15,11 +15,13 @@ const SA_LOGIN_DATA: IAuthPayload = {
   name: "YOUFOUNDME",
 };
 
+export type IAccountLoginResponseWithRefreshToken = IAccountLoginResponse & { refreshToken: string };
+
 @Injectable()
 export class AuthService {
   constructor(private accountService: AccountService, private jwtService: JwtService) {}
 
-  private async generateTokenAndLoginResponse(account: IAccount): Promise<IAccountLoginResponse> {
+  private async generateTokenAndLoginResponse(account: IAccount): Promise<IAccountLoginResponseWithRefreshToken> {
     const generatedToken = await generateAuthToken(this.jwtService, account);
     const generatedRefreshToken = await generateRefreshToken(this.jwtService, account);
 
@@ -36,7 +38,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginRequestDto, updateLoginCount: boolean = true): Promise<IAccountLoginResponse> {
+  async login(loginDto: LoginRequestDto, updateLoginCount: boolean = true): Promise<IAccountLoginResponseWithRefreshToken> {
     const account = await this.accountService.findOneByLoginId(loginDto.loginId, false);
 
     if(!account || !(await argon2.verify(account.loginPassHash, loginDto.loginPass))) {
@@ -56,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async loginSA(): Promise<IAccountLoginResponse> {
+  async loginSA(): Promise<IAccountLoginResponseWithRefreshToken> {
     const generatedToken = await generateAuthTokenSA(this.jwtService);
     const generatedRefreshToken = await generateRefreshToken(this.jwtService, SA_LOGIN_DATA);
 
@@ -74,10 +76,10 @@ export class AuthService {
     return SUCCESS_RESPONSE;
   }
 
-  async refresh(refreshDto: RefreshRequestDto): Promise<IAccountLoginResponse> {
-    if(!refreshDto.refreshToken) throw new InvalidRequestBodyException();
+  async refresh(refreshDto: RefreshRequestDto, refreshToken: string | null): Promise<IAccountLoginResponseWithRefreshToken> {
+    if(!refreshToken) throw new InvalidRequestBodyException();
 
-    const verifyResult = await verifyRefreshToken(this.jwtService, refreshDto.refreshToken);
+    const verifyResult = await verifyRefreshToken(this.jwtService, refreshToken);
     if(typeof verifyResult === "object" && verifyResult?.id) {
       const refreshUuid = AuthStorage.REFRESH_UUID_STORE.get(refreshDto.id);
 

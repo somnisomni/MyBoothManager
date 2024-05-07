@@ -22,7 +22,6 @@ export class LoginResponseDto implements IAccountLoginResponse {
   @Expose() declare lastSelectedBoothId?: number | null;
   @Expose() declare superAdmin?: boolean;
   @Expose() declare accessToken: string;
-  @Expose() declare refreshToken: string;
 
   constructor(data: IAccountLoginResponse) {
     this.id = data.id;
@@ -31,6 +30,5 @@ export class LoginResponseDto implements IAccountLoginResponse {
     this.lastSelectedBoothId = data.lastSelectedBoothId;
     this.superAdmin = data.superAdmin;
     this.accessToken = data.accessToken;
-    this.refreshToken = data.refreshToken;
   }
 }

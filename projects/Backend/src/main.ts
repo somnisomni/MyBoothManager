@@ -39,6 +39,7 @@ async function bootstrap() {
     secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime()}`,
     algorithm: "sha384",
     parseOptions: {
+      path: "/",
       httpOnly: true,
       sameSite: (process.env.COOKIE_SAME_SITE || "strict") as "strict" | "lax" | "none",
       secure: process.env.NODE_ENV !== "development",
@@ -60,7 +61,9 @@ async function bootstrap() {
     immutable: false,
   } as FastifyStaticOptions);
 
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+  });
 
   /* *** Nest.js app globals *** */
   app.useGlobalFilters(

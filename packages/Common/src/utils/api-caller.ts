@@ -27,7 +27,7 @@ export default class APICaller {
     private readonly healthCheckPath: string = "healthcheck") { }
 
   /* Basic fetch function */
-  private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
+  private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
     const url: string = `${this.apiHost}${this.apiGroup.length > 0 ? `/${this.apiGroup}` : ""}/${path}`;
 
     const response = await fetch(url, {
@@ -38,24 +38,25 @@ export default class APICaller {
         ...additionalInitOptions?.headers ?? { },
         ...containAuthCredential && this.getAuthorizationToken ? { Authorization: `Bearer ${this.getAuthorizationToken()}` } : { },
       },
+      ...containAuthCookie ? { credentials: "same-origin" } : { credentials: "omit" },
     });
 
     return await response.json() as T;
   }
 
-  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
-    return this.callAPIInternal<T>(method, path, payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS, containAuthCredential);
+  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
+    return this.callAPIInternal<T>(method, path, payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS, containAuthCookie, containAuthCredential);
   }
 
   /* Fetch function shortcuts */
-  public async GET<T>(path: string, payload?: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("GET", path, payload, containAuthCredential); }
-  public async POST<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("POST", path, payload, containAuthCredential); }
-  public async PUT<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("PUT", path, payload, containAuthCredential); }
-  public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("PATCH", path, payload, containAuthCredential); }
-  public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCredential = true) { return await this.callAPI<T>("DELETE", path, payload, containAuthCredential); }
+  public async GET<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("GET", path, payload, containAuthCookie, containAuthCredential); }
+  public async POST<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("POST", path, payload, containAuthCookie, containAuthCredential); }
+  public async PUT<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("PUT", path, payload, containAuthCookie, containAuthCredential); }
+  public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("PATCH", path, payload, containAuthCookie, containAuthCredential); }
+  public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("DELETE", path, payload, containAuthCookie, containAuthCredential); }
 
   public async POSTMultipart<T>(path: string, payload: FormData): Promise<T | IErrorResponse> {
-    return this.callAPIInternal<T>("POST", path, payload, undefined, true);
+    return this.callAPIInternal<T>("POST", path, payload, undefined, false, true);
   }
 
   /* Public APIs */
