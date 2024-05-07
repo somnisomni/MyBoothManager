@@ -18,6 +18,9 @@ declare global {
       MYSQL_DATABASE?: string,
       SEQUELIZE_TIMEZONE?: string,
       ENABLE_SEQUELIZE_LOGGING?: string,
+
+      COOKIE_SECRET?: string,
+      COOKIE_SAME_SITE?: "strict" | "lax" | "none",
     }
   }
 }

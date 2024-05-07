@@ -1,9 +1,11 @@
+import type { FastifyPluginCallback } from "fastify";
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/multipart";
 // import { fastifyHelmet } from "@fastify/helmet";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { default as fastifyStatic, FastifyStaticOptions } from "@fastify/static";
+import { default as fastifyCookie, FastifyCookieOptions } from "@fastify/cookie";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
@@ -33,6 +35,15 @@ async function bootstrap() {
   );
 
   /* *** Fastify plugins *** */
+  await app.register(fastifyCookie as unknown as FastifyPluginCallback<FastifyCookieOptions>, {
+    secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime()}`,
+    algorithm: "sha384",
+    parseOptions: {
+      httpOnly: true,
+      sameSite: (process.env.COOKIE_SAME_SITE || "strict") as "strict" | "lax" | "none",
+      secure: process.env.NODE_ENV !== "development",
+    },
+  });
   await app.register(fastifyMultipart, {
     limits: {
       fileSize: MAX_UPLOAD_FILE_BYTES,
