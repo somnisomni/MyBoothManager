@@ -4,9 +4,27 @@ import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./admin";
 
+const useAuthLocalStore = defineStore("auth-local", () => {
+  /* *** States *** */
+  /**
+   * In-memory API access token value
+   */
+  const accessToken = ref<string | null>(null);
+
+  function clear(): void {
+    accessToken.value = null;
+  }
+
+  return {
+    accessToken,
+    clear,
+  };
+});
+
 const useAuthStore = defineStore("auth", () => {
   /* Dependencies (NOT TO BE EXPORTED) */
   const $adminStore = useAdminStore();
+  const $authLocalStore = useAuthLocalStore();
 
   /* States */
   const id = ref<number | null>(null);
@@ -34,6 +52,7 @@ const useAuthStore = defineStore("auth", () => {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
     });
+    $authLocalStore.accessToken = data.accessToken;
   }
 
   async function adminLogin(data: IAccountLoginRequest): Promise<boolean | ErrorCodes> {
@@ -87,7 +106,9 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   function invalidateLoginData(): void {
-    $adminStore.clearAllStates();
+    $adminStore.clear();
+    $authLocalStore.clear();
+
     id.value = null;
     authTokenData.value = null;
   }
@@ -109,4 +130,7 @@ const useAuthStore = defineStore("auth", () => {
   },
 });
 
-export { useAuthStore };
+export {
+  useAuthStore,
+  useAuthLocalStore,
+};
