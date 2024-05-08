@@ -14,7 +14,7 @@
       </VLayout>
     </VContainer>
 
-    <div v-else class="position-fixed d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+    <div v-else class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <VProgressCircular indeterminate size="x-large" color="primary" class="my-2" />
       <span class="mt-2 text-grey-darken-2">부스 목록 불러오는 중...</span>
     </div>
@@ -25,7 +25,7 @@
 import { BoothStatus, type ErrorCodes, type IBooth } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import BoothListView from "@/components/booth/BoothListView.vue";
-import { usePublicStore } from "@/plugins/stores/public";
+import { useAPIStore } from "@/plugins/stores/api";
 import router from "@/plugins/router";
 
 @Component({
@@ -55,7 +55,7 @@ export default class LandingPage extends Vue {
   async mounted() {
     this.isLoadingBoothList = true;
 
-    const response = await usePublicStore().apiCaller.fetchAllBooths();
+    const response = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllBooths());
 
     if("errorCode" in response) {
       this.fetchError = response.errorCode;

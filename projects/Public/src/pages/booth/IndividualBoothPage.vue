@@ -115,7 +115,7 @@ import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBoot
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
 import { useHead, useSeoMeta } from "@unhead/vue";
 import SharePanel from "@/components/booth/SharePanel.vue";
-import { usePublicStore } from "@/plugins/stores/public";
+import { useAPIStore } from "@/plugins/stores/api";
 import { useLocalStore } from "@/plugins/stores/local";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFileUrl } from "@/lib/common-functions";
@@ -242,7 +242,7 @@ export default class IndividualBoothPage extends Vue {
     }
 
     /* Fetch booth data first */
-    const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
+    const boothDataResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchSingleBooth(this.boothId));
 
     if("errorCode" in boothDataResponse) {
       this.fetchError = boothDataResponse.errorCode;
@@ -253,10 +253,10 @@ export default class IndividualBoothPage extends Vue {
 
     /* After booth data is fetched successfully, fetch others */
     const responsePromises: Array<Promise<any>> = [
-      usePublicStore().apiCaller.fetchAllMembersOfBooth(this.boothId),
-      usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId),
-      usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId),
-      usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId),
+      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllMembersOfBooth(this.boothId)),
+      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsOfBooth(this.boothId)),
+      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId)),
+      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId)),
     ];
 
     const responses = await Promise.all(responsePromises);
@@ -273,23 +273,23 @@ export default class IndividualBoothPage extends Vue {
 
     this.isDataLoading = true;
 
-    const boothDataResponse = await usePublicStore().apiCaller.fetchSingleBooth(this.boothId);
+    const boothDataResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchSingleBooth(this.boothId));
     if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
     else errors[0] = boothDataResponse.errorCode;
 
-    const boothMemberResponse = await usePublicStore().apiCaller.fetchAllMembersOfBooth(this.boothId);
+    const boothMemberResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllMembersOfBooth(this.boothId));
     if(!("errorCode" in boothMemberResponse)) this.boothMemberList = boothMemberResponse;
     else errors[1] = boothMemberResponse.errorCode;
 
-    const goodsResponse = await usePublicStore().apiCaller.fetchAllGoodsOfBooth(this.boothId);
+    const goodsResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsOfBooth(this.boothId));
     if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse.map((goods) => new Goods(goods));
     else errors[2] = goodsResponse.errorCode;
 
-    const combinationResponse = await usePublicStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId);
+    const combinationResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId));
     if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse.map((combination) => new GoodsCombination(combination));
     else errors[3] = combinationResponse.errorCode;
 
-    const categoryResponse = await usePublicStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId);
+    const categoryResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId));
     if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
     else errors[4] = categoryResponse.errorCode;
 

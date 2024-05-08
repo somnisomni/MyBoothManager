@@ -4,6 +4,13 @@
       <RouterView v-if="!isServerNotAvailable" />
     </div>
 
+    <VSnackbar v-model="isAPIFetchFailed" location="top right" color="error" timeout="30000" :close-on-back="false" close-on-content-click transition="slide-x-reverse-transition">
+      <div class="d-flex flex-row align-center justify-start">
+        <VIcon icon="mdi-alert" size="large" />
+        <div class="ml-3">서버와의 통신 중 오류가 발생했습니다. <br /> 인터넷 연결을 확인해주세요.</div>
+      </div>
+    </VSnackbar>
+
     <VFooter color="blue-grey-lighten-5" class="text-blue-grey-lighten-1">
       <VContainer>
       <p><span class="text-h6 font-weight-bold">{{ APP_NAME }}</span> {{ versionString }}</p>
@@ -23,7 +30,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
 import { APP_NAME, DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
-import { usePublicStore } from "@/plugins/stores/public";
+import { useAPIStore } from "@/plugins/stores/api";
 
 @Component({})
 export default class App extends Vue {
@@ -41,8 +48,10 @@ export default class App extends Vue {
     return v.startsWith("0.") || v.endsWith("-dev") || v.endsWith("-beta");
   }
 
+  get isAPIFetchFailed() { return useAPIStore().isAPIFetchFailed; }
+
   async mounted() {
-    this.isServerNotAvailable = !(await usePublicStore().apiCaller.checkAPIServerAlive());
+    this.isServerNotAvailable = !(await useAPIStore().apiCaller.checkAPIServerAlive());
   }
 }
 </script>

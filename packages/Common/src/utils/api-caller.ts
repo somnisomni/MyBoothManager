@@ -24,7 +24,8 @@ export default class APICaller {
     private readonly apiHost: string,
     private readonly apiGroup: string = "",
     private readonly getAuthorizationToken: (() => string) | null | undefined = null,
-    private readonly healthCheckPath: string = "healthcheck") { }
+    private readonly healthCheckPath: string = "healthcheck",
+  ) { }
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
