@@ -38,7 +38,7 @@ export default class APICaller {
         ...additionalInitOptions?.headers ?? { },
         ...containAuthCredential && this.getAuthorizationToken ? { Authorization: `Bearer ${this.getAuthorizationToken()}` } : { },
       },
-      ...containAuthCookie ? { credentials: "same-origin" } : { credentials: "omit" },
+      ...containAuthCookie ? { credentials: "include" } : { credentials: "omit" },
     });
 
     return await response.json() as T;
