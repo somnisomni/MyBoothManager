@@ -14,7 +14,7 @@ export class AuthController {
 
   private readonly REFRESH_TOKEN_COOKIE_KEY: string = "refreshToken";
   private readonly REFRESH_TOKEN_COOKIE_OPTIONS: Readonly<CookieSerializeOptions> = { path: "/admin/auth/refresh" } as const;
-  private setRefreshTokenCookie = (response: FastifyReply, value: string) => response.setCookie(this.REFRESH_TOKEN_COOKIE_KEY, value);
+  private setRefreshTokenCookie = (response: FastifyReply, value: string) => response.setCookie(this.REFRESH_TOKEN_COOKIE_KEY, response.signCookie(value), this.REFRESH_TOKEN_COOKIE_OPTIONS);
 
   @Public()
   @UseInterceptors(ClassSerializerInterceptor)
@@ -51,7 +51,7 @@ export class AuthController {
   @Post("refresh")
   @HttpCode(200)
   async refresh(@Body() refreshDto: RefreshRequestDto, @Req() request: FastifyRequest, @Res({ passthrough: true }) response: FastifyReply): Promise<LoginResponseDto> {
-    const data = await this.authService.refresh(refreshDto, request.unsignCookie(this.REFRESH_TOKEN_COOKIE_KEY).value);
+    const data = await this.authService.refresh(refreshDto, request.unsignCookie(request.cookies[this.REFRESH_TOKEN_COOKIE_KEY] ?? "").value);
 
     this.setRefreshTokenCookie(response, data.refreshToken);
 
