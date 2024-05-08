@@ -1,9 +1,11 @@
+import type { FastifyPluginCallback } from "fastify";
 import { NestFactory } from "@nestjs/core";
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { default as fastifyMultipart, FastifyMultipartOptions } from "@fastify/multipart";
-// import { fastifyHelmet } from "@fastify/helmet";
+import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
+import { default as fastifyMultipart, type FastifyMultipartOptions } from "@fastify/multipart";
+import { default as fastifyHelmet, type FastifyHelmetOptions } from "@fastify/helmet";
+import { default as fastifyStatic, type FastifyStaticOptions } from "@fastify/static";
+import { default as fastifyCookie, type FastifyCookieOptions } from "@fastify/cookie";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
-import { default as fastifyStatic, FastifyStaticOptions } from "@fastify/static";
 import { AppModule } from "@/app.module";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
@@ -33,6 +35,22 @@ async function bootstrap() {
   );
 
   /* *** Fastify plugins *** */
+  await app.register(fastifyCookie as unknown as FastifyPluginCallback<FastifyCookieOptions>, {
+    secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime()}`,
+    algorithm: "sha384",
+    parseOptions: {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    },
+  });
+  await app.register(fastifyHelmet as unknown as FastifyPluginCallback<FastifyHelmetOptions>, {
+    global: true,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: { policy: "require-corp" },
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+  });
   await app.register(fastifyMultipart, {
     limits: {
       fileSize: MAX_UPLOAD_FILE_BYTES,
@@ -49,7 +67,10 @@ async function bootstrap() {
     immutable: false,
   } as FastifyStaticOptions);
 
-  app.enableCors();
+  app.enableCors({
+    origin: [ process.env.FRONTEND_ADMIN_URL ?? "", process.env.FRONTEND_PUBLIC_URL ?? "" ],
+    credentials: true,
+  });
 
   /* *** Nest.js app globals *** */
   app.useGlobalFilters(
@@ -62,7 +83,7 @@ async function bootstrap() {
 
   /* *** Start the backend server *** */
   await app.listen(
-    process.env.API_SERVER_PORT || 31111,
+    process.env.API_SERVER_PORT || 20000,
     process.env.API_SERVER_HOST || "127.0.0.1",
     (error, address) => {
       if(error) {

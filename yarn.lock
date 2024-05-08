@@ -726,6 +726,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/cookie@npm:^9.3.1":
+  version: 9.3.1
+  resolution: "@fastify/cookie@npm:9.3.1"
+  dependencies:
+    cookie-signature: "npm:^1.1.0"
+    fastify-plugin: "npm:^4.0.0"
+  checksum: 10/b3ae999316a775c9167900b73bf02125504fedc7b3121c3a766c827caf18e10959f060d22495f6d7247cfc7b375c9761765af615c67691cb39afcc5d3677e9fb
+  languageName: node
+  linkType: hard
+
 "@fastify/cors@npm:9.0.1":
   version: 9.0.1
   resolution: "@fastify/cors@npm:9.0.1"
@@ -1504,6 +1514,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myboothmanager/backend@workspace:projects/Backend"
   dependencies:
+    "@fastify/cookie": "npm:^9.3.1"
     "@fastify/helmet": "npm:^11.1.1"
     "@fastify/multipart": "npm:^8.2.0"
     "@fastify/static": "npm:^7.0.3"
@@ -1621,19 +1632,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.0.2
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=33ead8&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=241de9&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/f33476bec0b2cc11db64a9e8e8192e4b82d976613b9e4af3e595d6100a6c04fbcee027ec3ae05c0a556db4fa38abba65f6402522a78a6d504604073bf117604f
+  checksum: 10/cc7253fb876b21377a286a747dac0a9172ea2e8c2e0f3e02bd771ce80415cba6c1ffe3e61724cb72268fb023f42fc67939a4d6f453c7ec49b92cbf7deb3d1084
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.0.2
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=33ead8&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=241de9&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/f33476bec0b2cc11db64a9e8e8192e4b82d976613b9e4af3e595d6100a6c04fbcee027ec3ae05c0a556db4fa38abba65f6402522a78a6d504604073bf117604f
+  checksum: 10/cc7253fb876b21377a286a747dac0a9172ea2e8c2e0f3e02bd771ce80415cba6c1ffe3e61724cb72268fb023f42fc67939a4d6f453c7ec49b92cbf7deb3d1084
   languageName: node
   linkType: hard
 
@@ -4132,6 +4143,13 @@ __metadata:
   version: 2.0.0
   resolution: "convert-source-map@npm:2.0.0"
   checksum: 10/c987be3ec061348cdb3c2bfb924bec86dea1eacad10550a85ca23edb0fe3556c3a61c7399114f3331ccb3499d7fd0285ab24566e5745929412983494c3926e15
+  languageName: node
+  linkType: hard
+
+"cookie-signature@npm:^1.1.0":
+  version: 1.2.1
+  resolution: "cookie-signature@npm:1.2.1"
+  checksum: 10/b871138a81382173d51dde5c1c56e8b313bc4b9e5f2f67d0d63be50fd43b92a25cb9bd72c2fc2935c0c6cb6cce834e7e2fd12830d7ec289ccac5bdec19dd14eb
   languageName: node
   linkType: hard
 

@@ -1,8 +1,8 @@
 import * as CT from "@myboothmanager/common";
-import { useAuthStore } from "@/plugins/stores/auth";
+import { useAuthLocalStore } from "@/plugins/stores/auth";
 
 export default class AdminAPI {
-  private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthStore().authTokenData!.accessToken);
+  private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthLocalStore().accessToken!);
 
   /* Admin FE specific API call wrapper */
   private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {
@@ -30,15 +30,15 @@ export default class AdminAPI {
 
   /* Auth */
   static async login(payload: CT.IAccountLoginRequest) {
-    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/login", payload, false));
+    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/login", payload, true, false));
   }
 
   static async logout(payload: { id: number }) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.POST("auth/logout", payload, false));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.POST("auth/logout", payload, true, false));
   }
 
-  static async refreshAuth(payload: { id: number, refreshToken: string }) {
-    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/refresh", payload));
+  static async refreshAuth(payload: CT.IAccountAuthRefreshRequest) {
+    return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/refresh", payload, true, true));
   }
 
   static async checkAuth() {

@@ -18,6 +18,11 @@ declare global {
       MYSQL_DATABASE?: string,
       SEQUELIZE_TIMEZONE?: string,
       ENABLE_SEQUELIZE_LOGGING?: string,
+
+      COOKIE_SECRET?: string,
+
+      FRONTEND_ADMIN_URL?: string,
+      FRONTEND_PUBLIC_URL?: string,
     }
   }
 }

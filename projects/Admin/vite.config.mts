@@ -49,7 +49,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5888,
+    port: 20001,
   },
   base: process.env.VITE_BASE_PATH ?? "./",
   define: defines,

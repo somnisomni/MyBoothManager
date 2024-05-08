@@ -33,7 +33,7 @@ const useAdminStore = defineStore("admin", () => {
   const isFirstLoad = ref<boolean>(true);
 
   /* Actions */
-  function clearAllStates(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {
+  function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {
     if(exclude && !exclude.account) currentAccount.value = null;
 
     for(const key in currentBooth) {
@@ -50,7 +50,7 @@ const useAdminStore = defineStore("admin", () => {
   function changeBooth(boothId: number): void {
     isBoothDataLoaded.value = false;
 
-    clearAllStates({ account: true });
+    clear({ account: true });
     $apiStore.fetchSingleBoothOfCurrentAccount(boothId).finally(() => {
       isBoothDataLoaded.value = true;
     });
@@ -63,7 +63,7 @@ const useAdminStore = defineStore("admin", () => {
     isAllDataLoaded,
     isFirstLoad,
 
-    clearAllStates,
+    clear,
     changeBooth,
   };
 });

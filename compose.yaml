@@ -39,7 +39,7 @@ services:
       - "31111:31111"
     environment:
       TRUST_LOCALHOST_PROXY: true
-      JWT_SECRET: som_myboothmanager_ni
+      API_SERVER_PORT: 31111
       SUPERADMIN_ID: admin
       SUPERADMIN_PASS: should1be2changed!
       MYSQL_HOST: 127.0.0.1
@@ -48,7 +48,11 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: myboothmanager
       SEQUELIZE_TIMEZONE: +09:00
+      JWT_SECRET: som_myboothmanager_ni
+      COOKIE_SECRET: in_myboothmanager_mos
+      FRONTEND_ADMIN_URL: "http://localhost:31112"
+      FRONTEND_PUBLIC_URL: "http://localhost:31113"
     network_mode: host
 
 volumes:
-  uploads:
+  mbm-uploads:
