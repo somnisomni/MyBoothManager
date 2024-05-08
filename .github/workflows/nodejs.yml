@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Pre setup
-        run: yarn pre
+      - name: Initialize
+        run: yarn install && yarn common:build
       - name: Do test
         run: yarn test
