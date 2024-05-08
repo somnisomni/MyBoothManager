@@ -20,7 +20,9 @@ declare global {
       ENABLE_SEQUELIZE_LOGGING?: string,
 
       COOKIE_SECRET?: string,
-      COOKIE_SAME_SITE?: "strict" | "lax" | "none",
+
+      FRONTEND_ADMIN_URL?: string,
+      FRONTEND_PUBLIC_URL?: string,
     }
   }
 }

@@ -1,24 +1,30 @@
 # MyBoothManager-Monorepo
-## Set up environment
-* Execute setup script on monorepo root,
+## Development
+### Set up environment
+* Initialize the project:
    ```bash
-   $ yarn pre
+   $ yarn install && yarn common:build
    ```
    This will install all dependencies and build the [common](packages/Common) and [common-ui](packages/CommonUI) packages.
 
-* For running development server, on monorepo root,
+* Run the development server of all projects:
    ```bash
    $ yarn dev
    ```
    This will start the development server for the [frontend admin](projects/Admin), [frontend public](projects/Public), and [backend](projects/Backend) concurrently.
 
-* If the contents of common package is changed, you need to build it again. For that, on monorepo root,
+* Apply changes of common packages:
    ```bash
    $ yarn common:build
    ```
    This will build the [common](packages/Common) and [common-ui](packages/CommonUI) packages and apply changes to projects.
 
-## Development
+### Default local development server settings
+> To make CORS headers and HTTP cookie work on local environment too, don't navigate to localhost IP address directly.
+* **Backend**: [api.sora.localhost:20000](http://api.sora.localhost:20000)
+* **Frontend Admin**: [admin.sora.localhost:20001](http://admin.sora.localhost:20001)
+* **Frontend Public**: [public.sora.localhost:20002](http://public.sora.localhost:20002)
+
 ### Versioning
 * This project is *(trying to)* follow [Semantic Versioning](https://semver.org/).
 * Also this project is using [`yarn version`](https://yarnpkg.com/cli/version) command to bump the version.
