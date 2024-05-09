@@ -1,11 +1,11 @@
 {
   "author": "somni <me@somni.one>",
   "private": true,
-  "packageManager": "yarn@4.1.1",
+  "packageManager": "yarn@4.2.2",
   "scripts": {
     "all": "yarn workspaces foreach -A run",
-    "all:build": "yarn all build",
     "all:version": "yarn workspaces foreach -A version",
+    "all:build": "yarn all build",
     "common": "yarn workspace @myboothmanager/common",
     "commonui": "yarn workspace @myboothmanager/common-ui",
     "common:build": "yarn common build; yarn install; yarn commonui build; yarn install",
@@ -23,9 +23,9 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@typescript-eslint/parser": "^7.7.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "concurrently": "^8.2.2",
-    "eslint": "^8",
+    "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "jest": "^29.7.0",

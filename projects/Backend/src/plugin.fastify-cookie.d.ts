@@ -144,6 +144,12 @@ declare namespace fastifyCookie {
 
   type HookType = "onRequest" | "preParsing" | "preValidation" | "preHandler"  | "preSerialization";
 
+  export interface FastifyCookieOptions {
+    secret?: string | string[] | Buffer | Buffer[] | Signer;
+    hook?: HookType | false;
+    parseOptions?: fastifyCookie.CookieSerializeOptions;
+  }
+
   export type Sign = (value: string, secret: string | Buffer, algorithm?: string) => string;
   export type Unsign = (input: string, secret: string | Buffer, algorithm?: string) => UnsignResult;
   export type SignerFactory = (secrets: string | string[] | Buffer | Buffer[], algorithm?: string) => SignerBase;
@@ -168,12 +174,6 @@ declare namespace fastifyCookie {
   }
 
   export const fastifyCookie: FastifyCookie;
-
-  export interface FastifyCookieOptions {
-    secret?: string | string[] | Buffer | Buffer[] | SignerBase;
-    algorithm?: string;
-    parseOptions?: CookieSerializeOptions;
-  }
 
   export { fastifyCookie as default };
 }

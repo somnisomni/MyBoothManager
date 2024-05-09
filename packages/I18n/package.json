@@ -2,6 +2,6 @@
   "name": "@myboothmanager/i18n",
   "version": "0.0.2",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.1.1",
+  "packageManager": "yarn@4.2.2",
   "private": true
 }

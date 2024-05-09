@@ -2,7 +2,7 @@
   "name": "@myboothmanager/public",
   "version": "0.0.2",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.1.1",
+  "packageManager": "yarn@4.2.2",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -17,33 +17,33 @@
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "../../packages/Common",
     "@myboothmanager/common-ui": "../../packages/CommonUI",
-    "@unhead/vue": "^1.9.7",
+    "@unhead/vue": "^1.9.10",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qrcode": "^1.5.3",
-    "vue": "^3.4.23",
-    "vue-router": "^4.3.1",
-    "vuetify": "^3.5.16"
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2",
+    "vuetify": "^3.6.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.11",
     "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8",
+    "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-vue": "^9.25.0",
     "npm-run-all2": "^6.1.2",
-    "sass": "^1.75.0",
+    "sass": "^1.77.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.9",
+    "vite": "^5.2.11",
     "vite-plugin-vuetify": "^2.0.3",
     "vite-plugin-webpackchunkname": "^1.0.1",
     "vue-facing-decorator": "^3.0.4",
-    "vue-tsc": "^2.0.13"
+    "vue-tsc": "^2.0.16"
   }
 }
