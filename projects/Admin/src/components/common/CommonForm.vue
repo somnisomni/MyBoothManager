@@ -28,6 +28,7 @@
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :clearable="field.optional"
+                 :disabled="field.disabled"
                  :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
                  :items="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).items : undefined"
                  :item-title="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemTitle : undefined"
@@ -135,6 +136,7 @@ export interface IFormFieldOptions {
   placeholder?: string;
   prefix?: string;
   suffix?: string;
+  disabled?: boolean;
 
   // Validation
   optional?: boolean;
