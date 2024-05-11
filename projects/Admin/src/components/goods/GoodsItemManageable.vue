@@ -44,12 +44,17 @@ export interface IGoodsItemMenuOption {
 }
 
 @Component({
-  emits: ["menu:duplicate", "menu:delete"],
+  emits: ["menu:edit", "menu:duplicate", "menu:delete"],
 })
 export default class GoodsItemManageable extends Vue {
   readonly forceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   readonly menuOptions: IGoodsItemMenuOption[] = markRaw([
+    {
+      icon: "mdi-pencil",
+      text: "수정",
+      onClick: this.onMenuEdit,
+    },
     {
       icon: "mdi-content-duplicate",
       text: "복제",
@@ -74,6 +79,11 @@ export default class GoodsItemManageable extends Vue {
     return this.baseProps.goodsData.id;
   }
 
+  @Emit("menu:edit")
+  onMenuEdit(): number {
+    return this.normalizedId;
+  }
+
   @Emit("menu:duplicate")
   onMenuDuplicate(): number {
     return this.normalizedId;
@@ -83,6 +93,7 @@ export default class GoodsItemManageable extends Vue {
   onMenuDelete(): number {
     return this.normalizedId;
   }
+
 }
 </script>
 

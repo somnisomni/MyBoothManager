@@ -14,12 +14,14 @@
       <template #goods="props">
         <GoodsItemManageable v-bind="props"
                              @click="openGoodsManageDialog"
+                             @menu:edit="openGoodsManageDialog"
                              @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(false, (props as GoodsItemProps).goodsData!.id)" />
       </template>
       <template #goods-combination="props">
         <GoodsItemManageable v-bind="props"
                              @click="openGoodsCombinationManageDialog"
+                             @menu:edit="openGoodsCombinationManageDialog"
                              @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).goodsData!.id)" />
       </template>
