@@ -104,9 +104,10 @@ export class BoothController {
     return await this.boothService.deleteInfoImage(+id, authData.id);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(":id")
-  async updateBoothInfo(@Param("id") id: string, @Body() updateBoothDto: UpdateBoothRequestDto, @AuthData() authData: IAuthPayload) {
-    return await this.boothService.updateBoothInfo(+id, updateBoothDto, authData.id);
+  async updateBoothInfo(@Param("id") id: string, @Body() updateBoothDto: UpdateBoothRequestDto, @AuthData() authData: IAuthPayload): Promise<AdminBoothResponseDto> {
+    return new AdminBoothResponseDto(await this.boothService.updateBoothInfo(+id, updateBoothDto, authData.id));
   }
 
   @Patch(":id/status")
