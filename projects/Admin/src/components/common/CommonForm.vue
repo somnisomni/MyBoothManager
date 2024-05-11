@@ -20,8 +20,12 @@
                  :density="field.density"
                  :prefix="field.type === FormFieldType.CURRENCY ? ((field as IFormFieldCurrencyOptions).currencySymbol ?? currentBoothCurrencySymbol) : field.prefix"
                  :suffix="field.suffix"
-                 :min="isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined"
-                 :max="isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined"
+                 :min="
+                   (isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)
+                   || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
+                 :max="
+                   (isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)
+                   || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :clearable="field.optional"
                  :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
