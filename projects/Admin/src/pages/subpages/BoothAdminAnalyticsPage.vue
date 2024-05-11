@@ -34,7 +34,7 @@
       <p class="text-disabled text-body-2 text-right mt-2">※ 취소된 판매 기록은 통계에 포함되지 않습니다.</p>
 
       <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 기록 개수: {{ orderHistoryCountOfCurrentSelectedDay.toLocaleString() }}개</p>
-      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 굿즈 개수: {{ orderHistoryTotalStockQuantityOfCurrentSelectedDay.toLocaleString() }}개</p>
+      <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 굿즈 재고수: {{ orderHistoryTotalStockQuantityOfCurrentSelectedDay.toLocaleString() }}개</p>
       <p class="text-body-2 text-center my-1">{{ currentSelectedDay !== "all" ? "일일" : "" }} 총 판매 금액: {{ currencySymbol }}{{ orderHistoryTotalRevenueOfCurrentSelectedDay.toLocaleString() }}</p>
     </div>
     <div v-else>
