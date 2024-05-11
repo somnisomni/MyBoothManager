@@ -246,8 +246,6 @@ export default class GoodsCombinationManageDialog extends Vue {
           this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
         }
         this.formModels.stockVisibility = combination.stock.visibility;
-
-        this.formModelsInitial = deepClone(this.formModels);
       }
     } else {
       this.formModels.name = "";
@@ -256,10 +254,9 @@ export default class GoodsCombinationManageDialog extends Vue {
       this.formModels.price = 0;
       this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
       this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
-
-      this.formModelsInitial = deepClone(this.formModels);
     }
 
+    this.formModelsInitial = deepClone(this.formModels);
     this.resetForm();
   }
 

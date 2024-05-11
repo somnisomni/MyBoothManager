@@ -14,16 +14,17 @@
                 @secondary="resetForm"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !formValid"
+                :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
-    <VForm v-model="formValid" @submit.prevent>
-      <VTextField v-model.trim="formData.name"
-                  tabindex="1"
-                  density="compact"
-                  label="굿즈 카테고리 이름"
-                  placeholder="예시) 블루아카이브"
-                  :rules="stringValidator(formData.name)" />
-    </VForm>
+    <VLayout class="d-flex flex-column flex-md-row">
+      <CommonForm v-model="isFormValid"
+                  v-model:edited="isFormEdited"
+                  v-model:data="formModels"
+                  ref="form"
+                  class="flex-1-1"
+                  :initialModelValues="formModelsInitial"
+                  :fields="formFields" />
+    </VLayout>
 
     <VAlert v-if="typeof updateErrorCode === 'number'" type="error">
       <span v-if="updateErrorCode === ErrorCodes.ENTITY_DUPLICATED">같은 이름의 카테고리가 이미 존재합니다.</span>
@@ -40,14 +41,18 @@
 <script lang="ts">
 import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
 import { reactive } from "vue";
-import { Vue, Component, Model, Prop, Watch } from "vue-facing-decorator";
+import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
+import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
+import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
+    CommonForm,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
@@ -57,20 +62,32 @@ export default class GoodsCategoryManageDialog extends Vue {
   readonly ErrorCodes = ErrorCodes;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Boolean, default: false }) editMode!: boolean;
-  @Prop({ type: Number, default: null }) categoryId!: number | null;
+  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
+  @Prop({ type: Number, default: null }) readonly categoryId!: number | null;
 
-  readonly GOODS_CATEGORY_ADD_DEFAULT_DATA: Partial<IGoodsCategoryCreateRequest> = {
-    boothId: useAdminStore().currentBooth.booth!.id,
+  @Ref("form") readonly form!: CommonForm;
+
+  readonly formModels: IGoodsCategoryCreateRequest = reactive({
+    boothId: -1,
     name: "",
-  };
+  });
 
-  updateInProgress = false;
-  formData: IGoodsCategoryCreateRequest | IGoodsCategoryUpdateRequest = reactive({ boothId: useAdminStore().currentBooth.booth!.id });
-  formValid = false;
+  readonly formFields = {
+    name: {
+      type: FormFieldType.TEXT,
+      label: "굿즈 카테고리 이름",
+      placeholder: "장르명, 단일 장르 부스인 경우 굿즈 종류명 등",
+    },
+  } as Record<keyof IGoodsCategoryCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
+  formModelsInitial: IGoodsCategoryCreateRequest = deepClone(this.formModels);
+
   updateErrorCode: ErrorCodes | null = null;
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
+
+  isFormValid = false;
+  isFormEdited = false;
+  updateInProgress = false;
 
   get dynString(): Record<string, string | null> {
     return {
@@ -81,109 +98,30 @@ export default class GoodsCategoryManageDialog extends Vue {
     };
   }
 
-  get isFormEdited(): boolean {
-    let edited = false;
+  @Watch("open") mounted() {
+    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
 
     if(this.categoryId && this.editMode) {
-      const currentGoodsData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId!)];
+      const categoryData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId)];
 
-      if(currentGoodsData) {
-        const formDataTyped = this.formData as IGoodsCategoryUpdateRequest;
-
-        edited = Object.keys(this.formData).some((key) => {
-          const k = key as keyof IGoodsCategoryUpdateRequest;
-          return formDataTyped[k] !== currentGoodsData[k];
-        });
+      if(categoryData) {
+        this.formModels.name = categoryData.name;
       }
     } else {
-      const formDataTyped = this.formData as IGoodsCategoryCreateRequest;
-
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IGoodsCategoryCreateRequest;
-        return formDataTyped[k] !== this.GOODS_CATEGORY_ADD_DEFAULT_DATA[k];
-      });
+      this.formModels.name = "";
     }
 
-    return edited;
+    this.formModelsInitial = deepClone(this.formModels);
+    this.resetForm();
   }
-
-  mounted() { this.resetForm(); }
-  @Watch("open", { immediate: true }) onDialogOpen() { this.resetForm(); }
 
   @Watch("formData", { deep: true })
   onFormDataUpdated() {
     this.updateErrorCode = null;
   }
 
-  resetForm(): void {
-    if(this.categoryId && this.editMode) {
-      const goodsData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId)];
-
-      if(goodsData) {
-        this.formData = reactive({
-          name: goodsData.name,
-        } as IGoodsCategoryUpdateRequest);
-      }
-    } else {
-      this.formData = reactive({
-        ...this.GOODS_CATEGORY_ADD_DEFAULT_DATA,
-      } as IGoodsCategoryCreateRequest);
-    }
-
-    this.formData.boothId = useAdminStore().currentBooth.booth!.id;
-  }
-
-  stringValidator(input?: string): Array<string | boolean> {
-    const rules = [
-      (!input || input.trim().length <= 0) ? "입력한 내용이 없거나 공백으로만 이루어질 수 없습니다." : true,
-    ];
-
-    return rules;
-  }
-
-  async onDialogConfirm() {
-    let success = false;
-
-    this.updateInProgress = true;
-
-    let result: { id: number } | ErrorCodes;
-    if(this.editMode) {
-      const requestData: IGoodsCategoryUpdateRequest = {
-        ...this.formData as IGoodsCategoryUpdateRequest,
-        boothId: useAdminStore().currentBooth.booth!.id,
-        name: this.formData.name?.trim(),
-      };
-      result = await useAdminAPIStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
-
-      if(typeof result === "object" && "id" in result) {
-        success = true;
-      } else {
-        this.updateErrorCode = result;
-      }
-    } else {
-      const requestData: IGoodsCategoryCreateRequest = {
-        ...this.formData as IGoodsCategoryCreateRequest,
-        boothId: useAdminStore().currentBooth.booth!.id,
-        name: this.formData.name!.trim(),
-      };
-      result = await useAdminAPIStore().createGoodsCategory(requestData);
-
-      if(typeof result === "object" && "id" in result) {
-        success = true;
-      } else {
-        this.updateErrorCode = result;
-      }
-    }
-
-    this.updateInProgress = false;
-
-    if(success && typeof result === "object" && "id" in result) {
-      this.$emit("updated", result.id);
-      this.open = false;
-    } else {
-      this.$emit("error");
-    }
-  }
+  resetForm() { if(this.form) this.form.reset(); }
+  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onDialogCancel() {
     if(this.isFormEdited) {
@@ -193,15 +131,55 @@ export default class GoodsCategoryManageDialog extends Vue {
     }
   }
 
+  async onDialogConfirm() {
+    this.updateInProgress = true;
+
+    let result: { id: number } | ErrorCodes = ErrorCodes.SUCCESS;
+
+    if(this.editMode && this.categoryId) {
+      // UPDATE
+
+      const requestData: IGoodsCategoryUpdateRequest = {
+        ...diff(this.formModelsInitial, this.formModels),
+        boothId: useAdminStore().currentBooth.booth!.id,
+      };
+
+      result = await useAdminAPIStore().updateGoodsCategoryInfo(Number(this.categoryId!), requestData);
+    } else {
+      // CREATE
+
+      const requestData: IGoodsCategoryCreateRequest = {
+        ...this.formModels,
+        boothId: useAdminStore().currentBooth.booth!.id,
+      };
+
+      result = await useAdminAPIStore().createGoodsCategory(requestData);
+    }
+
+    if(typeof result === "object") {
+      this.updateErrorCode = null;
+      this.$emit("updated", result.id);
+      this.open = false;
+    } else {
+      this.updateErrorCode = result;
+      this.$emit("error");
+    }
+
+    this.updateInProgress = false;
+  }
+
   async onDeleteConfirm() {
     this.updateInProgress = true;
 
     if(this.categoryId) {
       const response = await useAdminAPIStore().deleteGoodsCategory(this.categoryId);
 
-      if(typeof response === "boolean" && response === true) {
+      if(response === true) {
         this.$emit("deleted");
         this.open = false;
+      } else {
+        this.updateErrorCode = response;
+        this.$emit("error");
       }
     }
 
