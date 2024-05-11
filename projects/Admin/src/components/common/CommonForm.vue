@@ -247,7 +247,12 @@ export default class CommonForm extends Vue {
   /* Form utility functions */
   // FORM
   public reset() { this.models = reactive(deepClone(this.initialModelValues)); }
-  public resetValidation() { if(this.form) this.form.resetValidation(); }
+  public resetValidation() {
+    if(this.form) {
+      this.form.resetValidation();
+      this.form.validate();
+    }
+  }
 
   isFormField(fieldType: FormFieldType): boolean {
     switch(fieldType) {
