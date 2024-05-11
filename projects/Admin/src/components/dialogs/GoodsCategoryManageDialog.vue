@@ -3,7 +3,7 @@
                 width="500px"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                :hideCloseButton="true"
+                :hideCloseButton="isFormEdited || updateInProgress"
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogPrimaryText="dynString.primaryText"

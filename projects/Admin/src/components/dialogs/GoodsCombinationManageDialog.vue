@@ -3,7 +3,8 @@
                 :width="editMode ? '800px' : '500px'"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                hideCloseButton
+                :hideCloseButton="isFormEdited || updateInProgress"
+                fullscreenOnSmallScreen
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogPrimaryText="dynString.primaryText"
@@ -114,6 +115,7 @@ export default class GoodsCombinationManageDialog extends Vue {
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
     goodsIds: [],
   });
+
   readonly formFields = readonly({
     name: {
       type: FormFieldType.TEXT,

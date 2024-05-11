@@ -3,7 +3,8 @@
                 width="500px"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                hideCloseButton
+                :hideCloseButton="isFormEdited || updateInProgress"
+                fullscreenOnSmallScreen
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogSecondaryText="dynString.secondaryText"
@@ -113,8 +114,9 @@ export default class BoothManageDialog extends Vue {
       },
       itemTitle: "name",
       itemValue: "symbol",
-      hint: "굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경해도 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다.",
+      hint: "굿즈 가격에 표시될 통화(화폐) 기호입니다. 부스 생성 시에만 변경 가능하며, 이후에는 변경할 수 없습니다.",
       persistentHint: true,
+      disabled: this.editMode,
     },
     dateOpen: {
       type: FormFieldType.DATE,

@@ -95,7 +95,7 @@ export default class GoodsManageDialog extends Vue {
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
     ownerMemberIds: ref([]),
   });
-  
+
   readonly formFields = {
     name: {
       type: FormFieldType.TEXT,
