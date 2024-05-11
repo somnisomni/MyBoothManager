@@ -128,7 +128,8 @@ export default class BoothManageDialog extends Vue {
     dateClose: {
       type: FormFieldType.DATE,
       label: "운영 종료 일자",
-      get min() { return momentFormat(new Date()); },
+      get min() { return momentFormat(dateOpenProxied.value); },
+      rules: [ ((v: string) => new Date(v) >= new Date(dateOpenProxied.value) ? true : "운영 종료 일자는 운영 시작 일자보다 빠를 수 없습니다.") ],
     },
   } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
   formModelsInitial: IBoothCreateRequestInternal = deepClone(this.formModels);
