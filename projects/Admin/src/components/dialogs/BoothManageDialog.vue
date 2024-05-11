@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
 import deepClone from "clone-deep";
@@ -48,6 +48,10 @@ interface IBoothCreateRequestInternal extends Omit<IBoothCreateRequest, "dateOpe
 }
 
 const momentFormat = (date: Date) => moment(date).format("YYYY-MM-DD");
+
+const editModeProxied = ref(false);
+const dateOpenProxied = ref(new Date());
+const dateCloseProxied = ref(new Date());
 
 @Component({
   components: {
@@ -69,13 +73,11 @@ export default class BoothManageDialog extends Vue {
     boothNumber: "",
     currencySymbol: "₩",
 
-    _dateOpen: new Date(),
-    get dateOpen(): string { return momentFormat(new Date(this._dateOpen)); },
-    set dateOpen(value: string) { this._dateOpen = new Date(value); },
+    get dateOpen(): string { return momentFormat(new Date(dateOpenProxied.value)); },
+    set dateOpen(value: string) { dateOpenProxied.value = new Date(value); },
 
-    _dateClose: new Date(),
-    get dateClose(): string { return momentFormat(this._dateClose); },
-    set dateClose(value: string) { this._dateClose = new Date(value); },
+    get dateClose(): string { return momentFormat(dateCloseProxied.value); },
+    set dateClose(value: string) { dateCloseProxied.value = new Date(value); },
   });
 
   readonly formFields = {
@@ -116,7 +118,7 @@ export default class BoothManageDialog extends Vue {
       itemValue: "symbol",
       hint: "굿즈 가격에 표시될 통화(화폐) 기호입니다. 부스 생성 시에만 변경 가능하며, 이후에는 변경할 수 없습니다.",
       persistentHint: true,
-      disabled: this.editMode,
+      get disabled() { return editModeProxied.value; },
     },
     dateOpen: {
       type: FormFieldType.DATE,
@@ -146,6 +148,8 @@ export default class BoothManageDialog extends Vue {
   }
 
   @Watch("open") mounted() {
+    editModeProxied.value = this.editMode;
+
     if(this.editMode) {
       const boothData = useAdminStore().currentBooth.booth!;
 
