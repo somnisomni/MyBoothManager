@@ -55,7 +55,7 @@ export interface IBoothModel extends Omit<IBoothCommon, "status"> {
 
 /* === Requests === */
 export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status"> { }
-export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "status">> { }
+export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "status" | "currencySymbol">> { }
 export interface IBoothStatusUpdateRequest extends IBoothStatus { }
 
 /* === Responses === */
