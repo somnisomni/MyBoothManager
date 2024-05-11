@@ -1,74 +1,28 @@
 <template>
   <CommonDialog v-model="open"
+                width="500px"
                 :persistent="isFormEdited"
                 :progressActive="updateInProgress"
-                :hideCloseButton="true"
+                hideCloseButton
                 :dialogTitle="dynString.title"
                 dialogCancelText="취소"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogPrimaryText="dynString.primaryText"
-                @cancel="onDialogCancel"
-                @secondary="resetForm"
                 @primary="onDialogConfirm"
+                @secondary="resetForm"
+                @cancel="onDialogCancel"
                 :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !formValid"
+                :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
-    <VForm v-model="formValid" @submit.prevent>
-      <VTextField v-model.trim="formData.name"
-                  class="my-1"
-                  density="compact"
-                  label="부스명 *"
-                  placeholder="예시) 없을 거 빼곤 다 있는 부스"
-                  :rules="stringValidator(formData.name!)" />
-      <VTextField v-model.trim="formData.description"
-                  class="my-1"
-                  density="compact"
-                  label="부스 한 줄 설명"
-                  placeholder="예시) 이번 달 구독비는 굿즈 구매로 납부받습니다" />
-      <VLayout class="d-flex flex-row">
-        <VTextField v-model.trim="formData.location"
-                    class="my-1"
-                    density="compact"
-                    label="부스 위치 *"
-                    placeholder="예시) 일산 킨텍스 5관 / 키보토스존"
-                    :rules="stringValidator(formData.location!)" />
-        <VTextField v-model.trim="formData.boothNumber"
-                    class="flex-0-0 my-1 ml-2"
-                    style="width: 200px"
-                    density="compact"
-                    label="부스 번호"
-                    placeholder="Kg99"
-                    hint="부스 공개 페이지에서 부스 번호가 강조 표시됩니다."
-                    persistent-hint />
-      </VLayout>
-      <VSelect v-model="formData.currencySymbol"
-               class="my-1 mb-4"
-               density="compact"
-               :items="currencySymbols"
-               item-title="name"
-               item-value="symbol"
-               label="통화 기호 *"
-               hint="굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경하면 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다. 변경에 주의하세요!"
-               persistent-hint />
-      <VLayout class="d-flex flex-row">
-        <VTextField v-model="formDateOpenModel"
-                    class="my-1 pr-2"
-                    type="date"
-                    label="운영 시작 일자 *"
-                    density="compact"
-                    :min="today"
-                    :rules="[() => formData.dateOpen! <= formData.dateClose! ? true : '운영 종료 일자 이전으로 지정해야 합니다.']" />
-        <span class="pa-2 text-h5">~</span>
-        <VTextField v-model="formDateCloseModel"
-                    class="my-1 pl-2"
-                    type="date"
-                    label="운영 종료 일자 *"
-                    density="compact"
-                    :min="today"
-                    :rules="[() => formData.dateClose! >= formData.dateOpen! ? true : '운영 시작 일자 이후로 지정해야 합니다.']" />
-      </VLayout>
-
-    </VForm>
+    <VLayout class="d-flex flex-column flex-md-row">
+      <CommonForm v-model="isFormValid"
+                  v-model:edited="isFormEdited"
+                  v-model:data="formModels"
+                  ref="form"
+                  class="flex-1-1"
+                  :initialModelValues="formModelsInitial"
+                  :fields="formFields" />
+    </VLayout>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                                @primary="() => { open = false; }" />
@@ -77,42 +31,109 @@
 
 <script lang="ts">
 import { reactive } from "vue";
-import { Vue, Component, Model, Watch, Prop } from "vue-facing-decorator";
-import { useDate } from "vuetify";
-import { currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
+import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
+import { ErrorCodes, currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
+import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
+import moment from "moment";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
+import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
-const BOOTH_ADD_DEFAULT_DATA: IBoothCreateRequest = {
-  name: "",
-  description: "",
-  location: "",
-  boothNumber: "",
-  currencySymbol: "₩",
-  dateOpen: new Date(),
-  dateClose: new Date(),
-};
+interface IBoothCreateRequestInternal extends Omit<IBoothCreateRequest, "dateOpen" | "dateClose"> {
+  dateOpen?: string,
+  dateClose?: string,
+}
+
+const momentFormat = (date: Date) => moment(date).format("YYYY-MM-DD");
 
 @Component({
   components: {
+    CommonForm,
     FormDataLossWarningDialog,
   },
   emits: ["updated", "error"],
 })
 export default class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Boolean, default: false }) editMode!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
 
-  updateInProgress = false;
-  formData: IBoothUpdateRequest | IBoothCreateRequest = reactive({});
-  formValid = false;
+  @Ref("form") readonly form!: CommonForm;
+
+  readonly formModels: IBoothCreateRequestInternal = reactive({
+    name: "",
+    description: "",
+    location: "",
+    boothNumber: "",
+    currencySymbol: "₩",
+
+    _dateOpen: new Date(),
+    get dateOpen(): string { return momentFormat(new Date(this._dateOpen)); },
+    set dateOpen(value: string) { this._dateOpen = new Date(value); },
+
+    _dateClose: new Date(),
+    get dateClose(): string { return momentFormat(this._dateClose); },
+    set dateClose(value: string) { this._dateClose = new Date(value); },
+  });
+
+  readonly formFields = {
+    name: {
+      type: FormFieldType.TEXT,
+      label: "부스 이름",
+      placeholder: "예시) 없을 거 빼곤 다 있는 부스",
+    },
+    description: {
+      type: FormFieldType.TEXT,
+      label: "부스 한 줄 설명",
+      placeholder: "예시) 만들고 싶은걸 만들어요",
+      optional: true,
+    },
+    location: {
+      type: FormFieldType.TEXT,
+      label: "부스 위치",
+      placeholder: "예시) 일산 킨텍스 5관",
+    },
+    boothNumber: {
+      type: FormFieldType.TEXT,
+      label: "부스 번호",
+      placeholder: "A12 ~ 13",
+      hint: "부스 공개 페이지에서 부스 번호가 강조 표시됩니다.",
+      persistentHint: true,
+      optional: true,
+    },
+    currencySymbol: {
+      type: FormFieldType.SELECT,
+      label: "통화 기호",
+      get items() {
+        return Object.keys(currencySymbolInfo).map((key) => ({
+          ...currencySymbolInfo[key],
+          name: `${currencySymbolInfo[key].name} (${currencySymbolInfo[key].symbol})`,
+        }));
+      },
+      itemTitle: "name",
+      itemValue: "symbol",
+      hint: "굿즈 가격에 표시될 통화(화폐) 기호입니다. 통화 기호를 변경해도 기존에 등록한 굿즈의 가격이 초기화되거나 자동으로 변환되지 않습니다.",
+      persistentHint: true,
+    },
+    dateOpen: {
+      type: FormFieldType.DATE,
+      label: "운영 시작 일자",
+      get min() { return momentFormat(new Date()); },
+    },
+    dateClose: {
+      type: FormFieldType.DATE,
+      label: "운영 종료 일자",
+      get min() { return momentFormat(new Date()); },
+    },
+  } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
+  formModelsInitial: IBoothCreateRequestInternal = deepClone(this.formModels);
+
   cancelWarningDialogShown = false;
 
-  get today(): string {
-    const today = new Date();
-    return useDate().toISO(today);
-  }
+  isFormValid = false;
+  isFormEdited = false;
+  updateInProgress = false;
 
   get dynString(): Record<string, string | null> {
     return {
@@ -122,66 +143,33 @@ export default class BoothManageDialog extends Vue {
     };
   }
 
-  get currencySymbols(): Array<Record<string, string>> {
-    return Object.keys(currencySymbolInfo).map((key) => ({
-      ...currencySymbolInfo[key],
-      name: `${currencySymbolInfo[key].name} (${currencySymbolInfo[key].symbol})`,
-    }));
-  }
-
-  get isFormEdited(): boolean {
-    let edited = false;
-
-    if(this.editMode) {
-      // const currentBoothData = useAdminStore().currentBooth.booth!;
-      // edited = Object.keys(this.formData).some((key) => {
-      //   const k = key as keyof IBoothUpdateRequest;
-      //   return this.formData[k] !== currentBoothData[k];
-      // });
-
-      /* *** FIXME: Need to find more robust way for checking whether the form is edited *** */
-      return true;
-    } else {
-      edited = Object.keys(this.formData).some((key) => {
-        const k = key as keyof IBoothCreateRequest;
-        return this.formData[k] !== BOOTH_ADD_DEFAULT_DATA[k];
-      });
-    }
-
-    return edited;
-  }
-
-  get formDateOpenModel(): string | undefined { return useDate().toISO(this.formData.dateOpen); }
-  get formDateCloseModel(): string | undefined { return useDate().toISO(this.formData.dateClose); }
-  set formDateOpenModel(value: string) { this.formData.dateOpen = new Date(value); }
-  set formDateCloseModel(value: string) { this.formData.dateClose = new Date(value); }
-
-  mounted() { this.resetForm(); }
-  @Watch("open", { immediate: true }) onDialogOpen(watchValue: boolean) { if(watchValue) this.resetForm(); }
-
-  resetForm() {
+  @Watch("open") mounted() {
     if(this.editMode) {
       const boothData = useAdminStore().currentBooth.booth!;
 
-      this.formData = reactive({
-        ...boothData,
-        dateOpen: new Date(boothData.dateOpen!),
-        dateClose: new Date(boothData.dateClose!),
-      } as IBoothUpdateRequest);
+      this.formModels.name = boothData.name;
+      this.formModels.description = boothData.description;
+      this.formModels.location = boothData.location;
+      this.formModels.boothNumber = boothData.boothNumber;
+      this.formModels.currencySymbol = boothData.currencySymbol;
+      this.formModels.dateOpen = boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined;
+      this.formModels.dateClose = boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined;
     } else {
-      this.formData = reactive({
-        ...BOOTH_ADD_DEFAULT_DATA,
-      } as IBoothCreateRequest);
+      this.formModels.name = "";
+      this.formModels.description = "";
+      this.formModels.location = "";
+      this.formModels.boothNumber = "";
+      this.formModels.currencySymbol = "₩";
+      this.formModels.dateOpen = momentFormat(new Date());
+      this.formModels.dateClose = momentFormat(new Date());
     }
+
+    this.formModelsInitial = deepClone(this.formModels);
+    this.resetForm();
   }
 
-  stringValidator(input: string): Array<string | boolean> {
-    const rules = [
-      (!input || input.trim().length <= 0) ? "입력한 내용이 없거나 공백으로만 이루어질 수 없습니다." : true,
-    ];
-
-    return rules;
-  }
+  resetForm() { if(this.form) this.form.reset(); }
+  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onDialogCancel() {
     if(this.isFormEdited) {
@@ -192,47 +180,37 @@ export default class BoothManageDialog extends Vue {
   }
 
   async onDialogConfirm() {
-    let success = false;
-    let errorMsg = "";
-
     this.updateInProgress = true;
 
-    const requestData: IBoothUpdateRequest | IBoothCreateRequest = {
-      ...this.formData,
-      name: this.formData.name?.trim(),
-      description: this.formData.description?.trim(),
-      location: this.formData.location?.trim(),
-    };
+    let result: boolean | ErrorCodes = false;
 
     if(this.editMode) {
-      const result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
+      // UPDATE
 
-      if(result === true) {
-        success = true;
-      } else {
-        errorMsg = `오류 (${result})`;
-      }
+      const requestData: IBoothUpdateRequest = {
+        ...diff(this.formModelsInitial, this.formModels),
+      };
+
+      result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
     } else {
-      const result = await useAdminAPIStore().createBooth(requestData as IBoothCreateRequest);
+      // CREATE
 
-      if(result === true) {
-        success = true;
-      } else {
-        errorMsg = `오류 (${result})`;
-      }
+      const requestData: IBoothCreateRequestInternal = {
+        ...this.formModels,
+      };
+
+      result = await useAdminAPIStore().createBooth(requestData as IBoothCreateRequest);
     }
 
-    this.updateInProgress = false;
-
-    if(success) {
+    if(result === true) {
       this.$emit("updated");
       this.open = false;
     } else {
       this.$emit("error");
-
-      // TODO: error dialog
-      alert(errorMsg);
+      alert("오류 " + result);
     }
+
+    this.updateInProgress = false;
   }
 }
 </script>

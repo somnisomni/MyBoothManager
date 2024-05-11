@@ -10,8 +10,8 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @secondary="resetForm"
                 @primary="onDialogConfirm"
+                @secondary="resetForm"
                 @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
@@ -95,6 +95,7 @@ export default class GoodsManageDialog extends Vue {
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
     ownerMemberIds: ref([]),
   });
+  
   readonly formFields = {
     name: {
       type: FormFieldType.TEXT,
