@@ -9,8 +9,8 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @secondary="resetForm"
                 @primary="onDialogConfirm"
+                @secondary="form?.reset"
                 @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
@@ -34,8 +34,8 @@
                   v-model:data="formModels"
                   ref="form"
                   class="flex-1-1"
-                  :initialModelValues="formModelsInitial"
-                  :fields="formFields" />
+                  :fields="formFields"
+                  :disabled="updateInProgress" />
     </VLayout>
   </CommonDialog>
 
@@ -47,10 +47,8 @@
 
 <script lang="ts">
 import { reactive, readonly } from "vue";
-import deepClone from "clone-deep";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
-import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -65,14 +63,14 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
-  emits: ["added", "error"],
+  emits: ["updated", "deleted", "error"],
 })
 export default class BoothMemberManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
   @Prop({ type: Number, default: null }) boothMemberId!: number | null;
 
-  @Ref("form") readonly form!: CommonForm;
+  @Ref("form") readonly form?: CommonForm;
 
   readonly formModels: IBoothMemberCreateRequest = reactive({
     boothId: -1,
@@ -82,6 +80,7 @@ export default class BoothMemberManageDialog extends Vue {
     role: "",
     primaryColor: "#000000",
   });
+
   readonly formFields = readonly({
     name: {
       type: FormFieldType.TEXT,
@@ -115,7 +114,6 @@ export default class BoothMemberManageDialog extends Vue {
       placeholder: "부스장, 위탁 등...",
     },
   } as Record<keyof IBoothMemberCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>);
-  formModelsInitial: IBoothMemberCreateRequest = deepClone(this.formModels);
 
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
@@ -141,28 +139,32 @@ export default class BoothMemberManageDialog extends Vue {
     return this.editMode && this.currentMember ? this.currentMember.avatarImage?.path ?? null : null;
   }
 
-  @Watch("open") mounted() {
-    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+  @Watch("open")
+  async onDialogOpen(open: boolean) {
+    if(!open) return;
+
+    while(!this.form) await this.$nextTick();
 
     if(this.editMode && this.currentMember) {
-      this.formModels.name = this.currentMember.name;
-      this.formModels.descriptionShort = this.currentMember.descriptionShort;
-      this.formModels.url = this.currentMember.url;
-      this.formModels.role = this.currentMember.role;
-      this.formModels.primaryColor = this.currentMember.primaryColor;
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        name: this.currentMember.name,
+        descriptionShort: this.currentMember.descriptionShort,
+        url: this.currentMember.url,
+        role: this.currentMember.role,
+        primaryColor: this.currentMember.primaryColor,
+      } as IBoothMemberUpdateRequest);
     } else {
-      this.formModels.name = "";
-      this.formModels.descriptionShort = "";
-      this.formModels.url = "";
-      this.formModels.role = "";
-      this.formModels.primaryColor = "#000000";
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        name: "",
+        descriptionShort: "",
+        url: "",
+        role: "",
+        primaryColor: "#000000",
+      } as IBoothMemberCreateRequest);
     }
-
-    this.formModelsInitial = deepClone(this.formModels);
-    this.resetForm();
   }
-
-  resetForm() { if(this.form) this.form.reset(); }
 
   onDialogCancel() {
     if(this.isFormEdited) {
@@ -181,7 +183,7 @@ export default class BoothMemberManageDialog extends Vue {
       // UPDATE
 
       const requestData: IBoothMemberUpdateRequest = {
-        ...diff(this.formModelsInitial, this.formModels),
+        ...this.form!.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
       };
 

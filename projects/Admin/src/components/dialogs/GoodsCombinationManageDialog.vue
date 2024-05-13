@@ -11,9 +11,9 @@
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
                 @primary="onDialogConfirm"
-                @secondary="resetForm"
-                @cancel="onDialogCancel"
+                @secondary="form?.reset"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
+                @cancel="onDialogCancel"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
                 :closeOnCancel="false">
@@ -35,8 +35,8 @@
                     v-model:data="formModels"
                     ref="form"
                     class="flex-1-1"
-                    :initialModelValues="formModelsInitial"
-                    :fields="formFields" />
+                    :fields="formFields"
+                    :disabled="updateInProgress" />
 
         <!-- Selected goods status -->
         <VExpandTransition>
@@ -78,7 +78,6 @@ import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsC
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import deepClone from "clone-deep";
-import { diff } from "deep-object-diff";
 import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -104,7 +103,7 @@ export default class GoodsCombinationManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
   @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
-  @Ref("form") readonly form!: CommonForm;
+  @Ref("form") readonly form?: CommonForm;
 
   readonly formModels: IGoodsCombinationCreateRequest = reactive({
     boothId: -1,
@@ -180,7 +179,6 @@ export default class GoodsCombinationManageDialog extends Vue {
       onClick: this.openGoodsSelectionDialog,
     },
   } as Record<keyof IGoodsCombinationCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>);
-  formModelsInitial: IGoodsCombinationCreateRequest = deepClone(this.formModels);
 
   goodsSelectionDialogShown = false;
   openGoodsSelectionDialog() { this.goodsSelectionDialogShown = true; }
@@ -188,6 +186,8 @@ export default class GoodsCombinationManageDialog extends Vue {
   deleteWarningDialogShown = false;
 
   _isFormValid = false;
+  get isFormValid() { return this._isFormValid && this.formModels.goodsIds.length >= 2; }
+  set isFormValid(value: boolean) { this._isFormValid = value; }
   isFormEdited = false;
   updateInProgress = false;
 
@@ -199,9 +199,6 @@ export default class GoodsCombinationManageDialog extends Vue {
       leftButtonText: this.editMode ? "삭제" : undefined,
     };
   }
-
-  get isFormValid() { return this._isFormValid && this.formModels.goodsIds.length >= 2; }
-  set isFormValid(value: boolean) { this._isFormValid = value; }
 
   get minimumStockOfSelectedGoods() {
     return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().currentBooth.goods![goodsId].stock.remaining));
@@ -229,38 +226,39 @@ export default class GoodsCombinationManageDialog extends Vue {
     return this.editMode ? useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)]?.goodsImage?.path ?? null : null;
   }
 
-  @Watch("open") mounted() {
-    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+  @Watch("open")
+  async onDialogOpen(open: boolean) {
+    if(!open) return;
+
+    while(!this.form) await this.$nextTick();
 
     if(this.combinationId && (this.editMode || this.duplicate)) {
       const combination = useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)];
 
-      if(combination) {
-        this.formModels.name = combination.name;
-        this.formModels.description = combination.description;
-        this.formModels.categoryId = combination.categoryId;
-        this.formModels.price = combination.price;
-        if(!this.duplicate) {
-          this.formModels.goodsIds = Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id);
-        } else {
-          this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
-        }
-        this.formModels.stockVisibility = combination.stock.visibility;
-      }
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        categoryId: combination.categoryId,
+        name: combination.name,
+        description: combination.description,
+        price: combination.price,
+        stockVisibility: combination.stock.visibility,
+        goodsIds: !this.duplicate
+          ? Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id)
+          : [],
+      } as IGoodsCombinationUpdateRequest);
     } else {
-      this.formModels.name = "";
-      this.formModels.description = "";
-      this.formModels.categoryId = -1;
-      this.formModels.price = 0;
-      this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length);
-      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        categoryId: -1,
+        name: "",
+        description: "",
+        price: 0,
+        stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+        goodsIds: [],
+      } as IGoodsCombinationCreateRequest);
     }
-
-    this.formModelsInitial = deepClone(this.formModels);
-    this.resetForm();
   }
 
-  resetForm() { if(this.form) this.form.reset(); }
   clearSelectedGoods() { this.formModels.goodsIds.splice(0, this.formModels.goodsIds.length); }
 
   onDialogCancel() {
@@ -276,11 +274,11 @@ export default class GoodsCombinationManageDialog extends Vue {
 
     if(this.editMode) {
       const requestData: IGoodsCombinationUpdateRequest = {
-        ...diff(this.formModelsInitial, this.formModels),
+        ...this.form!.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
 
         // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
-        goodsIds: !deepEqual(this.formModelsInitial.goodsIds, this.formModels.goodsIds) ? deepClone(this.formModels.goodsIds) : undefined,
+        goodsIds: !deepEqual(this.form!.initialModels.goodsIds, this.formModels.goodsIds) ? deepClone(this.formModels.goodsIds) : undefined,
       };
       const result = await useAdminAPIStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 

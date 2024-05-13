@@ -9,10 +9,10 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
-                @cancel="onDialogCancel"
                 @primary="onDialogConfirm"
-                @secondary="resetForm"
+                @secondary="form?.reset"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
+                @cancel="onDialogCancel"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
@@ -22,8 +22,8 @@
                   v-model:data="formModels"
                   ref="form"
                   class="flex-1-1"
-                  :initialModelValues="formModelsInitial"
-                  :fields="formFields" />
+                  :fields="formFields"
+                  :disabled="updateInProgress" />
     </VLayout>
 
     <VAlert v-if="typeof updateErrorCode === 'number'" type="error">
@@ -42,8 +42,6 @@
 import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
-import deepClone from "clone-deep";
-import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -65,7 +63,7 @@ export default class GoodsCategoryManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
   @Prop({ type: Number, default: null }) readonly categoryId!: number | null;
 
-  @Ref("form") readonly form!: CommonForm;
+  @Ref("form") readonly form?: CommonForm;
 
   readonly formModels: IGoodsCategoryCreateRequest = reactive({
     boothId: -1,
@@ -79,7 +77,6 @@ export default class GoodsCategoryManageDialog extends Vue {
       placeholder: "장르명, 단일 장르 부스인 경우 굿즈 종류명 등",
     },
   } as Record<keyof IGoodsCategoryCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
-  formModelsInitial: IGoodsCategoryCreateRequest = deepClone(this.formModels);
 
   updateErrorCode: ErrorCodes | null = null;
   cancelWarningDialogShown = false;
@@ -98,30 +95,33 @@ export default class GoodsCategoryManageDialog extends Vue {
     };
   }
 
-  @Watch("open") mounted() {
+  @Watch("open")
+  async onDialogOpen(open: boolean) {
+    if(!open) return;
+
+    while(!this.form) await this.$nextTick();
+
     this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
 
     if(this.categoryId && this.editMode) {
       const categoryData = useAdminStore().currentBooth.goodsCategories![Number(this.categoryId)];
 
-      if(categoryData) {
-        this.formModels.name = categoryData.name;
-      }
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        name: categoryData.name,
+      } as IGoodsCategoryUpdateRequest);
     } else {
-      this.formModels.name = "";
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        name: "",
+      } as IGoodsCategoryCreateRequest);
     }
-
-    this.formModelsInitial = deepClone(this.formModels);
-    this.resetForm();
   }
 
   @Watch("formData", { deep: true })
   onFormDataUpdated() {
     this.updateErrorCode = null;
   }
-
-  resetForm() { if(this.form) this.form.reset(); }
-  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onDialogCancel() {
     if(this.isFormEdited) {
@@ -140,7 +140,7 @@ export default class GoodsCategoryManageDialog extends Vue {
       // UPDATE
 
       const requestData: IGoodsCategoryUpdateRequest = {
-        ...diff(this.formModelsInitial, this.formModels),
+        ...this.form!.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
       };
 

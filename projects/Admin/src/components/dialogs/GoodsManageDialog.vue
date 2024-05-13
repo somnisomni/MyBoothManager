@@ -11,7 +11,7 @@
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
                 @primary="onDialogConfirm"
-                @secondary="resetForm"
+                @secondary="form?.reset"
                 @cancel="onDialogCancel"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
                 :disableSecondary="!isFormEdited"
@@ -36,8 +36,8 @@
                   v-model:data="formModels"
                   ref="form"
                   class="flex-1-1"
-                  :initialModelValues="formModelsInitial"
-                  :fields="formFields" />
+                  :fields="formFields"
+                  :disabled="updateInProgress" />
     </VLayout>
 
     <GoodsCategoryManageDialog v-model="goodsCategoryManageDialogShown"
@@ -55,7 +55,6 @@ import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoods
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { reactive , readonly, ref, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
-import { diff } from "deep-object-diff";
 import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
@@ -81,7 +80,7 @@ export default class GoodsManageDialog extends Vue {
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
   @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
-  @Ref("form") readonly form!: CommonForm;
+  @Ref("form") readonly form?: CommonForm;
 
   readonly formModels: IGoodsCreateRequest = reactive({
     boothId: -1,
@@ -141,14 +140,14 @@ export default class GoodsManageDialog extends Vue {
       label: "초기 재고",
       suffix: "개",
       min: 0,
-      onChange: this.resetValidation,
+      onChange: this.resetValidationProxy,
     },
     stockRemaining: {
       type: FormFieldType.NUMBER,
       label: "현재 재고",
       suffix: "개",
       min: 0,
-      onChange: this.resetValidation,
+      onChange: this.resetValidationProxy,
       rules: [ this.stockRemainingValidationRule ],
     },
     stockVisibility: {
@@ -178,7 +177,7 @@ export default class GoodsManageDialog extends Vue {
       multiple: true,
     },
   } as Record<keyof IGoodsCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
-  formModelsInitial: IGoodsCreateRequest = deepClone(this.formModels);
+  resetValidationProxy() { this.form?.resetValidation(); }
 
   goodsCategoryManageDialogShown = false;
   openAddCategoryDialog() { this.goodsCategoryManageDialogShown = true; }
@@ -207,43 +206,46 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get allCategoryData() {
-    const list = Object.values(useAdminStore().currentBooth.goodsCategories!);
-    list.push({ boothId: -1, id: -1, name: "미분류" });
-
-    return list;
+    return readonly([
+      ...Object.values(useAdminStore().currentBooth.goodsCategories!),
+      { boothId: -1, id: -1, name: "미분류" },
+    ]);
   }
 
-  @Watch("open") mounted() {
-    this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
+  @Watch("open")
+  async onDialogOpen(open: boolean) {
+    if(!open) return;
+
+    while(!this.form) await this.$nextTick();
 
     if(this.currentGoods && (this.editMode || this.duplicate)) {
-      this.formModels.name = this.currentGoods.name;
-      this.formModels.description = this.currentGoods.description;
-      this.formModels.categoryId = this.currentGoods.categoryId;
-      this.formModels.type = this.currentGoods.type;
-      this.formModels.price = this.currentGoods.price;
-      this.formModels.stockInitial = this.currentGoods.stock.initial;
-      this.formModels.stockRemaining = this.currentGoods.stock.remaining;
-      this.formModels.stockVisibility = this.currentGoods.stock.visibility;
-      this.formModels.ownerMemberIds = deepClone(this.currentGoods.ownerMemberIds) as number[] | null;
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        categoryId: this.currentGoods.categoryId,
+        name: this.currentGoods.name,
+        description: this.currentGoods.description,
+        type: this.currentGoods.type,
+        price: this.currentGoods.price,
+        stockInitial: this.currentGoods.stock.initial,
+        stockRemaining: this.currentGoods.stock.remaining,
+        stockVisibility: this.currentGoods.stock.visibility,
+        ownerMemberIds: deepClone(this.currentGoods.ownerMemberIds),
+      } as IGoodsUpdateRequest);
     } else {
-      this.formModels.name = "";
-      this.formModels.description = "";
-      this.formModels.categoryId = -1;
-      this.formModels.type = "";
-      this.formModels.price = 0;
-      this.formModels.stockInitial = 0;
-      this.formModels.stockRemaining = 0;
-      this.formModels.stockVisibility = GoodsStockVisibility.SHOW_REMAINING_ONLY;
-      this.formModels.ownerMemberIds = [];
+      this.form.setInitialModel({
+        boothId: useAdminStore().currentBooth.booth!.id,
+        categoryId: -1,
+        name: "",
+        description: "",
+        type: "",
+        price: 0,
+        stockInitial: 0,
+        stockRemaining: 0,
+        stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
+        ownerMemberIds: [],
+      } as IGoodsCreateRequest);
     }
-
-    this.formModelsInitial = deepClone(this.formModels);
-    this.resetForm();
   }
-
-  resetForm() { if(this.form) this.form.reset(); }
-  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onGoodsCategoryUpdated(categoryId: number) {
     this.formModels.categoryId = categoryId;
@@ -266,11 +268,11 @@ export default class GoodsManageDialog extends Vue {
       // UPDATE
 
       const requestData: IGoodsUpdateRequest = {
-        ...diff(this.formModelsInitial, this.formModels),
+        ...this.form!.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
 
         // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
-        ownerMemberIds: !deepEqual(this.formModelsInitial.ownerMemberIds, this.formModels.ownerMemberIds) ? deepClone(this.formModels.ownerMemberIds) : undefined,
+        ownerMemberIds: !deepEqual(this.form!.initialModels.ownerMemberIds, this.formModels.ownerMemberIds) ? deepClone(this.formModels.ownerMemberIds) : undefined,
       };
 
       result = await useAdminAPIStore().updateGoodsInfo(Number(this.goodsId!), requestData);

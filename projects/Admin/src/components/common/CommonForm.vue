@@ -74,11 +74,12 @@
 </template>
 
 <script lang="ts">
-import { markRaw, reactive, type Component as VueComponent } from "vue";
+import { markRaw, reactive, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
+import { diff } from "deep-object-diff";
 import { useAdminStore } from "@/plugins/stores/admin";
 
 export enum FormFieldType {
@@ -216,19 +217,27 @@ export default class CommonForm extends Vue {
   @Model({ type: Boolean, default: false }) isValid!: boolean;
   @Model({ name: "edited", type: Boolean, default: false }) isEdited!: boolean;
   @Model({ name: "data", type: Object, default: {}, required: true }) models!: Record<string, any>;
-  @Prop({ type: Object, default: {}, required: true }) readonly initialModelValues!: Record<string, any>;
-  @Prop({ type: Object, default: {}, required: true }) readonly fields!: Record<string, FormFieldOptions>;
+  @Prop({ type: Object, default: {}, required: true }) readonly fields!: Readonly<Record<string, FormFieldOptions>>;
 
   @Ref("form") readonly form!: VForm;
+
+  private _initialModels: Readonly<Record<string, any>> = readonly({ } as const);
+  public  get initialModels() { return toRaw(this._initialModels); }
+  private set initialModels(value: Record<string, any>) { this._initialModels = readonly(deepClone(toRaw(value))); }
 
   /* Model value update */
   @Watch("models", { deep: true, immediate: true })
   onModelDataUpdate() {
-    this.isEdited = !deepEqual(this.models, this.initialModelValues);
-    // this.isEdited = Object.keys(this.models).some((key) => {
-    //   const k = key as keyof typeof this.models;
-    //   return this.models[k] !== this.initialModelValues[k];
-    // });
+    this.isEdited = !deepEqual(toRaw(this.models), toRaw(this.initialModels));
+  }
+
+  public setInitialModel(initial: Record<string, any>): void {
+    this.initialModels = initial;
+    this.reset();
+  }
+
+  public getDiffOfModel(): Record<string, any> {
+    return diff(toRaw(this.initialModels), toRaw(this.models));
   }
 
   /* Common rules */
@@ -246,7 +255,7 @@ export default class CommonForm extends Vue {
 
   /* Form utility functions */
   // FORM
-  public reset() { this.models = reactive(deepClone(this.initialModelValues)); }
+  public reset() { this.models = reactive(deepClone(this.initialModels)); }
   public resetValidation() {
     if(this.form) {
       this.form.resetValidation();

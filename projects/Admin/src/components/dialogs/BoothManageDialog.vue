@@ -10,7 +10,7 @@
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogPrimaryText="dynString.primaryText"
                 @primary="onDialogConfirm"
-                @secondary="resetForm"
+                @secondary="form?.reset"
                 @cancel="onDialogCancel"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
@@ -21,8 +21,8 @@
                   v-model:data="formModels"
                   ref="form"
                   class="flex-1-1"
-                  :initialModelValues="formModelsInitial"
-                  :fields="formFields" />
+                  :fields="formFields"
+                  :disabled="updateInProgress" />
     </VLayout>
 
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
@@ -34,8 +34,6 @@
 import { reactive, ref } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, currencySymbolInfo, type IBoothCreateRequest, type IBoothUpdateRequest } from "@myboothmanager/common";
-import deepClone from "clone-deep";
-import { diff } from "deep-object-diff";
 import moment from "moment";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -64,7 +62,7 @@ export default class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
 
-  @Ref("form") readonly form!: CommonForm;
+  @Ref("form") readonly form?: CommonForm;
 
   readonly formModels: IBoothCreateRequestInternal = reactive({
     name: "",
@@ -124,17 +122,17 @@ export default class BoothManageDialog extends Vue {
       type: FormFieldType.DATE,
       label: "운영 시작 일자",
       get min() { return momentFormat(new Date()); },
-      onChange: this.resetValidation,
+      onChange: this.resetValidationProxy,
     },
     dateClose: {
       type: FormFieldType.DATE,
       label: "운영 종료 일자",
       get min() { return momentFormat(dateOpenProxied.value); },
       rules: [ ((v: string) => new Date(v) >= new Date(dateOpenProxied.value) ? true : "운영 종료 일자는 운영 시작 일자보다 빠를 수 없습니다.") ],
-      onChange: this.resetValidation,
+      onChange: this.resetValidationProxy,
     },
   } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
-  formModelsInitial: IBoothCreateRequestInternal = deepClone(this.formModels);
+  resetValidationProxy() { this.form?.resetValidation(); }
 
   cancelWarningDialogShown = false;
 
@@ -150,35 +148,38 @@ export default class BoothManageDialog extends Vue {
     };
   }
 
-  @Watch("open") mounted() {
+  @Watch("open")
+  async onDialogOpen(open: boolean) {
     editModeProxied.value = this.editMode;
+
+    if(!open) return;
+
+    while(!this.form) await this.$nextTick();
 
     if(this.editMode) {
       const boothData = useAdminStore().currentBooth.booth!;
 
-      this.formModels.name = boothData.name;
-      this.formModels.description = boothData.description;
-      this.formModels.location = boothData.location;
-      this.formModels.boothNumber = boothData.boothNumber;
-      this.formModels.currencySymbol = boothData.currencySymbol;
-      this.formModels.dateOpen = boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined;
-      this.formModels.dateClose = boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined;
+      this.form.setInitialModel({
+        name: boothData.name,
+        description: boothData.description,
+        location: boothData.location,
+        boothNumber: boothData.boothNumber,
+        currencySymbol: boothData.currencySymbol,
+        dateOpen: boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined,
+        dateClose: boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined,
+      } as IBoothUpdateRequest);
     } else {
-      this.formModels.name = "";
-      this.formModels.description = "";
-      this.formModels.location = "";
-      this.formModels.boothNumber = "";
-      this.formModels.currencySymbol = "₩";
-      this.formModels.dateOpen = momentFormat(new Date());
-      this.formModels.dateClose = momentFormat(new Date());
+      this.form.setInitialModel({
+        name: "",
+        description: "",
+        location: "",
+        boothNumber: "",
+        currencySymbol: "₩",
+        dateOpen: momentFormat(new Date()),
+        dateClose: momentFormat(new Date()),
+      } as IBoothCreateRequestInternal);
     }
-
-    this.formModelsInitial = deepClone(this.formModels);
-    this.resetForm();
   }
-
-  resetForm() { if(this.form) this.form.reset(); }
-  resetValidation() { if(this.form) this.form.resetValidation(); }
 
   onDialogCancel() {
     if(this.isFormEdited) {
@@ -197,7 +198,7 @@ export default class BoothManageDialog extends Vue {
       // UPDATE
 
       const requestData: IBoothUpdateRequest = {
-        ...diff(this.formModelsInitial, this.formModels),
+        ...this.form!.getDiffOfModel(),
       };
 
       result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
