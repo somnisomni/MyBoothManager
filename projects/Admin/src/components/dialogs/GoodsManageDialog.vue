@@ -133,6 +133,8 @@ export default class GoodsManageDialog extends Vue {
       label: "가격 (단가)",
       min: 0,
       allowDecimal: true,
+      hint: "가격을 0으로 설정하면 해당 굿즈를 증정용으로 표시합니다.",
+      persistentHint: true,
     },
     stockInitial: {
       type: FormFieldType.NUMBER,
