@@ -97,7 +97,11 @@
                         :editable="false"
                         omitEmptyGoodsCategory
                         @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
-                        @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)" />
+                        @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
+            <template #goods="props">
+              <GoodsItemPublic v-bind="props" />
+            </template>
+          </GoodsListView>
           <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
         </VContainer>
       </div>
@@ -120,10 +124,12 @@ import { useLocalStore } from "@/plugins/stores/local";
 import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFileUrl } from "@/lib/common-functions";
 import GoodsItemDetailsDialog from "@/components/dialogs/GoodsItemDetailsDialog.vue";
+import GoodsItemPublic from "@/components/goods/GoodsItemPublic.vue";
 
 @Component({
   components: {
     BoothInfoSection,
+    GoodsItemPublic,
     SharePanel,
     GoodsItemDetailsDialog,
   },
