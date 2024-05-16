@@ -23,7 +23,7 @@ export default class GoodsItemPublic extends Vue {
   readonly baseComponent!: GoodsItem;
 
   get isOutOfStock(): boolean {
-    return this.baseComponent.normalizedData.stockRemaining <= 0;
+    return (this.baseComponent.normalizedData.stockRemaining ?? -1) <= 0;
   }
 
   get shouldHideStock(): boolean {

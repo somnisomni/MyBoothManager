@@ -1,9 +1,12 @@
 <template>
   <VMain style="min-height: 100%">
-    <SharePanel v-if="!fetchError" :boothData="boothData" showHomeButton />
+    <SharePanel v-if="!fetchError"
+                :boothData="boothData"
+                showHomeButton />
 
     <VScrollYReverseTransition leave-absolute>
-      <div v-if="isDataFetched && fetchError" class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+      <div v-if="isDataFetched && fetchError"
+           class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
         <h4 class="text-h4 text-center text-error">
           <VIcon class="mr-2">mdi-alert</VIcon>
 
@@ -13,11 +16,21 @@
           <span v-else>데이터를 불러오는 중 오류 발생 ({{ fetchError }})</span>
         </h4>
 
-        <VBtn class="mt-4" size="large" color="primary" variant="outlined" prepend-icon="mdi-home" :to="{ name: 'landing' }" replace>메인 페이지로 이동</VBtn>
+        <VBtn class="mt-4"
+              size="large"
+              color="primary"
+              variant="outlined"
+              prepend-icon="mdi-home"
+              :to="{ name: 'landing' }"
+              replace>메인 페이지로 이동</VBtn>
       </div>
 
-      <div v-else-if="!isDataFetched" class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
-        <VProgressCircular indeterminate color="primary" size="x-large" class="my-2" />
+      <div v-else-if="!isDataFetched"
+           class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+        <VProgressCircular indeterminate
+                           color="primary"
+                           size="x-large"
+                           class="my-2" />
         <p class="mt-2 text-grey-darken-2">부스 정보 불러오는 중...</p>
       </div>
     </VScrollYReverseTransition>
@@ -55,54 +68,48 @@
           <VSpacer class="my-8" />
 
           <div v-if="boothMemberList.length > 0">
-            <h4 class="text-h4 text-left font-weight-medium ml-2">멤버 목록</h4>
-            <VDivider class="my-2" />
-            <div class="d-flex flex-row flex-wrap justify-center">
-              <BoothMemberItem v-for="member in boothMemberList"
-                               :key="member.id"
-                               :memberData="member"
-                               :imageUrlResolver="getUploadFileUrl" />
-            </div>
+            <ExpandableContent heading="멤버 목록">
+              <div class="d-flex flex-row flex-wrap justify-center">
+                <BoothMemberItem v-for="member in boothMemberList"
+                                 :key="member.id"
+                                 :memberData="member"
+                                 :imageUrlResolver="getUploadFileUrl" />
+              </div>
+            </ExpandableContent>
           </div>
 
-          <VSpacer v-if="infoImage.url" class="my-8" />
+          <VSpacer v-if="infoImage.url"
+                   class="my-8" />
 
           <div v-if="infoImage.url" class="w-100">
-            <div v-ripple class="d-flex align-center pa-2" style="cursor: pointer" @click="boothInfoExpanded = !boothInfoExpanded">
-              <h4 class="flex-grow-1 text-h4 text-left font-weight-medium">부스 인포</h4>
-              <VIcon :icon="boothInfoExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="large" class="pa-2" />
-            </div>
-
-            <VDivider class="mb-2" />
-
-            <VExpandTransition>
-              <VImg v-show="boothInfoExpanded"
-                    :src="infoImage.url"
+            <ExpandableContent heading="부스 인포">
+              <VImg :src="infoImage.url"
                     :lazy-src="infoImage.thumbnail"
                     class="booth-info-image w-100 no-interaction rounded-lg"
-                    cover
-                    position="top" />
-            </VExpandTransition>
+                    position="top"
+                    cover />
+            </ExpandableContent>
           </div>
 
           <VSpacer class="my-8" />
 
-          <h4 class="text-h4 text-left font-weight-medium ml-2">굿즈 목록</h4>
-          <VDivider class="my-2" />
-          <GoodsListView v-if="boothGoodsList.length > 0"
-                        :currencySymbol="boothData?.currencySymbol"
-                        :goodsList="[...boothGoodsList, ...boothCombinationList]"
-                        :goodsCategoryList="boothCategoryList"
-                        :goodsImageUrlResolver="getUploadFileUrl"
-                        :editable="false"
-                        omitEmptyGoodsCategory
-                        @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
-                        @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
-            <template #goods="props">
-              <GoodsItemPublic v-bind="props" />
-            </template>
-          </GoodsListView>
-          <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
+          <div>
+            <ExpandableContent heading="굿즈 목록">
+              <GoodsListView v-if="boothGoodsList.length > 0"
+                             :currencySymbol="boothData?.currencySymbol"
+                             :goodsList="[...boothGoodsList, ...boothCombinationList]"
+                             :goodsCategoryList="boothCategoryList"
+                             :goodsImageUrlResolver="getUploadFileUrl"
+                             omitEmptyGoodsCategory
+                             @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
+                             @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
+                <template #goods="props">
+                  <GoodsItemPublic v-bind="props" />
+                </template>
+              </GoodsListView>
+              <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
+            </ExpandableContent>
+          </div>
         </VContainer>
       </div>
     </VScrollYReverseTransition>
@@ -125,10 +132,12 @@ import BoothInfoSection from "@/components/booth/BoothInfoSection.vue";
 import { getUploadFileUrl } from "@/lib/common-functions";
 import GoodsItemDetailsDialog from "@/components/dialogs/GoodsItemDetailsDialog.vue";
 import GoodsItemPublic from "@/components/goods/GoodsItemPublic.vue";
+import ExpandableContent from "@/components/common/ExpandableContent.vue";
 
 @Component({
   components: {
     BoothInfoSection,
+    ExpandableContent,
     GoodsItemPublic,
     SharePanel,
     GoodsItemDetailsDialog,
