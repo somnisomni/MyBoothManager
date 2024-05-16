@@ -58,7 +58,7 @@
 
       <VBtn v-for="button in field.additionalButtons"
             :key="button.title"
-            icon
+            :icon="true"
             class="flex-0-0 align-self-start ml-2 mt-2"
             :title="button.title"
             :variant="button.variant ?? 'flat'"

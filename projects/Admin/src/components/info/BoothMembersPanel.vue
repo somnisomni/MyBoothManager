@@ -6,7 +6,7 @@
                          :key="member.id"
                          :memberData="member"
                          :imageUrlResolver="getUploadFileUrl"
-                         editable
+                         :editable="true"
                          @click="onMemberEditButtonClick" />
       </VSlideYTransition>
     </div>
