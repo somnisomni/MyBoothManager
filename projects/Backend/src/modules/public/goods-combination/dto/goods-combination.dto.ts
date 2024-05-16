@@ -1,4 +1,4 @@
-import { IGoodsCombinationResponse, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
+import { GoodsStockVisibility, IGoodsCombinationResponse, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 import deepClone from "clone-deep";
 import GoodsCombination from "@/db/models/goods-combination";
@@ -26,8 +26,8 @@ export class PublicGoodsCombinationResponseDto implements IGoodsCombinationRespo
     this.price = values.price;
     this.stock = {
       visibility: values.stockVisibility,
-      initial: values.stockInitial,
-      remaining: values.stockRemaining,
+      initial: values.stockVisibility === GoodsStockVisibility.SHOW_ALL ? values.stockInitial : undefined,
+      remaining: values.stockVisibility !== GoodsStockVisibility.HIDE_ALL ? values.stockRemaining : undefined,
     };
     this.ownerMemberIds = deepClone(values.ownerMemberIds);
     this.goodsImage = model.goodsImage?.toImageUploadInfo();
