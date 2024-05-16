@@ -1,34 +1,38 @@
 <template>
   <VSheet :key="boothData.id"
           v-ripple
-          class="booth-item d-flex flex-column rounded-lg overflow-hidden"
+          class="booth-item d-flex flex-row rounded-lg overflow-hidden"
           :class="{ 'hover': isPointerHovering }"
-          width="250px"
-          height="180px"
           :elevation="elevation"
           @pointerenter="isPointerHovering = true"
           @pointerleave="isPointerHovering = false"
           @click.stop="$emit('click', boothData.id)">
-    <VImg :src="bannerImageUrl"
-          height="100px"
-          aspect-ratio="3/1"
-          cover
-          class="flex-0-0 no-interaction-all" />
+    <!-- *** Banner image *** -->
+    <VImg class="booth-item-image flex-0-0 no-interaction-all"
+          :src="bannerImageUrl"
+          :lazy-src="bannerImageThumbnail"
+          cover />
+    <div class="booth-item-image-overlay"></div>
 
-    <VLayout class="flex-grow-1 d-flex flex-row justify-start pa-2">
+    <!-- *** Bottom info area *** -->
+    <VLayout class="booth-info flex-grow-1 d-flex flex-row justify-start align-center align-self-end pa-3">
       <div class="flex-grow-1 overflow-hidden">
-        <div class="text-body-1 font-weight-bold" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" :title="boothData.name">{{ boothData.name }}</div>
-        <div v-if="boothData.description" class="text-body-2 font-weight-light" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis;" :title="boothData.description">{{ boothData.description }}</div>
+        <div class="name text-body-1 font-weight-bold" :title="boothData.name">{{ boothData.name }}</div>
+        <div v-if="boothData.description" class="description text-body-2 font-weight-light" :title="boothData.description">{{ boothData.description }}</div>
       </div>
 
-      <div v-if="shouldShowExtraInfo" class="d-inline-flex flex-row justify-end align-center h-100 flex-shrink-0">
-        <VDivider vertical class="mx-2" />
+      <div v-if="shouldShowExtraInfo"
+           class="d-inline-flex flex-row justify-end align-center h-100 flex-shrink-0 overflow-hidden pl-2"
+           style="max-width: 6em">
+        <div class="d-inline-flex flex-column justify-center align-center w-100">
+          <div v-if="boothData.boothNumber"
+              class="font-weight-bold"
+              title="부스 번호">
+            <VTooltip activator="parent"
+                      location="bottom"
+                      transition="fade-transition">부스 번호</VTooltip>
 
-        <div class="d-inline-flex flex-column justify-center align-center" style="max-width: 4em">
-          <div v-if="boothData.boothNumber" class="font-weight-medium" style="max-width: 4em" title="부스 번호">
-            <VTooltip activator="parent" location="bottom" transition="fade-transition">부스 번호</VTooltip>
-
-            <span>{{ boothData.boothNumber }}</span>
+            <span class="booth-number">{{ boothData.boothNumber }}</span>
           </div>
 
           <div v-if="boothData.status.status !== BoothStatus.OPEN">
@@ -72,6 +76,10 @@ export default class BoothListItem extends Vue {
       ?? `https://picsum.photos/seed/${this.boothData.id}/800/400`;
   }
 
+  get bannerImageThumbnail() {
+    return this.boothData.bannerImage?.thumbnailData;
+  }
+
   get shouldShowExtraInfo(): boolean {
     return !!this.boothData.boothNumber || this.boothData.status.status !== BoothStatus.OPEN;
   }
@@ -82,13 +90,78 @@ export default class BoothListItem extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .booth-item {
+  --booth-item-width: 300px;
+  --booth-item-height: 200px;
+  width: var(--booth-item-width);
+  height: var(--booth-item-height);
+
   cursor: pointer;
-  transition: box-shadow 0.33s, transform 0.33s cubic-bezier(0, 0, 0, 1);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.33s,
+              transform 0.33s cubic-bezier(0, 0, 0, 1);
+  will-change: transform;
+
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+
+  background-color: black;
 
   &.hover:not(:active) {
     transform: translateY(-2.5%);
   }
+
+  .booth-info {
+    max-height: calc(var(--booth-item-height) / 2);
+    color: white;
+
+    @mixin text($line-clamp: 2) {
+      display: -webkit-box;
+      display:    -moz-box;
+      display:         box;
+      -webkit-line-clamp: $line-clamp;
+         -moz-line-clamp: $line-clamp;
+              line-clamp: $line-clamp;
+      -webkit-box-orient: vertical;
+         -moz-box-orient: vertical;
+              box-orient: vertical;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: keep-all;
+    }
+
+    .name {
+      @include text(1);
+    }
+
+    .description {
+      @include text(2);
+    }
+
+    .booth-number {
+      font-size: 1.25em;
+    }
+  }
+}
+
+.booth-item-image {
+    @mixin absolute-fill {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+    @include absolute-fill;
+
+    &-overlay {
+      @include absolute-fill;
+      background: linear-gradient(transparent 33%, rgba(0, 0, 0, 0.85));
+    }
 }
 </style>
