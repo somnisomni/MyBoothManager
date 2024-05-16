@@ -24,7 +24,7 @@
                 :key="btn.icon"
                 :disabled="progressActive || btn.disabled"
                 :title="btn.title"
-                icon
+                :icon="true"
                 variant="flat"
                 class="mr-2"
                 @click="() => { btn.onClick(); }">
