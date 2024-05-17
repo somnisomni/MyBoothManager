@@ -4,7 +4,7 @@ import { IAuthPayload } from "../auth/jwt";
 import { AccountService } from "./account.service";
 import { CreateAccountDTO } from "./dto/create-account.dto";
 import { UpdateAccountDto } from "./dto/update-account.dto";
-import { AccountResponseDto } from "./dto/account.dto";
+import { AccountResponseDto, SuperAdminAccountResponseDto } from "./dto/account.dto";
 
 @UseGuards(AdminAuthGuard)
 @Controller("/admin/account")
@@ -24,6 +24,13 @@ export class AccountController {
   @Post()
   async create(@Body() createAccountDto: CreateAccountDTO): Promise<AccountResponseDto> {
     return new AccountResponseDto(await this.accountService.create(createAccountDto));
+  }
+
+  @SuperAdmin()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get("all")
+  async findAll(): Promise<Array<SuperAdminAccountResponseDto>> {
+    return (await this.accountService.findAll()).map((account) => new SuperAdminAccountResponseDto(account));
   }
 
   @SuperAdmin()

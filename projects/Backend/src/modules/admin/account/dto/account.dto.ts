@@ -1,4 +1,4 @@
-import { IAccountResponse } from "@myboothmanager/common";
+import type { IAccountResponse, ISuperAdminAccountResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 import Account from "@/db/models/account";
 
@@ -17,6 +17,23 @@ export class AccountResponseDto implements IAccountResponse {
     this.loginId = values.loginId;
     this.name = values.name;
     this.lastSelectedBoothId = values.lastSelectedBoothId;
-    this.superAdmin = isSuperAdmin;
+    this.superAdmin = !isSuperAdmin ? undefined : isSuperAdmin;
+  }
+}
+
+@Exclude()
+export class SuperAdminAccountResponseDto extends AccountResponseDto implements ISuperAdminAccountResponse {
+  @Expose() declare lastLoginAt?: Date | null;
+  @Expose() declare loginCount: number;
+  @Expose() declare createdAt?: Date | null;
+  @Expose() declare updatedAt?: Date | null;
+
+  constructor(model: Account) {
+    super(model, false);
+
+    this.loginCount = model.loginCount;
+    this.lastLoginAt = model.lastLoginAt;
+    this.createdAt = model.createdAt;
+    this.updatedAt = model.updatedAt;
   }
 }

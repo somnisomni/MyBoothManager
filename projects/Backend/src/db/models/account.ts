@@ -1,6 +1,6 @@
 import type { IAccountCreateRequest, IAccountModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull, AfterFind } from "sequelize-typescript";
+import { Model, Table, PrimaryKey, Unique, AutoIncrement, Column, HasMany, Default, AllowNull, AfterFind, CreatedAt, UpdatedAt } from "sequelize-typescript";
 import Booth from "./booth";
 import UploadStorage from "./uploadstorage";
 
@@ -41,6 +41,14 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare lastSelectedBoothId?: number | null;
 
+  @CreatedAt
+  @Column(DataTypes.DATE)
+  declare createdAt?: Date | null;
+
+  @UpdatedAt
+  @Column(DataTypes.DATE)
+  declare updatedAt?: Date | null;
+
 
   /* === Relations === */
   @HasMany(() => Booth)
@@ -53,7 +61,7 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   /* === Hooks === */
   @AfterFind
   static async setDefaultLastSelectedBoothId(instance: Account) {
-    if(instance && !instance.lastSelectedBoothId) {
+    if(instance && instance.id && !instance.lastSelectedBoothId) {
       const firstBooth = await Booth.findOne({ where: { ownerId: instance.id }, attributes: [ "id" ] });
       if(firstBooth) {
         instance.lastSelectedBoothId = firstBooth.id;

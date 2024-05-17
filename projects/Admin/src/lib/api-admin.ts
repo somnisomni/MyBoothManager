@@ -46,6 +46,12 @@ export default class AdminAPI {
   }
 
   /* Fetch */
+  static async fetchAllAccounts(currentAccountData: CT.IAccount) {
+    if(currentAccountData.superAdmin)
+      return await this.apiCallWrapper<Array<CT.ISuperAdminAccountResponse>>(() => this.API.GET("account/all"));
+    else return CT.ErrorCodes.NO_ACCESS;
+  }
+
   static async fetchCurrentAccountInfo() {
     return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.GET("account"));
   }
@@ -109,8 +115,8 @@ export default class AdminAPI {
   }
 
   /* Create */
-  static async createAccount(currentUserData: CT.IAccount, payload: CT.IAccountCreateRequest) {
-    if(currentUserData.superAdmin)
+  static async createAccount(currentAccountData: CT.IAccount, payload: CT.IAccountCreateRequest) {
+    if(currentAccountData.superAdmin)
       return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.POST("account", payload));
     else return CT.ErrorCodes.NO_ACCESS;
   }

@@ -27,7 +27,6 @@ export class AccountService {
     const result = await Account.findAll({
       attributes: {
         exclude: [
-          ...SEQUELIZE_INTERNAL_KEYS,
           "loginPassHash",
         ],
       },

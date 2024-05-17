@@ -39,6 +39,10 @@ export interface IAccountAuthRefreshRequest {
 
 /* === Responses === */
 export interface IAccountResponse extends IAccount { }
+export interface ISuperAdminAccountResponse extends Omit<IAccountResponse, "superAdmin">, Pick<IAccountModel, "loginCount" | "lastLoginAt"> {
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
+}
 export interface IAccountLoginResponse extends IAccount {
   accessToken: string;
 }
