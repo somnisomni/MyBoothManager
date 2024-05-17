@@ -4,6 +4,7 @@ import { IImageUploadInfo } from "./base";
 interface IBoothCommon {
   id: number;
   ownerId: number;
+  fairId?: number | null;
   name: string;
   currencySymbol: string;
   description?: string | null;
@@ -55,7 +56,7 @@ export interface IBoothModel extends Omit<IBoothCommon, "status"> {
 
 /* === Requests === */
 export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status"> { }
-export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "status" | "currencySymbol">> { }
+export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol">> { }
 export interface IBoothStatusUpdateRequest extends IBoothStatus { }
 
 /* === Responses === */
