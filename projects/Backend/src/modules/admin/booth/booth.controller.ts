@@ -49,29 +49,33 @@ export class BoothController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/member")
-  async findAllBoothMember(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminBoothMemberResponseDto>> {
+  async findAllBoothMember(@Param("id") boothId: string): Promise<Array<AdminBoothMemberResponseDto>> {
     return (await this.publicBoothMemberService.findAll(+boothId, true))
       .map((member) => new AdminBoothMemberResponseDto(member));
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods")
-  async findAllBoothGoods(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminGoodsResponseDto>> {
+  async findAllBoothGoods(@Param("id") boothId: string): Promise<Array<AdminGoodsResponseDto>> {
     return (await this.publicGoodsService.findAll(+boothId, true))
       .map((goods) => new AdminGoodsResponseDto(goods));
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods/combination")
-  async findAllBoothGoodsCombination(@Param("id") boothId: string, @AuthData() authData: IAuthPayload):Promise<Array<AdminGoodsCombinationResponseDto>> {
+  async findAllBoothGoodsCombination(@Param("id") boothId: string):Promise<Array<AdminGoodsCombinationResponseDto>> {
     return (await this.publicGoodsCombinationService.findAll(+boothId, true))
       .map((combination) => new AdminGoodsCombinationResponseDto(combination));
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods/category")
-  async findAllBoothGoodsCategory(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<AdminGoodsCategoryResponseDto>> {
+  async findAllBoothGoodsCategory(@Param("id") boothId: string): Promise<Array<AdminGoodsCategoryResponseDto>> {
     return (await this.publicGoodsCategoryService.findAll(+boothId, true))
       .map((category) => new AdminGoodsCategoryResponseDto(category));
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id/goods/order")
   async findAllBoothGoodsOrder(@Param("id") boothId: string, @AuthData() authData: IAuthPayload): Promise<Array<GoodsOrderResponseDto>> {
     return (await this.boothService.findAllGoodsOrderOfBooth(+boothId, authData.id))
