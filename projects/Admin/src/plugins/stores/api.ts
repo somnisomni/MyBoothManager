@@ -121,7 +121,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function updateCurrentBoothStatus(payload: C.IBoothStatusUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothStatus($adminStore.currentBooth.booth!.id, payload),
-      () => $adminStore.currentBooth.booth! = { ...$adminStore.currentBooth.booth!, status: { ...payload } },
+      () => $adminStore.currentBooth.booth!.status = { ...$adminStore.currentBooth.booth!.status, ...payload },
     );
   }
 

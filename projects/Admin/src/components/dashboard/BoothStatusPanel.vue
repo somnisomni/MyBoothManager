@@ -119,8 +119,6 @@ export default class BoothStatusPanel extends Vue {
     this.contentPublishStatusUpdateProgress = true;
 
     const response = await useAdminAPIStore().updateCurrentBoothStatus({
-      status: this.currentBoothStatus,
-      reason: this.currentBoothStatusReason,
       contentPublished: publish,
     });
 
