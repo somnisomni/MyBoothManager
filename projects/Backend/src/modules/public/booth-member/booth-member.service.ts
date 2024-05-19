@@ -3,11 +3,14 @@ import { ISingleValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/c
 import BoothMember from "@/db/models/booth-member";
 import { EntityNotFoundException } from "@/lib/exceptions";
 import { PublicCommon } from "../common";
+import { BoothNotPublishedException } from "../booth/booth.exception";
 
 @Injectable()
 export class PublicBoothMemberService {
   async findOne(boothId: number, id: number): Promise<BoothMember> {
-    PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+    if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+      throw new BoothNotPublishedException();
+    }
 
     const member = await BoothMember.findOne({
       where: {
@@ -24,7 +27,11 @@ export class PublicBoothMemberService {
   }
 
   async findAll(boothId: number, isAdmin: boolean = false): Promise<Array<BoothMember>> {
-    if(!isAdmin) PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+    if(!isAdmin) {
+      if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+        throw new BoothNotPublishedException();
+      }
+    }
 
     return await BoothMember.findAll({
       where: { boothId },
@@ -35,7 +42,9 @@ export class PublicBoothMemberService {
   }
 
   async countAll(boothId: number): Promise<ISingleValueResponse<number>> {
-    PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+    if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+      throw new BoothNotPublishedException();
+    }
 
     return { value: await BoothMember.count({ where: { boothId } }) };
   }

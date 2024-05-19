@@ -3,20 +3,25 @@ import { ISingleValueResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/c
 import GoodsCategory from "@/db/models/goods-category";
 import { findOneByPk } from "@/lib/common-functions";
 import { PublicCommon } from "../common";
+import { BoothNotPublishedException } from "../booth/booth.exception";
 
 @Injectable()
 export class PublicGoodsCategoryService {
   async findOne(id: number): Promise<GoodsCategory> {
     const category = await findOneByPk(GoodsCategory, id);
 
-    PublicCommon.throwIfBoothNotPublicilyAccessible(category.boothId);
+    if(!await PublicCommon.isBoothPublicilyAccessible(category.boothId)) {
+      throw new BoothNotPublishedException();
+    }
 
     return category;
   }
 
   async findAll(boothId?: number, isAdmin: boolean = false): Promise<Array<GoodsCategory>> {
     if(boothId && !isAdmin) {
-      PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+      if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+        throw new BoothNotPublishedException();
+      }
     }
 
     const where = boothId ? { boothId } : undefined;
@@ -31,7 +36,9 @@ export class PublicGoodsCategoryService {
 
   async countAll(boothId?: number): Promise<ISingleValueResponse<number>> {
     if(boothId) {
-      PublicCommon.throwIfBoothNotPublicilyAccessible(boothId);
+      if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+        throw new BoothNotPublishedException();
+      }
     }
 
     const where = boothId ? { boothId } : undefined;

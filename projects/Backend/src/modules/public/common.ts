@@ -1,7 +1,6 @@
 import { IBoothModel, BoothStatus } from "@myboothmanager/common";
 import { WhereOptions, Op } from "sequelize";
 import Booth from "@/db/models/booth";
-import { BoothNotPublishedException } from "./booth/booth.exception";
 
 export class PublicCommon {
   /**
@@ -33,7 +32,7 @@ export class PublicCommon {
    * @param boothId Booth ID to check.
    * @returns `true` if the booth is unique and publicily accessible.
    */
-  private static async isBoothPublicilyAccessible(boothId: number): Promise<boolean> {
+  public static async isBoothPublicilyAccessible(boothId: number): Promise<boolean> {
     if(!boothId) return false;
 
     return (await Booth.count({
@@ -42,11 +41,5 @@ export class PublicCommon {
         ...PublicCommon.PUBLIC_BOOTH_WHERE_OPTIONS,
       },
     })) === 1;
-  }
-
-  public static async throwIfBoothNotPublicilyAccessible(boothId: number): Promise<void> {
-    if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
-      throw new BoothNotPublishedException();
-    }
   }
 }
