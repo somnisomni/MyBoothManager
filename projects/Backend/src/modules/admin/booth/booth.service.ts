@@ -100,7 +100,11 @@ export class BoothService {
     const booth = await this.findBoothBelongsToAccount(id, callerAccountId);
 
     try {
-      await booth.update(updateBoothStatusDto);
+      await booth.update({
+        status: updateBoothStatusDto.status,
+        statusReason: updateBoothStatusDto.reason,
+        statusContentPublished: updateBoothStatusDto.contentPublished,
+      });
       await booth.save();
     } catch(err) {
       throw new BoothStatusUpdateFailedException();
