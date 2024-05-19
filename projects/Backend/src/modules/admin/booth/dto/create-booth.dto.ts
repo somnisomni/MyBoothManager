@@ -1,6 +1,7 @@
 import { IBoothCreateRequest } from "@myboothmanager/common";
 
 export class CreateBoothRequestDto implements IBoothCreateRequest {
+  declare fairId?: number;
   declare name: string;
   declare description?: string;
   declare location: string;
