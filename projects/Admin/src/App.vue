@@ -2,6 +2,8 @@
   <VApp class="bg-transparent">
     <RouterView v-if="isServerAvailable" />
 
+    <GlobalSnackbarManager v-model="testSnackbarQueue" />
+
     <VSnackbar v-model="isServerConnectionChecking" location="top" timeout="-1" variant="flat" :close-on-back="false" :close-on-content-click="false"
                color="primary" height="4rem" min-width="unset !important" style="margin-top: 0;" rounded="0">
       <VLayout class="d-flex flex-row align-center">
@@ -20,7 +22,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-facing-decorator";
-import { APP_PRIMARY_COLOR } from "@myboothmanager/common-ui";
+import { APP_PRIMARY_COLOR, type ISnackbarContext } from "@myboothmanager/common-ui";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
@@ -28,6 +30,11 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
 export default class App extends Vue {
   isServerAvailable: boolean = false;
   showServerNotRespondErrorDialog: boolean = false;
+
+  readonly testSnackbarQueue: Array<ISnackbarContext> = [
+    { id: crypto.randomUUID(), type: "plain", text: "테스트", timeout: 1000 },
+    { id: crypto.randomUUID(), type: "error", text: "에러 테스트", timeout: 20000 },
+  ];
 
   async mounted() {
     console.info("%cMade with %c❤️", `font-size: 1.5rem; color: ${APP_PRIMARY_COLOR}`, "font-size: 1.5rem; color: red");
@@ -37,6 +44,16 @@ export default class App extends Vue {
     if(!this.isServerAvailable) {
       this.showServerNotRespondErrorDialog = true;
     }
+
+    setTimeout(() => {
+      this.testSnackbarQueue.push({ id: crypto.randomUUID(), type: "info", text: "테스트2", timeout: 1000 });
+    }, 5000);
+    setTimeout(() => {
+      this.testSnackbarQueue.push({ id: crypto.randomUUID(), type: "warning", text: "warning", timeout: 300000 });
+    }, 7000);
+    setTimeout(() => {
+      this.testSnackbarQueue.push({ id: crypto.randomUUID(), type: "plain", text: "another", timeout: 10000 });
+    }, 8000);
   }
 
   get isServerConnectionChecking() { return !this.isServerAvailable; }

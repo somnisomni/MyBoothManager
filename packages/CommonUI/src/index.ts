@@ -16,6 +16,8 @@ export default {
     app.component("GoodsItem", C.GoodsItem);
     app.component("GoodsCategoryTitle", C.GoodsCategoryTitle);
     app.component("GoodsListView", C.GoodsListView);
+
+    app.component("GlobalSnackbarManager", C.GlobalSnackbarManager);
   },
 };
 
