@@ -17,7 +17,7 @@
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "../../packages/Common",
     "@myboothmanager/common-ui": "../../packages/CommonUI",
-    "chart.js": "^4.4.2",
+    "chart.js": "^4.4.3",
     "chartjs-adapter-moment": "^1.0.1",
     "clone-deep": "^4.0.1",
     "deep-object-diff": "^1.1.9",
@@ -29,10 +29,10 @@
     "vue": "^3.4.27",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.2",
-    "vuetify": "^3.6.6"
+    "vuetify": "^3.6.7"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.10.2",
+    "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/html2canvas": "^1.0.0",
@@ -40,17 +40,17 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-vue": "^9.26.0",
-    "npm-run-all2": "^6.1.2",
-    "sass": "^1.77.1",
+    "npm-run-all2": "^6.2.0",
+    "sass": "^1.77.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vite-plugin-vuetify": "^2.0.3",
     "vite-plugin-webpackchunkname": "^1.0.1",
     "vue-facing-decorator": "^3.0.4",
-    "vue-tsc": "^2.0.18"
+    "vue-tsc": "^2.0.19"
   }
 }
