@@ -1,1 +1,1 @@
-export type { ISnackbarContext } from "./snackbar";
+export { SnackbarContextWrapper, type ISnackbarContext } from "./snackbar";

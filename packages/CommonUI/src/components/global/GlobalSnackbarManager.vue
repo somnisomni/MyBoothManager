@@ -7,10 +7,20 @@
              transition="slide-x-reverse-transition"
              contentClass="global-snackbar-content">
     <VLayout class="d-flex flex-row align-center">
-      <VIcon v-if="getPrependIcon(context)"
-             :icon="getPrependIcon(context)"
-             class="mr-2" />
+      <!-- Prepend area -->
+      <div>
+        <slot name="prepend"
+              :context="context">
+          <VIcon v-if="context.type !== 'loading' && getPrependIcon(context)"
+                 :icon="getPrependIcon(context)"
+                 class="mr-2" />
+          <VProgressCircular v-else-if="context.type === 'loading'"
+                             indeterminate
+                             class="mr-2" />
+        </slot>
+      </div>
 
+      <!-- Content text area-->
       <div>{{ context.text }}</div>
     </VLayout>
   </VSnackbar>
@@ -63,6 +73,19 @@ export default class GlobalSnackbarManager extends Vue {
   rearrangeSnackbarStack() {
     if(!this.activeSnackbars) return;
 
+    // First, sort by persistent prop
+    this.activeSnackbars.sort((a, b) => {
+      const aContext = this.queue.find((item) => item.id === (a.$.vnode ?? a.$props ?? a.$attrs).key);
+      const bContext = this.queue.find((item) => item.id === (b.$.vnode ?? b.$props ?? b.$attrs).key);
+
+      if(!aContext || !bContext) return 0;
+
+      if(aContext.persistent && !bContext.persistent) return -1;
+      if(!aContext.persistent && bContext.persistent) return 1;
+      else return 0;
+    });
+
+    // Then proceed to rearrange(stack) the snackbars
     let nextTopOffset = 0;
     for(let i = 0; i < this.activeSnackbars.length; i++) {
       const target = this.activeSnackbars[i];
@@ -117,12 +140,18 @@ export default class GlobalSnackbarManager extends Vue {
           color: "info",
         };
         break;
+      case "loading":
+        props = {
+          ...props,
+          color: "primary",
+        };
+        break;
     }
 
     if(props.persistent) {
       props = {
         ...props,
-        timeout: -1,
+        timeout: props.timeout > 0 ? -1 : props.timeout,
         closeOnBack: false,
         closeOnContentClick: false,
       };

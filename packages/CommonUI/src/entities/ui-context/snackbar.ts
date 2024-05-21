@@ -1,3 +1,5 @@
+import { ref, type Ref } from "vue";
+
 /* Part of https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/anchor.ts#L8-L14 */
 const block = ["top", "bottom"] as const;
 const inline = ["start", "end", "left", "right"] as const;
@@ -13,7 +15,7 @@ type VuetifyAnchor =
 
 export interface ISnackbarContext {
   id: string;
-  type: "plain" | "info" | "success" | "error" | "warning";
+  type: "plain" | "info" | "success" | "error" | "warning" | "loading";
   persistent?: boolean;
   prependIcon?: string;
 
@@ -25,4 +27,30 @@ export interface ISnackbarContext {
   width?: string | number;
   height?: string | number;
   disabled?: boolean;
+}
+
+export class SnackbarContextWrapper {
+  private _contexts: Array<ISnackbarContext> = new Array();
+
+  get contexts(): Ref<Array<ISnackbarContext>> {
+    return ref(this._contexts);
+  }
+
+  add(context: Omit<ISnackbarContext, "id">): ReturnType<typeof crypto.randomUUID> {
+    let id;
+    this._contexts.push({
+      id: id = crypto.randomUUID(),
+      ...context,
+    });
+
+    return id;
+  }
+
+  removeImmediate(id: string): void {
+    const context = this._contexts.find((context) => context.id === id);
+
+    if(context) {
+      context.timeout = 0;
+    }
+  }
 }
