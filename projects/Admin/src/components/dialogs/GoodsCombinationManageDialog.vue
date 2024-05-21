@@ -287,7 +287,6 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.open = false;
       } else {
         this.$emit("error");
-        alert("오류 " + result);
       }
     } else {
       const requestData: IGoodsCombinationCreateRequest = {
@@ -301,7 +300,6 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.open = false;
       } else {
         this.$emit("error");
-        alert("오류 " + result);
       }
     }
 
@@ -319,7 +317,6 @@ export default class GoodsCombinationManageDialog extends Vue {
         this.open = false;
       } else {
         this.$emit("error");
-        alert("오류 " + response);
       }
     }
 

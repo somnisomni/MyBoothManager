@@ -1,6 +1,5 @@
 import * as C from "@myboothmanager/common";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import $router from "@/plugins/router";
 import AdminAPI from "@/lib/api-admin";
 import { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
@@ -12,15 +11,12 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   const $adminStore = useAdminStore();
   const $authStore  = useAuthStore();
 
-  /* *** States *** */
-  const isAPIFetchError  = ref(false);
-  const lastAPIErrorCode = ref<C.ErrorCodes | null>(null);
+  /* *** Private states (NOT TO BE EXPORTED) *** */
+  let apiFetchErrorSnackbarId = crypto.randomUUID();
+  let apiErrorSnackbarId = crypto.randomUUID();
 
   /* *** Private actions (NOT TO BE EXPORTED) *** */
   async function apiWrapper<T>(func: () => Promise<T | C.ErrorCodes>): Promise<T | C.ErrorCodes> {
-    isAPIFetchError.value = false;
-    lastAPIErrorCode.value = null;
-
     /* Call(fetch) API function */
     let result;
     try {
@@ -28,7 +24,14 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     } catch(err) {
       console.error(err);
 
-      isAPIFetchError.value = true;
+      // Show API fetch error global snackbar
+      $adminStore.globalSnackbarContexts.removeImmediate(apiFetchErrorSnackbarId);
+      apiFetchErrorSnackbarId = $adminStore.globalSnackbarContexts.add({
+        type: "error",
+        text: "API를 호출할 수 없습니다. 인터넷 연결을 확인해주세요.",
+        timeout: 30000,
+      });
+
       return C.ErrorCodes.UNKNOWN_ERROR;
     }
 
@@ -56,8 +59,13 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         }
       }
 
-      // Set error code
-      lastAPIErrorCode.value = result;
+      // Show API error global snackbar
+      $adminStore.globalSnackbarContexts.removeImmediate(apiErrorSnackbarId);
+      apiErrorSnackbarId = $adminStore.globalSnackbarContexts.add({
+        type: "error",
+        text: `API 호출 중 오류가 발생했습니다. (오류 코드: ${result as C.ErrorCodes})`,
+        timeout: 30000,
+      });
     }
 
     return result;
@@ -405,9 +413,6 @@ const useAdminAPIStore = defineStore("admin-api", () => {
 
 
   return {
-    isAPIFetchError,
-    lastAPIErrorCode,
-
     fetchCurrentAccountInfo,
 
     fetchSingleBoothOfCurrentAccount,

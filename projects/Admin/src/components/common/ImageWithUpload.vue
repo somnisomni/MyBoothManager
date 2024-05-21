@@ -115,7 +115,6 @@ export default class ImageWithUpload extends Vue {
 
       this.$emit("updated");
     } else {
-      alert("error " + response);
       this.$emit("error");
     }
 

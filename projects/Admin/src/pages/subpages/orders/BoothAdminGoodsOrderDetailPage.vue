@@ -214,10 +214,6 @@ export default class BoothAdminGoodsOrderDetailPage extends Vue {
 
     if(response === true) {
       // TODO: further process
-      alert("OK");
-    } else {
-      // TODO: show dialog?
-      alert(response);
     }
   }
 

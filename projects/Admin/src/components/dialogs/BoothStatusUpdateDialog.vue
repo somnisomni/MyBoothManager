@@ -98,9 +98,6 @@ export default class BoothStatusUpdateDialog extends Vue {
       return;
     } else {
       this.$emit("error");
-
-      // TODO: error dialog
-      alert(result);
     }
 
     this.updateInProgress = false;

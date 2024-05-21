@@ -8,7 +8,7 @@ export default class AdminAPI {
   private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {
     const response = await callee() as T | CT.IErrorResponse;
 
-    if((response as CT.IErrorResponse).errorCode) {
+    if(typeof ((response as CT.IErrorResponse).errorCode) === "number") {
       return (response as CT.IErrorResponse).errorCode as CT.ErrorCodes;
     } else {
       return response as T;

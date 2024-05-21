@@ -145,8 +145,6 @@ export default class BoothAdminGoodsPage extends Vue {
 
     if(typeof response === "boolean" && response === true) {
       this.deleteDialogOpen = false;
-    } else {
-      alert("오류 " + response);
     }
   }
 }

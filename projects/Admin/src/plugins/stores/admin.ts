@@ -2,6 +2,7 @@ import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
 import { ref, type ToRefs } from "vue";
 import { type IAccount, type IBooth, type IBoothMember, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { useAdminAPIStore } from "./api";
 
 interface CurrentBoothStates {
@@ -31,6 +32,8 @@ const useAdminStore = defineStore("admin", () => {
   const isBoothDataLoaded = ref<boolean>(false);
   const isAllDataLoaded = ref<boolean>(false);
   const isFirstLoad = ref<boolean>(true);
+
+  const globalSnackbarContexts = new SnackbarContextWrapper();
 
   /* Actions */
   function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {
@@ -62,6 +65,7 @@ const useAdminStore = defineStore("admin", () => {
     isBoothDataLoaded,
     isAllDataLoaded,
     isFirstLoad,
+    globalSnackbarContexts,
 
     clear,
     changeBooth,

@@ -217,7 +217,6 @@ export default class BoothManageDialog extends Vue {
       this.open = false;
     } else {
       this.$emit("error");
-      alert("오류 " + result);
     }
 
     this.updateInProgress = false;
