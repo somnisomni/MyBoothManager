@@ -94,7 +94,7 @@ export default class LoginPage extends Vue {
     } else if(window.history.state?.noAccess) {
       useAdminStore().globalSnackbarContexts.add({
         type: "error",
-        text: "접근 권한이 없습니다.",
+        text: "로그인 후에 접근할 수 있습니다.",
         timeout: 3000,
       });
     }
