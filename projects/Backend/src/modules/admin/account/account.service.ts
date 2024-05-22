@@ -2,7 +2,7 @@ import * as argon2 from "argon2";
 import { Injectable, NotImplementedException } from "@nestjs/common";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import Account from "@/db/models/account";
-import { create, removeOne } from "@/lib/common-functions";
+import { create, removeOne, stringCompareCaseSensitive } from "@/lib/common-functions";
 import { EntityNotFoundException } from "@/lib/exceptions";
 import { IAuthPayload } from "../auth/jwt";
 import { CreateAccountDTO } from "./dto/create-account.dto";
@@ -53,7 +53,7 @@ export class AccountService {
 
   async findOneByLoginId(loginId: string, excludePassHash: boolean = true): Promise<Account> {
     const result = await Account.findOne({
-      where: { loginId },
+      where: stringCompareCaseSensitive<Account>("loginId", loginId),
       attributes: {
         exclude: [
           ...SEQUELIZE_INTERNAL_KEYS,
