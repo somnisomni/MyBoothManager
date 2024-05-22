@@ -34,18 +34,6 @@
         </template>
       </GoodsListView>
     </VLayout>
-
-    <VSnackbar v-model="showStockNotEnoughSnackbar" :timeout="2000" close-on-back close-on-content-click location="top">
-      <span class="text-body-2">재고가 부족합니다.</span>
-    </VSnackbar>
-
-    <VSnackbar v-model="showOrderSuccessSnackbar" :timeout="3000" close-on-back close-on-content-click location="top" color="success">
-      <span class="text-body-2"><VIcon>mdi-check-bold</VIcon> 판매가 성공적으로 기록되었습니다.</span>
-    </VSnackbar>
-
-    <VSnackbar v-model="showOrderFailedSnackbar" :timeout="3000" close-on-back close-on-content-click location="top" color="error">
-      <span class="text-body-2"><VIcon>mdi-alert</VIcon> 판매를 기록하는 중 오류가 발생했습니다.</span>
-    </VSnackbar>
   </VMain>
 
   <POSPageLeaveConfirmDialog v-model="showPageLeaveConfirmDialog"
@@ -54,7 +42,7 @@
 
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
-import type { Goods, GoodsCombination } from "@myboothmanager/common-ui";
+import type { Goods, GoodsCombination, SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoodsCategory } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
@@ -79,15 +67,19 @@ export default class BoothPOSPage extends Vue {
   @Setup(() => useDisplay().mdAndUp)
   readonly mdAndUp!: boolean;
 
+  @Setup(() => useAdminStore().globalSnackbarContexts)
+  readonly globalSnackbarContexts!: SnackbarContextWrapper;
+
   orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
   smDrawerHeight: number = 0;
-  showStockNotEnoughSnackbar: boolean = false;
-  showOrderSuccessSnackbar: boolean = false;
-  showOrderFailedSnackbar: boolean = false;
   showPageLeaveConfirmDialog: boolean = false;
   pageLeaveConfirmed: boolean = false;
   private pageLeaveTarget: RouteLocationRaw | null = null;
+
+  private stockNotEnoughSnackbarId = "";
+  private orderCreateSuccessSnackbarId = "";
+  private orderCreateFailedSnackbarId = "";
 
   get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
   get currencySymbol(): string { return this.currentBooth.currencySymbol; }
@@ -143,13 +135,43 @@ export default class BoothPOSPage extends Vue {
       this.orderSimulationLayer?.handleQuantityUpdate(isCombination ? "combination" : "goods", id, delta);
     } catch(e) {
       if(e === "UpperLimitExceeded") {
-        this.showStockNotEnoughSnackbar = true;
+        this.onGoodsStockNotEnough();
       }
     }
   }
 
-  onOrderCreationSuccess(): void { this.showOrderSuccessSnackbar = true; }
-  onOrderCreationFailed(): void { this.showOrderFailedSnackbar = true; }
+  onGoodsStockNotEnough(): void {
+    this.globalSnackbarContexts.removeImmediate(this.stockNotEnoughSnackbarId);
+    this.stockNotEnoughSnackbarId = this.globalSnackbarContexts.add({
+      type: "plain",
+      text: "재고가 부족합니다.",
+      timeout: 2000,
+      closeOnBack: true,
+      closeOnContentClick: true,
+    });
+  }
+
+  onOrderCreationSuccess(): void {
+    this.globalSnackbarContexts.removeImmediate(this.orderCreateSuccessSnackbarId);
+    this.orderCreateSuccessSnackbarId = this.globalSnackbarContexts.add({
+      type: "success",
+      text: "판매가 성공적으로 기록되었습니다.",
+      timeout: 3000,
+      closeOnBack: true,
+      closeOnContentClick: true,
+    });
+  }
+
+  onOrderCreationFailed(): void {
+    this.globalSnackbarContexts.removeImmediate(this.orderCreateFailedSnackbarId);
+    this.orderCreateFailedSnackbarId = this.globalSnackbarContexts.add({
+      type: "error",
+      text: "판매를 기록하는 중 오류가 발생했습니다.",
+      timeout: 3000,
+      closeOnBack: true,
+      closeOnContentClick: true,
+    });
+  }
 }
 </script>
 

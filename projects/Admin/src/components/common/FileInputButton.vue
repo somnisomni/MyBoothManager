@@ -12,16 +12,13 @@
             @click="onFileInputButtonClick">{{ label }}</VBtn>
     </slot>
     <span v-if="!hideFileName" class="ml-2">{{ fileName }}</span>
-
-    <VSnackbar v-model="fileSizeExceededWarningShown" :timeout="3000" location="bottom" color="warning">
-      <span class="text-body-2"><VIcon class="mr-1">mdi-alert</VIcon> {{ maxFileSizeString }}를 초과하는 파일은 선택할 수 없습니다.</span>
-    </VSnackbar>
   </VLayout>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Model, Prop, Ref, Vue } from "vue-facing-decorator";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
+import { useAdminStore } from "@/plugins/stores/admin";
 
 // eslint-disable-next-line import/exports-last
 export enum FileInputAccepts {
@@ -107,7 +104,11 @@ export default class FileInputButton extends Vue {
     const file = this.fileInput.files?.item(0) ?? null;
 
     if(file && file.size > this.maxFileSize) {
-      this.fileSizeExceededWarningShown = true;
+      useAdminStore().globalSnackbarContexts.add({
+        type: "warning",
+        text: `크기가 ${this.maxFileSizeString} 이하인 파일만 선택할 수 있습니다.`,
+      });
+
       this.fileInput.value = "";
       this.value = null;
       return;
