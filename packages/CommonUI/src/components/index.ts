@@ -12,4 +12,4 @@ export { default as GoodsItem, type GoodsItemProps } from "./goods/GoodsItem.vue
 export { default as GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";
 export { default as GoodsListView } from "./goods/GoodsListView.vue";
 
-export { default as GlobalSnackbarManager } from "./global/GlobalSnackbarManager.vue";
+export { default as GlobalSnackbarStack } from "./global/GlobalSnackbarStack.vue";

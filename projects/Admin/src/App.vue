@@ -2,7 +2,7 @@
   <VApp class="bg-transparent">
     <RouterView v-if="isServerAvailable" />
 
-    <GlobalSnackbarManager v-model="globalSnackbarContexts.contexts" />
+    <GlobalSnackbarStack v-model="globalSnackbarContexts.contexts" />
 
     <ServerNotRespondErrorDialog v-model="showServerNotRespondErrorDialog" />
   </VApp>

@@ -17,7 +17,7 @@ export default {
     app.component("GoodsCategoryTitle", C.GoodsCategoryTitle);
     app.component("GoodsListView", C.GoodsListView);
 
-    app.component("GlobalSnackbarManager", C.GlobalSnackbarManager);
+    app.component("GlobalSnackbarStack", C.GlobalSnackbarStack);
   },
 };
 

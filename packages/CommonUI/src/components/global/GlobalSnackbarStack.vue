@@ -32,7 +32,7 @@ import type { VSnackbar } from "vuetify/components";
 import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
 
 @Component({})
-export default class GlobalSnackbarManager extends Vue {
+export default class GlobalSnackbarStack extends Vue {
   readonly STACK_MARGIN = 8;
 
   @Model({ type: Array, required: true }) declare queue: Array<ISnackbarContext>;
