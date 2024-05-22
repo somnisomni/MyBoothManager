@@ -6,13 +6,15 @@ import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 import { manualChunksPlugin } from "vite-plugin-webpackchunkname";
 
+import { APP_NAME } from "@myboothmanager/common";
+
 /* === Defines === */
 const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim(); } catch(e) { return null; } })();
 const packageJson = require("./package.json");
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({
   VITE__APP_VERSION: `"${packageJson.version}"`,
-  VITE__GIT_HASH: `"${commitHash}"` ?? "unknown",
+  VITE__GIT_HASH: `"${commitHash}"` ?? "\"unknown\"",
 }).map(([key, value]) => [`import.meta.env.${key}`, value]));
 /* === */
 
@@ -56,6 +58,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        compact: true,
+        sourcemap: process.env.NODE_ENV !== "production",
+        generatedCode: "es2015",
+        banner: "/*! Admin */\n"
+              + "/*! Copyright (c) 2023- somni */\n\n",
+        footer: `/*! ${APP_NAME} (initially MyBoothManager) v${packageJson.version} */`,
+
         manualChunks: (id) => {
           for(const [chunkName, includes] of Object.entries(chunkFileNameIncludeMap)) {
             if(includes.some((include) => id.includes(include))) return chunkName;
