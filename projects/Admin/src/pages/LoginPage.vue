@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
-import { Component, Vue, Watch } from "vue-facing-decorator";
+import { Component, Hook, Vue, Watch } from "vue-facing-decorator";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -79,11 +79,12 @@ export default class LoginPage extends Vue {
   };
 
   errorMessage = "";
+  logoutStateSnackbarId = "";
   confirmLoginDialogShown = false;
 
   mounted() {
     if(window.history.state?.logout) {
-      useAdminStore().globalSnackbarContexts.add({
+      this.logoutStateSnackbarId = useAdminStore().globalSnackbarContexts.add({
         type: window.history.state?.authTokenInvalid
           ? "warning"
           : "info",
@@ -92,7 +93,7 @@ export default class LoginPage extends Vue {
           : "로그아웃 되었습니다.",
       });
     } else if(window.history.state?.noAccess) {
-      useAdminStore().globalSnackbarContexts.add({
+      this.logoutStateSnackbarId = useAdminStore().globalSnackbarContexts.add({
         type: "error",
         text: "로그인 후에 접근할 수 있습니다.",
         timeout: 3000,
@@ -157,6 +158,11 @@ export default class LoginPage extends Vue {
     if(this.errorMessage.length > 0) {
       this.errorMessage = "";
     }
+  }
+
+  @Hook
+  beforeRouteLeave() {
+    useAdminStore().globalSnackbarContexts.removeImmediate(this.logoutStateSnackbarId);
   }
 }
 </script>
