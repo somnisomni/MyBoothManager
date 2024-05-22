@@ -27,6 +27,8 @@ export interface ISnackbarContext {
   width?: string | number;
   height?: string | number;
   disabled?: boolean;
+  closeOnBack?: boolean;
+  closeOnContentClick?: boolean;
 }
 
 export class SnackbarContextWrapper {
