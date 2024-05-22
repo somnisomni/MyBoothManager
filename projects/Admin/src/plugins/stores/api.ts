@@ -57,15 +57,18 @@ const useAdminAPIStore = defineStore("admin-api", () => {
           $router.replace({ name: "logout", state: { authTokenInvalid: true } });
           break;
         }
-      }
 
-      // Show API error global snackbar
-      $adminStore.globalSnackbarContexts.removeImmediate(apiErrorSnackbarId);
-      apiErrorSnackbarId = $adminStore.globalSnackbarContexts.add({
-        type: "error",
-        text: `API 호출 중 오류가 발생했습니다. (오류 코드: ${result as C.ErrorCodes})`,
-        timeout: 30000,
-      });
+        default: {
+          // Show API error global snackbar
+          $adminStore.globalSnackbarContexts.removeImmediate(apiErrorSnackbarId);
+          apiErrorSnackbarId = $adminStore.globalSnackbarContexts.add({
+            type: "error",
+            text: `API 호출 중 오류가 발생했습니다. (오류 코드: ${result as C.ErrorCodes})`,
+            timeout: 30000,
+          });
+          break;
+        }
+      }
     }
 
     return result;
