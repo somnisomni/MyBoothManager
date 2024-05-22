@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import type { POSOrderList, IGoodsOrderInternal } from "@/pages/subpages/BoothPOSPage.lib";
+import type { POSOrderList, IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
 import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
 import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
 

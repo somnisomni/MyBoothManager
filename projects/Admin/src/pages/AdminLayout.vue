@@ -81,7 +81,7 @@ import { Const } from "@/lib/const";
     BoothSelectionArea,
   },
 })
-export default class BoothAdminLayout extends Vue {
+export default class AdminLayout extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly APP_NAME = APP_NAME;
   readonly APP_VERSION = Const.APP_VERSION;

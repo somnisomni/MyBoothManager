@@ -33,7 +33,7 @@ import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 
 @Component({})
-export default class BoothAdminClosingPage extends Vue {
+export default class ClosingPage extends Vue {
   get currencySymbol(): string {
     return useAdminStore().currentBooth.booth?.currencySymbol ?? "₩";
   }

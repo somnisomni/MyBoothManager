@@ -22,7 +22,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
 @Component({
   emits: ["completed"],
 })
-export default class BoothAdminLoadDataOverlay extends Vue {
+export default class AdminLoadDataOverlay extends Vue {
   loadingTargetName = "";
   loadingTargetLength = -1;
   loadingTargetCurrentProgress = -1;

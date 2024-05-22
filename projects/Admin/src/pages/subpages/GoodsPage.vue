@@ -69,7 +69,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
     GoodsCategoryTitleManageable,
   },
 })
-export default class BoothAdminGoodsPage extends Vue {
+export default class GoodsPage extends Vue {
   readonly getUploadFileUrl = getUploadFileUrl;
 
   goodsManageDialogOpen = false;

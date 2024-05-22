@@ -24,7 +24,7 @@ import GoodsOverviewPanel from "@/components/dashboard/GoodsOverviewPanel.vue";
     GoodsOverviewPanel,
   },
 })
-export default class BoothAdminDashboardPage extends Vue {
+export default class DashboardPage extends Vue {
   readonly BoothStatus = BoothStatus;
 
   get currentBoothData(): IBooth {

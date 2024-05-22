@@ -72,7 +72,7 @@ import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDia
     OrderFilterSettingDialog,
   },
 })
-export default class BoothAdminGoodsOrdersListPage extends Vue {
+export default class GoodsOrdersListPage extends Vue {
   dataLoading: boolean = true;
 
   filterSettingDialogShown: boolean = false;
@@ -92,7 +92,7 @@ export default class BoothAdminGoodsOrdersListPage extends Vue {
   }
 
   @Hook
-  beforeRouteEnter(to: RouteRecordRaw, from: RouteRecordRaw, next: (callback?: (vm?: BoothAdminGoodsOrdersListPage) => void) => void) {
+  beforeRouteEnter(to: RouteRecordRaw, from: RouteRecordRaw, next: (callback?: (vm?: GoodsOrdersListPage) => void) => void) {
     next((vm) => {
       if(vm) {
         if(to.meta?.previousId) {

@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import type { POSOrderList } from "@/pages/subpages/BoothPOSPage.lib";
+import type { POSOrderList } from "@/pages/subpages/POSPage.lib";
 import { type IGoods, type IGoodsCombination, GoodsOrderPaymentMethod } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";

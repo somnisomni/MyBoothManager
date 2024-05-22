@@ -1,7 +1,7 @@
 <template>
   <VFadeTransition leave-absolute>
     <div v-if="!loaded" class="position-absolute w-100 h-100" style="z-index: 1000">
-      <BoothAdminLoadDataOverlay @completed="loaded = true" />
+      <AdminLoadDataOverlay @completed="loaded = true" />
     </div>
     <div v-else-if="needCreateBooth" class="position-absolute w-100 h-100" style="z-index: 1000">
       <NoBoothAvailableOverlay />
@@ -19,16 +19,16 @@
 import { Component, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
-import BoothAdminLoadDataOverlay from "./BoothAdminLoadDataOverlay.vue";
+import AdminLoadDataOverlay from "./AdminLoadDataOverlay.vue";
 import NoBoothAvailableOverlay from "./NoBoothAvailableOverlay.vue";
 
 @Component({
   components: {
-    BoothAdminLoadDataOverlay,
+    AdminLoadDataOverlay,
     NoBoothAvailableOverlay,
   },
 })
-export default class BoothAdminRoot extends Vue {
+export default class AdminRoot extends Vue {
   get loaded(): boolean {
     return useAdminStore().isAllDataLoaded;
   }

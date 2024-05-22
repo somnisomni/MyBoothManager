@@ -51,7 +51,7 @@ import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
 import { getUploadFileUrl } from "@/lib/functions";
-import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
+import { POSOrderSimulationLayer } from "./POSPage.lib";
 
 @Component({
   components: {
@@ -59,7 +59,7 @@ import { POSOrderSimulationLayer } from "./BoothPOSPage.lib";
     POSPageLeaveConfirmDialog,
   },
 })
-export default class BoothPOSPage extends Vue {
+export default class POSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly getUploadFileUrl = getUploadFileUrl;
   readonly goodsItemForceStockVisibility = GoodsStockVisibility.SHOW_ALL;

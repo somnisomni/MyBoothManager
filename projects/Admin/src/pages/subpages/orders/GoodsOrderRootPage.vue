@@ -12,12 +12,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import BoothAdminGoodsOrdersListPage from "./BoothAdminGoodsOrdersListPage.vue";
+import GoodsOrdersListPage from "./GoodsOrderListPage.vue";
 
 @Component({})
-export default class BoothAdminGoodsOrdersRootPage extends Vue {
+export default class GoodsOrdersRootPage extends Vue {
   get keepAliveIncludeNames() {
-    return [ BoothAdminGoodsOrdersListPage.name ];
+    return [ GoodsOrdersListPage.name ];
   }
 }
 </script>

@@ -38,7 +38,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
     BoothMembersPanel,
   },
 })
-export default class BoothAdminInfoPage extends Vue {
+export default class InfoPage extends Vue {
   get boothBannerImagePath(): string | null {
     return useAdminStore().currentBooth.booth!.bannerImage?.path ?? null;
   }

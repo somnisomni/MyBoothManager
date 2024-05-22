@@ -62,7 +62,7 @@ ChartJS.register();
     Chart,
   },
 })
-export default class BoothAdminAnalyticsPage extends Vue {
+export default class AnalyticsPage extends Vue {
   readonly CHART_ANALYTICS_OPTIONS: ChartOptions = {
     responsive: true,
     maintainAspectRatio: true,

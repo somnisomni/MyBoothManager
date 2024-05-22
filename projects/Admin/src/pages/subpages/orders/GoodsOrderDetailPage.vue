@@ -150,7 +150,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
-export default class BoothAdminGoodsOrderDetailPage extends Vue {
+export default class GoodsOrderDetailPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly GoodsOrderStatus = GoodsOrderStatus;
   readonly getPaymentMethodString = getPaymentMethodString;

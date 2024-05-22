@@ -10,19 +10,18 @@ const LoginPage         = () => import(/* webpackChunkName: "pages/fundamentals"
 const PlaceholderPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/dev/PlaceholderPage.vue");
 const SuperAdminPage  = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/superadmin/SuperAdminPage.vue");
 
-const BoothAdminRoot          = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/BoothAdminRoot.vue");
-const BoothAdminLayout        = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/BoothAdminLayout.vue");
-const BoothPOSPage            = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothPOSPage.vue");
-const BoothAdminInfoPage      = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminInfoPage.vue");
-const BoothAdminDashboardPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminDashboardPage.vue");
-const BoothAdminAnalyticsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminAnalyticsPage.vue");
-const BoothAdminClosingPage   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/BoothAdminClosingPage.vue");
+const AdminRoot     = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminRoot.vue");
+const AdminLayout   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminLayout.vue");
+const GoodsPage     = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/GoodsPage.vue");
+const POSPage       = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/POSPage.vue");
+const InfoPage      = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/InfoPage.vue");
+const DashboardPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/DashboardPage.vue");
+const AnalyticsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/AnalyticsPage.vue");
+const ClosingPage   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/ClosingPage.vue");
 
-const BoothAdminGoodsPage     = () => import(/* webpackChunkName: "pages/admin-goods" */ "@/pages/subpages/BoothAdminGoodsPage.vue");
-
-const BoothAdminGoodsOrdersRootPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrdersRootPage.vue");
-const BoothAdminGoodsOrdersListPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrdersListPage.vue");
-const BoothAdminGoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/BoothAdminGoodsOrderDetailPage.vue");
+const GoodsOrdersRootPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderRootPage.vue");
+const GoodsOrdersListPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderListPage.vue");
+const GoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderDetailPage.vue");
 /* === */
 
 const isProd: boolean = import.meta.env.PROD;
@@ -66,54 +65,54 @@ const router = createRouter({
     {
       path: "/",
       name: "admin-root",
-      component: BoothAdminRoot,
+      component: AdminRoot,
       children: [
         {
           path: "",
           name: "admin-layout",
-          component: BoothAdminLayout,
+          component: AdminLayout,
           children: [
             {
               path: "",
               name: "admin",
-              component: BoothAdminDashboardPage,
+              component: DashboardPage,
             },
             {
               path: "info",
               name: "admin-info",
-              component: BoothAdminInfoPage,
+              component: InfoPage,
             },
             {
               path: "goods",
               name: "admin-goods",
-              component: BoothAdminGoodsPage,
+              component: GoodsPage,
             },
             {
               path: "orders",
               name: "admin-orders-root",
-              component: BoothAdminGoodsOrdersRootPage,
+              component: GoodsOrdersRootPage,
               children: [
                 {
                   path: "",
                   name: "admin-orders",
-                  component: BoothAdminGoodsOrdersListPage,
+                  component: GoodsOrdersListPage,
                 },
                 {
                   path: ":id",
                   name: "admin-order-detail",
-                  component: BoothAdminGoodsOrderDetailPage,
+                  component: GoodsOrderDetailPage,
                 },
               ],
             },
             {
               path: "analytics",
               name: "admin-analytics",
-              component: BoothAdminAnalyticsPage,
+              component: AnalyticsPage,
             },
             {
               path: "closing",
               name: "admin-closing",
-              component: BoothAdminClosingPage,
+              component: ClosingPage,
             },
             {
               path: "utility/price-calculator",
@@ -125,7 +124,7 @@ const router = createRouter({
         {
           path: "/pos",
           name: "admin-pos",
-          component: BoothPOSPage,
+          component: POSPage,
         },
       ],
     },
