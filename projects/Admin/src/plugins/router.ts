@@ -172,7 +172,7 @@ router.beforeEach(async (to, from, next) => {
   if(authTokenAvailable && to.name === "login") {
     next({ name: "admin" });
   } else if(!authTokenAvailable && to.name !== "login") {
-    next({ name: "login" });
+    next({ name: "login", state: { noAccess: true } });
   } else {
     next();
   }
