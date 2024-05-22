@@ -58,8 +58,9 @@
 </template>
 
 <script lang="ts">
+import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
-import { Component, Hook, Vue, Watch } from "vue-facing-decorator";
+import { Component, Hook, Setup, Vue, Watch } from "vue-facing-decorator";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -70,6 +71,9 @@ export default class LoginPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly APP_VERSION = Const.APP_VERSION;
   readonly APP_GIT_HASH = Const.APP_GIT_HASH;
+
+  @Setup(() => useAdminStore().globalSnackbarContexts)
+  declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
   formValid = false;
   loginProgress = false;
@@ -84,7 +88,7 @@ export default class LoginPage extends Vue {
 
   mounted() {
     if(window.history.state?.logout) {
-      this.logoutStateSnackbarId = useAdminStore().globalSnackbarContexts.add({
+      this.logoutStateSnackbarId = this.globalSnackbarContexts.add({
         type: window.history.state?.authTokenInvalid
           ? "warning"
           : "info",
@@ -93,7 +97,7 @@ export default class LoginPage extends Vue {
           : "로그아웃 되었습니다.",
       });
     } else if(window.history.state?.noAccess) {
-      this.logoutStateSnackbarId = useAdminStore().globalSnackbarContexts.add({
+      this.logoutStateSnackbarId = this.globalSnackbarContexts.add({
         type: "error",
         text: "로그인 후에 접근할 수 있습니다.",
         timeout: 3000,
@@ -162,7 +166,7 @@ export default class LoginPage extends Vue {
 
   @Hook
   beforeRouteLeave() {
-    useAdminStore().globalSnackbarContexts.removeImmediate(this.logoutStateSnackbarId);
+    this.globalSnackbarContexts.removeImmediate(this.logoutStateSnackbarId);
   }
 }
 </script>

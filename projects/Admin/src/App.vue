@@ -20,20 +20,14 @@ export default class App extends Vue {
   showServerNotRespondErrorDialog: boolean = false;
 
   @Setup(() => useAdminStore().globalSnackbarContexts)
-  declare globalSnackbarContexts: SnackbarContextWrapper;
+  declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
   async mounted() {
     console.info("%cMade with %c❤️", `font-size: 1.5rem; color: ${APP_PRIMARY_COLOR}`, "font-size: 1.5rem; color: red");
 
-    const serverConnectionCheckSnackbarId = this.globalSnackbarContexts.add({
-      type: "loading",
+    await this.globalSnackbarContexts.addLoading({
       text: "서버 연결 상태 확인 중...",
-      persistent: true,
-    });
-
-    this.isServerAvailable = await AdminAPI.checkAPIServerAlive();
-
-    this.globalSnackbarContexts.removeImmediate(serverConnectionCheckSnackbarId);
+    }, async () => this.isServerAvailable = await AdminAPI.checkAPIServerAlive());
 
     if(!this.isServerAvailable) {
       this.showServerNotRespondErrorDialog = true;

@@ -48,6 +48,20 @@ export class SnackbarContextWrapper {
     return id;
   }
 
+  async addLoading<T>(context: Omit<ISnackbarContext, "id" | "type" | "persistent">, loadingFunc: () => Promise<T>): Promise<T> {
+    const id = this.add({
+      ...context,
+      type: "loading",
+      persistent: true,
+    });
+
+    const result = await loadingFunc();
+
+    this.removeImmediate(id);
+
+    return result;
+  }
+
   removeImmediate(id: string): void {
     const context = this._contexts.find((context) => context.id === id);
 

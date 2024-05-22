@@ -68,7 +68,7 @@ export default class BoothPOSPage extends Vue {
   readonly mdAndUp!: boolean;
 
   @Setup(() => useAdminStore().globalSnackbarContexts)
-  readonly globalSnackbarContexts!: SnackbarContextWrapper;
+  declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
   orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
