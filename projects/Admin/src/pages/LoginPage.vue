@@ -1,5 +1,6 @@
 <template>
-  <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column" style="word-break: keep-all">
+  <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column pa-0"
+              style="word-break: keep-all">
     <VCard elevation="8" class="overflow-hidden" style="max-width: 100%; z-index: 1000;">
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
@@ -10,17 +11,36 @@
                       label="로그인 ID"
                       type="text"
                       required
-                      autofocus
+                      :autofocus="!shouldRememberLoginId"
                       :rules="[ () => loginData.loginId.length <= 0 ? 'ID를 입력하세요.' : true ]"/>
           <VTextField v-model="loginData.loginPass"
                       class="my-2"
                       label="패스워드"
                       type="password"
                       required
+                      :autofocus="shouldRememberLoginId"
                       :rules="[ () => loginData.loginPass.length <= 0 ? '패스워드를 입력하세요.' : true ]"/>
 
+          <div>
+            <VCheckbox  v-model="shouldRememberLoginId"
+                        class="mb-2"
+                        label="&nbsp;로그인 ID 기억하기"
+                        color="primary"
+                        density="dense"
+                        hide-details />
+            <VExpandTransition>
+              <VSheet v-if="shouldRememberLoginId">
+                <p class="ml-6 text-left text-subtitle-2 text-warning"
+                  style="font-size: 0.9em !important;">
+                  <VIcon icon="mdi-alert" /> 공용 기기나 브라우저에서는 타인에게 ID가 노출될 수 있습니다. 사용에 유의해주세요.
+                </p>
+              </VSheet>
+            </VExpandTransition>
+          </div>
+
           <VExpandTransition>
-            <VSheet v-if="errorMessage">
+            <VSheet v-if="errorMessage"
+                    class="mt-4">
               <VAlert type="error">{{ errorMessage }}</VAlert>
             </VSheet>
           </VExpandTransition>
@@ -35,8 +55,6 @@
                   @click.prevent="doLogin(false)">로그인</VBtn>
           </VLayout>
         </VForm>
-
-        <p class="text-caption mt-4 text-disabled">현재 계정 생성 및 패스워드 변경 등은 신청을 받아 직접 처리하고 있습니다.<br />개발자에게 문의해주세요.</p>
       </VCardText>
     </VCard>
 
@@ -61,10 +79,11 @@
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue, Watch } from "vue-facing-decorator";
+import { Const } from "@/lib/const";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
 import { useAdminStore } from "@/plugins/stores/admin";
-import { Const } from "@/lib/const";
+import { useLocalStore } from "@/plugins/stores/local";
 
 @Component({})
 export default class LoginPage extends Vue {
@@ -81,12 +100,14 @@ export default class LoginPage extends Vue {
     loginId: "",
     loginPass: "",
   };
+  shouldRememberLoginId = false;
 
   errorMessage = "";
   logoutStateSnackbarId = "";
   confirmLoginDialogShown = false;
 
   mounted() {
+    /* History state handling */
     if(window.history.state?.logout) {
       this.logoutStateSnackbarId = this.globalSnackbarContexts.add({
         type: window.history.state?.authTokenInvalid
@@ -107,6 +128,10 @@ export default class LoginPage extends Vue {
     window.history.state.logout = undefined;
     window.history.state.authTokenInvalid = undefined;
     window.history.state.noAccess = undefined;
+
+    /* Fill login ID if exists */
+    this.loginData.loginId = useLocalStore().settings.lastLoginId ?? "";
+    this.shouldRememberLoginId = !!useLocalStore().settings.lastLoginId;
   }
 
   async doLogin(confirm?: boolean) {
@@ -127,6 +152,9 @@ export default class LoginPage extends Vue {
         router.replace({ name: "superadmin" });
       } else {
         router.replace({ name: "admin" });
+
+        // Save last login ID to local storage (only for normal admin accounts)
+        useLocalStore().settings.lastLoginId = this.shouldRememberLoginId ? this.loginData.loginId : null;
       }
     } else if(typeof result === "number") {
       switch(result) {
@@ -146,7 +174,7 @@ export default class LoginPage extends Vue {
           this.confirmLoginDialogShown = true;
           break;
         case ErrorCodes.UNKNOWN_ERROR:
-          this.errorMessage = "지정되지 않은 오류 또는 서버 API 호출 중 오류가 발생했습니다.";
+          this.errorMessage = "지정되지 않은 오류 또는 서버 API 호출 중 오류가 발생했습니다. 서비스 관리자에게 문의해주세요.";
           break;
         default:
           this.errorMessage = `로그인 중 알 수 없는 오류가 발생했습니다. (${result})`;
