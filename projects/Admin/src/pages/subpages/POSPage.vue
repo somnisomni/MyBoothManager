@@ -151,11 +151,11 @@ export default class POSPage extends Vue {
     });
   }
 
-  onOrderCreationSuccess(): void {
+  onOrderCreationSuccess(createdOrderId: number): void {
     this.globalSnackbarContexts.removeImmediate(this.orderCreateSuccessSnackbarId);
     this.orderCreateSuccessSnackbarId = this.globalSnackbarContexts.add({
       type: "success",
-      text: "판매가 성공적으로 기록되었습니다.",
+      text: `판매가 성공적으로 기록되었습니다.\n(생성된 판매 기록 ID: ${createdOrderId})`,
       timeout: 3000,
       closeOnBack: true,
       closeOnContentClick: true,

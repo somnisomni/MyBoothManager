@@ -394,14 +394,19 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     );
   }
 
-  async function createGoodsOrder(payload: C.IGoodsOrderCreateRequest): Promise<true | C.ErrorCodes> {
-    return await simplifyAPICall(
+  async function createGoodsOrder(payload: C.IGoodsOrderCreateRequest): Promise<number | C.ErrorCodes> {
+    let createdOrderId = -1;
+
+    await simplifyAPICall(
       () => AdminAPI.createGoodsOrder(payload),
       (response) => {
         if(!$adminStore.currentBooth.goodsOrders) $adminStore.currentBooth.goodsOrders = {};
         $adminStore.currentBooth.goodsOrders[response.id] = response;
+        createdOrderId = response.id;
       },
     );
+
+    return createdOrderId;
   }
 
   async function updateGoodsOrderStatus(orderId: number, payload: C.IGoodsOrderStatusUpdateRequest): Promise<true | C.ErrorCodes> {
