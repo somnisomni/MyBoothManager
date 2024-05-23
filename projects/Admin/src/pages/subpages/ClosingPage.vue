@@ -40,6 +40,12 @@
               <span>{{ currentBooth.boothMembers![memberId].name }}</span>
               <span>{{ currencySymbol }}{{ revenue.toLocaleString() }}</span>
             </li>
+
+            <li v-if="Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue) !== 0"
+                class="d-flex justify-space-between">
+              <span>잔여 금액</span>
+              <span>{{ currencySymbol }}{{ Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue).toLocaleString() }}</span>
+            </li>
           </ul>
         </VTabsWindowItem>
 
@@ -194,11 +200,15 @@ export default class ClosingPage extends Vue {
 
     for(const member of Object.values(this.currentBooth.boothMembers ?? {})) {
       const goodsTotal = this.goodsMemberMap.get(member.id)!
-        .map((goodsId) => this.goodsRevenueMap.get(goodsId)!.total)
-        .reduce((acc, cur) => acc + cur, 0);
+        .map((goodsId) => {
+          const rev = this.goodsRevenueMap.get(goodsId);
+          return rev ? rev.total : 0;
+        }).reduce((acc, cur) => acc + cur, 0);
       const combinationTotal = this.goodsCombinationMemberMap.get(member.id)!
-        .map((combinationId) => this.goodsCombinationRevenueMap.get(combinationId)!.total)
-        .reduce((acc, cur) => acc + cur, 0);
+        .map((combinationId) => {
+          const rev = this.goodsCombinationRevenueMap.get(combinationId);
+          return rev ? rev.total : 0;
+        }).reduce((acc, cur) => acc + cur, 0);
 
       map.set(member.id, goodsTotal + combinationTotal);
     }
