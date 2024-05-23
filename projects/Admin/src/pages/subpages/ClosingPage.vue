@@ -1,6 +1,9 @@
 <template>
-  <VContainer class="mt-4 pa-2 pa-md-6">
+  <VContainer class="mt-4 pa-2 pa-md-6"
+              style="max-width: 700px;">
     <div class="mb-4">
+      <h2>굿즈 판매 목록</h2>
+
       <ul style="list-style: none">
         <li v-for="[ combinationId, data ] in goodsCombinationRevenueMap"
             :key="combinationId"
@@ -23,8 +26,12 @@
       </ul>
     </div>
 
+    <VDivider class="my-4" />
+
     <div v-if="Object.values(currentBooth.boothMembers ?? { }).length > 0"
          class="mb-4">
+      <h2>멤버 수익 분배</h2>
+
       <VTabs v-model="memberRevenueDistributionStrategy"
              fixed-tabs>
         <VTab value="own">소유 굿즈별 분배</VTab>
@@ -60,32 +67,6 @@
           </ul>
         </VTabsWindowItem>
       </VTabsWindow>
-    </div>
-
-    <h2>goods</h2>
-    <div v-for="[ memberId, goodsIds ] in goodsMemberMap" :key="memberId">
-      <h3>member ID #{{ memberId }}</h3>
-      <div v-for="goodsId in goodsIds" :key="goodsId">
-        <p>have goods #{{ goodsId }}</p>
-      </div>
-    </div>
-
-    <h2>combinations</h2>
-    <div v-for="[ memberId, combinationIds ] in goodsCombinationMemberMap" :key="memberId">
-      <h3>member ID #{{ memberId }}</h3>
-      <div v-for="combinationId in combinationIds" :key="combinationId">
-        <p>have combination #{{ combinationId }}</p>
-      </div>
-    </div>
-
-    <h2>goods sell worth map</h2>
-    <div v-for="[ goodsId, data ] in goodsRevenueMap" :key="goodsId">
-      <p>goods #{{ goodsId }}: {{ data.quantity.toLocaleString() }}개 / {{ currencySymbol }}{{ data.total.toLocaleString() }}</p>
-    </div>
-
-    <h2>goods combination sell worth map</h2>
-    <div v-for="[ combinationId, data ] in goodsCombinationRevenueMap" :key="combinationId">
-      <p>combination #{{ combinationId }}: {{ data.quantity.toLocaleString() }} 개 / {{ currencySymbol }}{{ data.total.toLocaleString() }}</p>
     </div>
   </VContainer>
 </template>
