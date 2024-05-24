@@ -98,13 +98,13 @@ export default class ClosingPage extends Vue {
 
           if(map.has(goods.gId)) {
             map.set(goods.gId, {
-              name: this.currentBooth.goods![goods.gId]!.name,
+              name: goods.name ?? this.currentBooth.goods![goods.gId]?.name,
               quantity: map.get(goods.gId)!.quantity + goods.quantity,
               total: map.get(goods.gId)!.total + calculatedPrice,
             });
           } else {
             map.set(goods.gId, {
-              name: this.currentBooth.goods![goods.gId]!.name,
+              name: goods.name ?? this.currentBooth.goods![goods.gId]?.name,
               quantity: goods.quantity,
               total: calculatedPrice,
             });
@@ -127,13 +127,13 @@ export default class ClosingPage extends Vue {
 
           if(map.has(combination.cId)) {
             map.set(combination.cId, {
-              name: this.currentBooth.goodsCombinations![combination.cId]!.name,
+              name: combination.name ?? this.currentBooth.goodsCombinations![combination.cId]?.name,
               quantity: map.get(combination.cId)!.quantity + combination.quantity,
               total: map.get(combination.cId)!.total + calculatedPrice,
             });
           } else {
             map.set(combination.cId, {
-              name: this.currentBooth.goodsCombinations![combination.cId]!.name,
+              name: combination.name ?? this.currentBooth.goodsCombinations![combination.cId]?.name,
               quantity: combination.quantity,
               total: calculatedPrice,
             });
