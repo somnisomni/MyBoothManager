@@ -2,8 +2,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PublicFairModule } from "@/modules/public/fair/fair.module";
 import { FairController } from "./fair.controller";
 import { FairService } from "./fair.service";
+import { AdminAuthGuard } from "../auth/auth.guard";
 
-describe("AdminFairController", () => {
+describe("FairController", () => {
   let controller: FairController;
 
   beforeEach(async () => {
@@ -11,7 +12,7 @@ describe("AdminFairController", () => {
       imports: [PublicFairModule],
       controllers: [FairController],
       providers: [FairService],
-    }).compile();
+    }).overrideGuard(AdminAuthGuard).useValue({ canActivate: () => true }).compile();
 
     controller = module.get<FairController>(FairController);
   });
