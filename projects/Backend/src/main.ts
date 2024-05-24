@@ -50,6 +50,9 @@ async function bootstrap() {
     crossOriginResourcePolicy: { policy: "cross-origin" },
     crossOriginEmbedderPolicy: { policy: "require-corp" },
     crossOriginOpenerPolicy: { policy: "same-origin" },
+    frameguard: { action: "deny" },
+    noSniff: true,
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   });
   await app.register(fastifyMultipart, {
     limits: {
