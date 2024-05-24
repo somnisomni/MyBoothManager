@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PublicFairController } from "./fair.controller";
 import { PublicFairService } from "./fair.service";
 
-describe("FairController", () => {
+describe("PublicFairController", () => {
   let controller: PublicFairController;
 
   beforeEach(async () => {

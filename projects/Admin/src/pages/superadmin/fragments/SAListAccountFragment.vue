@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <VBtn @click="refreshList">새로고침</VBtn>
+  <div class="px-2 my-8">
+    <h2>부스 관리 계정 목록 <VBtn class="ml-2" @click="refreshList">새로고침</VBtn></h2>
 
     <VDataTable :headers="tableHeaders"
                 :items="accounts"
@@ -12,8 +12,7 @@
 import type { ISuperAdminAccountResponse } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import moment from "moment";
-import AdminAPI from "@/lib/api-admin";
-import { useAdminStore } from "@/plugins/stores/admin";
+import SuperAdminAPI from "../SuperAdminPage.lib";
 
 type ISuperAdminAccountResponseInternal = ISuperAdminAccountResponse & {
   lastLoginAt: string,
@@ -48,7 +47,7 @@ export default class SAListAccountFragment extends Vue {
   async refreshList() {
     this.isLoading = true;
 
-    const response = await AdminAPI.fetchAllAccounts(useAdminStore().currentAccount!);
+    const response = await SuperAdminAPI.fetchAllAccounts();
 
     if(response instanceof Array) {
       this.accounts = response.map((account) => ({

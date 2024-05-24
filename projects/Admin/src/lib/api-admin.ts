@@ -1,11 +1,11 @@
 import * as CT from "@myboothmanager/common";
 import { useAuthLocalStore } from "@/plugins/stores/auth";
 
-export default class AdminAPI {
-  private static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthLocalStore().accessToken!);
+export class BaseAdminAPI {
+  protected static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthLocalStore().accessToken!);
 
   /* Admin FE specific API call wrapper */
-  private static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {
+  protected static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {
     const response = await callee() as T | CT.IErrorResponse;
 
     if(typeof ((response as CT.IErrorResponse).errorCode) === "number") {
@@ -14,7 +14,9 @@ export default class AdminAPI {
       return response as T;
     }
   }
+}
 
+export default class AdminAPI extends BaseAdminAPI {
   /* == Endpoints == */
   /* Common */
   static async checkAPIServerAlive(): Promise<boolean> {
@@ -46,12 +48,6 @@ export default class AdminAPI {
   }
 
   /* Fetch */
-  static async fetchAllAccounts(currentAccountData: CT.IAccount) {
-    if(currentAccountData.superAdmin)
-      return await this.apiCallWrapper<Array<CT.ISuperAdminAccountResponse>>(() => this.API.GET("account/all"));
-    else return CT.ErrorCodes.NO_ACCESS;
-  }
-
   static async fetchCurrentAccountInfo() {
     return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.GET("account"));
   }
@@ -115,12 +111,6 @@ export default class AdminAPI {
   }
 
   /* Create */
-  static async createAccount(currentAccountData: CT.IAccount, payload: CT.IAccountCreateRequest) {
-    if(currentAccountData.superAdmin)
-      return await this.apiCallWrapper<CT.IAccountResponse>(() => this.API.POST("account", payload));
-    else return CT.ErrorCodes.NO_ACCESS;
-  }
-
   static async createBooth(payload: CT.IBoothCreateRequest) {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.POST("booth", payload));
   }

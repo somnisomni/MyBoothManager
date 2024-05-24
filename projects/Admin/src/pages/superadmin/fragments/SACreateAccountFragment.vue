@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="px-2 my-8">
+    <h2>새 부스 관리 계정 생성</h2>
+
     <CommonForm v-model="isFormValid"
                 v-model:edited="isFormEdited"
                 v-model:data="formModels"
@@ -8,18 +10,20 @@
                 :disabled="createInProgress" />
 
     <VBtn :loading="createInProgress"
-          :disabled="createInProgress"
+          :disabled="!isFormValid || createInProgress"
+          class="w-100"
           @click="createAccount">생성</VBtn>
   </div>
 </template>
 
 <script lang="ts">
 import type { IAccountCreateRequest } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
+import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
 import { reactive } from "vue";
-import AdminAPI from "@/lib/api-admin";
+import CommonForm, { type FormFieldOptions, FormFieldType } from "@/components/common/CommonForm.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
-import CommonForm, { type FormFieldOptions, FormFieldType } from "../../../components/common/CommonForm.vue";
+import SuperAdminAPI from "../SuperAdminPage.lib";
 
 @Component({
   components: {
@@ -27,6 +31,12 @@ import CommonForm, { type FormFieldOptions, FormFieldType } from "../../../compo
   },
 })
 export default class SACreateAccountFragment extends Vue {
+  @Setup(() => useAdminStore().globalSnackbarContexts)
+  declare readonly globalSnackbarContexts: SnackbarContextWrapper;
+
+  @Ref("form")
+  declare readonly form: CommonForm;
+
   isFormValid = false;
   isFormEdited = false;
   createInProgress = false;
@@ -44,7 +54,7 @@ export default class SACreateAccountFragment extends Vue {
     },
     loginId: {
       type: FormFieldType.TEXT,
-      label: "새 계정 ID",
+      label: "새 계정 로그인 ID",
     },
     loginPass: {
       type: FormFieldType.PASSWORD,
@@ -56,13 +66,24 @@ export default class SACreateAccountFragment extends Vue {
     this.createInProgress = true;
 
     if(!this.formModels.loginId || !this.formModels.loginPass || !this.formModels.name) {
-      alert("계정 생성 데이터 일부분 누락");
+      this.globalSnackbarContexts.add({
+        type: "warning",
+        text: "계정 생성 데이터 일부분 누락",
+      });
     } else {
-      const res = await AdminAPI.createAccount(useAdminStore().currentAccount!, this.formModels);
-      if(typeof res !== "string") {
-        alert("계정 생성 성공");
+      const res = await SuperAdminAPI.createAccount(this.formModels);
+
+      if(typeof res === "object") {
+        this.globalSnackbarContexts.add({
+          type: "success",
+          text: `계정 생성 성공 (ID: ${res.id})`,
+        });
+        this.form.reset();
       } else {
-        alert("계정 생성 실패: " + res);
+        this.globalSnackbarContexts.add({
+          type: "error",
+          text: `계정 생성 실패: ${res}`,
+        });
       }
     }
 

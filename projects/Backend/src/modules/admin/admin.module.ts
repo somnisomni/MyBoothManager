@@ -7,11 +7,13 @@ import { GoodsOrderModule } from "./goods-order/goods-order.module";
 import { GoodsCategoryModule } from "./goods-category/goods-category.module";
 import { GoodsCombinationModule } from "./goods-combination/goods-combination.module";
 import { BoothMemberModule } from "./booth-member/booth-member.module";
+import { FairModule } from "./fair/fair.module";
 
 @Module({
   imports: [
     AccountModule,
     AuthModule,
+    FairModule,
     BoothModule,
     BoothMemberModule,
     GoodsModule,
