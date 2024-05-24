@@ -1,6 +1,7 @@
 import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
+import { DateTime } from "luxon";
 import Account from "./account";
 import GoodsCategory from "./goods-category";
 import GoodsOrder from "./goods-order";
@@ -8,6 +9,7 @@ import UploadStorage from "./uploadstorage";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
 import BoothMember from "./booth-member";
+import Fair from "./fair";
 
 @Table
 @DefaultScope(() => ({
@@ -31,6 +33,11 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @ForeignKey(() => Account)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare ownerId: number;
+
+  @AllowNull
+  @ForeignKey(() => Fair)
+  @Column(DataTypes.INTEGER.UNSIGNED)
+  declare fairId?: number | null;
 
   @AllowNull(false)
   @Column(DataTypes.STRING(256))
@@ -66,6 +73,17 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Column(DataTypes.DATEONLY)
   declare dateClose?: Date | null;
 
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.JSON)
+  get datesOpenInFair(): Array<string> | null {
+    return this.getDataValue("datesOpenInFair") ?? null;
+  }
+  set datesOpenInFair(value: Array<string> | Array<Date>) {
+    const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
+    this.setDataValue("datesOpenInFair", dateonlyArray);
+  }
+
   @AllowNull(false)
   @Default([])
   @Column(DataTypes.JSON)
@@ -100,8 +118,11 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
 
 
   /* === Relations === */
-  @BelongsTo(() => Account)
+  @BelongsTo(() => Account, "ownerId")
   declare ownerAccount: Account;
+
+  @BelongsTo(() => Fair, "fairId")
+  declare associatedFair?: Fair;
 
   @HasMany(() => Goods)
   declare goods: Goods[];

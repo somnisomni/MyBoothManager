@@ -5,6 +5,7 @@ import Booth from "@/db/models/booth";
 @Exclude()
 export class PublicBoothResponseDto implements IBoothResponse {
   @Expose() declare id: number;
+  @Expose() declare fairId?: number | null;
   @Expose() declare name: string;
   @Expose() declare description?: string | null;
   @Expose() declare location?: string | null;
@@ -13,6 +14,7 @@ export class PublicBoothResponseDto implements IBoothResponse {
   @Expose() declare status: IBoothStatus;
   @Expose() declare dateOpen?: Date | null;
   @Expose() declare dateClose?: Date | null;
+  @Expose() declare datesOpenInFair?: Array<Date> | null;
   @Expose() declare infoImage?: IImageUploadInfo;
   @Expose() declare bannerImage?: IImageUploadInfo;
 
@@ -22,6 +24,7 @@ export class PublicBoothResponseDto implements IBoothResponse {
     const values = model.get();
 
     this.id = values.id;
+    this.fairId = values.fairId;
     this.name = values.name;
     this.description = values.description;
     this.location = values.location;
@@ -34,6 +37,7 @@ export class PublicBoothResponseDto implements IBoothResponse {
     };
     this.dateOpen = values.dateOpen;
     this.dateClose = values.dateClose;
+    this.datesOpenInFair = values.datesOpenInFair as Array<Date> | null;
     this.infoImage = model.infoImage?.toImageUploadInfo();
     this.bannerImage = model.bannerImage?.toImageUploadInfo();
   }

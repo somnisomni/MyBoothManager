@@ -1524,6 +1524,7 @@ __metadata:
     "@tsconfig/node20": "npm:^20.1.4"
     "@types/clone-deep": "npm:^4.0.4"
     "@types/jest": "npm:^29.5.12"
+    "@types/luxon": "npm:^3.4.2"
     "@types/node": "npm:^20.12.12"
     "@types/sequelize": "npm:^4.28.20"
     "@types/validator": "npm:^13.11.10"
@@ -1541,6 +1542,7 @@ __metadata:
     expect-type: "npm:^0.19.0"
     fastify: "npm:=4.26.2"
     jest: "npm:^29.7.0"
+    luxon: "npm:^3.4.4"
     mysql2: "npm:^3.9.7"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.1"
@@ -1625,19 +1627,19 @@ __metadata:
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
   version: 0.3.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=cd11a2&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d2e5e0&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/bf7d132763ffef4cc2da25f93e32149522d28345e5d79e5cc55726249207235698fb02e192040f08272013850b239f8f02164b7b5ff000d84b19150b66bf98cd
+  checksum: 10/97424a291215f610438cee0fbefd2bcc71ff5875ed719b005895c6120174bb00521be82a212fdedbbcd3efaed867554c5fcfdad03375828cae1f4d6f7e756c58
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
   version: 0.3.1
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=cd11a2&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=d2e5e0&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/bf7d132763ffef4cc2da25f93e32149522d28345e5d79e5cc55726249207235698fb02e192040f08272013850b239f8f02164b7b5ff000d84b19150b66bf98cd
+  checksum: 10/97424a291215f610438cee0fbefd2bcc71ff5875ed719b005895c6120174bb00521be82a212fdedbbcd3efaed867554c5fcfdad03375828cae1f4d6f7e756c58
   languageName: node
   linkType: hard
 
@@ -2470,6 +2472,13 @@ __metadata:
   version: 4.17.4
   resolution: "@types/lodash@npm:4.17.4"
   checksum: 10/3ec19f9fc48200006e71733e08bcb1478b0398673657fcfb21a8643d41a80bcce09a01000077c3b23a3c6d86b9b314abe0672a8fdfc0fd66b893bd41955cfab8
+  languageName: node
+  linkType: hard
+
+"@types/luxon@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "@types/luxon@npm:3.4.2"
+  checksum: 10/fd89566e3026559f2bc4ddcc1e70a2c16161905ed50be9473ec0cfbbbe919165041408c4f6e06c4bcf095445535052e2c099087c76b1b38e368127e618fc968d
   languageName: node
   linkType: hard
 
@@ -7388,6 +7397,13 @@ __metadata:
   version: 8.0.5
   resolution: "lru-cache@npm:8.0.5"
   checksum: 10/74153ab136d0c2d735003b8b1c0fa8213c94c2520701dfe8bb31d957f975b3d3665b1ef27ac9a5b9f92c8f581c79008834c0f9bd60c5adf368476f9a95e8fa82
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "luxon@npm:3.4.4"
+  checksum: 10/c14164bc338987349075a08e63ea3ff902866735f7f5553a355b27be22667919765ff96fde4d3413d0e9a0edc4ff9e2e74ebcb8f86eae0ce8b14b27330d87d6e
   languageName: node
   linkType: hard
 

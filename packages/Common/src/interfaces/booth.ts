@@ -46,7 +46,8 @@ export interface IBoothAdmin extends IBooth {
 }
 
 /* === Model for Backend (DB) === */
-export interface IBoothModel extends Omit<IBoothCommon, "status"> {
+export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "status"> {
+  datesOpenInFair?: Array<string> | null;   // JSON string array of "YYYY-MM-DD"
   status: BoothStatus;
   statusReason?: string | null;
   statusContentPublished: boolean;
