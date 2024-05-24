@@ -71,4 +71,8 @@ export enum ErrorCodes {
   EMPTY_UPLOAD              = 8001,
   INVALID_IMAGE             = 8002,
   IMAGE_MANIPULATION_FAILED = 8003,
+
+  // 9XXX: Fair errors
+  UNKNOWN_FAIR_ERROR = 9000,
+  FAIR_PASSED        = 9001,
 }
