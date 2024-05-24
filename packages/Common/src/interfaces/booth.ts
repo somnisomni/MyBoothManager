@@ -10,8 +10,9 @@ interface IBoothCommon {
   description?: string | null;
   location?: string | null;
   boothNumber?: string | null;
-  dateOpen?: Date | null;
-  dateClose?: Date | null;
+  dateOpen?: Date | null;   // For custom fair
+  dateClose?: Date | null;  // For custom fair
+  datesOpenInFair?: Array<Date> | null;  // For selected fair
   status: IBoothStatus;
 }
 

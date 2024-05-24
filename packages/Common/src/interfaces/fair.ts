@@ -3,8 +3,7 @@ interface IFairCommon {
   id: number;
   name: string;
   location: string;
-  startDate: Date;
-  endDate: Date;
+  openingDates: Array<Date>;    // String array of "YYYY-MM-DD"
   websiteUrl?: string | null;
 }
 
