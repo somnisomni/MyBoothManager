@@ -18,7 +18,7 @@
     <VLayout class="d-flex flex-column flex-md-row">
       <div class="d-flex flex-column">
         <!-- Fair selection -->
-        <VSelect v-model.number="formModels.fairId"
+        <VAutocomplete v-model.number="formModels.fairId"
                  :items="normalizedFairList"
                  label="행사"
                  item-title="name"
@@ -36,7 +36,7 @@
               </VListItemSubtitle>
             </VListItem>
           </template>
-        </VSelect>
+        </VAutocomplete>
 
         <!-- Form -->
         <CommonForm v-model="isFormValid"
