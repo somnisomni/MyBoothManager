@@ -7,8 +7,9 @@
          :key="field.label"
          class="d-flex flex-row flex-nowrap justify-center align-center">
       <component v-if="isFormField(field.type)"
-                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+                 v-show="!field.hide"
                  v-model.trim.lazy="models[fieldname]"
+                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  :tabindex="index + 1    /* tabindex should be started with 1 */"
                  :type="isNumericField(field.type) ? 'number' : field.type"
                  :label="`${field.label}` + (field.optional ? '' : ' *')"
@@ -28,12 +29,13 @@
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :clearable="field.optional"
-                 :disabled="field.disabled"
+                 :disabled="field.hide || field.disabled"
                  :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
                  :items="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).items : undefined"
                  :item-title="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemTitle : undefined"
                  :item-value="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemValue : undefined"
-                 :rules="[...(field.rules ?? []),
+                 :rules="field.hide ? [] : [
+                          ...(field.rules ?? []),
                           ...(field.optional ? [] : RULE_MANDATORY),
                           ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
                  @change="() => {
@@ -74,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { markRaw, reactive, toRaw, readonly, type Component as VueComponent } from "vue";
+import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
@@ -137,6 +139,7 @@ export interface IFormFieldOptions {
   placeholder?: string;
   prefix?: string;
   suffix?: string;
+  hide?: boolean;
   disabled?: boolean;
 
   // Validation
@@ -241,7 +244,12 @@ export default class CommonForm extends Vue {
   }
 
   /* Common rules */
-  readonly RULE_MANDATORY = [(v: string | number) => (!!v || (typeof v === "string" && v.trim().length > 0) || (typeof v === "number" && Number.isFinite(v))) || "필수로 입력해야 하는 항목입니다."];
+  readonly RULE_MANDATORY = [(v: any) => (
+    ((typeof v === "string" && v.trim().length > 0)
+      || (typeof v === "number" && Number.isFinite(v))
+      || (v instanceof Array && v.length > 0))
+      && !!v)
+    || "필수로 입력해야 하는 항목입니다."];
   readonly RULE_NUMBER_PROHIBIT_NEGATIVE = [(v: number) => v >= 0 || "음수는 입력할 수 없습니다."];
 
   /* Common getters */
@@ -255,7 +263,11 @@ export default class CommonForm extends Vue {
 
   /* Form utility functions */
   // FORM
-  public reset() { this.models = reactive(deepClone(this.initialModels)); }
+  public reset() {
+    for(const key in this.initialModels) {
+      this.models[key] = deepClone(this.initialModels[key]);
+    }
+  }
   public resetValidation() {
     if(this.form) {
       this.form.resetValidation();

@@ -81,6 +81,10 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/goods/order`));
   }
 
+  static async fetchAvailableFairs() {
+    return await this.apiCallWrapper<Array<CT.IFairResponse>>(() => this.API.fetchAvailableFairs());
+  }
+
   /* Update */
   static async updateBoothInfo(boothId: number, payload: CT.IBoothUpdateRequest) {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.PATCH(`booth/${boothId}`, payload));

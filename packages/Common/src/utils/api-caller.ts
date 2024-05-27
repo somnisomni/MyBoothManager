@@ -7,6 +7,7 @@ import {
   type IGoodsCombinationResponse,
   type IGoodsResponse,
   type ISingleValueResponse,
+  type IFairResponse,
 } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -123,6 +124,14 @@ export default class APICaller {
 
     if("value" in response) return +response.value;
     else return response;
+  }
+
+  public async fetchAvailableFairs() {
+    return await this.createPublicAPI().GET<Array<IFairResponse>>("fair");
+  }
+
+  public async fetchSingleFair(fairId: number) {
+    return await this.createPublicAPI().GET<IFairResponse>(`fair/${fairId}`);
   }
 
   // Booth member
