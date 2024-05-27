@@ -38,6 +38,7 @@ export class PublicBoothResponseDto implements IBoothResponse {
 
     if(values.fairId) {
       this.fair = model.associatedFair?.toFairInfo();
+      this.location = model.associatedFair?.location;
       this.datesOpenInFair = values.datesOpenInFair as Array<Date> | null;
     } else {
       this.location = values.location;
