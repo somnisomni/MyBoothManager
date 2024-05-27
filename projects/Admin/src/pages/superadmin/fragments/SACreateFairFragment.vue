@@ -68,7 +68,7 @@ export default class SACreateFairFragment extends Vue {
       label: "행사 개최 일자 목록",
       hint: "YYYY-MM-DD, YYYY-MM-DD, ...  (ISO 8601 형식 날짜를 쉼표(,)로 구분하여 입력)",
       persistentHint: true,
-      rules: [(value: string) => (value && value.split(",").every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date.trim()))) || "YYYY-MM-DD, YYYY-MM-DD, ...  (ISO 8601 형식 날짜를 쉼표(,)로 구분하여 입력"],
+      rules: [(value: string) => (value.length > 0 && value.split(",").every((date) => /^\d{4}-\d{2}-\d{2}$/.test(date.trim()))) || "YYYY-MM-DD, YYYY-MM-DD, ...  (ISO 8601 형식 날짜를 쉼표(,)로 구분하여 입력"],
     },
     websiteUrl: {
       type: FormFieldType.TEXT,
