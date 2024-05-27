@@ -1,4 +1,5 @@
 import { ErrorCodes } from "../enums/errors";
+import { IFair } from "./fair";
 
 /* === Common Response Interfaces === */
 export interface IErrorResponse {
@@ -22,3 +23,5 @@ export interface IImageUploadInfo {
   path: string;
   thumbnailData?: string | null;  // BASE64-encoded string
 }
+
+export interface IFairInfo extends Omit<IFair, "id" | "openingDates"> { }

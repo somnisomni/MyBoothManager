@@ -12,6 +12,7 @@
       <VTabsWindow v-model="currentTab">
         <VTabsWindowItem value="fair">
           <SACreateFairFragment />
+          <SAListFairFragment />
         </VTabsWindowItem>
 
         <VTabsWindowItem value="account">
@@ -28,12 +29,14 @@ import { Component, Vue } from "vue-facing-decorator";
 import SACreateAccountFragment from "./fragments/SACreateAccountFragment.vue";
 import SAListAccountFragment from "./fragments/SAListAccountFragment.vue";
 import SACreateFairFragment from "./fragments/SACreateFairFragment.vue";
+import SAListFairFragment from "./fragments/SAListFairFragment.vue";
 
 @Component({
   components: {
     SACreateAccountFragment,
     SAListAccountFragment,
     SACreateFairFragment,
+    SAListFairFragment,
   },
 })
 export default class SuperAdminPage extends Vue {

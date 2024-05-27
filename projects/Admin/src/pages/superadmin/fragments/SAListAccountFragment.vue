@@ -11,18 +11,12 @@
 <script lang="ts">
 import type { ISuperAdminAccountResponse } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
-import moment from "moment";
-import SuperAdminAPI from "../SuperAdminPage.lib";
+import { SuperAdminAPI, momentFormat } from "../SuperAdminPage.lib";
 
 type ISuperAdminAccountResponseInternal = ISuperAdminAccountResponse & {
   lastLoginAt: string,
   createdAt: string,
   updatedAt: string,
-};
-
-const momentFormat = (date?: Date | string | null) => {
-  const m = moment(date);
-  return m.isValid() ? m.format("YYYY-MM-DD HH:mm:ss") : "기록 없음";
 };
 
 @Component({})

@@ -23,7 +23,7 @@ import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
 import { reactive } from "vue";
 import CommonForm, { type FormFieldOptions, FormFieldType } from "@/components/common/CommonForm.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
-import SuperAdminAPI from "../SuperAdminPage.lib";
+import { SuperAdminAPI } from "../SuperAdminPage.lib";
 
 @Component({
   components: {

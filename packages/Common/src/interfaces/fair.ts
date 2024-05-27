@@ -22,3 +22,8 @@ export interface IFairUpdateRequest extends Partial<IFairCreateRequest> { }
 
 /* === Responses === */
 export interface IFairResponse extends IFair { }
+export interface ISuperAdminFairResponse extends IFairResponse {
+  isPassed?: boolean;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
+}

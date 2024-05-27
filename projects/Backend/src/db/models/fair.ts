@@ -1,4 +1,4 @@
-import { IFairCreateRequest, IFairModel } from "@myboothmanager/common";
+import { IFairCreateRequest, IFairInfo, IFairModel } from "@myboothmanager/common";
 import { DateTime } from "luxon";
 import { DataTypes } from "sequelize";
 import { AllowNull, AutoIncrement, Column, Default, HasMany, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
@@ -33,7 +33,7 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
     return this.getDataValue("openingDates");
   }
   set openingDates(value: Array<string> | Array<Date>) {
-    const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
+    const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!).sort();
     this.setDataValue("openingDates", dateonlyArray);
   }
 
@@ -42,6 +42,28 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
   @Column(DataTypes.STRING(512))
   declare websiteUrl?: string | null;
 
+  @Column(DataTypes.VIRTUAL)
+  get isPassed(): boolean {
+    const parsedDates: Array<Date> = this.openingDates.map((date) => new Date(date));
+    parsedDates.sort((a, b) => a.getTime() - b.getTime());
+
+    const toDateonly = (date: string | Date) => DateTime.fromFormat(DateTime.fromJSDate(new Date(date)).toISODate()!, "yyyy-MM-dd");
+    const lastDate: DateTime = toDateonly(parsedDates[parsedDates.length - 1]);
+    const now: DateTime = toDateonly(new Date());
+
+    return now > lastDate;
+  }
+
+
+  /* === Functions === */
+  toFairInfo(): IFairInfo {
+    return {
+      name: this.name,
+      description: this.description,
+      location: this.location,
+      websiteUrl: this.websiteUrl,
+    };
+  }
 
   /* === Relations === */
   @HasMany(() => Booth)

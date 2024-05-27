@@ -1,11 +1,10 @@
-import { IBoothResponse, IBoothStatus, IImageUploadInfo } from "@myboothmanager/common";
+import { IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 import Booth from "@/db/models/booth";
 
 @Exclude()
 export class PublicBoothResponseDto implements IBoothResponse {
   @Expose() declare id: number;
-  @Expose() declare fairId?: number | null;
   @Expose() declare name: string;
   @Expose() declare description?: string | null;
   @Expose() declare location?: string | null;
@@ -15,6 +14,7 @@ export class PublicBoothResponseDto implements IBoothResponse {
   @Expose() declare dateOpen?: Date | null;
   @Expose() declare dateClose?: Date | null;
   @Expose() declare datesOpenInFair?: Array<Date> | null;
+  @Expose() declare fair?: IFairInfo;
   @Expose() declare infoImage?: IImageUploadInfo;
   @Expose() declare bannerImage?: IImageUploadInfo;
 
@@ -24,10 +24,8 @@ export class PublicBoothResponseDto implements IBoothResponse {
     const values = model.get();
 
     this.id = values.id;
-    this.fairId = values.fairId;
     this.name = values.name;
     this.description = values.description;
-    this.location = values.location;
     this.boothNumber = values.boothNumber;
     this.currencySymbol = values.currencySymbol;
     this.status = {
@@ -35,10 +33,16 @@ export class PublicBoothResponseDto implements IBoothResponse {
       reason: values.statusReason ?? undefined,
       contentPublished: values.statusContentPublished ?? false,
     };
-    this.dateOpen = values.dateOpen;
-    this.dateClose = values.dateClose;
-    this.datesOpenInFair = values.datesOpenInFair as Array<Date> | null;
     this.infoImage = model.infoImage?.toImageUploadInfo();
     this.bannerImage = model.bannerImage?.toImageUploadInfo();
+
+    if(values.fairId) {
+      this.fair = model.associatedFair?.toFairInfo();
+      this.datesOpenInFair = values.datesOpenInFair as Array<Date> | null;
+    } else {
+      this.location = values.location;
+      this.dateOpen = values.dateOpen;
+      this.dateClose = values.dateClose;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { IImageUploadInfo } from "./base";
+import { IFairInfo, IImageUploadInfo } from "./base";
 
 /* === Common === */
 interface IBoothCommon {
@@ -8,12 +8,12 @@ interface IBoothCommon {
   name: string;
   currencySymbol: string;
   description?: string | null;
-  location?: string | null;
   boothNumber?: string | null;
+  status: IBoothStatus;
+  location?: string | null; // For custom fair
   dateOpen?: Date | null;   // For custom fair
   dateClose?: Date | null;  // For custom fair
-  datesOpenInFair?: Array<Date> | null;  // For selected fair
-  status: IBoothStatus;
+  datesOpenInFair?: Array<Date> | null;  // Only with fair
 }
 
 export interface IBoothStatus {
@@ -37,6 +37,7 @@ export enum BoothStatus {
 
 /* === Frontend === */
 export interface IBooth extends IBoothCommon {
+  fair?: IFairInfo | null;
   bannerImage?: IImageUploadInfo | null;
   infoImage?: IImageUploadInfo | null;
 }
@@ -62,5 +63,5 @@ export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "
 export interface IBoothStatusUpdateRequest extends Partial<IBoothStatus> { }
 
 /* === Responses === */
-export interface IBoothResponse extends IBooth { }
+export interface IBoothResponse extends Omit<IBooth, "fairId"> { }
 export interface IBoothAdminResponse extends IBoothAdmin { }

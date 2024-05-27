@@ -14,11 +14,17 @@ import Fair from "./fair";
 @Table
 @DefaultScope(() => ({
   include: [{
+    as: "associatedFair",
+    model: Fair,
+    nested: false,
+  }, {
     as: "bannerImage",
     model: UploadStorage,
+    nested: false,
   }, {
     as: "infoImage",
     model: UploadStorage,
+    nested: false,
   }],
 }))
 export default class Booth extends Model<IBoothModel, IBoothCreateRequest> implements IBoothModel {

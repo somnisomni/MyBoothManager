@@ -1,8 +1,10 @@
 import * as CT from "@myboothmanager/common";
+import moment from "moment";
 import { BaseAdminAPI } from "@/lib/api-admin";
 import { useAdminStore } from "@/plugins/stores/admin";
 
-export default class SuperAdminAPI extends BaseAdminAPI {
+/* *** API class for Super Admin *** */
+export class SuperAdminAPI extends BaseAdminAPI {
   private static get isSuperAdmin(): boolean {
     return useAdminStore().currentAccount?.superAdmin ?? false;
   }
@@ -22,7 +24,7 @@ export default class SuperAdminAPI extends BaseAdminAPI {
   }
 
   static async fetchAllFairs() {
-    return await this.apiCallWrapper<Array<CT.IFairResponse>>(() => this.API.GET("fair/all"));
+    return await this.apiCallWrapper<Array<CT.ISuperAdminFairResponse>>(() => this.API.GET("fair/all"));
   }
 
   /* Create */
@@ -33,4 +35,10 @@ export default class SuperAdminAPI extends BaseAdminAPI {
   static async createFair(payload: CT.IFairCreateRequest) {
     return await this.apiCallWrapper<CT.IFairResponse>(() => this.API.POST("fair", payload));
   }
+}
+
+/* *** Functions *** */
+export function momentFormat(date?: Date | string | null) {
+  const m = moment(date);
+  return m.isValid() ? m.format("YYYY-MM-DD HH:mm:ss") : "기록 없음";
 }
