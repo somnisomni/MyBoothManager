@@ -217,7 +217,7 @@ export default class BoothManageDialog extends Vue {
     };
   }
 
-  get normalizedFairList(): Array<{ id: number | null, name: string }> {
+  get normalizedFairList(): Array<Record<string, unknown>> {
     const normalizeDateRange = (dates: Array<Date | string>) => {
       if(dates.length === 1) return new Date(dates[0]).toLocaleDateString();
 
@@ -228,10 +228,18 @@ export default class BoothManageDialog extends Vue {
     };
 
     return [
+      // Placeholder fair data while loading fair list
+      ...(this.isFairListLoading ? [{
+        ...useAdminStore().currentBooth.booth?.fair,
+      }] : []),
+
+      // Actual fair data fetched from API
       ...useProxyStore().availableFairList.map((fair) => ({
         ...fair,
         openingDates: normalizeDateRange(fair.openingDates),
       })),
+
+      // Custom fair
       {
         id: null,
         name: "(사용자 지정)",
@@ -246,16 +254,6 @@ export default class BoothManageDialog extends Vue {
     if(!open) return;
 
     while(!this.form) await this.$nextTick();
-
-    if(this.isFairListLoading) {
-      const response = await AdminAPI.fetchAvailableFairs();
-
-      if(typeof response === "object") {
-        useProxyStore().availableFairList = response;
-      }
-
-      this.isFairListLoading = false;
-    }
 
     if(this.editMode) {
       const boothData = useAdminStore().currentBooth.booth!;
@@ -283,6 +281,17 @@ export default class BoothManageDialog extends Vue {
         dateClose: momentFormat(new Date()),
         datesOpenInFair: [],
       } as IBoothCreateRequestInternal);
+    }
+
+    if(this.isFairListLoading) {
+      // No `await` here
+      AdminAPI.fetchAvailableFairs().then((response) => {
+        if(typeof response === "object") {
+          useProxyStore().availableFairList = response;
+        }
+
+        this.isFairListLoading = false;
+      });
     }
   }
 
