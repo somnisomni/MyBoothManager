@@ -26,7 +26,8 @@
                  hint="부스 생성 시에만 지정 가능하며, 이후에는 변경할 수 없습니다."
                  persistent-hint
                  :loading="isFairListLoading"
-                 :disabled="isFairListLoading || editMode">
+                 :disabled="isFairListLoading || editMode"
+                 @update:modelValue="formModels.datesOpenInFair.splice(0, formModels.datesOpenInFair.length)">
           <template v-slot:item="{ props, item }">
             <VListItem v-bind="props">
               <VListItemSubtitle class="text-subtitle-2"
