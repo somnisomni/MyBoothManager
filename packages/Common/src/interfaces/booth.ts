@@ -58,7 +58,8 @@ export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "sta
 }
 
 /* === Requests === */
-export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status"> { }
+export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status" | "datesOpenInFair"> { }
+export interface IBoothCreateWithFairRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status" | "location" | "dateOpen" | "dateClose"> { }
 export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol">> { }
 export interface IBoothStatusUpdateRequest extends Partial<IBoothStatus> { }
 

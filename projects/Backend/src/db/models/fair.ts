@@ -58,6 +58,7 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
   /* === Functions === */
   toFairInfo(): IFairInfo {
     return {
+      id: this.id,
       name: this.name,
       description: this.description,
       location: this.location,

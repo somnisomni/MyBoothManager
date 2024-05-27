@@ -111,7 +111,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   /* Create */
-  static async createBooth(payload: CT.IBoothCreateRequest) {
+  static async createBooth(payload: CT.IBoothCreateRequest | CT.IBoothCreateWithFairRequest) {
     return await this.apiCallWrapper<CT.IBoothResponse>(() => this.API.POST("booth", payload));
   }
 

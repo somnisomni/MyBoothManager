@@ -24,4 +24,4 @@ export interface IImageUploadInfo {
   thumbnailData?: string | null;  // BASE64-encoded string
 }
 
-export interface IFairInfo extends Omit<IFair, "id" | "openingDates"> { }
+export interface IFairInfo extends Omit<IFair, "openingDates"> { }
