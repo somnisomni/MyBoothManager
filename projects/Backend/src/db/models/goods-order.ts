@@ -34,9 +34,9 @@ export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequ
   declare status: GoodsOrderStatus;
 
   @AllowNull(false)
-  @Column(DataTypes.INTEGER.UNSIGNED)
-  get totalRevenue(): number { return Math.floor(this.getDataValue("totalRevenue")); }
-  set totalRevenue(value: number) { this.setDataValue("totalRevenue", Math.floor(value)); }
+  @Column(DataTypes.FLOAT.UNSIGNED)
+  get totalRevenue(): number { return parseFloat(this.getDataValue("totalRevenue").toFixed(3)); }
+  set totalRevenue(value: number) { this.setDataValue("totalRevenue", parseFloat(Number(value).toFixed(3))); }
 
   @AllowNull
   @Default(GoodsOrderPaymentMethod.CASH)
