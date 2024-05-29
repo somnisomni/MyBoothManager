@@ -20,9 +20,9 @@
         <!-- Fair selection -->
         <VAutocomplete v-model.number="formModels.fairId"
                  :items="normalizedFairList"
-                 label="행사"
                  item-title="name"
                  item-value="id"
+                 label="행사"
                  hint="부스 생성 시에만 지정 가능하며, 이후에는 변경할 수 없습니다."
                  persistent-hint
                  :loading="isFairListLoading"
@@ -55,12 +55,11 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref , computed } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref, Setup } from "vue-facing-decorator";
 import { ErrorCodes, currencySymbolInfo, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
 import moment from "moment";
 import { defineStore } from "pinia";
-import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -80,6 +79,8 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
   const _fairId = ref<number | null>(null);
 
   const availableFairList = ref<Array<IFairResponse>>([]);
+  const isCurrentBoothFairPassed = computed(() => availableFairList.value.findIndex((fair) => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0);
+
   const formModels: IBoothCreateRequestInternal = reactive({
     name: "",
     description: "",
@@ -101,6 +102,8 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
 
   return {
     availableFairList,
+    isCurrentBoothFairPassed,
+
     formModels,
     editMode,
   };
@@ -199,6 +202,7 @@ export default class BoothManageDialog extends Vue {
       itemValue: "value",
       multiple: true,
       get hide() { return !useProxyStore().formModels.fairId; },
+      get disabled() { return useProxyStore().isCurrentBoothFairPassed; },
     },
   } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
   resetValidationProxy() { this.form?.resetValidation(); }
@@ -229,7 +233,7 @@ export default class BoothManageDialog extends Vue {
 
     return [
       // Placeholder fair data while loading fair list
-      ...(this.isFairListLoading ? [{
+      ...(this.editMode && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed) ? [{
         ...useAdminStore().currentBooth.booth?.fair,
       }] : []),
 
@@ -267,7 +271,7 @@ export default class BoothManageDialog extends Vue {
         currencySymbol: boothData.currencySymbol,
         dateOpen: boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined,
         dateClose: boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined,
-        datesOpenInFair: boothData.datesOpenInFair,
+        datesOpenInFair: deepClone(boothData.datesOpenInFair),
       } as IBoothUpdateRequest);
     } else {
       this.form.setInitialModel({
@@ -313,9 +317,6 @@ export default class BoothManageDialog extends Vue {
 
       const requestData: IBoothUpdateRequest = {
         ...this.form!.getDiffOfModel(),
-
-        // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
-        datesOpenInFair: (!deepEqual(this.form!.initialModels.datesOpenInFair, this.formModels.datesOpenInFair) ? deepClone(this.formModels.datesOpenInFair) : undefined) as unknown as Array<Date>,
       };
 
       result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);

@@ -77,8 +77,6 @@
 import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
 import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
-import deepClone from "clone-deep";
-import deepEqual from "fast-deep-equal";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -276,9 +274,6 @@ export default class GoodsCombinationManageDialog extends Vue {
       const requestData: IGoodsCombinationUpdateRequest = {
         ...this.form!.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
-
-        // NOTE: Below is workaround for diff() - this function converts array to object, making the value not valid for the request
-        goodsIds: !deepEqual(this.form!.initialModels.goodsIds, this.formModels.goodsIds) ? deepClone(this.formModels.goodsIds) : undefined,
       };
       const result = await useAdminAPIStore().updateGoodsCombinationInfo(Number(this.combinationId!), requestData);
 

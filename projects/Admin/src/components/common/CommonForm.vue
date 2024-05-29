@@ -240,7 +240,17 @@ export default class CommonForm extends Vue {
   }
 
   public getDiffOfModel(): Record<string, any> {
-    return diff(toRaw(this.initialModels), toRaw(this.models));
+    const result: Record<string, any> = diff(toRaw(this.initialModels), toRaw(this.models));
+
+    // NOTE: Below is workaround for diff() ...
+    //       ... the diff() function converts array to record object, making the value not valid for the API request
+    for(const key in this.models) {
+      if(typeof this.models[key] === "object" && this.models[key] instanceof Array) {
+        result[key] = !deepEqual(this.initialModels[key], this.models[key]) ? deepClone(this.models[key]) : undefined;
+      }
+    }
+
+    return result;
   }
 
   /* Common rules */
