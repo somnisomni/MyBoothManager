@@ -82,6 +82,7 @@ import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components"
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { diff } from "deep-object-diff";
+import { toValue } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 
 export enum FormFieldType {
@@ -226,12 +227,13 @@ export default class CommonForm extends Vue {
 
   private _initialModels: Readonly<Record<string, any>> = readonly({ } as const);
   public  get initialModels() { return toRaw(this._initialModels); }
-  private set initialModels(value: Record<string, any>) { this._initialModels = readonly(deepClone(toRaw(value))); }
+  private set initialModels(value: Record<string, any>) { this._initialModels = readonly(deepClone(toValue(value))); }
 
   /* Model value update */
   @Watch("models", { deep: true, immediate: true })
   onModelDataUpdate() {
     this.isEdited = !deepEqual(toRaw(this.models), toRaw(this.initialModels));
+    console.log(toRaw(this.models), toRaw(this.initialModels), this.isEdited);
   }
 
   public setInitialModel(initial: Record<string, any>): void {
@@ -277,7 +279,6 @@ export default class CommonForm extends Vue {
     for(const key in this.initialModels) {
       this.models[key] = deepClone(this.initialModels[key]);
     }
-    this.isEdited = false;
   }
 
   public resetValidation() {

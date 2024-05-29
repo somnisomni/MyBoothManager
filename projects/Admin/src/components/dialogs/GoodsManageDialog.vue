@@ -53,7 +53,7 @@
 import type { GoodsAdmin } from "@/lib/classes";
 import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
-import { reactive , readonly, ref, type DeepReadonly } from "vue";
+import { reactive , readonly, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/plugins/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
@@ -91,7 +91,7 @@ export default class GoodsManageDialog extends Vue {
     stockInitial: 0,
     stockRemaining: 0,
     stockVisibility: GoodsStockVisibility.SHOW_REMAINING_ONLY,
-    ownerMemberIds: ref([]),
+    ownerMemberIds: [],
   });
 
   readonly formFields = {
