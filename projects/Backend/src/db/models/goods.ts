@@ -57,17 +57,17 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
   get price(): number { return parseFloat(this.getDataValue("price").toFixed(3)); }
-  set price(value: number) { this.setDataValue("price", parseFloat(new Number(value).toFixed(3))); }
+  set price(value: number) { this.setDataValue("price", parseFloat(Number(value).toFixed(3))); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
   get stockInitial(): number { return Math.floor(this.getDataValue("stockInitial")); }
-  set stockInitial(value: number) { this.setDataValue("stockInitial", Math.floor(new Number(value).valueOf())); }
+  set stockInitial(value: number) { this.setDataValue("stockInitial", Math.floor(Number(value))); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
   get stockRemaining(): number { return Math.floor(this.getDataValue("stockRemaining")); }
-  set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(new Number(value).valueOf())); }
+  set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(Number(value))); }
 
   @AllowNull(false)
   @Default(GoodsStockVisibility.SHOW_REMAINING_ONLY)

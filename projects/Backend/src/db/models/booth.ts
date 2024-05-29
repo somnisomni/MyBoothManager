@@ -87,7 +87,7 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   }
   set datesOpenInFair(value: Array<string> | Array<Date>) {
     const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
-    this.setDataValue("datesOpenInFair", dateonlyArray);
+    this.setDataValue("datesOpenInFair", Array.from(new Set(dateonlyArray)));
   }
 
   @AllowNull(false)

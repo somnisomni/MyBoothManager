@@ -75,7 +75,7 @@
 import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 
-type GoodsWorthMapItem = { name: string, quantity: number, total: number };
+type GoodsWorthMapItem = { name: string, quantity: number, total: number, memberLength?: number };
 
 @Component({})
 export default class ClosingPage extends Vue {
@@ -93,20 +93,23 @@ export default class ClosingPage extends Vue {
     for(const item of Object.values(this.currentBooth.goodsOrders!)) {
       for(const goods of Object.values(item.order)) {
         if(goods.gId) {
-          const originalPrice = this.currentBooth.goods![goods.gId]?.price ?? 0;
+          const originalGoods = this.currentBooth.goods![goods.gId];
+          const originalPrice = originalGoods?.price ?? 0;
           const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
 
           if(map.has(goods.gId)) {
             map.set(goods.gId, {
-              name: goods.name ?? this.currentBooth.goods![goods.gId]?.name,
+              name: goods.name ?? originalGoods?.name,
               quantity: map.get(goods.gId)!.quantity + goods.quantity,
               total: map.get(goods.gId)!.total + calculatedPrice,
+              memberLength: originalGoods?.ownerMemberIds?.length,
             });
           } else {
             map.set(goods.gId, {
-              name: goods.name ?? this.currentBooth.goods![goods.gId]?.name,
+              name: goods.name ?? originalGoods?.name,
               quantity: goods.quantity,
               total: calculatedPrice,
+              memberLength: originalGoods?.ownerMemberIds?.length,
             });
           }
         }
@@ -122,20 +125,23 @@ export default class ClosingPage extends Vue {
     for(const item of Object.values(this.currentBooth.goodsOrders!)) {
       for(const combination of Object.values(item.order)) {
         if(combination.cId) {
-          const originalPrice = this.currentBooth.goodsCombinations![combination.cId]?.price ?? 0;
+          const originalCombination = this.currentBooth.goodsCombinations![combination.cId];
+          const originalPrice = originalCombination?.price ?? 0;
           const calculatedPrice = (combination.price ?? originalPrice) * combination.quantity;
 
           if(map.has(combination.cId)) {
             map.set(combination.cId, {
-              name: combination.name ?? this.currentBooth.goodsCombinations![combination.cId]?.name,
+              name: combination.name ?? originalCombination?.name,
               quantity: map.get(combination.cId)!.quantity + combination.quantity,
               total: map.get(combination.cId)!.total + calculatedPrice,
+              memberLength: originalCombination?.ownerMemberIds?.length,
             });
           } else {
             map.set(combination.cId, {
-              name: combination.name ?? this.currentBooth.goodsCombinations![combination.cId]?.name,
+              name: combination.name ?? originalCombination?.name,
               quantity: combination.quantity,
               total: calculatedPrice,
+              memberLength: originalCombination?.ownerMemberIds?.length,
             });
           }
         }
@@ -183,12 +189,12 @@ export default class ClosingPage extends Vue {
       const goodsTotal = this.goodsMemberMap.get(member.id)!
         .map((goodsId) => {
           const rev = this.goodsRevenueMap.get(goodsId);
-          return rev ? rev.total : 0;
+          return rev ? rev.total / (rev.memberLength ?? 1) : 0;
         }).reduce((acc, cur) => acc + cur, 0);
       const combinationTotal = this.goodsCombinationMemberMap.get(member.id)!
         .map((combinationId) => {
           const rev = this.goodsCombinationRevenueMap.get(combinationId);
-          return rev ? rev.total : 0;
+          return rev ? rev.total / (rev.memberLength ?? 1) : 0;
         }).reduce((acc, cur) => acc + cur, 0);
 
       map.set(member.id, goodsTotal + combinationTotal);

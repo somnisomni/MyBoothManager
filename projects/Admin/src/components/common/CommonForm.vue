@@ -233,7 +233,6 @@ export default class CommonForm extends Vue {
   @Watch("models", { deep: true, immediate: true })
   onModelDataUpdate() {
     this.isEdited = !deepEqual(toRaw(this.models), toRaw(this.initialModels));
-    console.log(toRaw(this.models), toRaw(this.initialModels), this.isEdited);
   }
 
   public setInitialModel(initial: Record<string, any>): void {

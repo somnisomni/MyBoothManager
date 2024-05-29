@@ -72,7 +72,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   @Column(DataTypes.VIRTUAL)
   get ownerMemberIds(): Array<number> {
     if(this.combinedGoods && this.combinedGoods.length > 0) {
-      return this.combinedGoods.flatMap(g => (g.ownerMemberIds ?? []).flat());
+      return Array.from(new Set(this.combinedGoods.flatMap(g => (g.ownerMemberIds ?? []).flat())));
     } else {
       return [];
     }
