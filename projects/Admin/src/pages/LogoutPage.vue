@@ -16,7 +16,7 @@ export default class LogoutPage extends Vue {
     await AdminAPI.logout({ id: useAuthStore().id ?? -1 });
     useAuthStore().invalidateLoginData();
 
-    router.replace({ name: "login", state: {
+    await router.replace({ name: "login", state: {
       logout: true,
       authTokenInvalid: window.history.state.authTokenInvalid,
     }});

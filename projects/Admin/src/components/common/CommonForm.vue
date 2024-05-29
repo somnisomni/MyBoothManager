@@ -267,7 +267,9 @@ export default class CommonForm extends Vue {
     for(const key in this.initialModels) {
       this.models[key] = deepClone(this.initialModels[key]);
     }
+    this.isEdited = false;
   }
+
   public resetValidation() {
     if(this.form) {
       this.form.resetValidation();
