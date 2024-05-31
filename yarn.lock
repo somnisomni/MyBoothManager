@@ -1559,8 +1559,8 @@ __metadata:
   linkType: soft
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
-  version: 0.4.2
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=c0a73c&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  version: 0.5.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=9fff7a&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     clone-deep: "npm:^4.0.1"
   peerDependencies:
@@ -1569,13 +1569,13 @@ __metadata:
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/82b93d413c978e323b9798c933f99c9844331fb3c6e58dd644ca4d6ea19beea3879200b9fdea53c73b9da86b17d57e197b524149a7ff18b1adf72396e9328d69
+  checksum: 10/c8a5b8ab8e753cd30e311fb09fe1bd614f390f382211bac4a0c09e310d1613af0681aa0dda57e54d43e132dfdf057794ea2b5779bdb4ce0570b22e4fd0be8565
   languageName: node
   linkType: hard
 
 "@myboothmanager/common-ui@file:../../packages/CommonUI::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
-  version: 0.4.2
-  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=c0a73c&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  version: 0.5.0
+  resolution: "@myboothmanager/common-ui@file:../../packages/CommonUI#../../packages/CommonUI::hash=9fff7a&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     clone-deep: "npm:^4.0.1"
   peerDependencies:
@@ -1584,7 +1584,7 @@ __metadata:
     vue: ">=3"
     vue-facing-decorator: ">=3"
     vuetify: ">=3"
-  checksum: 10/82b93d413c978e323b9798c933f99c9844331fb3c6e58dd644ca4d6ea19beea3879200b9fdea53c73b9da86b17d57e197b524149a7ff18b1adf72396e9328d69
+  checksum: 10/c8a5b8ab8e753cd30e311fb09fe1bd614f390f382211bac4a0c09e310d1613af0681aa0dda57e54d43e132dfdf057794ea2b5779bdb4ce0570b22e4fd0be8565
   languageName: node
   linkType: hard
 
@@ -1626,20 +1626,20 @@ __metadata:
   linkType: soft
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin":
-  version: 0.4.2
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=9a3014&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
+  version: 0.5.0
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=41920e&locator=%40myboothmanager%2Fadmin%40workspace%3Aprojects%2FAdmin"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/78cfc381be897b63cb92c86001fdc3720995fbdb2f71c9583811520a74c45da047ac121c80dbe471e8a12b7efc6bedeb3bb57a840e24ff7d4598cc3ed2aa0440
+  checksum: 10/41f2c0dd99277ac0c7a96848fc9bc74bb6a66dc807cff7bd7130e99228678473631255ed558ac672d1893fc9a6f5bc2114d5a66938b0af2cdcdfbeadf516cb13
   languageName: node
   linkType: hard
 
 "@myboothmanager/common@file:../../packages/Common::locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic":
-  version: 0.4.2
-  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=9a3014&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
+  version: 0.5.0
+  resolution: "@myboothmanager/common@file:../../packages/Common#../../packages/Common::hash=41920e&locator=%40myboothmanager%2Fpublic%40workspace%3Aprojects%2FPublic"
   dependencies:
     currency-symbol-map: "npm:^5.1.0"
-  checksum: 10/78cfc381be897b63cb92c86001fdc3720995fbdb2f71c9583811520a74c45da047ac121c80dbe471e8a12b7efc6bedeb3bb57a840e24ff7d4598cc3ed2aa0440
+  checksum: 10/41f2c0dd99277ac0c7a96848fc9bc74bb6a66dc807cff7bd7130e99228678473631255ed558ac672d1893fc9a6f5bc2114d5a66938b0af2cdcdfbeadf516cb13
   languageName: node
   linkType: hard
 
