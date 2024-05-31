@@ -46,6 +46,11 @@ export class PublicBoothService {
     });
   }
 
+  async findAllWithoutPassedFair(): Promise<Array<Booth>> {
+    const booths = await this.findAll();
+    return booths.filter((booth) => !booth.fairId || !booth.associatedFair?.isPassed);
+  }
+
   async countAll(): Promise<ISingleValueResponse<number>> {
     return { value: await Booth.count() };
   }
