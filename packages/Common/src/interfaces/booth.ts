@@ -36,7 +36,7 @@ export enum BoothStatus {
 }
 
 /* === Frontend === */
-export interface IBooth extends IBoothCommon {
+export interface IBooth extends Omit<IBoothCommon, "fairId"> {
   fair?: IFairInfo | null;
   bannerImage?: IImageUploadInfo | null;
   infoImage?: IImageUploadInfo | null;
