@@ -283,8 +283,8 @@ export default class IndividualBoothPage extends Vue {
     }
   }
 
-  async pollData(): Promise<boolean | ErrorCodes[]> {
-    const errors: ErrorCodes[] = [-1, -1, -1, -1, -1];
+  async pollData(): Promise<boolean | Array<ErrorCodes>> {
+    const errors: Array<ErrorCodes> = [0, 0, 0, 0, 0];
 
     this.isDataLoading = true;
 
