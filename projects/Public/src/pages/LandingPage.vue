@@ -1,6 +1,46 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
-    <VContainer v-if="boothList && !isLoadingBoothList" class="d-flex flex-column">
+    <div v-if="isLoadingBoothList && !apiError"
+         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+      <VProgressCircular indeterminate
+                         size="x-large"
+                         color="primary"
+                         class="my-2" />
+      <span class="mt-2 text-grey-darken-2">부스 목록 불러오는 중...</span>
+    </div>
+
+    <div v-else-if="apiError"
+         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+      <h4 class="text-h4 text-center text-error">
+        <VIcon class="mr-2">mdi-alert</VIcon>
+        <span>데이터를 불러오는 중 오류 발생 ({{ apiError }})</span>
+      </h4>
+
+      <VBtn class="mt-4"
+            size="large"
+            color="primary"
+            variant="outlined"
+            prepend-icon="mdi-refresh"
+            @click="reloadWindow">새로고침</VBtn>
+    </div>
+
+
+    <div v-else-if="!isLoadingBoothList && (boothList && boothList.length <= 0)"
+         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+      <h4 class="text-h4 text-center text-info">
+        <VIcon class="mr-2">mdi-weather-dust</VIcon>
+        <span>현재 운영 중이거나 준비 중인 부스가 없어요!</span>
+      </h4>
+
+      <VBtn class="mt-4"
+            size="large"
+            color="info"
+            variant="outlined"
+            prepend-icon="mdi-refresh"
+            @click="reloadWindow">새로고침</VBtn>
+    </div>
+
+    <VContainer v-else-if="!isLoadingBoothList && (boothList && boothList.length > 0)" class="d-flex flex-column">
       <VLayout v-for="fair in fairList"
                :key="fair.id"
                class="d-flex flex-0-0 flex-column my-4 overflow-visible">
@@ -41,11 +81,6 @@
                        @click:boothItem="onBoothItemClick" />
       </VLayout>
     </VContainer>
-
-    <div v-else class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
-      <VProgressCircular indeterminate size="x-large" color="primary" class="my-2" />
-      <span class="mt-2 text-grey-darken-2">부스 목록 불러오는 중...</span>
-    </div>
   </VScrollYReverseTransition>
 </template>
 
@@ -65,7 +100,7 @@ export default class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
   isLoadingBoothList: boolean = true;
-  fetchError: ErrorCodes | null = null;
+  apiError: ErrorCodes | null = null;
 
   _fairList: Array<IFair> = [];
   get fairList() { return this._fairList; }
@@ -96,12 +131,12 @@ export default class LandingPage extends Vue {
     const fairResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAvailableFairs());
 
     if("errorCode" in boothResponse) {
-      this.fetchError = (boothResponse || fairResponse).errorCode;
+      this.apiError = (boothResponse || fairResponse).errorCode;
       return;
     }
 
     if("errorCode" in fairResponse) {
-      this.fetchError = fairResponse.errorCode;
+      this.apiError = fairResponse.errorCode;
       return;
     }
 
@@ -113,6 +148,8 @@ export default class LandingPage extends Vue {
   getBoothsOfFair(fairId: number) {
     return this.boothList.filter((booth) => booth.fair && booth.fair.id === fairId);
   }
+
+  reloadWindow() { window.location.reload(); }
 
   async onBoothItemClick(boothId: number) {
     await router.push({ name: "booth-individual", params: { boothId } });
