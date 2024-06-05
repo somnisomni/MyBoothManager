@@ -57,7 +57,7 @@
 <script lang="ts">
 import { reactive, ref , computed } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref, Setup } from "vue-facing-decorator";
-import { ErrorCodes, currencySymbolInfo, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
+import { ErrorCodes, currencySymbolInfo, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
 import moment from "moment";
 import { defineStore } from "pinia";
 import deepClone from "clone-deep";
@@ -222,15 +222,6 @@ export default class BoothManageDialog extends Vue {
   }
 
   get normalizedFairList(): Array<Record<string, unknown>> {
-    const normalizeDateRange = (dates: Array<Date | string>) => {
-      if(dates.length === 1) return new Date(dates[0]).toLocaleDateString();
-
-      const min = dates.reduce((prev, curr) => new Date(prev) < new Date(curr) ? prev : curr);
-      const max = dates.reduce((prev, curr) => new Date(prev) > new Date(curr) ? prev : curr);
-
-      return `${new Date(min).toLocaleDateString()} ~ ${new Date(max).toLocaleDateString()}`;
-    };
-
     return [
       // Placeholder fair data while loading fair list
       ...(this.editMode && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed) ? [{
@@ -240,7 +231,7 @@ export default class BoothManageDialog extends Vue {
       // Actual fair data fetched from API
       ...useProxyStore().availableFairList.map((fair) => ({
         ...fair,
-        openingDates: normalizeDateRange(fair.openingDates),
+        openingDates: toDateRangeString(fair.openingDates),
       })),
 
       // Custom fair

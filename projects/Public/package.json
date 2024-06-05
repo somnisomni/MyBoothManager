@@ -1,6 +1,6 @@
 {
   "name": "@myboothmanager/public",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "author": "somni <me@somni.one>",
   "packageManager": "yarn@4.2.2",
   "private": true,

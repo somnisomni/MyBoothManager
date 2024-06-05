@@ -7,3 +7,12 @@ export function emptyObject(target: Record<any, any>): void {
 export function emptyNumberKeyObject(target: Record<number, any>): void {
   Object.keys(target).forEach((key) => delete target[parseInt(key)]);
 }
+
+export function toDateRangeString(dates: Array<Date | string>): string  {
+  if(dates.length === 1) return new Date(dates[0]).toLocaleDateString();
+
+  const min = dates.reduce((prev, curr) => new Date(prev) < new Date(curr) ? prev : curr);
+  const max = dates.reduce((prev, curr) => new Date(prev) > new Date(curr) ? prev : curr);
+
+  return `${new Date(min).toLocaleDateString()} ~ ${new Date(max).toLocaleDateString()}`;
+}

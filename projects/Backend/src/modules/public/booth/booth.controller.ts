@@ -12,7 +12,7 @@ export class PublicBoothController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll(): Promise<Array<PublicBoothResponseDto>> {
-    return (await this.publicBoothService.findAll())
+    return (await this.publicBoothService.findAllWithoutPassedFair())
       .map((booth) => new PublicBoothResponseDto(booth));
   }
 
