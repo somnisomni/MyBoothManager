@@ -5,7 +5,8 @@ import * as csv from "csv-parse";
 export class CSVService {
   constructor() { }
 
-  async parseCSVString(csvStr: string, columns: Array<string> | true = true): Promise<Array<Record<string, unknown>>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async parseCSVString<T extends Array<string>>(csvStr: string, columns: T | true = true): Promise<Array<Record<string, any>>> {
     const normalized = csvStr.trim();
 
     const records = [];

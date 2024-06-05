@@ -5,8 +5,8 @@ export const goodsCsvHeader = [
   "type",
   "price",
   "stock_initial",
-];
+] as const;
 
 export const goodsCsvHeaderStringified = goodsCsvHeader.join(",");
 
-export const goodsCsvHeaderMap = Object.fromEntries(goodsCsvHeader.map((value) => [value, value]));
+export const goodsCsvHeaderMap = Object.freeze(Object.fromEntries(goodsCsvHeader.map((value) => [value, value])));

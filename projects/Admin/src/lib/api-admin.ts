@@ -206,4 +206,9 @@ export default class AdminAPI extends BaseAdminAPI {
   static async deleteGoodsCombinationImage(combinationId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image?bId=${boothId}`));
   }
+
+  /* Utility */
+  static async requestPreviewGoodsCSVImport(csv: string) {
+    return await this.apiCallWrapper<CT.IGoodsCSVImportPreviewResponse>(() => this.API.POST("goods/csv/preview", { csv } as CT.IGoodsCSVImportRequest));
+  }
 }
