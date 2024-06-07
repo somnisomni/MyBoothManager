@@ -33,6 +33,7 @@
 		"eslint.workingDirectories": [
       { "pattern": "./packages/*/" },
       { "pattern": "./projects/*/" }
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 	}
 }

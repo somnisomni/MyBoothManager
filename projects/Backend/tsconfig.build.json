@@ -4,7 +4,7 @@
   "exclude": ["node_modules", "tests", "dist/", "**/*spec.ts"],
   "compilerOptions": {
     "composite": false,
-    "module": "CommonJS",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "declaration": false,
     "sourceMap": false

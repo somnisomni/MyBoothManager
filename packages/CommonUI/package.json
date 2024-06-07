@@ -4,6 +4,7 @@
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.2.0",
   "private": true,
+  "main": "./dist/common-ui.mjs",
   "scripts": {
     "build": "pnpm clean && run-p type-check \"build-only {@}\" --",
     "clean": "rimraf ./dist",
@@ -18,7 +19,7 @@
   "module": "./dist/common-ui.mjs",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "workspace:*",
+    "@myboothmanager/common": "workspace:^",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",

@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "workspace:*",
-    "@myboothmanager/common-ui": "workspace:*",
+    "@myboothmanager/common": "workspace:^",
+    "@myboothmanager/common-ui": "workspace:^",
     "@unhead/vue": "^1.9.10",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
