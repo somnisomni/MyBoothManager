@@ -21,7 +21,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Initialize
-        run: pnpm install --frozen-lockfile && pnpm common:build
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+      - name: Initialize project
+        run: pnpm common:build
       - name: Do test
         run: pnpm test
