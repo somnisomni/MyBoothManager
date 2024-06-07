@@ -53,7 +53,7 @@ export default defineConfig({
   server: {
     port: 20001,
   },
-  base: process.env.VITE_BASE_PATH ?? "./",
+  base: process.env.VITE_ADMIN_BASE_PATH ?? "./",
   define: defines,
   build: {
     rollupOptions: {

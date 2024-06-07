@@ -280,6 +280,9 @@ importers:
 
   projects/Backend:
     dependencies:
+      '@esbuild-kit/esm-loader':
+        specifier: ^2.6.5
+        version: 2.6.5
       '@fastify/cookie':
         specifier: ^9.3.1
         version: 9.3.1
@@ -325,6 +328,9 @@ importers:
       clone-deep:
         specifier: ^4.0.1
         version: 4.0.1
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -356,9 +362,6 @@ importers:
         specifier: ^3.8.1
         version: 3.8.1(@types/node@20.14.2)
     devDependencies:
-      '@esbuild-kit/esm-loader':
-        specifier: ^2.6.5
-        version: 2.6.5
       '@nestjs/cli':
         specifier: ^10.3.2
         version: 10.3.2
@@ -398,9 +401,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^7.12.0
         version: 7.12.0(eslint@8.57.0)(typescript@5.4.5)
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
       eslint:
         specifier: ^8
         version: 8.57.0

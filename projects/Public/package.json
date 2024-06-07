@@ -13,6 +13,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "lint:fix": "pnpm lint --fix"
   },
+  "files": [ "./dist" ],
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "workspace:^",
