@@ -9,7 +9,7 @@
     "all:build": "pnpm all build",
     "common": "pnpm -F @myboothmanager/common",
     "common-ui": "pnpm -F @myboothmanager/common-ui",
-    "common:build": "pnpm common build && pnpm install && pnpm common-ui build && pnpm install",
+    "common:build": "pnpm common build && pnpm common-ui build",
     "admin": "pnpm -F @myboothmanager/admin",
     "public": "pnpm -F @myboothmanager/public",
     "backend": "pnpm -F @myboothmanager/backend",
