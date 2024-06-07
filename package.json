@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
     "all": "pnpm -r run",
-    "all:version": "pnpm all version",
+    "all:version": "pnpm -r exec npm version",
     "all:build": "pnpm all build",
     "common": "pnpm -F @myboothmanager/common",
     "common-ui": "pnpm -F @myboothmanager/common-ui",
