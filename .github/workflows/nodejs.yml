@@ -7,9 +7,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +21,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Initialize
-        run: yarn install && yarn common:build
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+      - name: Initialize project
+        run: pnpm common:build
       - name: Do test
-        run: yarn test
+        run: pnpm test

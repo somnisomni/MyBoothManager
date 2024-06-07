@@ -30,20 +30,10 @@
     }
   ],
 	"settings": {
-		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
-		"typescript.enablePromptUseWorkspaceTsdk": true,
-    "jest.disabledWorkspaceFolders": [
-      "./packages/Common",
-      "./packages/CommonUI",
-      "./packages/I18n",
-      "./projects/Admin",
-      "./projects/Public",
-      "./projects/Backend"
-		],
-    "eslint.nodePath": "../../.yarn/sdks",
 		"eslint.workingDirectories": [
       { "pattern": "./packages/*/" },
       { "pattern": "./projects/*/" }
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 	}
 }

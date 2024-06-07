@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
-  "include": ["env.d.ts", "./src/**/*.ts", "./scripts/**/*.ts"],
+  "include": ["env.d.ts", "./src/**/*.ts"],
   "exclude": ["./dist"],
   "compilerOptions": {
     "composite": true,
@@ -30,6 +30,8 @@
     }
   },
   "ts-node": {
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node",
     "compilerOptions": {
       "module": "CommonJS",
       "target": "ESNext",

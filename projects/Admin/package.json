@@ -2,7 +2,7 @@
   "name": "@myboothmanager/admin",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "pnpm@9.2.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,12 +11,13 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "pnpm lint --fix"
   },
+  "files": [ "./dist" ],
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "../../packages/Common",
-    "@myboothmanager/common-ui": "../../packages/CommonUI",
+    "@myboothmanager/common": "workspace:^",
+    "@myboothmanager/common-ui": "workspace:^",
     "chart.js": "^4.4.3",
     "chartjs-adapter-moment": "^1.0.1",
     "clone-deep": "^4.0.1",
@@ -29,15 +30,15 @@
     "vue": "^3.4.27",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.2",
-    "vuetify": "^3.6.7"
+    "vuetify": "^3.6.8"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/html2canvas": "^1.0.0",
-    "@types/node": "^20.12.12",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.2",
+    "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8",
@@ -45,9 +46,9 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-vue": "^9.26.0",
     "npm-run-all2": "^6.2.0",
-    "sass": "^1.77.2",
+    "sass": "^1.77.4",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11",
+    "vite": "^5.2.13",
     "vite-plugin-vuetify": "^2.0.3",
     "vite-plugin-webpackchunkname": "^1.0.1",
     "vue-facing-decorator": "^3.0.4",

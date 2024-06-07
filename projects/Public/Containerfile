@@ -1,5 +1,9 @@
+### BASE ###
+FROM node:lts-alpine as base
+
 ### BUILD STAGE ###
-FROM node:lts-alpine as build
+FROM base as build
+RUN corepack enable pnpm
 
 # Build arguments
 ARG GIT_HASH
@@ -7,34 +11,33 @@ ARG API_SERVER_URL=http://localhost:31111
 ARG BASE_PATH=/
 ENV GIT_HASH=${GIT_HASH}
 ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
-ENV VITE_BASE_PATH=${BASE_PATH}
+ENV VITE_PUBLIC_BASE_PATH=${BASE_PATH}
 
 # Copy files
 WORKDIR /build
-COPY package.json .
+COPY package.json pnpm-*.yaml .
 COPY packages/      packages/
 COPY projects/Public projects/Public
 
-# Build setup
-RUN yarn set version berry
-RUN yarn install
+# Build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+#     pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
+RUN pnpm common:build && pnpm public build
 
-# Build common package
-RUN yarn common build
+# No need to deploy; all build artifacts are in dist folder as static files
+# When convert to SSR, it may need to deploy as Node.js app, if so uncomment below
+# RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
 
-# Build common UI package
-RUN yarn install
-RUN yarn install && yarn commonui build
-
-# Build public frontend
-RUN yarn install && yarn public build
 
 ### PRODUCTION STAGE ###
-FROM node:lts-alpine as production
+FROM base as production
 
 # Copy files
 WORKDIR /app
 COPY --from=build /build/projects/Public/dist .
+# Uncomment below and remove above line when convert to SSR
+# COPY --from=build /prod/public/dist .
 
 # Expose port
 EXPOSE 31113

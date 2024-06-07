@@ -1,12 +1,13 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["./src/**/*.ts", "./scripts/**/*.ts"],
+  "include": ["./src/**/*.ts", "./scripts/**/*"],
   "exclude": ["node_modules", "tests", "dist/", "**/*spec.ts"],
   "compilerOptions": {
     "composite": false,
     "module": "CommonJS",
     "moduleResolution": "Node",
     "declaration": false,
-    "sourceMap": false
+    "sourceMap": false,
+    "allowJs": true
   }
 }

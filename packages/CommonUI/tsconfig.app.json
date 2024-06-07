@@ -9,6 +9,8 @@
     "outDir": "./dist",
     "declarationDir": "./dist",
     "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
     "paths": {
       "@/*": ["./src/*"]
     },

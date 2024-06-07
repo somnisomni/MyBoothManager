@@ -89,6 +89,8 @@ async function bootstrap() {
     process.env.API_SERVER_PORT || 20000,
     process.env.API_SERVER_HOST || "127.0.0.1",
     (error, address) => {
+      console.debug(`*** Running in ${process.env.NODE_ENV ?? "(not specified)"} environment ***`);
+
       if(error) {
         console.error("*** ❌ API server failed to start! ***");
         console.error(error);

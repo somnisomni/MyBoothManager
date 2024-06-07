@@ -73,3 +73,7 @@ yarn-error.log
 .yarn/cache/*-freebsd-*
 .yarn/cache/*-darwin-*
 .yarn/cache/fsevents-patch-*
+
+# pnpm
+.pnpm-store/
+.pnpm/
