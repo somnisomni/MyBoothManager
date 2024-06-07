@@ -2,11 +2,11 @@
   "name": "@myboothmanager/common",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "pnpm@9.2.0",
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "build": "yarn clean && tsc -p \"./tsconfig.build.json\"",
+    "build": "pnpm clean && tsc -p \"./tsconfig.build.json\"",
     "clean": "rimraf ./dist",
     "lint": "eslint",
     "test": "jest"

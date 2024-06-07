@@ -2,7 +2,7 @@
   "name": "@myboothmanager/public",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "pnpm@9.2.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,12 +11,12 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "../../packages/Common",
-    "@myboothmanager/common-ui": "../../packages/CommonUI",
+    "@myboothmanager/common": "workspace:*",
+    "@myboothmanager/common-ui": "workspace:*",
     "@unhead/vue": "^1.9.10",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",

@@ -2,10 +2,10 @@
   "name": "@myboothmanager/common-ui",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "pnpm@9.2.0",
   "private": true,
   "scripts": {
-    "build": "yarn clean && run-p type-check \"build-only {@}\" --",
+    "build": "pnpm clean && run-p type-check \"build-only {@}\" --",
     "clean": "rimraf ./dist",
     "build-only": "vite build && vue-tsc -p tsconfig.app.json --emitDeclarationOnly",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
@@ -18,7 +18,7 @@
   "module": "./dist/common-ui.mjs",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/common": "*",
+    "@myboothmanager/common": "workspace:*",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
