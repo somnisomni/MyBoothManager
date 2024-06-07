@@ -30,4 +30,4 @@ echo "=========="
 echo
 
 $COMPOSE -f $COMPOSE_FILE down
-$COMPOSE -f $COMPOSE_FILE up -d --build
+time $COMPOSE -f $COMPOSE_FILE up -d --build
