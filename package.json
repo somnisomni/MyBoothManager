@@ -15,9 +15,10 @@
     "backend": "pnpm -F @myboothmanager/backend",
     "dev": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"pnpm admin dev\" \"pnpm public dev\" \"pnpm backend start:dev\"",
     "preview": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"pnpm admin preview\" \"pnpm public preview\" \"pnpm backend start:prod\"",
-    "test": "pnpm node --experimental-vm-modules \"$(pnpm bin)/jest\"",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "jest": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "test": "pnpm jest",
+    "test:watch": "pnpm jest --watch",
+    "test:cov": "pnpm jest --coverage"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
