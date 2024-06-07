@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.2.0",
   "scripts": {
+    "preinstall": "pnpm dlx only-allow pnpm",
     "all": "pnpm -r run",
     "all:version": "pnpm all version",
     "all:build": "pnpm all build",
