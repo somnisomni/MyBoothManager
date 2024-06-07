@@ -30,6 +30,8 @@
     }
   },
   "ts-node": {
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node",
     "compilerOptions": {
       "module": "CommonJS",
       "target": "ESNext",

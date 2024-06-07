@@ -4,7 +4,7 @@
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.2.0",
   "private": true,
-  "main": "./dist/common-ui.mjs",
+  "main": "./dist/common-ui.js",
   "scripts": {
     "build": "pnpm clean && run-p type-check \"build-only {@}\" --",
     "clean": "rimraf ./dist",
@@ -17,7 +17,7 @@
   ],
   "type": "module",
   "types": "./dist/common-ui.d.ts",
-  "module": "./dist/common-ui.mjs",
+  "module": "./dist/common-ui.js",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "workspace:^",

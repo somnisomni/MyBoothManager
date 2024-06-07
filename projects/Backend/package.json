@@ -4,22 +4,22 @@
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "pnpm@9.2.0",
-  "type": "module",
   "scripts": {
+    "__run": "cross-env NODE_OPTIONS=\"--import ./scripts/node/register-esm-loader.cjs\"",
     "build": "nest build",
-    "start": "nest start",
-    "start:dev": "cross-env NODE_ENV=development nest start --watch --preserveWatchOutput",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "cross-env NODE_ENV=production pnpm migrate:prod up && node dist/src/main",
-    "start:prod:no-migrate": "cross-env NODE_ENV=production node dist/src/main",
+    "start": "pnpm __run nest start",
+    "start:dev": "pnpm __run NODE_ENV=development nest start --watch --preserveWatchOutput",
+    "start:debug": "pnpm __run nest start --debug --watch",
+    "start:prod": "pnpm migrate:prod up && pnpm start:prod:no-migrate",
+    "start:prod:no-migrate": "cross-env NODE_ENV=production pnpm start",
     "migrate": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register scripts/db-migrator/migrate",
-    "migrate:prod": "cross-env NODE_ENV=production node dist/scripts/db-migrator/migrate",
+    "migrate:prod": "pnpm __run NODE_ENV=production node dist/scripts/db-migrator/migrate",
     "seed": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register scripts/db-migrator/seed",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "pnpm lint --fix",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test:watch": "pnpm test --watch",
+    "test:cov": "pnpm test --coverage"
   },
   "dependencies": {
     "@fastify/cookie": "^9.3.1",
@@ -49,6 +49,7 @@
     "umzug": "^3.8.0"
   },
   "devDependencies": {
+    "@esbuild-kit/esm-loader": "^2.6.5",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.1.1",
     "@nestjs/testing": "^10.3.8",

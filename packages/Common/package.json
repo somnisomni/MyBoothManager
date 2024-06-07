@@ -4,10 +4,13 @@
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.2.0",
   "private": true,
-  "main": "./dist/index.js",
-  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "build": "pnpm clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
+    "build:esm": "tsc -p tsconfig.build.esm.json && tsc-alias -p tsconfig.build.esm.json",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json && tsc-alias -p tsconfig.build.cjs.json",
     "clean": "rimraf ./dist",
     "lint": "eslint",
     "test": "jest"

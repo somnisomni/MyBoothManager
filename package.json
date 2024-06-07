@@ -15,7 +15,7 @@
     "backend": "pnpm -F @myboothmanager/backend",
     "dev": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"pnpm admin dev\" \"pnpm public dev\" \"pnpm backend start:dev\"",
     "preview": "concurrently -n \"ADMIN,PUBLIC,BACKEND\" -c \"bgRed.bold,bgGreen.bold,bgBlue.bold\" --kill-others \"pnpm admin preview\" \"pnpm public preview\" \"pnpm backend start:prod\"",
-    "jest": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
+    "jest": "pnpm node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand",
     "test": "pnpm jest",
     "test:watch": "pnpm jest --watch",
     "test:cov": "pnpm jest --coverage"

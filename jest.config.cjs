@@ -5,5 +5,7 @@ module.exports = {
     "<rootDir>/packages/*",
     "<rootDir>/projects/*",
   ],
+  coverageDirectory: "./coverage",
   collectCoverageFrom: ["**/*.(t|j)s"],
+  extensionsToTreatAsEsm: [".ts"],
 };

@@ -2,8 +2,9 @@
   "extends": "./tsconfig.json",
   "exclude": ["./dist", "node_modules", "**/__tests__/**"],
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "outDir": "./dist/cjs",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "target": "ESNext",
     "declaration": true
   },
