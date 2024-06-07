@@ -15,6 +15,7 @@
   "files": [
     "./dist"
   ],
+  "type": "module",
   "types": "./dist/common-ui.d.ts",
   "module": "./dist/common-ui.mjs",
   "devDependencies": {
