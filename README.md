@@ -20,7 +20,7 @@ This is an in-development project for **managing booths and goods**, recording o
     </tr>
   </tbody>
 
-  <caption style="caption-side: bottom"><a href="https://github.com/somnisomni/MyBoothManager/tree/766f2f998a6a15bfa1db9ddf72d360d0982fe8d1">v0.5.0 (766f2f9)</a>, 실제 서비스를 사용한 부스의 스크린샷. <i>Thanks to <a href="https://twitter.com/sd_srkm">sorakumo</a></i></caption>
+  <caption style="caption-side: bottom"><p align="center"><a href="https://github.com/somnisomni/MyBoothManager/tree/766f2f998a6a15bfa1db9ddf72d360d0982fe8d1">v0.5.0 (766f2f9)</a>, 실제 서비스를 사용한 부스의 스크린샷. <i>Thanks to <a href="https://twitter.com/sd_srkm">sorakumo</a></i></p></caption>
 </table>
 
 
