@@ -2,7 +2,7 @@
   "name": "myboothmanager",
   "author": "somni <me@somni.one>",
   "private": true,
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@9.3.0",
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
     "all": "pnpm -r run",
