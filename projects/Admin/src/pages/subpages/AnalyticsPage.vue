@@ -157,7 +157,7 @@ export default class AnalyticsPage extends Vue {
   }
 
   get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!?.currencySymbol ?? "";
+    return useAdminStore().currentBooth.booth!.currencySymbol ?? "";
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
@@ -204,7 +204,7 @@ export default class AnalyticsPage extends Vue {
   }
 
   get orderHistoryInfoMergedByMinute(): Record<number, { quantity: number, price: number }> {
-    const merged: Record<any, { quantity: number, price: number }> = {};
+    const merged: Record<number, { quantity: number, price: number }> = {};
 
     this.orderHistoryFilteredArray.forEach((item) => {
       if(!item.createdAt) return;

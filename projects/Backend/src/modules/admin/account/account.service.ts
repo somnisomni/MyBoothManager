@@ -67,7 +67,7 @@ export class AccountService {
   }
 
   update(id: number, updateAccountDto: UpdateAccountDto) {
-    throw new NotImplementedException("ACCOUNT UPDATE NOT IMPLEMENTED");
+    throw new NotImplementedException(`ACCOUNT UPDATE NOT IMPLEMENTED ${id} ${updateAccountDto}`);
   }
 
   async remove(id: number): Promise<ISuccessResponse> {

@@ -3,6 +3,7 @@ import importConfig from "./import.mjs";
 import stylisticConfig from "./stylistic.mjs";
 import typescriptConfigs from "./typescript.mjs";
 import typescriptVueConfigs from "./typescript-vue.mjs";
+import configfiles from "./configfiles.mjs";
 
 const ignores = Object.freeze({
   ignores: [
@@ -10,7 +11,8 @@ const ignores = Object.freeze({
     "**/dist/**",
     "**/build/**",
     "**/coverage/**",
-    "**/(\.)?output/**",
+    "**/(.)?output/**",
+    "**/vite.config.(m|c)?(t|j)s.timestamp*",
   ],
 });
 
@@ -20,6 +22,7 @@ const individualConfigs = Object.freeze({
   stylistic: stylisticConfig,
   typescript: typescriptConfigs,
   typescriptVue: typescriptVueConfigs,
+  configfiles: configfiles,
 });
 
 export const eslintConfigs = Object.freeze({
@@ -31,6 +34,7 @@ export const eslintConfigs = Object.freeze({
     ...individualConfigs.typescript,
     individualConfigs.additional,
     individualConfigs.stylistic,
+    individualConfigs.configfiles,
   ]),
   vue: Object.freeze([
     ignores,
@@ -38,5 +42,6 @@ export const eslintConfigs = Object.freeze({
     ...individualConfigs.typescriptVue,
     individualConfigs.additional,
     individualConfigs.stylistic,
+    individualConfigs.configfiles,
   ]),
 });

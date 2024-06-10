@@ -2,6 +2,7 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import vueParser from "vue-eslint-parser";
 import vuePlugin from "eslint-plugin-vue";
+import globals from "globals";
 
 /** @type {Array<import("eslint").Linter.FlatConfig>} */
 export default [
@@ -17,6 +18,10 @@ export default [
         parser: tseslint.parser,
         ecmaVersion: "latest",
         sourceType: "module",
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2022,
       },
     },
   },

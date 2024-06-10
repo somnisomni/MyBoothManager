@@ -1,7 +1,8 @@
-export type MutualExclusive<TInterface,
-                            TKey1 extends keyof TInterface,
-                            TKey2 extends keyof TInterface>
-  =  (({ [key in TKey1]: TInterface[key] } & { [key in TKey2]?: never })
+export type MutualExclusive<
+  TInterface,
+  TKey1 extends keyof TInterface,
+  TKey2 extends keyof TInterface,
+> = (({ [key in TKey1]: TInterface[key] } & { [key in TKey2]?: never })
     | ({ [key in TKey2]: TInterface[key] } & { [key in TKey1]?: never }))
     & Omit<TInterface, TKey1 | TKey2>;
 

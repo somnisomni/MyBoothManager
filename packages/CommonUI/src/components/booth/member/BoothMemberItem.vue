@@ -44,7 +44,7 @@ import { useDisplay } from "vuetify";
 export default class BoothMemberItem extends Vue {
   @Prop({ type: Object,  required: true }) readonly memberData!: IBoothMember;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
-  @Prop({ type: Function, default: (s: any) => s }) readonly imageUrlResolver!: (rawImageUrl?: string | null) => string | null | undefined;
+  @Prop({ type: Function, default: (s: string) => s }) readonly imageUrlResolver!: (rawImageUrl?: string | null) => string | null | undefined;
 
   @Setup(() => useDisplay().smAndUp)
   declare smAndUp: boolean;

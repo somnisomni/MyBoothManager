@@ -75,7 +75,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   }
   async function simplifyAPICall<T>(
     apiFunc: () => Promise<T | C.ErrorCodes>,
-    afterFetchFunc: (response: T) => any | Promise<any>,
+    afterFetchFunc: (response: T) => unknown | Promise<unknown>,
   ): Promise<true | C.ErrorCodes> {
     const response = await apiWrapper(apiFunc);
 

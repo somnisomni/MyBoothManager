@@ -9,5 +9,5 @@ export default {
       before: false,
       after: true,
     }],
-  }
+  },
 };

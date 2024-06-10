@@ -47,6 +47,7 @@
     ],
     "eslint.lintTask.enable": true,
     "eslint.run": "onType",
+    "eslint.packageManager": "pnpm",
     "typescript.tsdk": "node_modules/typescript/lib"
 	}
 }
