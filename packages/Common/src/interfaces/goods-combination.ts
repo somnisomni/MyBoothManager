@@ -1,5 +1,3 @@
-/* eslint-disable import/exports-last */
-
 import { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
 
 /* === Common === */

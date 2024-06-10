@@ -3,15 +3,15 @@ import { ref, type Ref } from "vue";
 /* Part of https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/anchor.ts#L8-L14 */
 const block = ["top", "bottom"] as const;
 const inline = ["start", "end", "left", "right"] as const;
-type Tblock = typeof block[number]
-type Tinline = typeof inline[number]
+type Tblock = typeof block[number];
+type Tinline = typeof inline[number];
 type VuetifyAnchor =
   | Tblock
   | Tinline
   | "center"
   | "center center"
   | `${Tblock} ${Tinline | "center"}`
-  | `${Tinline} ${Tblock | "center"}`
+  | `${Tinline} ${Tblock | "center"}`;
 
 export interface ISnackbarContext {
   id: string;
@@ -32,7 +32,7 @@ export interface ISnackbarContext {
 }
 
 export class SnackbarContextWrapper {
-  private _contexts: Array<ISnackbarContext> = new Array();
+  private _contexts: Array<ISnackbarContext> = [];
 
   get contexts(): Ref<Array<ISnackbarContext>> {
     return ref(this._contexts);

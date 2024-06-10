@@ -1,5 +1,3 @@
-/* eslint-disable import/exports-last */
-
 import { IImageUploadInfo } from "./base";
 
 /* === Common === */

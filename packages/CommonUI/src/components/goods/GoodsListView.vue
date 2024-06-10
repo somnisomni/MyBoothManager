@@ -78,7 +78,7 @@ export default class GoodsListView extends Vue {
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly categoryEditable!: boolean;
-  @Prop({ type: Function, default: (s: any) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
+  @Prop({ type: Function, default: (s: string) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
 
   get goodsListAdjusted(): Array<Goods> {
     if(!this.goodsList) {

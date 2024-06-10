@@ -12,22 +12,19 @@
     "build:esm": "tsc -p tsconfig.build.esm.json && tsc-alias -p tsconfig.build.esm.json",
     "build:cjs": "tsc -p tsconfig.build.cjs.json && tsc-alias -p tsconfig.build.cjs.json",
     "clean": "rimraf ./dist",
-    "lint": "eslint",
+    "lint": "eslint .",
     "test": "jest"
   },
   "files": [
     "./dist"
   ],
   "devDependencies": {
+    "@myboothmanager/dev-shared": "workspace:^",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.2",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
-    "eslint": "^8",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.4.0",
     "execa": "^9.2.0",
     "jest": "^29.7.0",
     "rimraf": "^5.0.7",

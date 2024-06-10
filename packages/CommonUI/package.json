@@ -10,7 +10,7 @@
     "clean": "rimraf ./dist",
     "build-only": "vite build && vue-tsc -p tsconfig.app.json --emitDeclarationOnly",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint ."
   },
   "files": [
     "./dist"
@@ -20,15 +20,15 @@
   "module": "./dist/common-ui.js",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
+    "@myboothmanager/dev-shared": "workspace:^",
     "@myboothmanager/common": "workspace:^",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/node": "^20.14.2",
     "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8",
+    "eslint": "^9.4.0",
     "eslint-plugin-vue": "^9.26.0",
     "npm-run-all2": "^6.2.0",
     "rimraf": "^5.0.7",

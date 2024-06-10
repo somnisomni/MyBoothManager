@@ -58,6 +58,10 @@ This is an in-development project for **managing booths and goods**, recording o
   $ pnpm all:version minor  # or major, patch
   ```
 
+### Misc
+* In [root `package.json`](package.json), [`@myboothmanager/dev-shared`](packages/DevShared/) is registered as dev dependency. <br />
+  This is intended, and is mandatory to make VSCode ESLint plugin work properly in sub-projects which extends the shared ESLint config.
+
 ## Copyright & License
 Copyright © 2023- **[somni](https://github.com/somnisomni)**, All rights reserved.
 

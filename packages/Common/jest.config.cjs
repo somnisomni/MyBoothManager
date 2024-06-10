@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { JestConfigWithTsJest, pathsToModuleNameMapper } = require("ts-jest");
 const { compilerOptions } = require("./tsconfig.json");
 
