@@ -13,6 +13,10 @@
       "path": "packages/CommonUI"
     },
     {
+      "name": "[packages] Dev Shared",
+      "path": "packages/DevShared"
+    },
+    {
       "name": "[packages] I18n",
       "path": "packages/I18n"
     },
@@ -34,6 +38,16 @@
       { "pattern": "./packages/*/" },
       { "pattern": "./projects/*/" }
     ],
+    "eslint.useFlatConfig": true,
+    "eslint.validate": [
+      "javascript",
+      "typescript",
+      "vue",
+      "html"
+    ],
+    "eslint.lintTask.enable": true,
+    "eslint.run": "onType",
+    "eslint.packageManager": "pnpm",
     "typescript.tsdk": "node_modules/typescript/lib"
 	}
 }

@@ -32,7 +32,7 @@ export default class CommonErrorDialog extends Vue {
   @Prop({ type: String, default: "green" }) accentColor!: string;
   @Prop({ type: Boolean, default: true }) showReloadButton!: boolean;
   @Prop({ type: Boolean, default: true }) showContacts!: boolean;
-  @Prop({ type: Boolean, default: true }) closeable!: Boolean;
+  @Prop({ type: Boolean, default: true }) closeable!: boolean;
 
   get developerTwitterHandle(): string {
     return `@${DEVELOPER_TWITTER_HANDLE}`;

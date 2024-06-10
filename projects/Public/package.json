@@ -10,7 +10,7 @@
     "preview": "run-p build && vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "lint": "eslint .",
     "lint:fix": "pnpm lint --fix"
   },
   "files": [ "./dist" ],
@@ -27,16 +27,14 @@
     "vuetify": "^3.6.8"
   },
   "devDependencies": {
+    "@myboothmanager/dev-shared": "workspace:^",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.14.2",
     "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.4.0",
     "eslint-plugin-vue": "^9.26.0",
     "npm-run-all2": "^6.2.0",
     "sass": "^1.77.4",

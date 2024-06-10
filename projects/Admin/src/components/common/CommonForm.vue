@@ -76,6 +76,8 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";

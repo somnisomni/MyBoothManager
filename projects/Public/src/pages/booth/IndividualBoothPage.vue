@@ -164,7 +164,7 @@ export default class IndividualBoothPage extends Vue {
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
 
   readonly dataPollingInterval: number = 30000; // 30 seconds
-  dataPollingTimerId: NodeJS.Timeout | null = null;
+  dataPollingTimerId: ReturnType<typeof setTimeout> | null = null;
 
   get boothId(): number {
     return new Number(useRoute().params["boothId"] as string).valueOf();
@@ -267,7 +267,7 @@ export default class IndividualBoothPage extends Vue {
     }
 
     /* After booth data is fetched successfully, fetch others */
-    const responsePromises: Array<Promise<any>> = [
+    const responsePromises: Array<Promise<any>> = [  // eslint-disable-line @typescript-eslint/no-explicit-any
       useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllMembersOfBooth(this.boothId)),
       useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsOfBooth(this.boothId)),
       useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId)),

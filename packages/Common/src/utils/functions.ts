@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export function emptyObject(target: Record<any, any>): void {
+export function emptyObject(target: Record<string, unknown>): void {
   Object.keys(target).forEach((key) => delete target[key]);
 }
 
-export function emptyNumberKeyObject(target: Record<number, any>): void {
+export function emptyNumberKeyObject(target: Record<number, unknown>): void {
   Object.keys(target).forEach((key) => delete target[parseInt(key)]);
 }
 
