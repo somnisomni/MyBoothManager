@@ -3,19 +3,22 @@ import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import packageJson from "./package.json";
 
 /* === Defines === */
-const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim(); } catch(e) { return null; } })();
-
-const defines: Record<string, string> = Object.fromEntries(Object.entries({
-  VITE__APP_VERSION: `"${packageJson.version}"`,
-  VITE__GIT_HASH: `"${commitHash ?? "unknown"}"`,
-}).map(([key, value]) => [`import.meta.env.${key}`, value]));
+let commitHash = process.env.GIT_HASH;
+if(!commitHash) {
+  try {
+    commitHash = execSync("git rev-parse --short HEAD").toString().trim();
+  } catch(e) {
+    commitHash = "unknown";
+  }
+}
 /* === */
 
 /* === Startup Debug Logging === */
 console.debug();
 console.debug(" *** PUBLIC *** ");
 console.debug("Starting Nuxt.js for " + process.env.NODE_ENV + " environment");
-Object.entries(defines).forEach(([key, value]) => console.debug(key + ": " + value));
+console.debug(`  - package.json app version: ${packageJson.version}`);
+console.debug(`  - Git hash: ${commitHash}`);
 console.debug();
 /* === */
 
@@ -49,7 +52,32 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-    define: defines,
+  },
+  css: [
+    "~/assets/styles/styles.scss",
+  ],
+  app: {
+    head: {
+      link: [
+        {
+          rel: "stylesheet",
+          as: "style",
+          crossorigin: "anonymous",
+          href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/variable/pretendardvariable-dynamic-subset.css",
+        },
+      ],
+    },
+  },
+  components: [
+    { path: "~/components", pathPrefix: false },
+  ],
+  runtimeConfig: {
+    public: {
+      appVersion: packageJson.version,
+      versionGitHash: commitHash,
+      apiServerUrl: "http://api.sora.localhost:20000",
+      apiServerUploadsPath: "uploads",
+    },
   },
   build: {
     transpile: ["vuetify"],
