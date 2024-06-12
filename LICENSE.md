@@ -66,7 +66,7 @@ The **licensor** is the individual or entity offering these terms, and the **sof
 > **This is not a part of the license clauses**, but these further explanations might help you to understand the license.
 
   - **The license is not considered as open-source, but source-available.** The source code of this software is publicly available, but using the source code is limited under the license clauses.  
-    > TL;DR you can see and use the source code in non-commercial and/or personal purposes, but you can't use commercially, distribute, modify, sell, or make a profit with this software itself and its source code.
+    > TL;DR: you can see and use the source code in non-commercial and/or personal purposes, but you can't use commercially, distribute, modify, sell, or make a profit with this software itself and its source code.
 
   - **This license is only applied to the software and the source code itself.** Software users[^1] are not limited to this license clauses. Please check what's granted to use the deployed software for software users in **End-User License Agreement(EULA)** *(not ready yet)*.
 
