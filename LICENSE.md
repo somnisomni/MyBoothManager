@@ -57,3 +57,17 @@ The **licensor** is the individual or entity offering these terms, and the **sof
 **Your licenses** are all the licenses granted to you for the software under these terms.
 
 **Use** means anything you do with the software requiring one of your licenses.
+
+---
+
+## Additional explanations
+
+> [!TIP]  
+> **This is not a part of the license clauses**, but these further explanations might help you to understand the license.
+
+  - **The license is not considered as open-source, but source-available.** The source code of this software is publicly available, but using the source code is limited under the license clauses.  
+    > TL;DR you can see and use the source code in non-commercial and/or personal purposes, but you can't use commercially, distribute, modify, sell, or make a profit with this software itself and its source code.
+
+  - **This license is only applied to the software and the source code itself.** Users[^1] are not limited to this license clauses. Please check what's granted to use the deployed software for users in End-User License Agreement *(not ready yet)*.
+
+[^1]: In this context, **user** means the individual or entity actually using the published or deployed software. Same as the meaning of "end-user".
