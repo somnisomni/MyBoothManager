@@ -14,23 +14,37 @@ type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export const MAX_UPLOAD_FILE_BYTES = (1024 * 1024) * 15;  // 15MB
 
+export interface APICallerOptions {
+  host: string;
+  group: string;
+  healthCheckPath: string;
+  getAuthorizationToken: () => string | null | undefined;
+}
+
 export default class APICaller {
-  private static readonly FETCH_COMMON_OPTIONS: Partial<RequestInit> = {
+  private static readonly FETCH_COMMON_OPTIONS: Readonly<Partial<RequestInit>> = {
     headers: { "Content-Type": "application/json" },
     cache: "no-cache",
     redirect: "error",
-  };
+  } as const;
 
-  constructor(
-    private readonly apiHost: string,
-    private readonly apiGroup: string = "",
-    private readonly getAuthorizationToken: (() => string) | null | undefined = null,
-    private readonly healthCheckPath: string = "healthcheck",
-  ) { }
+  constructor(private readonly options: Partial<APICallerOptions>) { }
+
+  private get normalizedOptions(): APICallerOptions {
+    return {
+      host: this.options.host ?? "localhost:20000",
+      group: this.options.group ?? "",
+      healthCheckPath: this.options.healthCheckPath ?? "healthcheck",
+      getAuthorizationToken: this.options.getAuthorizationToken ?? (() => "" as string | null | undefined),
+    };
+  }
+
+  /* Public APIs */
+  private readonly createPublicAPI = () => new APICaller({ host: this.normalizedOptions.host, group: "public" });
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
-    const url: string = `${this.apiHost}${this.apiGroup.length > 0 ? `/${this.apiGroup}` : ""}/${path}`;
+    const url: string = `${this.normalizedOptions.host}${this.normalizedOptions.group.length > 0 ? `/${this.normalizedOptions.group}` : ""}/${path}`;
 
     const response = await fetch(url, {
       ...additionalInitOptions,
@@ -38,7 +52,7 @@ export default class APICaller {
       body: payload,
       headers: {
         ...additionalInitOptions?.headers ?? { },
-        ...containAuthCredential && this.getAuthorizationToken ? { Authorization: `Bearer ${this.getAuthorizationToken()}` } : { },
+        ...containAuthCredential && this.normalizedOptions.getAuthorizationToken ? { Authorization: `Bearer ${this.normalizedOptions.getAuthorizationToken()}` } : { },
       },
       ...containAuthCookie ? { credentials: "include" } : { credentials: "omit" },
     });
@@ -61,13 +75,11 @@ export default class APICaller {
     return this.callAPIInternal<T>("POST", path, payload, undefined, false, true);
   }
 
-  /* Public APIs */
-  private readonly createPublicAPI = () => new APICaller(this.apiHost, "public");
-
+  /* API endpoints below is predefined public endpoints */
   // Server
   public async checkAPIServerAlive(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.apiHost}/${this.healthCheckPath}`, APICaller.FETCH_COMMON_OPTIONS);
+      const response = await fetch(`${this.normalizedOptions.host}/${this.normalizedOptions.healthCheckPath}`, APICaller.FETCH_COMMON_OPTIONS);
 
       if(response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE) return true;
       else return false;
