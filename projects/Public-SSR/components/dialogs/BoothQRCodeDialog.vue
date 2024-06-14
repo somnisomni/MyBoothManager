@@ -41,7 +41,7 @@ class BoothQRCodeDialog extends Vue {
   }
 
   get boothPublicUrl(): string | null {
-    const url = `${window.location.origin}${useRouter().resolve({ name: "booth-individual", params: { boothId: this.boothId } }).href}`;
+    const url = `${window.location.origin}${useRouter().resolve({ path: `/booth/${this.boothId}` }).href}`;
     return URL.canParse(url) ? url : null;
   }
 }
