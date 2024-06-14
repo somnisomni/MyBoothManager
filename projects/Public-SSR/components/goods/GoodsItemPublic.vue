@@ -13,10 +13,10 @@
 <script lang="ts">
 import type { GoodsItem } from "@myboothmanager/common-ui";
 import { GoodsStockVisibility } from "@myboothmanager/common";
-import { Component, Vue, Ref } from "vue-facing-decorator";
+import { Component, Vue, Ref, toNative } from "vue-facing-decorator";
 
 @Component({})
-export default class GoodsItemPublic extends Vue {
+class GoodsItemPublic extends Vue {
   isMounted: boolean = false;
 
   @Ref("base")
@@ -34,4 +34,6 @@ export default class GoodsItemPublic extends Vue {
     this.isMounted = true;
   }
 }
+
+export default toNative(GoodsItemPublic);
 </script>

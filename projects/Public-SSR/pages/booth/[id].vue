@@ -84,7 +84,7 @@
           <div v-if="infoImage.url" class="w-100">
             <ExpandableContent heading="부스 인포">
               <VImg :src="infoImage.url"
-                    :lazy-src="infoImage.thumbnail"
+                    :lazy-src="infoImage.thumbnail ?? undefined"
                     class="booth-info-image w-100 no-interaction rounded-lg"
                     position="top"
                     cover />
@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-facing-decorator";
+import { Component, Vue, Watch, toNative } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
@@ -129,7 +129,7 @@ import { useLocalStore } from "@/stores/local";
 import { getUploadFileUrl } from "#imports";
 
 @Component({})
-export default class IndividualBoothPage extends Vue {
+class IndividualBoothPage extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly ErrorCodes = ErrorCodes;
 
@@ -307,6 +307,8 @@ export default class IndividualBoothPage extends Vue {
     }
   }
 }
+
+export default toNative(IndividualBoothPage);
 </script>
 
 <style lang="scss" scoped>

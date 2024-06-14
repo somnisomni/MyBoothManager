@@ -26,11 +26,11 @@
 
 <script lang="ts">
 import type { IBooth } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
 @Component({})
-export default class SharePanel extends Vue {
+class SharePanel extends Vue {
   @Prop({ type: Object, required: true }) boothData!: IBooth;
   @Prop({ type: Boolean, default: false }) showHomeButton!: boolean;
 
@@ -64,6 +64,8 @@ export default class SharePanel extends Vue {
     this.showURLCopiedSnackbar = true;
   }
 }
+
+export default toNative(SharePanel);
 </script>
 
 <style lang="scss" scoped>

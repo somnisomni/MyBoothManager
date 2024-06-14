@@ -86,11 +86,11 @@
 
 <script lang="ts">
 import { BoothStatus, toDateRangeString, type ErrorCodes, type IBooth, type IFair } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue, toNative } from "vue-facing-decorator";
 import { useAPIStore } from "@/stores/api";
 
 @Component({})
-export default class LandingPage extends Vue {
+class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
   isLoadingBoothList: boolean = true;
@@ -149,4 +149,6 @@ export default class LandingPage extends Vue {
     await useRouter().push({ path: `/booth/${boothId}` });
   }
 }
+
+export default toNative(LandingPage);
 </script>

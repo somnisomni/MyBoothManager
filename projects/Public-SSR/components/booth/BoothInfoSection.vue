@@ -43,11 +43,11 @@
 
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
 
 @Component({})
-export default class BoothInfoSection extends Vue {
+class BoothInfoSection extends Vue {
   readonly BoothStatus = BoothStatus;
 
   @Prop({ type: Object, required: true }) boothData!: IBooth;
@@ -73,6 +73,8 @@ export default class BoothInfoSection extends Vue {
     return dates?.join(", ");
   }
 }
+
+export default toNative(BoothInfoSection);
 </script>
 
 <style lang="scss" scoped>

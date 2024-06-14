@@ -14,12 +14,12 @@
 
 <script lang="ts">
 import { type IBooth } from "@myboothmanager/common";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Vue, toNative } from "vue-facing-decorator";
 
 @Component({
   emits: ["click:boothItem"],
 })
-export default class BoothListView extends Vue {
+class BoothListView extends Vue {
   @Prop({ type: Array, required: true }) boothList!: Array<IBooth>;
 
   @Emit("click:boothItem")
@@ -27,4 +27,6 @@ export default class BoothListView extends Vue {
     return boothId;
   }
 }
+
+export default toNative(BoothListView);
 </script>
