@@ -10,12 +10,12 @@
     <!-- *** Banner image *** -->
     <VImg class="booth-item-image flex-0-0 no-interaction-all"
           :src="bannerImageUrl"
-          :lazy-src="bannerImageThumbnail ?? undefined"
+          :lazy-src="bannerImageThumbnail"
           cover />
     <div class="booth-item-image-overlay"></div>
 
     <!-- *** Bottom info area *** -->
-    <VLayout class="booth-info flex-grow-1 d-flex flex-row justify-start align-center align-self-end pa-3">
+    <div class="booth-info flex-grow-1 d-flex flex-row justify-start align-center align-self-end pa-3">
       <div class="flex-grow-1 overflow-hidden">
         <div class="name text-body-1 font-weight-bold" :title="boothData.name">{{ boothData.name }}</div>
         <div v-if="boothData.description" class="description text-body-2 font-weight-light" :title="boothData.description">{{ boothData.description }}</div>
@@ -46,7 +46,7 @@
           </div>
         </div>
       </div>
-    </VLayout>
+    </div>
   </VSheet>
 </template>
 
@@ -77,7 +77,7 @@ class BoothListItem extends Vue {
   }
 
   get bannerImageThumbnail() {
-    return this.boothData.bannerImage?.thumbnailData;
+    return this.boothData.bannerImage?.thumbnailData ?? undefined;
   }
 
   get shouldShowExtraInfo(): boolean {
@@ -116,6 +116,9 @@ export default toNative(BoothListItem);
   }
 
   .booth-info {
+    position: absolute;
+    left: 0;
+    right: 0;
     max-height: calc(var(--booth-item-height) / 2);
     color: white;
 
