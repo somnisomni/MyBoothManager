@@ -124,7 +124,6 @@ import { Component, Vue, Watch, toNative } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
-import { useAPIStore } from "@/stores/api";
 import { useLocalStore } from "@/stores/local";
 import { getUploadFileUrl } from "#imports";
 
@@ -183,7 +182,7 @@ class IndividualBoothPage extends Vue {
     useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
 
     /* *** Set document metadata *** */
-    useHead({
+    useHeadSafe({
       title: `${this.boothData.name} - 부스 정보`,
     });
     useSeoMeta({
@@ -242,7 +241,7 @@ class IndividualBoothPage extends Vue {
     }
 
     /* Fetch booth data first */
-    const boothDataResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchSingleBooth(this.boothId));
+    const boothDataResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchSingleBooth(this.boothId));
 
     if("errorCode" in boothDataResponse) {
       this.fetchError = boothDataResponse.errorCode;
@@ -253,10 +252,10 @@ class IndividualBoothPage extends Vue {
 
     /* After booth data is fetched successfully, fetch others */
     const responsePromises: Array<Promise<any>> = [  // eslint-disable-line @typescript-eslint/no-explicit-any
-      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllMembersOfBooth(this.boothId)),
-      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsOfBooth(this.boothId)),
-      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId)),
-      useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId)),
+      this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllMembersOfBooth(this.boothId)),
+      this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsOfBooth(this.boothId)),
+      this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId)),
+      this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId)),
     ];
 
     const responses = await Promise.all(responsePromises);
@@ -273,23 +272,23 @@ class IndividualBoothPage extends Vue {
 
     this.isDataLoading = true;
 
-    const boothDataResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchSingleBooth(this.boothId));
+    const boothDataResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchSingleBooth(this.boothId));
     if(!("errorCode" in boothDataResponse)) this.boothData = boothDataResponse;
     else errors[0] = boothDataResponse.errorCode;
 
-    const boothMemberResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllMembersOfBooth(this.boothId));
+    const boothMemberResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllMembersOfBooth(this.boothId));
     if(!("errorCode" in boothMemberResponse)) this.boothMemberList = boothMemberResponse;
     else errors[1] = boothMemberResponse.errorCode;
 
-    const goodsResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsOfBooth(this.boothId));
+    const goodsResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsOfBooth(this.boothId));
     if(!("errorCode" in goodsResponse)) this.boothGoodsList = goodsResponse.map((goods) => new Goods(goods));
     else errors[2] = goodsResponse.errorCode;
 
-    const combinationResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId));
+    const combinationResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId));
     if(!("errorCode" in combinationResponse)) this.boothCombinationList = combinationResponse.map((combination) => new GoodsCombination(combination));
     else errors[3] = combinationResponse.errorCode;
 
-    const categoryResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId));
+    const categoryResponse = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId));
     if(!("errorCode" in categoryResponse)) this.boothCategoryList = categoryResponse;
     else errors[4] = categoryResponse.errorCode;
 

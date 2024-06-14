@@ -39,7 +39,6 @@
 <script lang="ts">
 import { Vue, Component, toNative, Setup } from "vue-facing-decorator";
 import { APP_NAME, DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
-import { useAPIStore } from "@/stores/api";
 
 @Component({})
 class RootLayout extends Vue {
@@ -65,7 +64,7 @@ class RootLayout extends Vue {
   get isAPIFetchFailed() { return useAPIStore().isAPIFetchFailed; }
 
   async mounted() {
-    this.isServerNotAvailable = !(await useAPIStore().apiCaller.checkAPIServerAlive());
+    this.isServerNotAvailable = !(await this.$publicAPI.apiCaller.checkAPIServerAlive());
   }
 }
 

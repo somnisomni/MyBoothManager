@@ -1,4 +1,9 @@
-const useLocalStore = defineStore("local", () => {
+interface IBoothPageSettings {
+  enableAutoRefresh: boolean;
+  lastVisitedBoothId?: number;
+}
+
+export const useLocalStore = defineStore("local", () => {
   const boothPageSettings = reactive({
     enableAutoRefresh: true,
     lastVisitedBoothId: undefined,
@@ -12,10 +17,3 @@ const useLocalStore = defineStore("local", () => {
     storage: persistedState.localStorage,
   },
 });
-
-export interface IBoothPageSettings {
-  enableAutoRefresh: boolean;
-  lastVisitedBoothId?: number;
-}
-
-export { useLocalStore };

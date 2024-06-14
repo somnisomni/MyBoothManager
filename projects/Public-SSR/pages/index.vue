@@ -1,31 +1,6 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
-    <div v-if="isLoadingBoothList && !apiError"
-         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
-      <VProgressCircular indeterminate
-                         size="x-large"
-                         color="primary"
-                         class="my-2" />
-      <span class="mt-2 text-grey-darken-2">부스 목록 불러오는 중...</span>
-    </div>
-
-    <div v-else-if="apiError"
-         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
-      <h4 class="text-h4 text-center text-error">
-        <VIcon class="mr-2">mdi-alert</VIcon>
-        <span>데이터를 불러오는 중 오류 발생 ({{ apiError }})</span>
-      </h4>
-
-      <VBtn class="mt-4"
-            size="large"
-            color="primary"
-            variant="outlined"
-            prepend-icon="mdi-refresh"
-            @click="reloadWindow">새로고침</VBtn>
-    </div>
-
-
-    <div v-else-if="!isLoadingBoothList && (boothList && boothList.length <= 0)"
+    <div v-if=" boothList && boothList.length <= 0"
          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-info">
         <VIcon class="mr-2">mdi-weather-dust</VIcon>
@@ -40,7 +15,7 @@
             @click="reloadWindow">새로고침</VBtn>
     </div>
 
-    <VContainer v-else-if="!isLoadingBoothList && (boothList && boothList.length > 0)" class="d-flex flex-column">
+    <VContainer v-else-if="boothList && boothList.length > 0" class="d-flex flex-column">
       <VLayout v-for="fair in fairList"
                :key="fair.id"
                class="d-flex flex-0-0 flex-column my-4 overflow-visible">
@@ -85,30 +60,25 @@
 </template>
 
 <script lang="ts">
-import { BoothStatus, toDateRangeString, type ErrorCodes, type IBooth, type IFair } from "@myboothmanager/common";
-import { Component, Vue, toNative } from "vue-facing-decorator";
-import { useAPIStore } from "@/stores/api";
+import { BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
+import { Component, Setup, Vue, toNative } from "vue-facing-decorator";
+
+function filterBoothList(boothList: Array<IBooth>) {
+  // Don't include closed booths in the booth list view
+  return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
+}
+
+function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
+  // Don't include fairs that no booth is assigned to
+  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) !== -1);
+}
 
 @Component({})
 class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
-  isLoadingBoothList: boolean = true;
-  apiError: ErrorCodes | null = null;
-
-  _fairList: Array<IFair> = [];
-  get fairList() { return this._fairList; }
-  set fairList(value: Array<IFair>) {
-    // Don't include fairs that no booth is assigned to
-    this._fairList = value.filter((fair) => this.boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) !== -1);
-  }
-
-  _boothList: Array<IBooth> = [];
-  get boothList() { return this._boothList; }
-  set boothList(value: Array<IBooth>) {
-    // Don't include closed booths in the booth list view
-    this._boothList = value.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
-  }
+  boothList: Array<IBooth> = [];
+  fairList: Array<IFair> = [];
 
   get boothListOpened() {
     return this.boothList.filter((booth) => !booth.fair && booth.status.status === BoothStatus.OPEN);
@@ -119,24 +89,8 @@ class LandingPage extends Vue {
   }
 
   async mounted() {
-    this.isLoadingBoothList = true;
-
-    const boothResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAllBooths());
-    const fairResponse = await useAPIStore().apiWrapper(() => useAPIStore().apiCaller.fetchAvailableFairs());
-
-    if("errorCode" in boothResponse) {
-      this.apiError = (boothResponse || fairResponse).errorCode;
-      return;
-    }
-
-    if("errorCode" in fairResponse) {
-      this.apiError = fairResponse.errorCode;
-      return;
-    }
-
-    this.boothList = boothResponse;
-    this.fairList = fairResponse;
-    this.isLoadingBoothList = false;
+    this.boothList = filterBoothList(await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllBooths(), false) as Array<IBoothResponse>);
+    this.fairList = filterFairList(await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAvailableFairs(), false) as Array<IFairResponse>, this.boothList);
   }
 
   getBoothsOfFair(fairId: number) {
