@@ -32,10 +32,11 @@ export default class APICaller {
 
   private get normalizedOptions(): APICallerOptions {
     return {
-      host: this.options.host ?? "localhost:20000",
-      group: this.options.group ?? "",
-      healthCheckPath: this.options.healthCheckPath ?? "healthcheck",
-      getAuthorizationToken: this.options.getAuthorizationToken ?? (() => "" as string | null | undefined),
+      host: "http://localhost:20000",
+      group: "",
+      healthCheckPath: "healthcheck",
+      getAuthorizationToken: () => undefined,
+      ...this.options,
     };
   }
 
@@ -60,8 +61,14 @@ export default class APICaller {
     return await response.json() as T;
   }
 
-  public async callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
-    return this.callAPIInternal<T>(method, path, payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS, containAuthCookie, containAuthCredential);
+  public callAPI<T>(method: HTTPMethodString, path: string, payload?: Record<never, never>, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
+    return this.callAPIInternal<T>(
+      method,
+      path,
+      payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS,
+      containAuthCookie,
+      containAuthCredential,
+    );
   }
 
   /* Fetch function shortcuts */

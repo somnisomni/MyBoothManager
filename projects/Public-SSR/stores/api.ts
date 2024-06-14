@@ -1,18 +1,22 @@
 import { APICaller, ErrorCodes, type IErrorResponse } from "@myboothmanager/common";
 
 const useAPIStore = defineStore("public", () => {
-  const apiCaller = new APICaller(
-    useRuntimeConfig().public.apiServerUrl,
-    "public",
-  );
+  const apiCaller = new APICaller({
+    host: useRuntimeConfig().public.apiServerUrl,
+    group: "public",
+  });
 
   const isAPIFetchFailed = ref(false);
 
-  async function apiWrapper<T>(callee: () => Promise<T | IErrorResponse>): Promise<T | IErrorResponse> {
+  async function apiWrapper<T>(callee: () => Promise<T | IErrorResponse>, lazy = true): Promise<T | IErrorResponse> {
     try {
-      const response = await callee();
+      const { error, data } = await useAsyncData(() => callee(), { lazy, deep: false });
+
+      if(error.value) throw error.value;
+      if(!data.value) throw "Data is nullish";
+
       isAPIFetchFailed.value = false;
-      return response;
+      return data.value;
     } catch(error) {
       console.error("API Fetch Failed!", error);
       isAPIFetchFailed.value = true;
