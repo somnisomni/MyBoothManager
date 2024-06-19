@@ -37,6 +37,8 @@ export default defineNuxtConfig({
         config.plugins?.push(vuetify({ autoImport: true }));
       });
     },
+    // Nuxt class component
+    "nuxt3-class-component",
   ],
   eslint: {
     config: {

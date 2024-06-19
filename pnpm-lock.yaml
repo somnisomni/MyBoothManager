@@ -544,6 +544,9 @@ importers:
       eslint:
         specifier: ^9.4.0
         version: 9.4.0
+      nuxt3-class-component:
+        specifier: ^1.2.0
+        version: 1.2.0(rollup@4.18.0)(vue@3.4.27(typescript@5.4.5))
       vite-plugin-vuetify:
         specifier: ^2.0.3
         version: 2.0.3(vite@5.2.13(@types/node@20.14.2)(sass@1.77.4)(terser@5.31.1))(vue@3.4.27(typescript@5.4.5))(vuetify@3.6.9)
@@ -5617,6 +5620,9 @@ packages:
     resolution: {integrity: sha512-6vRdiXTw9SajEQOUi6Ze/XaIXzy1q/sD5UqHQSv3yqTu7Pot5S7fEihNXV8LpcgLz+9HzjVt70r7jYe7R99c2w==}
     engines: {node: ^16.10.0 || >=18.0.0}
     hasBin: true
+
+  nuxt3-class-component@1.2.0:
+    resolution: {integrity: sha512-nUvdghzpxPk5dBwiS2pwM6b/C1On2pWQjoWBtsHzr34ditX0BsPkz9Ad3X+R43r4dmyMHLeomaaEu0gw6iIYug==}
 
   nuxt@3.12.1:
     resolution: {integrity: sha512-J9TO/b0KSTpKn4yzknIPYRhcJ+UwR/uFM2j0G2FPHAWKxo513ty7Y2unHejWfkuQBL6Ergw6o0E7XsIT059VQw==}
@@ -13815,6 +13821,15 @@ snapshots:
   nuxi@3.12.0:
     optionalDependencies:
       fsevents: 2.3.3
+
+  nuxt3-class-component@1.2.0(rollup@4.18.0)(vue@3.4.27(typescript@5.4.5)):
+    dependencies:
+      '@nuxt/kit': 3.12.1(rollup@4.18.0)
+      vue-facing-decorator: 3.0.4(vue@3.4.27(typescript@5.4.5))
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+      - vue
 
   nuxt@3.12.1(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.14.2)(@unocss/reset@0.61.0)(encoding@0.1.13)(eslint@9.4.0)(floating-vue@5.2.2(@nuxt/kit@3.12.1(rollup@4.18.0))(vue@3.4.27(typescript@5.4.5)))(ioredis@5.4.1)(optionator@0.9.4)(qrcode@1.5.3)(rollup@4.18.0)(sass@1.77.4)(terser@5.31.1)(typescript@5.4.5)(unocss@0.61.0(postcss@8.4.38)(rollup@4.18.0)(vite@5.2.13(@types/node@20.14.2)(sass@1.77.4)(terser@5.31.1)))(vite@5.2.13(@types/node@20.14.2)(sass@1.77.4)(terser@5.31.1))(vue-tsc@2.0.21(typescript@5.4.5)):
     dependencies:

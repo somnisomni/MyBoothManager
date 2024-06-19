@@ -1,8 +1,7 @@
 import { APICaller, ErrorCodes, type IErrorResponse } from "@myboothmanager/common";
 import { v4 as uuidV4 } from "uuid";
-import { useInternalStore } from "~/stores/internal";
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxt) => {
   const devApiServerRegex = /^(https?:\/\/)?((.+\.local(host)?)|localhost|127\.0\.0\.1)(:\d+)?$/;
   const apiServerUrlObj = new URL(useRuntimeConfig().public.apiServerUrl);
   const apiServerUrl =
@@ -22,7 +21,7 @@ export default defineNuxtPlugin(() => {
     const calleeName = callee.toString().split(".").findLast((v) => v) ?? uuidV4();
 
     try {
-      const { error, data } = await useAsyncData(calleeName, callee, { lazy, deep: false });
+      const { error, data } = await nuxt.runWithContext(async () => await useAsyncData(calleeName, callee, { lazy, deep: false }));
 
       if(error.value) throw error.value;
       if(!data.value) throw "Data is nullish";

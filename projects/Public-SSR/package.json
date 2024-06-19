@@ -31,6 +31,7 @@
     "eslint": "^9.4.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vue-facing-decorator": "3.0.4",
+    "nuxt3-class-component": "^1.2.0",
     "vuetify": "^3.6.9"
   }
 }

@@ -120,11 +120,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, toNative } from "vue-facing-decorator";
-import { useRoute } from "vue-router";
 import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
-import { useLocalStore } from "@/stores/local";
+import { Component, Vue, Watch, toNative } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
 
 @Component({})

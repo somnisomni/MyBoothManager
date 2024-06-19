@@ -1,6 +1,6 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
-    <div v-if="boothList && boothList.length <= 0"
+    <div v-if="!hasAnyBooth"
          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-info">
         <VIcon class="mr-2">mdi-weather-dust</VIcon>
@@ -15,7 +15,7 @@
             @click="reloadWindow">새로고침</VBtn>
     </div>
 
-    <VContainer v-else-if="boothList && boothList.length > 0"
+    <VContainer v-else
                 class="d-flex flex-column">
       <VLayout v-for="fair in fairList"
                :key="fair.id"
@@ -62,27 +62,33 @@
 
 <script lang="ts">
 import { BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
-import { Component, Setup, Vue, toNative } from "vue-facing-decorator";
+import { Vue } from "vue-facing-decorator";
 
-function filterBoothList(boothList: Array<IBooth>) {
-  // Don't include closed booths in the booth list view
-  return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
-}
+@NuxtComponent({
+  async asyncData(nuxtApp) {
+    function filterBoothList(boothList: Array<IBooth>) {
+      // Don't include closed booths in the booth list view
+      return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
+    }
 
-function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
-  // Don't include fairs that no booth is assigned to
-  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
-}
+    function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
+      // Don't include fairs that no booth is assigned to
+      return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
+    }
 
-@Component({})
-class LandingPage extends Vue {
+    const boothList: Array<IBooth> = filterBoothList(await nuxtApp.$publicAPI.wrap(() => nuxtApp.$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>);
+    const fairList: Array<IFair> = filterFairList(await nuxtApp.$publicAPI.wrap(() => nuxtApp.$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>, boothList);
+    const hasAnyBooth = await nuxtApp.runWithContext(() => useState<boolean>("hasAnyBooth", () => boothList.length > 0));
+
+    return { boothList, fairList, hasAnyBooth };
+  },
+})
+export default class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
-  @Setup(async () => filterBoothList(await useNuxtApp().$publicAPI.wrap(() => useNuxtApp().$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>))
   declare readonly boothList: Array<IBooth>;
-
-  @Setup(async () => await useNuxtApp().$publicAPI.wrap(() => useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>)
-  declare fairList: Array<IFair>;
+  declare readonly fairList: Array<IFair>;
+  declare readonly hasAnyBooth: boolean;
 
   get boothListOpened() {
     return this.boothList.filter((booth) => !booth.fair && booth.status.status === BoothStatus.OPEN);
@@ -90,10 +96,6 @@ class LandingPage extends Vue {
 
   get boothListOthers() {
     return this.boothList.filter((booth) => !booth.fair && !this.boothListOpened.includes(booth));
-  }
-
-  created() {
-    this.fairList = filterFairList(this.fairList, this.boothList);
   }
 
   getBoothsOfFair(fairId: number) {
@@ -106,6 +108,4 @@ class LandingPage extends Vue {
     await useRouter().push({ path: `/booth/${boothId}` });
   }
 }
-
-export default toNative(LandingPage);
 </script>
