@@ -15,16 +15,19 @@ export default defineNuxtPlugin((nuxt) => {
     group: "public",
   });
 
+  const calleeNameMatcher = /.+\.apiCaller\.(.+)\((.+)?\)$/;
+
   async function wrap<T>(callee: () => Promise<T | IErrorResponse>, lazy = true): Promise<T | IErrorResponse> {
     // `useAsyncData()` key autogeneration is not reliable in this case like wrapping an API call function.
     // So the key should be generated manually, and uniquely by the callee function name.
-    const calleeName = callee.toString().split(".").findLast((v) => v) ?? uuidV4();
+    const calleeName = callee.toString().match(calleeNameMatcher)?.[1] ?? uuidV4();
 
     try {
       const { error, data } = await nuxt.runWithContext(async () => await useAsyncData(calleeName, callee, { lazy, deep: false }));
 
       if(error.value) throw error.value;
       if(!data.value) throw "Data is nullish";
+      if(typeof data.value === "object" && "errorCode" in data.value) $internalStore.lastAPIError = data.value.errorCode;
 
       $internalStore.isAPIFetchFailed = false;
       return data.value;

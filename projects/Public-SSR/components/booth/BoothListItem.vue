@@ -52,13 +52,13 @@
 
 <script lang="ts">
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
-import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
+import { Prop, Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
 
-@Component({
+@NuxtComponent({
   emits: ["click"],
 })
-class BoothListItem extends Vue {
+export default class BoothListItem extends Vue {
   readonly BoothStatus = BoothStatus;
 
   @Prop({ type: Object, required: true }) boothData!: IBooth;
@@ -88,8 +88,6 @@ class BoothListItem extends Vue {
     return !!this.boothData.boothNumber && this.boothData.status.status !== BoothStatus.OPEN;
   }
 }
-
-export default toNative(BoothListItem);
 </script>
 
 <style lang="scss">

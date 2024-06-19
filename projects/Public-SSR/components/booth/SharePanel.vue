@@ -26,11 +26,11 @@
 
 <script lang="ts">
 import type { IBooth } from "@myboothmanager/common";
-import { Component, Prop, Vue, toNative } from "vue-facing-decorator";
+import { Prop, Setup, Vue } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
-@Component({})
-class SharePanel extends Vue {
+@NuxtComponent({})
+export default class SharePanel extends Vue {
   @Prop({ type: Object, required: true }) boothData!: IBooth;
   @Prop({ type: Boolean, default: false }) showHomeButton!: boolean;
 
@@ -38,9 +38,8 @@ class SharePanel extends Vue {
   showURLCopyFailedSnackbar: boolean = false;
   showBoothQRCodeDialog: boolean = false;
 
-  get boothId(): number {
-    return parseInt(useRoute().params["boothId"] as string);
-  }
+  @Setup(() => Number(useRoute().params["id"] as string))
+  declare readonly boothId: number;
 
   shareTwitter(): void {
     const contentString = `『 ${this.boothData.name}』\n` +
@@ -64,8 +63,6 @@ class SharePanel extends Vue {
     this.showURLCopiedSnackbar = true;
   }
 }
-
-export default toNative(SharePanel);
 </script>
 
 <style lang="scss" scoped>

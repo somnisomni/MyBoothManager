@@ -13,10 +13,10 @@
 <script lang="ts">
 import type { GoodsItem } from "@myboothmanager/common-ui";
 import { GoodsStockVisibility } from "@myboothmanager/common";
-import { Component, Vue, Ref, toNative } from "vue-facing-decorator";
+import { Vue, Ref } from "vue-facing-decorator";
 
-@Component({})
-class GoodsItemPublic extends Vue {
+@NuxtComponent({})
+export default class GoodsItemPublic extends Vue {
   isMounted: boolean = false;
 
   @Ref("base")
@@ -34,6 +34,4 @@ class GoodsItemPublic extends Vue {
     this.isMounted = true;
   }
 }
-
-export default toNative(GoodsItemPublic);
 </script>

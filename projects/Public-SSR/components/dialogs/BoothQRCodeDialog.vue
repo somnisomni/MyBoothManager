@@ -14,10 +14,10 @@
 
 <script lang="ts">
 import * as QRCode from "qrcode";
-import { Component, Model, Prop, Ref, Vue, Watch, toNative } from "vue-facing-decorator";
+import { Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 
-@Component({})
-class BoothQRCodeDialog extends Vue {
+@NuxtComponent({})
+export default class BoothQRCodeDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: Number, required: true }) boothId!: number;
 
@@ -45,6 +45,4 @@ class BoothQRCodeDialog extends Vue {
     return URL.canParse(url) ? url : null;
   }
 }
-
-export default toNative(BoothQRCodeDialog);
 </script>

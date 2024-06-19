@@ -1,6 +1,6 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
-    <div v-if="!hasAnyBooth"
+    <div v-if="!boothList || boothList.length <= 0"
          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-info">
         <VIcon class="mr-2">mdi-weather-dust</VIcon>
@@ -41,7 +41,7 @@
           </h6>
         </div>
 
-        <BoothListView :boothList="getBoothsOfFair(fair.id)"
+        <BoothListView :boothList="boothFairMap.get(fair.id) ?? []"
                        @click:boothItem="onBoothItemClick" />
       </VLayout>
 
@@ -64,23 +64,28 @@
 import { BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
 import { Vue } from "vue-facing-decorator";
 
+function filterBoothList(boothList: Array<IBooth>) {
+  // Don't include closed booths in the booth list view
+  return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
+}
+
+function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
+  // Don't include fairs that no booth is assigned to
+  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
+}
+
 @NuxtComponent({
-  async asyncData(nuxtApp) {
-    function filterBoothList(boothList: Array<IBooth>) {
-      // Don't include closed booths in the booth list view
-      return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
-    }
+  async asyncData(nuxt) {
+    const boothList: Array<IBooth> = filterBoothList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>);
+    const fairList: Array<IFair> = filterFairList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>, boothList);
 
-    function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
-      // Don't include fairs that no booth is assigned to
-      return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
-    }
-
-    const boothList: Array<IBooth> = filterBoothList(await nuxtApp.$publicAPI.wrap(() => nuxtApp.$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>);
-    const fairList: Array<IFair> = filterFairList(await nuxtApp.$publicAPI.wrap(() => nuxtApp.$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>, boothList);
-    const hasAnyBooth = await nuxtApp.runWithContext(() => useState<boolean>("hasAnyBooth", () => boothList.length > 0));
-
-    return { boothList, fairList, hasAnyBooth };
+    return { boothList, fairList };
+  },
+  setup() {
+    return {
+      boothList: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllBooths.name).data.value,
+      fairList: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs.name).data.value,
+    };
   },
 })
 export default class LandingPage extends Vue {
@@ -88,7 +93,6 @@ export default class LandingPage extends Vue {
 
   declare readonly boothList: Array<IBooth>;
   declare readonly fairList: Array<IFair>;
-  declare readonly hasAnyBooth: boolean;
 
   get boothListOpened() {
     return this.boothList.filter((booth) => !booth.fair && booth.status.status === BoothStatus.OPEN);
@@ -98,14 +102,27 @@ export default class LandingPage extends Vue {
     return this.boothList.filter((booth) => !booth.fair && !this.boothListOpened.includes(booth));
   }
 
-  getBoothsOfFair(fairId: number) {
-    return this.boothList.filter((booth) => booth.fair && booth.fair.id === fairId);
+  get boothFairMap() {
+    // Map<Fair ID, Array<Booth>>
+    const map = new Map<number, Array<IBooth>>();
+
+    this.boothList.forEach((booth) => {
+      if(booth.fair) {
+        if(!map.has(booth.fair.id)) {
+          map.set(booth.fair.id, []);
+        }
+
+        map.get(booth.fair.id)?.push(booth);
+      }
+    });
+
+    return map;
   }
 
   reloadWindow() { window.location.reload(); }
 
   async onBoothItemClick(boothId: number) {
-    await useRouter().push({ path: `/booth/${boothId}` });
+    await navigateTo({ path: `/booth/${boothId}` });
   }
 }
 </script>

@@ -22,10 +22,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Prop, Vue, toNative } from "vue-facing-decorator";
+import { Model, Prop, Vue } from "vue-facing-decorator";
 
-@Component({})
-class ExpandableContent extends Vue {
+@NuxtComponent({})
+export default class ExpandableContent extends Vue {
   @Model({ type: Boolean, default: false })
   get expanded(): boolean { return this._expanded; }
   set expanded(value: boolean) { this._expanded = value; }
@@ -34,6 +34,4 @@ class ExpandableContent extends Vue {
 
   _expanded: boolean = true;
 }
-
-export default toNative(ExpandableContent);
 </script>

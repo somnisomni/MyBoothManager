@@ -40,12 +40,12 @@
 
 <script lang="ts">
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
-import { Component, Model, Prop, Vue, toNative } from "vue-facing-decorator";
+import { Model, Prop, Vue } from "vue-facing-decorator";
 import { GoodsStockVisibility, IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { getUploadFileUrl } from "#imports";
 
-@Component({})
-class GoodsItemDetailsDialog extends Vue {
+@NuxtComponent({})
+export default class GoodsItemDetailsDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: GoodsBase, required: true }) data!: GoodsBase;
 
@@ -69,6 +69,4 @@ class GoodsItemDetailsDialog extends Vue {
     return `${(IMAGE_SIZE_CONSTRAINTS.get(ImageSizeConstraintKey.GOODS)?.height) ?? 500}px`;
   }
 }
-
-export default toNative(GoodsItemDetailsDialog);
 </script>

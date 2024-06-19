@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, toNative, Setup } from "vue-facing-decorator";
+import { Vue, Setup } from "vue-facing-decorator";
 import { APP_NAME, DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
 
-@Component({})
-class RootLayout extends Vue {
+@NuxtComponent({})
+export default class RootLayout extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly DEVELOPER_TWITTER_HANDLE = DEVELOPER_TWITTER_HANDLE;
 
@@ -51,6 +51,4 @@ class RootLayout extends Vue {
     this.isServerNotAvailable = !(await this.$publicAPI.apiCaller.checkAPIServerAlive());
   }
 }
-
-export default toNative(RootLayout);
 </script>

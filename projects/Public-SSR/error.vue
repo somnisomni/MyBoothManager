@@ -14,9 +14,9 @@
 
 <script lang="ts">
 import type { NuxtError } from "#app";
-import { Vue, Component, Setup } from "vue-facing-decorator";
+import { Vue, Setup } from "vue-facing-decorator";
 
-@Component({})
+@NuxtComponent({})
 export default class NotFoundErrorPage extends Vue {
   @Setup(() => useError())
   declare readonly error: NuxtError;
