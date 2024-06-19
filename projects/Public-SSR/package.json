@@ -17,15 +17,17 @@
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "workspace:^",
     "@myboothmanager/common-ui": "workspace:^",
-    "@pinia/nuxt": "^0.5.1",
     "@pinia-plugin-persistedstate/nuxt": "1.2.0",
+    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.12.1",
+    "uuid": "^10.0.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
     "@nuxt/eslint": "^0.3.13",
+    "@types/uuid": "^9.0.8",
     "eslint": "^9.4.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vue-facing-decorator": "3.0.4",

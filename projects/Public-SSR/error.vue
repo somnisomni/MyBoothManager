@@ -26,6 +26,9 @@ export default class NotFoundErrorPage extends Vue {
     document.addEventListener("copy", this.prevent);
     document.addEventListener("cut", this.prevent);
     document.addEventListener("drag", this.prevent);
+
+    console.warn("아래 오류 데이터를 개발자에게 제보해주세요.\nPlease send the error data below to the developer.");
+    console.error(`${this.error.message}\n\n${this.error.stack}`);
   }
 
   get rootRouteUrl(): string {

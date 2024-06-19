@@ -1,6 +1,6 @@
 <template>
   <VScrollYReverseTransition leave-absolute>
-    <div v-if=" boothList && boothList.length <= 0"
+    <div v-if="boothList && boothList.length <= 0"
          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-info">
         <VIcon class="mr-2">mdi-weather-dust</VIcon>
@@ -15,7 +15,8 @@
             @click="reloadWindow">새로고침</VBtn>
     </div>
 
-    <VContainer v-else-if="boothList && boothList.length > 0" class="d-flex flex-column">
+    <VContainer v-else-if="boothList && boothList.length > 0"
+                class="d-flex flex-column">
       <VLayout v-for="fair in fairList"
                :key="fair.id"
                class="d-flex flex-0-0 flex-column my-4 overflow-visible">
@@ -70,15 +71,18 @@ function filterBoothList(boothList: Array<IBooth>) {
 
 function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
   // Don't include fairs that no booth is assigned to
-  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) !== -1);
+  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
 }
 
 @Component({})
 class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
-  boothList: Array<IBooth> = [];
-  fairList: Array<IFair> = [];
+  @Setup(async () => filterBoothList(await useNuxtApp().$publicAPI.wrap(() => useNuxtApp().$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>))
+  declare readonly boothList: Array<IBooth>;
+
+  @Setup(async () => await useNuxtApp().$publicAPI.wrap(() => useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>)
+  declare fairList: Array<IFair>;
 
   get boothListOpened() {
     return this.boothList.filter((booth) => !booth.fair && booth.status.status === BoothStatus.OPEN);
@@ -88,9 +92,8 @@ class LandingPage extends Vue {
     return this.boothList.filter((booth) => !booth.fair && !this.boothListOpened.includes(booth));
   }
 
-  async mounted() {
-    this.boothList = filterBoothList(await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllBooths(), false) as Array<IBoothResponse>);
-    this.fairList = filterFairList(await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAvailableFairs(), false) as Array<IFairResponse>, this.boothList);
+  created() {
+    this.fairList = filterFairList(this.fairList, this.boothList);
   }
 
   getBoothsOfFair(fairId: number) {

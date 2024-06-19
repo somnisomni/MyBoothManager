@@ -5,20 +5,6 @@
       <slot v-if="!isServerNotAvailable"></slot>
     </div>
 
-    <VSnackbar v-model="isAPIFetchFailed"
-               location="top right"
-               color="error"
-               timeout="30000"
-               :close-on-back="false"
-               close-on-content-click
-               transition="slide-x-reverse-transition">
-      <div class="d-flex flex-row align-center justify-start">
-        <VIcon icon="mdi-alert"
-               size="large" />
-        <div class="ml-3">서버와의 통신 중 오류가 발생했습니다. <br /> 인터넷 연결을 확인해주세요.</div>
-      </div>
-    </VSnackbar>
-
     <VFooter color="blue-grey-lighten-5"
              class="text-blue-grey-lighten-1">
       <VContainer>
@@ -60,8 +46,6 @@ class RootLayout extends Vue {
   get isRollingVersion(): boolean {
     return this.appVersion.startsWith("0.") || this.appVersion.endsWith("-dev") || this.appVersion.endsWith("-beta");
   }
-
-  get isAPIFetchFailed() { return useAPIStore().isAPIFetchFailed; }
 
   async mounted() {
     this.isServerNotAvailable = !(await this.$publicAPI.apiCaller.checkAPIServerAlive());
