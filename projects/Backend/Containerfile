@@ -8,8 +8,9 @@ RUN corepack enable pnpm
 # Copy files
 WORKDIR /build
 COPY package.json pnpm-*.yaml .
-COPY packages/Common  packages/Common
-COPY projects/Backend projects/Backend
+COPY packages/Common    packages/Common
+COPY packages/DevShared packages/DevShared
+COPY projects/Backend   projects/Backend
 
 # Build
 # RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
