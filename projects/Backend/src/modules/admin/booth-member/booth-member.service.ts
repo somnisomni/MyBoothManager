@@ -20,7 +20,7 @@ export class BoothMemberService {
   ) { }
 
   async getBoothMemberAndParentBooth(memberId: number, boothId: number, callerAccountId: number): Promise<{ booth: Booth, member: BoothMember }> {
-    const member = await this.publicBoothMemberService.findOne(boothId, memberId);
+    const member = await this.publicBoothMemberService.findOne(boothId, memberId, true);
 
     if(member.boothId !== boothId) throw new NoAccessException();
 

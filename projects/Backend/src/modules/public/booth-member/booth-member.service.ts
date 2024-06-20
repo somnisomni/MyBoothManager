@@ -7,9 +7,11 @@ import { BoothNotPublishedException } from "../booth/booth.exception";
 
 @Injectable()
 export class PublicBoothMemberService {
-  async findOne(boothId: number, id: number): Promise<BoothMember> {
-    if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
-      throw new BoothNotPublishedException();
+  async findOne(boothId: number, id: number, isAdmin: boolean = false): Promise<BoothMember> {
+    if(!isAdmin) {
+      if(!await PublicCommon.isBoothPublicilyAccessible(boothId)) {
+        throw new BoothNotPublishedException();
+      }
     }
 
     const member = await BoothMember.findOne({
