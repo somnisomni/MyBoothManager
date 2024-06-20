@@ -82,9 +82,12 @@ function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
     return { boothList, fairList };
   },
   setup() {
+    // List filtering is done in the backend, but ensuring
+
+    const boothList = filterBoothList(useNuxtData<Array<IBooth>>(useNuxtApp().$publicAPI.apiCaller.fetchAllBooths.name).data.value ?? []);
     return {
-      boothList: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllBooths.name).data.value,
-      fairList: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs.name).data.value,
+      boothList: boothList,
+      fairList: filterFairList(useNuxtData<Array<IFair>>(useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs.name).data.value ?? [], boothList),
     };
   },
 })

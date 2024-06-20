@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxt) => {
 
   const calleeNameMatcher = /.+\.apiCaller\.(.+)\((.+)?\)$/;
 
-  async function wrap<T>(callee: () => Promise<T | IErrorResponse>, lazy = true): Promise<T | IErrorResponse> {
+  async function wrap<T>(callee: () => Promise<T | IErrorResponse>, lazy = false): Promise<T | IErrorResponse> {
     // `useAsyncData()` key autogeneration is not reliable in this case like wrapping an API call function.
     // So the key should be generated manually, and uniquely by the callee function name.
     const calleeName = callee.toString().match(calleeNameMatcher)?.[1] ?? uuidV4();

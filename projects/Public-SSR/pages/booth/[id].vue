@@ -150,6 +150,9 @@ import { getUploadFileUrl } from "#imports";
     return { boothFetchError, booth, members, goods, combinations, categories };
   },
   setup() {
+    // FIXME: Goods and goods combinations are not being reconstructed as corresponding classes if navigated from other page.
+    //        Note that it can't be done in asyncData() function above, may causing POJO serialization error
+
     return {
       boothFetchError: useNuxtData("boothFetchError").data.value ?? null,
       booth: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchSingleBooth.name).data.value ?? null,
