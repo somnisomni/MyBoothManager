@@ -2,7 +2,11 @@ import * as CT from "@myboothmanager/common";
 import { useAuthLocalStore } from "@/plugins/stores/auth";
 
 export class BaseAdminAPI {
-  protected static readonly API: CT.APICaller = new CT.APICaller(import.meta.env.VITE_MBM_API_SERVER_URL, "admin", () => useAuthLocalStore().accessToken!);
+  protected static readonly API: CT.APICaller = new CT.APICaller({
+    host: import.meta.env.VITE_MBM_API_SERVER_URL,
+    group: "admin",
+    getAuthorizationToken: () => useAuthLocalStore().accessToken!,
+  });
 
   /* Admin FE specific API call wrapper */
   protected static async apiCallWrapper<T>(callee: () => Promise<T | CT.IErrorResponse>): Promise<T | CT.ErrorCodes> {

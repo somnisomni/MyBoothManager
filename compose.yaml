@@ -12,6 +12,7 @@ services:
       - "31112:31112"
     depends_on:
       - backend
+    restart: unless-stopped
     network_mode: host    # Should ditch host network mode and use bridge mode instead
                           # But I have to find a way to get rid of errors of CNI network automatically created by podman-compose
 
@@ -19,14 +20,17 @@ services:
     build:
       context: .
       dockerfile: ./projects/Public/Containerfile
-      args:
-        GIT_HASH: ${GIT_COMMIT_HASH}
-        API_SERVER_URL: "http://localhost:31111"
-        BASE_PATH: "/"
+    environment:
+      NITRO_PORT: 31113
+      GIT_HASH: ${GIT_COMMIT_HASH}
+      NUXT_PUBLIC_API_SERVER_URL: "http://localhost:31111"
+      NUXT_PUBLIC_API_SERVER_UPLOADS_PATH: "uploads"
+      NUXT_APP_BASE_PATH: "/"
     ports:
       - "31113:31113"
     depends_on:
       - backend
+    restart: unless-stopped
     network_mode: host
 
   backend:
@@ -52,6 +56,7 @@ services:
       COOKIE_SECRET: in_myboothmanager_mos
       FRONTEND_ADMIN_URL: "http://localhost:31112"
       FRONTEND_PUBLIC_URL: "http://localhost:31113"
+    restart: unless-stopped
     network_mode: host
 
 volumes:

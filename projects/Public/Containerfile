@@ -7,16 +7,13 @@ RUN corepack enable pnpm
 
 # Build arguments
 ARG GIT_HASH
-ARG API_SERVER_URL=http://localhost:31111
-ARG BASE_PATH=/
 ENV GIT_HASH=${GIT_HASH}
-ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
-ENV VITE_PUBLIC_BASE_PATH=${BASE_PATH}
 
 # Copy files
 WORKDIR /build
-COPY package.json pnpm-*.yaml .
-COPY packages/      packages/
+COPY package.json    .
+COPY pnpm-*.yaml     .
+COPY packages/       packages/
 COPY projects/Public projects/Public
 
 # Build
@@ -25,23 +22,20 @@ COPY projects/Public projects/Public
 RUN pnpm install --frozen-lockfile
 RUN pnpm common:build && pnpm public build
 
-# No need to deploy; all build artifacts are in dist folder as static files
-# When convert to SSR, it may need to deploy as Node.js app, if so uncomment below
-# RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
+# Deploy
+RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
 
 
 ### PRODUCTION STAGE ###
 FROM base as production
+RUN corepack enable pnpm
 
 # Copy files
 WORKDIR /app
-COPY --from=build /build/projects/Public/dist .
-# Uncomment below and remove above line when convert to SSR
-# COPY --from=build /prod/public/dist .
+COPY --from=build /prod/public .
 
 # Expose port
 EXPOSE 31113
 
 # Start server
-RUN npm install -g http-server
-ENTRYPOINT ["npx", "http-server", "--proxy", "http://localhost:31113?", "--port", "31113"]
+ENTRYPOINT ["/bin/sh", "-c", "pnpm start:prod"]

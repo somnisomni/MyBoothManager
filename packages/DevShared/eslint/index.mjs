@@ -11,6 +11,7 @@ const ignores = Object.freeze({
     "**/dist/**",
     "**/build/**",
     "**/coverage/**",
+    "**/.nuxt/**",
     "**/(.)?output/**",
     "**/vite.config.(m|c)?(t|j)s.timestamp*",
   ],
