@@ -165,12 +165,12 @@ import { IntervalRunner } from "~/utils";
     return {
       FETCH_KEYS,
       boothId: Number(useRoute().params["id"] as string),
-      boothFetchError: useNuxtData("boothFetchError").data.value ?? null,
-      booth: useNuxtData(FETCH_KEYS.booth).data.value ?? null,
-      members: useNuxtData(FETCH_KEYS.members).data.value ?? [],
-      goods: useNuxtData(FETCH_KEYS.goods).data.value,
-      combinations: useNuxtData(FETCH_KEYS.combinations).data.value,
-      categories: useNuxtData(FETCH_KEYS.categories).data.value ?? [],
+      boothFetchError: useNuxtData("boothFetchError").data ?? null,
+      booth: useNuxtData(FETCH_KEYS.booth).data ?? null,
+      members: useNuxtData(FETCH_KEYS.members).data ?? [],
+      goods: useNuxtData(FETCH_KEYS.goods).data ?? [],
+      combinations: useNuxtData(FETCH_KEYS.combinations).data ?? [],
+      categories: useNuxtData(FETCH_KEYS.categories).data ?? [],
     };
   },
 })
@@ -315,6 +315,8 @@ export default class IndividualBoothPage extends Vue {
   .booth-info-image {
     max-width: 1280px;
     margin: auto;
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
   }
 }
 </style>
