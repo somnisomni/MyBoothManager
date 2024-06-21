@@ -162,11 +162,17 @@ import { IntervalRunner } from "~/utils";
       categories: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth.name,
     } as const;
 
+    // Explicit check for booth data availability
+    let booth: Ref<IBooth | IErrorResponse | null> = useNuxtData<IBooth>(FETCH_KEYS.booth).data ?? null;
+    if(!booth.value || "errorCode" in booth.value) {
+      booth = ref(null);
+    }
+
     return {
       FETCH_KEYS,
       boothId: Number(useRoute().params["id"] as string),
-      boothFetchError: useNuxtData("boothFetchError").data ?? null,
-      booth: useNuxtData(FETCH_KEYS.booth).data ?? null,
+      boothFetchError: useState("boothFetchError", () => null) ?? null,
+      booth,
       members: useNuxtData(FETCH_KEYS.members).data ?? [],
       goods: useNuxtData(FETCH_KEYS.goods).data ?? [],
       combinations: useNuxtData(FETCH_KEYS.combinations).data ?? [],
