@@ -2,16 +2,18 @@
   "name": "@myboothmanager/public",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "pnpm@9.3.0",
+  "packageManager": "pnpm@9.4.0",
   "private": true,
   "type": "module",
+  "files": [ "./.output" ],
   "scripts": {
     "postinstall": "nuxt prepare",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:prod": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -21,17 +23,18 @@
     "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.12.2",
     "uuid": "^10.0.0",
+    "qrcode": "^1.5.3",
     "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
     "@nuxt/eslint": "^0.3.13",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9.5.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vue-facing-decorator": "3.0.4",
     "nuxt3-class-component": "^1.2.0",
-    "vuetify": "^3.6.9"
+    "vuetify": "^3.6.10"
   }
 }
