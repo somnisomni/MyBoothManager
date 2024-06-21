@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: ./projects/Public/Containerfile
+      args:
+        GIT_HASH: ${GIT_COMMIT_HASH}
     environment:
       NITRO_PORT: 31113
       GIT_HASH: ${GIT_COMMIT_HASH}
