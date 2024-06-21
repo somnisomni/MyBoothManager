@@ -1,6 +1,6 @@
 {
   "name": "@myboothmanager/backend",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "pnpm@9.4.0",
@@ -21,7 +21,9 @@
     "test:watch": "pnpm test --watch",
     "test:cov": "pnpm test --coverage"
   },
-  "files": [ "./dist" ],
+  "files": [
+    "./dist"
+  ],
   "dependencies": {
     "@esbuild-kit/esm-loader": "^2.6.5",
     "@fastify/cookie": "^9.3.1",
