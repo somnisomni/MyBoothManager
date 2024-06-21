@@ -1,14 +1,19 @@
 <template>
-  <div id="error-page" class="d-flex align-center justify-center text-center pa-4"
+  <div id="error-page" class="d-flex flex-column align-center justify-center text-center pa-4"
        style="max-width: 100%;"
        @contextmenu.prevent="prevent">
-    <div>
-      <div id="error-text">
-        <p>{{ error.statusCode }}</p>
+    <p id="error-status-code-text">{{ error.statusCode }}</p>
+    <p class="mt-2 text-subtitle-1 text-warning">
+      <span v-if="error.statusCode === 404">존재하지 않는 페이지입니다.</span>
+      <span v-else>처리할 수 없는 오류가 발생했습니다. <br /> 개발자 또는 서비스 운영자에게 문의해주세요.</span>
+    </p>
 
-        <p id="error-text-href"><a :href="rootRouteUrl"><span>메인 페이지로 이동</span></a></p>
-      </div>
-    </div>
+    <VBtn class="allow-pointer-events mt-4"
+          size="large"
+          color="primary"
+          variant="outlined"
+          prepend-icon="mdi-home"
+          :to="{ path: '/' }">메인 페이지로 이동</VBtn>
   </div>
 </template>
 
@@ -56,49 +61,14 @@ export default class NotFoundErrorPage extends Vue {
   height: 100vh;
   overflow: hidden;
 
-  #error-text {
+  .allow-pointer-events {
+    pointer-events: auto;
+  }
+
+  #error-status-code-text {
     margin-top: 0.5em;
-    font-size: 2em;
+    font-size: 5em;
     line-height: 1.25;
-
-    #error-text-href {
-      pointer-events: initial !important;
-
-      margin-top: 1em;
-      font-size: 0.75em;
-
-      a {
-        position: relative;
-        overflow: hidden;
-        color: #1E88E5;  // text-blue-darken-1
-        padding: 0.25em 0.5em;
-        text-decoration: none;
-        transition: color 0.33s cubic-bezier(0, 0, 0, 1);
-
-        & > * { position: relative; z-index: 1; }
-
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          background-color: #1E88E5;
-          transform: scaleX(0);
-          transform-origin: left center;
-          transition: transform 0.33s cubic-bezier(0, 0, 0, 1);
-        }
-
-        &:hover, &:focus {
-          color: white;
-
-          &::before {
-            transform: scaleX(1);
-          }
-        }
-      }
-    }
   }
 }
 </style>
