@@ -8,6 +8,7 @@ uploads/
 # Compile output
 dist/
 node_modules/
+v8-compile-cache*/
 vite.config.*.timestamp-*
 
 # Logs
