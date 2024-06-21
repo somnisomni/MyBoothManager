@@ -3,7 +3,8 @@
     <div v-if="!booth || boothFetchError"
           class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-error">
-        <VIcon class="mr-2">mdi-alert</VIcon>
+        <VIcon class="mr-2"
+               icon="mdi-alert" />
 
         <span v-if="boothFetchError === ErrorCodes.ENTITY_NOT_FOUND">존재하지 않는 부스입니다.</span>
         <span v-else-if="boothFetchError === ErrorCodes.BOOTH_NOT_PUBLISHED">아직 공개되지 않은 부스입니다.</span>
@@ -29,11 +30,11 @@
       <VContainer class="adjusted-vcontainer">
         <div>
           <div v-if="booth.status.status !== BoothStatus.CLOSE"
-                class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
+               class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
             <VCheckbox v-model="autoRefreshEnabled"
-                        hide-details
-                        class="flex-grow-0"
-                        label="정보 자동 업데이트" />
+                       hide-details
+                       class="flex-grow-0"
+                       label="정보 자동 업데이트" />
 
             <VBtn variant="outlined"
                   size="large"
@@ -46,9 +47,9 @@
           </div>
 
           <VExpandTransition>
-            <p v-if="dataPollingTimerId"
-                class="text-right text-primary"
-                style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
+            <p v-if="dataPollingRunner"
+               class="text-right text-primary"
+               style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
           </VExpandTransition>
         </div>
 
@@ -58,15 +59,15 @@
           <ExpandableContent heading="멤버 목록">
             <div class="d-flex flex-row flex-wrap justify-center">
               <BoothMemberItem v-for="member in members"
-                                :key="member.id"
-                                :memberData="member"
-                                :imageUrlResolver="getUploadFileUrl" />
+                               :key="member.id"
+                               :memberData="member"
+                               :imageUrlResolver="getUploadFileUrl" />
             </div>
           </ExpandableContent>
         </div>
 
         <VSpacer v-if="infoImage.url"
-                  class="my-8" />
+                 class="my-8" />
 
         <div v-if="infoImage.url" class="w-100">
           <ExpandableContent heading="부스 인포">
@@ -82,14 +83,14 @@
 
         <div>
           <ExpandableContent heading="굿즈 목록">
-            <GoodsListView v-if="goods.length > 0"
-                            :currencySymbol="booth.currencySymbol"
-                            :goodsList="[...goods, ...combinations]"
-                            :goodsCategoryList="categories"
-                            :goodsImageUrlResolver="getUploadFileUrl"
-                            omitEmptyGoodsCategory
-                            @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
-                            @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
+            <GoodsListView v-if="goodsNormalized.length > 0"
+                           :currencySymbol="booth.currencySymbol"
+                           :goodsList="[...goodsNormalized, ...combinationsNormalized]"
+                           :goodsCategoryList="categories"
+                           :goodsImageUrlResolver="getUploadFileUrl"
+                           omitEmptyGoodsCategory
+                           @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
+                           @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
               <template #goods="props">
                 <GoodsItemPublic v-bind="props" />
               </template>
@@ -108,11 +109,14 @@
 <script lang="ts">
 import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
-import { Setup, Vue, Watch } from "vue-facing-decorator";
+import { Vue, Watch } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
+import { IntervalRunner } from "~/utils";
 
 @NuxtComponent({
   async asyncData(nuxt) {
+    const { $publicAPI } = nuxt;
+
     const boothId = Number(useRoute().params["id"] as string);
     const boothFetchError = useState<ErrorCodes | null>("boothFetchError", () => null);
 
@@ -121,7 +125,7 @@ import { getUploadFileUrl } from "#imports";
       return { boothFetchError };
     }
 
-    let booth: IBoothResponse | IErrorResponse | null = await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchSingleBooth(boothId));
+    let booth: IBoothResponse | IErrorResponse | null = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchSingleBooth(boothId));
     let members: Array<IBoothMember> = [];
     let categories: Array<IGoodsCategory> = [];
     let goods: Array<IGoods> = [];
@@ -134,34 +138,39 @@ import { getUploadFileUrl } from "#imports";
     }
 
     if(booth && !("errorCode" in booth)) {
-      const goodsResp = await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllGoodsOfBooth(boothId));
+      const goodsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsOfBooth(boothId));
       if(goodsResp instanceof Array) goods = goodsResp;
 
-      const combinationsResp = await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(boothId));
+      const combinationsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(boothId));
       if(combinationsResp instanceof Array) combinations = combinationsResp;
 
-      const membersResp = await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllMembersOfBooth(boothId));
+      const membersResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllMembersOfBooth(boothId));
       if(membersResp instanceof Array) members = membersResp;
 
-      const categoriesResp = await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(boothId));
+      const categoriesResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(boothId));
       if(categoriesResp instanceof Array) categories = categoriesResp;
     }
 
     return { boothFetchError, booth, members, goods, combinations, categories };
   },
   setup() {
-    // FIXME: Goods and goods combinations are not being reconstructed as corresponding classes if navigated from other page.
-    //        Note that it can't be done in asyncData() function above, may causing POJO serialization error
+    const FETCH_KEYS = {
+      booth: useNuxtApp().$publicAPI.apiCaller.fetchSingleBooth.name,
+      members: useNuxtApp().$publicAPI.apiCaller.fetchAllMembersOfBooth.name,
+      goods: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsOfBooth.name,
+      combinations: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth.name,
+      categories: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth.name,
+    } as const;
 
     return {
+      FETCH_KEYS,
+      boothId: Number(useRoute().params["id"] as string),
       boothFetchError: useNuxtData("boothFetchError").data.value ?? null,
-      booth: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchSingleBooth.name).data.value ?? null,
-      members: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllMembersOfBooth.name).data.value ?? [],
-      goods: (useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsOfBooth.name).data.value as Array<IGoods> ?? [])
-        .map((goods) => new Goods(goods)),
-      combinations: (useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth.name).data.value as Array<IGoodsCombination> ?? [])
-        .map((combination) => new GoodsCombination(combination)),
-      categories: useNuxtData(useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth.name).data.value ?? [],
+      booth: useNuxtData(FETCH_KEYS.booth).data.value ?? null,
+      members: useNuxtData(FETCH_KEYS.members).data.value ?? [],
+      goods: useNuxtData(FETCH_KEYS.goods).data.value,
+      combinations: useNuxtData(FETCH_KEYS.combinations).data.value,
+      categories: useNuxtData(FETCH_KEYS.categories).data.value ?? [],
     };
   },
 })
@@ -170,22 +179,28 @@ export default class IndividualBoothPage extends Vue {
   readonly ErrorCodes = ErrorCodes;
 
   isDataLoading: boolean = false;
-  declare boothFetchError: ErrorCodes | null;
-
+  dataPollingRunner: IntervalRunner | null = null;
   readonly dataPollingInterval: number = 30000; // 30 seconds
-  dataPollingTimerId: ReturnType<typeof setTimeout> | null = null;
-
-  declare readonly booth: IBooth | null;
-  declare readonly members: Array<IBoothMember>;
-  declare readonly categories: Array<IGoodsCategory>;
-  declare readonly goods: Array<Goods>;
-  declare readonly combinations: Array<GoodsCombination>;
 
   goodsItemDetailsDialogOpen: boolean = false;
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
 
-  @Setup(() => Number(useRoute().params["id"] as string))
+  declare readonly FETCH_KEYS: Record<string, string>;
+  declare boothFetchError: ErrorCodes | null;
   declare readonly boothId: number;
+  declare readonly booth: IBooth | null;
+  declare readonly members: Array<IBoothMember>;
+  declare readonly categories: Array<IGoodsCategory>;
+  declare readonly goods: Array<IGoods>;
+  declare readonly combinations: Array<IGoodsCombination>;
+
+  get goodsNormalized(): Array<Goods> {
+    return this.goods.map((goods) => new Goods(goods));
+  }
+
+  get combinationsNormalized(): Array<GoodsCombination> {
+    return this.combinations.map((combination) => new GoodsCombination(combination));
+  }
 
   get infoImage() {
     return {
@@ -247,37 +262,40 @@ export default class IndividualBoothPage extends Vue {
 
   unmounted() {
     /* *** Clear data polling timer *** */
-    if(this.dataPollingTimerId) {
-      clearInterval(this.dataPollingTimerId);
-      console.info("Stop polling ", this.dataPollingTimerId);
-    }
+    this.stopDataPolling();
   }
 
   @Watch("autoRefreshEnabled")
   onAutoRefreshEnabledChanged(value: boolean) {
     if(value) {
       if(this.booth && this.booth.status.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
-        this.dataPollingTimerId = setInterval(this.fetchData, this.dataPollingInterval);
+        this.dataPollingRunner = new IntervalRunner(this.fetchData, this.dataPollingInterval);
       }
     } else {
-      if(this.dataPollingTimerId) {
-        clearInterval(this.dataPollingTimerId);
-        this.dataPollingTimerId = null;
-      }
+      this.stopDataPolling();
     }
   }
 
   async fetchData() {
     /* *** Refresh data *** */
     this.isDataLoading = true;
-    await refreshNuxtData();
+    await refreshNuxtData(Object.values(this.FETCH_KEYS ?? {}));
     this.isDataLoading = false;
+  }
+
+  stopDataPolling() {
+    if(this.dataPollingRunner) {
+      this.dataPollingRunner.dispose();
+      this.dataPollingRunner = null;
+
+      console.info("Stop polling");
+    }
   }
 
   openGoodsItemDetailsDialog(id: number, isCombination: boolean = false) {
     const targetData = isCombination
-      ? this.combinations.find((combination) => combination.id === id)
-      : this.goods.find((goods) => goods.id === id);
+      ? this.combinationsNormalized.find((combination) => combination.id === id)
+      : this.goodsNormalized.find((goods) => goods.id === id);
 
     if(targetData) {
       this.goodsItemDetailsDialogTargetData = targetData;
@@ -299,4 +317,4 @@ export default class IndividualBoothPage extends Vue {
     margin: auto;
   }
 }
-</style>type IGoods, , type IGoodsCombinationtype IGoods, , type IGoodsCombination
+</style>
