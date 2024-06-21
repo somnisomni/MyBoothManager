@@ -12,11 +12,16 @@ export class IntervalRunner {
   constructor(
     private readonly callback: () => void,
     private readonly interval: number = 1000,
+    private readonly immediate: boolean = true,
   ) {
+    if(!this.immediate) {
+      this.lastExecutedTimestamp = Date.now();
+    }
+
     this.run();
   }
 
-  public async run() {
+  public run() {
     if(this.disposed) return;
 
     this.requestId = window.requestAnimationFrame(() => {
@@ -29,6 +34,10 @@ export class IntervalRunner {
 
       this.run();
     });
+  }
+
+  public runImmediately() {
+    this.lastExecutedTimestamp = 0;
   }
 
   public dispose() {

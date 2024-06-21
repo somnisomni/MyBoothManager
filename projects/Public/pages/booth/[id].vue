@@ -43,13 +43,13 @@
                   text="새로고침"
                   :disabled="isDataLoading"
                   :loading="isDataLoading"
-                  @click="fetchData" />
+                  @click="dataPollingRunner?.runImmediately()" />
           </div>
 
           <VExpandTransition>
             <p v-if="dataPollingRunner"
                class="text-right text-primary"
-               style="opacity: 0.5">※ 부스 정보가 30초마다 자동 업데이트됩니다.</p>
+               style="opacity: 0.5">※ 부스 정보가 {{ dataPollingInterval / 1000 }}초마다 자동 업데이트됩니다.</p>
           </VExpandTransition>
         </div>
 
@@ -180,7 +180,7 @@ export default class IndividualBoothPage extends Vue {
 
   isDataLoading: boolean = false;
   dataPollingRunner: IntervalRunner | null = null;
-  readonly dataPollingInterval: number = 30000; // 30 seconds
+  readonly dataPollingInterval: number = 60000; // microseconds
 
   goodsItemDetailsDialogOpen: boolean = false;
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
@@ -269,7 +269,9 @@ export default class IndividualBoothPage extends Vue {
   onAutoRefreshEnabledChanged(value: boolean) {
     if(value) {
       if(this.booth && this.booth.status.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
-        this.dataPollingRunner = new IntervalRunner(this.fetchData, this.dataPollingInterval);
+        this.dataPollingRunner = new IntervalRunner(this.fetchData, this.dataPollingInterval, false);
+
+        console.info("Start polling");
       }
     } else {
       this.stopDataPolling();
