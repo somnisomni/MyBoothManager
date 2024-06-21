@@ -13,15 +13,6 @@ if(!commitHash) {
 }
 /* === */
 
-/* === Startup Debug Logging === */
-console.debug();
-console.debug(" *** PUBLIC *** ");
-console.debug("Starting Nuxt.js for " + process.env.NODE_ENV + " environment");
-console.debug(`  - package.json app version: ${packageJson.version}`);
-console.debug(`  - Git hash: ${commitHash}`);
-console.debug();
-/* === */
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
@@ -54,6 +45,13 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
+    esbuild: {
+      tsconfigRaw: {
+        compilerOptions: {
+          experimentalDecorators: true,
+        },
+      },
+    },
   },
   css: [
     "~/assets/styles/styles.scss",
@@ -81,8 +79,8 @@ export default defineNuxtConfig({
     public: {
       appVersion: packageJson.version,
       versionGitHash: commitHash,
-      apiServerUrl: "http://api.sora.localhost:20000",
-      apiServerUploadsPath: "uploads",
+      apiServerUrl: process.env.NUXT_PUBLIC_API_SERVER_URL ?? "http://api.sora.localhost:20000",
+      apiServerUploadsPath: process.env.NUXT_PUBLIC_API_SERVER_UPLOADS_PATH ?? "uploads",
     },
   },
   build: {
@@ -94,4 +92,5 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  telemetry: false,
 });

@@ -1,0 +1,41 @@
+### BASE ###
+FROM node:lts-alpine as base
+
+### BUILD STAGE ###
+FROM base as build
+RUN corepack enable pnpm
+
+# Build arguments
+ARG GIT_HASH
+ENV GIT_HASH=${GIT_HASH}
+
+# Copy files
+WORKDIR /build
+COPY package.json    .
+COPY pnpm-*.yaml     .
+COPY packages/       packages/
+COPY projects/Public projects/Public
+
+# Build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+#     pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
+RUN pnpm common:build && pnpm public build
+
+# Deploy
+RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
+
+
+### PRODUCTION STAGE ###
+FROM base as production
+RUN corepack enable pnpm
+
+# Copy files
+WORKDIR /app
+COPY --from=build /prod/public .
+
+# Expose port
+EXPOSE 31113
+
+# Start server
+ENTRYPOINT ["/bin/sh", "-c", "pnpm start:prod"]
