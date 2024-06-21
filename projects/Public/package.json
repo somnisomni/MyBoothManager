@@ -1,46 +1,37 @@
 {
-  "name": "@myboothmanager/public-legacy",
+  "name": "@myboothmanager/public",
   "version": "0.5.0",
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.3.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check build-only",
-    "preview": "run-p build && vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix"
+    "postinstall": "nuxt prepare",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "eslint ."
   },
-  "files": [ "./dist" ],
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@myboothmanager/common": "workspace:^",
     "@myboothmanager/common-ui": "workspace:^",
-    "@unhead/vue": "^1.9.12",
-    "pinia": "^2.1.7",
-    "pinia-plugin-persistedstate": "^3.2.1",
-    "qrcode": "^1.5.3",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.3",
-    "vuetify": "^3.6.8"
+    "@pinia-plugin-persistedstate/nuxt": "1.2.0",
+    "@pinia/nuxt": "^0.5.1",
+    "nuxt": "^3.12.2",
+    "uuid": "^10.0.0",
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.14.2",
-    "@types/qrcode": "^1.5.5",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/tsconfig": "^0.5.1",
-    "eslint": "^9.4.0",
-    "npm-run-all2": "^6.2.0",
-    "sass": "^1.77.4",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.13",
+    "@nuxt/eslint": "^0.3.13",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^9.5.0",
     "vite-plugin-vuetify": "^2.0.3",
-    "vite-plugin-webpackchunkname": "^1.0.1",
-    "vue-facing-decorator": "^3.0.4",
-    "vue-tsc": "^2.0.21"
+    "vue-facing-decorator": "3.0.4",
+    "nuxt3-class-component": "^1.2.0",
+    "vuetify": "^3.6.9"
   }
 }

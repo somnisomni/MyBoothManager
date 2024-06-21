@@ -69,6 +69,10 @@ export default defineNuxtConfig({
         },
       ],
     },
+    pageTransition: {
+      name: "page",
+      mode: "out-in",
+    },
   },
   components: [
     { path: "~/components", pathPrefix: false },
