@@ -1,11 +1,11 @@
 {
   "recommendations": [
-    "arcanis.vscode-zipfs",
     "dbaeumer.vscode-eslint",
-    "Vue.vscode-typescript-vue-plugin"
+    "Vue.volar",
+    "EditorConfig.EditorConfig",
+    "Orta.vscode-jest"
   ],
   "unwantedRecommendations": [
-    "svelte.svelte-vscode",
-    "Vue.vscode-typescript-vue-plugin"
+    "svelte.svelte-vscode"
   ]
 }

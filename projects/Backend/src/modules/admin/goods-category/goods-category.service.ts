@@ -16,7 +16,7 @@ export class GoodsCategoryService {
   constructor(private readonly publicGoodsCategoryService: PublicGoodsCategoryService) { }
 
   async getGoodsCategoryAndParentBooth(categoryId: number, boothId: number, callerAccountId: number): Promise<{ booth: Booth, category: GoodsCategory }> {
-    const category = await this.publicGoodsCategoryService.findOne(categoryId);
+    const category = await this.publicGoodsCategoryService.findOne(categoryId, true);
 
     if(!category) throw new EntityNotFoundException();
     else if(category.boothId !== boothId) throw new NoAccessException();

@@ -6,8 +6,6 @@ import { CreateFairRequestDto } from "./dto/create-fair.dto";
 
 @Injectable()
 export class FairService {
-  constructor() {}
-
   async create(dto: CreateFairRequestDto): Promise<Fair> {
     return await create(Fair, dto);
   }

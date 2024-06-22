@@ -13,6 +13,10 @@
       "path": "packages/CommonUI"
     },
     {
+      "name": "[packages] Dev Shared",
+      "path": "packages/DevShared"
+    },
+    {
       "name": "[packages] I18n",
       "path": "packages/I18n"
     },
@@ -30,20 +34,20 @@
     }
   ],
 	"settings": {
-		"typescript.tsdk": "./.yarn/sdks/typescript/lib",
-		"typescript.enablePromptUseWorkspaceTsdk": true,
-    "jest.disabledWorkspaceFolders": [
-      "./packages/Common",
-      "./packages/CommonUI",
-      "./packages/I18n",
-      "./projects/Admin",
-      "./projects/Public",
-      "./projects/Backend"
-		],
-    "eslint.nodePath": "../../.yarn/sdks",
 		"eslint.workingDirectories": [
       { "pattern": "./packages/*/" },
       { "pattern": "./projects/*/" }
-    ]
+    ],
+    "eslint.useFlatConfig": true,
+    "eslint.validate": [
+      "javascript",
+      "typescript",
+      "vue",
+      "html"
+    ],
+    "eslint.lintTask.enable": true,
+    "eslint.run": "onType",
+    "eslint.packageManager": "pnpm",
+    "typescript.tsdk": "./node_modules/typescript/lib"
 	}
 }

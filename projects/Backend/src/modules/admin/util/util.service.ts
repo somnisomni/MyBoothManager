@@ -6,7 +6,7 @@ import path from "path";
 import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { path as APP_ROOT_PATH } from "app-root-path";
+import AppRootPath from "app-root-path";
 import { ISuccessResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE, IImageUploadInfo } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import UploadStorage from "@/db/models/uploadstorage";
@@ -22,7 +22,7 @@ export class UtilService {
   /**
    * Use `UtilService.safeResolveUploadFolder()` or `UtilService.getFileUploadPath()` instead for normal usage
    */
-  public static RESOLVED_UPLOAD_PATH: string = path.resolve(APP_ROOT_PATH, process.env.FILE_UPLOAD_FOLDER || "uploads");
+  public static RESOLVED_UPLOAD_PATH: string = path.resolve(AppRootPath.path, process.env.FILE_UPLOAD_FOLDER || "uploads");
 
   private validateFileSize(file: MultipartFile, maxSize: number = MAX_UPLOAD_FILE_BYTES): boolean {
     if(file.file.readableLength > maxSize) throw new RequestMaxSizeExceededException();

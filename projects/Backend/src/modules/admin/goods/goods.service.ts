@@ -25,8 +25,8 @@ export class GoodsService {
     if(goods.boothId !== boothId) throw new NoAccessException();
 
     /*
-    // The function in BoothService will throw errors on its own, No need to throw errors here.
-    // this.boothService.findBoothBelongsToAccount(boothId, callerAccountId);
+       The function in BoothService will throw errors on its own, No need to throw errors here.
+       this.boothService.findBoothBelongsToAccount(boothId, callerAccountId);
 
       * Circular dependency error; workaround to use Booth model directly
     */

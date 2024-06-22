@@ -5,7 +5,7 @@ import "@fastify/helmet";
 
 declare module "fastify" {
   export interface RouteShorthandOptions<
-    RawServer extends RawServerBase = RawServerDefault
+    RawServer extends RawServerBase = RawServerDefault,
   > extends fastifyHelmet.FastifyHelmetRouteOptions { }
 
   interface FastifyReply {
@@ -38,5 +38,5 @@ declare namespace fastifyHelmet {
   export { fastifyHelmet as default };
 }
 
-declare function fastifyHelmet(...params: Parameters<FastifyHelmet>): ReturnType<FastifyHelmet>
+declare function fastifyHelmet(...params: Parameters<FastifyHelmet>): ReturnType<FastifyHelmet>;
 export = fastifyHelmet;

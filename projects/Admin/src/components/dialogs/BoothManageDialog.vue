@@ -79,7 +79,7 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
   const _fairId = ref<number | null>(null);
 
   const availableFairList = ref<Array<IFairResponse>>([]);
-  const isCurrentBoothFairPassed = computed(() => availableFairList.value.findIndex((fair) => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0);
+  const isCurrentBoothFairPassed = computed(() => useAdminStore().currentBooth.booth?.fair && (availableFairList.value.findIndex((fair) => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0));
 
   const formModels: IBoothCreateRequestInternal = reactive({
     name: "",

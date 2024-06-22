@@ -1,5 +1,9 @@
+### BASE ###
+FROM node:lts-alpine as base
+
 ### BUILD STAGE ###
-FROM node:lts-alpine as build
+FROM base as build
+RUN corepack enable pnpm
 
 # Build arguments
 ARG GIT_HASH
@@ -9,29 +13,26 @@ ARG BASE_PATH=/admin
 ENV GIT_HASH=${GIT_HASH}
 ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
 ENV VITE_MBM_PUBLIC_URL=${PUBLIC_APP_URL}
-ENV VITE_BASE_PATH=${BASE_PATH}
+ENV VITE_ADMIN_BASE_PATH=${BASE_PATH}
 
 # Copy files
 WORKDIR /build
-COPY package.json .
+COPY package.json pnpm-*.yaml .
 COPY packages/      packages/
 COPY projects/Admin projects/Admin
 
-# Build setup
-RUN yarn set version berry
-RUN yarn install
+# Build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+#     pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
+RUN pnpm common:build && pnpm admin build
 
-# Build common package
-RUN yarn common build
+# No need to deploy; all build artifacts are in dist folder as static files
+# RUN pnpm deploy --filter @myboothmanager/admin --prod /prod/admin
 
-# Build common UI package
-RUN yarn install && yarn commonui build
-
-# Build public frontend
-RUN yarn install && yarn admin build
 
 ### PRODUCTION STAGE ###
-FROM node:lts-alpine as production
+FROM base as production
 
 # Copy files
 WORKDIR /app

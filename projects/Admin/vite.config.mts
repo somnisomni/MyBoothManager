@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import { fileURLToPath, URL } from "node:url";
 import { execSync } from "node:child_process";
 
@@ -14,7 +16,7 @@ const packageJson = require("./package.json");
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({
   VITE__APP_VERSION: `"${packageJson.version}"`,
-  VITE__GIT_HASH: `"${commitHash}"` ?? "\"unknown\"",
+  VITE__GIT_HASH: `"${commitHash ?? "unknown"}"`,
 }).map(([key, value]) => [`import.meta.env.${key}`, value]));
 /* === */
 
@@ -53,7 +55,7 @@ export default defineConfig({
   server: {
     port: 20001,
   },
-  base: process.env.VITE_BASE_PATH ?? "./",
+  base: process.env.VITE_ADMIN_BASE_PATH ?? "./",
   define: defines,
   build: {
     rollupOptions: {

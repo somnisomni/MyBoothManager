@@ -27,8 +27,8 @@
 </template>
 
 <script lang="ts">
-import type { ISnackbarContext } from "@/entities";
 import type { VSnackbar } from "vuetify/components";
+import type { ISnackbarContext } from "@/entities";
 import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
 
 @Component({})
@@ -104,7 +104,7 @@ export default class GlobalSnackbarStack extends Vue {
   }
 
   getNormalizedProps(context: ISnackbarContext) {
-    let props: ISnackbarContext | Record<string, any> = {
+    let props: ISnackbarContext | Record<string, any> = {  // eslint-disable-line @typescript-eslint/no-explicit-any
       /* Defaults */
       location: "top right",
       timeout: 5000,

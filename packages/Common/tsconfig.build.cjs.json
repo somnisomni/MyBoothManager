@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["./dist", "./node_modules", "**/__tests__/**"],
+  "compilerOptions": {
+    "outDir": "./dist/cjs",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "declaration": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}

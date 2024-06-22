@@ -42,7 +42,7 @@ declare module "fastify" {
      * Signs the specified cookie using the secret/signer provided.
      * @param value cookie value
      */
-     signCookie(value: string): string;
+    signCookie(value: string): string;
 
     /**
      * Unsigns the specified cookie using the secret/signer provided.
@@ -105,7 +105,7 @@ declare namespace fastifyCookie {
   }
 
   export class Signer implements SignerBase {
-    constructor (secrets: string | Array<string> | Buffer | Array<Buffer>, algorithm?: string)
+    constructor(secrets: string | Array<string> | Buffer | Array<Buffer>, algorithm?: string);
     sign: (value: string) => string;
     unsign: (input: string) => UnsignResult;
   }

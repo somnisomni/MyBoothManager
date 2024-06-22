@@ -1,44 +1,41 @@
+### BASE ###
+FROM node:lts-alpine as base
+
 ### BUILD STAGE ###
-FROM node:lts-alpine as build
+FROM base as build
+RUN corepack enable pnpm
 
 # Build arguments
 ARG GIT_HASH
-ARG API_SERVER_URL=http://localhost:31111
-ARG BASE_PATH=/
 ENV GIT_HASH=${GIT_HASH}
-ENV VITE_MBM_API_SERVER_URL=${API_SERVER_URL}
-ENV VITE_BASE_PATH=${BASE_PATH}
 
 # Copy files
 WORKDIR /build
-COPY package.json .
-COPY packages/      packages/
+COPY package.json    .
+COPY pnpm-*.yaml     .
+COPY packages/       packages/
 COPY projects/Public projects/Public
 
-# Build setup
-RUN yarn set version berry
-RUN yarn install
+# Build
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+#     pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
+RUN pnpm common:build && pnpm public build
 
-# Build common package
-RUN yarn common build
+# Deploy
+RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
 
-# Build common UI package
-RUN yarn install
-RUN yarn install && yarn commonui build
-
-# Build public frontend
-RUN yarn install && yarn public build
 
 ### PRODUCTION STAGE ###
-FROM node:lts-alpine as production
+FROM base as production
+RUN corepack enable pnpm
 
 # Copy files
 WORKDIR /app
-COPY --from=build /build/projects/Public/dist .
+COPY --from=build /prod/public .
 
 # Expose port
 EXPOSE 31113
 
 # Start server
-RUN npm install -g http-server
-ENTRYPOINT ["npx", "http-server", "--proxy", "http://localhost:31113?", "--port", "31113"]
+ENTRYPOINT ["/bin/sh", "-c", "pnpm start:prod"]
