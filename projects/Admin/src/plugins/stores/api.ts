@@ -273,6 +273,17 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     );
   }
 
+  async function requestPreviewGoodsCSVImport(csv: string): Promise<C.IGoodsCSVImportPreviewResponse | C.ErrorCodes> {
+    let apiResponse: C.IGoodsCSVImportPreviewResponse | null = null;
+    const errorCode = await simplifyAPICall(
+      () => AdminAPI.requestPreviewGoodsCSVImport(csv),
+      (res) => apiResponse = res,
+    );
+
+    if(typeof errorCode === "number") return errorCode;
+    return apiResponse ?? C.ErrorCodes.UNKNOWN_ERROR;
+  }
+
   /* Goods Combination */
   async function fetchGoodsCombinationsOfCurrentBooth(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
@@ -446,6 +457,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     uploadGoodsImage,
     deleteGoodsImage,
     deleteGoods,
+    requestPreviewGoodsCSVImport,
 
     fetchGoodsCombinationsOfCurrentBooth,
     createGoodsCombination,

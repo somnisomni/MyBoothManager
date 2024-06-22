@@ -1,18 +1,23 @@
 import type { MultipartFile } from "@fastify/multipart";
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, ISingleValueResponse, ImageSizeConstraintKey, IImageUploadInfo } from "@myboothmanager/common";
+import { ISuccessResponse, ISingleValueResponse, ImageSizeConstraintKey, IImageUploadInfo, GoodsStockVisibility } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import Booth from "@/db/models/booth";
 import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { UtilService } from "../util/util.service";
+import { CSVService } from "../util/csv.service";
 import { UpdateGoodsRequestDto } from "./dto/update-goods.dto";
 import { CreateGoodsRequestDto } from "./dto/create-goods.dto";
 import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
+import { GoodsImportPreviewResponseDto } from "./dto/import-goods.dto";
 
 @Injectable()
 export class GoodsService {
-  constructor(private readonly utilService: UtilService) { }
+  constructor(
+    private readonly utilService: UtilService,
+    private readonly csvService: CSVService,
+  ) { }
 
   private async getGoodsAndParentBooth(goodsId: number, boothId: number, callerAccountId: number): Promise<{ goods: Goods, booth: Booth }> {
     const goods = await findOneByPk(Goods, goodsId);
@@ -107,5 +112,39 @@ export class GoodsService {
     }
 
     return await removeTarget(goods);
+  }
+
+  async previewCSVImport(csv: string): Promise<GoodsImportPreviewResponseDto> {
+    const parsed = await this.csvService.parseCSVString(csv/*, goodsCsvHeader as unknown as Array<string>*/);
+    console.log(parsed);
+
+    // Extract categories first
+    const categories: GoodsImportPreviewResponseDto["categories"] = [];
+    for(const record of parsed) {
+      const category: string = record["category_name"];
+      if(category && categories.findIndex((c) => c.name === category) < 0) {
+        categories.push({ name: category });
+      }
+    }
+
+    // Then goods
+    const goods: GoodsImportPreviewResponseDto["goods"] = [];
+    for(const record of parsed) {
+      const categoryId = categories.findIndex((c) => c.name === record["category_name"]);
+
+      goods.push({
+        categoryId: categoryId >= 0 ? categoryId : undefined,
+        name: record["name"],
+        description: record["description"],
+        price: record["price"],
+        stock: {
+          initial: record["stock_initial"],
+          remaining: record["stock_initial"],
+          visibility: GoodsStockVisibility.SHOW_ALL,
+        },
+      });
+    }
+
+    return new GoodsImportPreviewResponseDto(goods, categories);
   }
 }
