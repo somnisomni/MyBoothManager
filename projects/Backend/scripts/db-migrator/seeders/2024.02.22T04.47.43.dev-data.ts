@@ -1,6 +1,6 @@
 import * as argon2 from "argon2";
 import { BoothStatus, GoodsStockVisibility, IAccountModel, IBoothModel, IGoodsCategoryModel, IGoodsCombinationModel, IGoodsModel } from "@myboothmanager/common";
-import { WhereOptions , Op } from "sequelize";
+import { WhereOptions, Op } from "sequelize";
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import GoodsCategory from "@/db/models/goods-category";
@@ -22,7 +22,7 @@ export const up: Seeder = async ({ context }) => {
       loginPassHash: await argon2.hash("empty"),
     },
   ] as IAccountModel[]);
-
+  
   // Booth
   const testAccount = await Account.findOne({ where: { loginId: "test" } });
   if(testAccount) {

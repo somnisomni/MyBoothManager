@@ -1,8 +1,19 @@
-import { DataTypes, ModelAttributes, QueryInterface, Sequelize } from "sequelize";
+import { DataTypes, ModelAttributes, QueryInterface } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 import { SequelizeStorage, Umzug } from "umzug";
 import generateConfig from "@/db/config";
+import Account from "@/db/models/account";
+import Booth from "@/db/models/booth";
+import BoothMember from "@/db/models/booth-member";
+import Fair from "@/db/models/fair";
+import Goods from "@/db/models/goods";
+import GoodsCategory from "@/db/models/goods-category";
+import GoodsCombination from "@/db/models/goods-combination";
+import GoodsOrder from "@/db/models/goods-order";
+import UploadStorage from "@/db/models/uploadstorage";
 
 const sequelize: Sequelize = new Sequelize(generateConfig());
+sequelize.addModels([Account, Fair, Booth, BoothMember, Goods, GoodsCategory, GoodsOrder, GoodsCombination, UploadStorage]);
 const migGlob  = process.env.NODE_ENV === "development" ? "./migrations/*.ts" : "./migrations/*.js";
 const seedGlob = process.env.NODE_ENV === "development" ? "./seeders/*.ts" : "./seeders/*.js";
 
