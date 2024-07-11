@@ -119,7 +119,7 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @AllowNull
   @Default(null)
   @ForeignKey(() => UploadStorage)
-  @Column(DataTypes.JSON)
+  @Column(DataTypes.INTEGER.UNSIGNED)
   declare infoImageId?: number | null;
 
 
