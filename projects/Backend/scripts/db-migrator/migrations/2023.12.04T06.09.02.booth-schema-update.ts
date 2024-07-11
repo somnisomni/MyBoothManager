@@ -10,12 +10,12 @@ import { Migration } from "../umzug";
 export const up: Migration = async ({ context }) => {
   const members = context.addColumn(Booth.name, "members", {
     type: DataTypes.JSON,
-    allowNull: false,
+    allowNull: true,
     defaultValue: [],
   });
   const expenses = context.addColumn(Booth.name, "expenses", {
     type: DataTypes.JSON,
-    allowNull: false,
+    allowNull: true,
     defaultValue: [],
   });
   const dateOpen = context.addColumn(Booth.name, "dateOpen", {

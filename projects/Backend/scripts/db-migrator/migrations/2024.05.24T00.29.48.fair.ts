@@ -32,7 +32,7 @@ export const up: Migration = async ({ context }) => {
     },
     openingDates: {
       type: DataTypes.JSON,
-      allowNull: false,
+      allowNull: true,
       defaultValue: [],
     },
     websiteUrl: {

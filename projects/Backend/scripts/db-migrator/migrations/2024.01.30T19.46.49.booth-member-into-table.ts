@@ -58,7 +58,7 @@ export const up: Migration = async ({ context }) => {
 export const down: Migration = async ({ context }) => {
   const booth = context.addColumn(Booth.name, "members", {
     type: DataTypes.JSON,
-    allowNull: false,
+    allowNull: true,
     defaultValue: [],
   });
   const boothMember = context.dropTable(BoothMember.name);
