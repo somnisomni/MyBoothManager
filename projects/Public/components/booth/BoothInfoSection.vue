@@ -10,16 +10,13 @@
             <VLayout class="d-flex flex-column flex-1-1" style="max-width: 100%">
               <h4 v-if="boothData.boothNumber" class="d-sm-none text-h4 mb-2">{{ boothData.boothNumber }}</h4>
               <h3 class="text-h3 font-weight-bold mb-2">{{ boothData.name }}</h3>
-              <div v-if="boothData.description" class="text-subtitle-1" style="font-size: 1.125rem !important;">{{ boothData.description }}</div>
-              <div class="text-overline">
-                <div v-if="stringifiedOpenDates"
-                     class="mt-4"
-                     style="line-height: 0.8;">{{ stringifiedOpenDates }}</div>
-                <div>
-                  <span>@ </span>
-                  <span v-if="boothData.fair">{{ boothData.fair?.name }} - </span>
-                  <span>{{ boothData.location }}</span>
-                </div>
+              <div v-if="boothData.description" class="text-subtitle-1" style="font-size: 1.125rem !important; line-height: 1.25;">{{ boothData.description }}</div>
+              <div class="text-overline mt-4"
+                   style="line-height: 1.33;">
+                <span v-if="stringifiedOpenDates">{{ stringifiedOpenDates }}</span>
+                <span> @ </span>
+                <span v-if="boothData.fair">{{ boothData.fair.name }} - </span>
+                <span>{{ boothData.location }}</span>
               </div>
             </VLayout>
             <VLayout v-if="boothData.boothNumber" class="d-none d-sm-flex flex-column flex-0-0 text-center">

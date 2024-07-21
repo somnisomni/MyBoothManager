@@ -21,7 +21,10 @@
                :key="fair.id"
                class="d-flex flex-0-0 flex-column my-4 overflow-visible">
         <div class="my-1">
-          <h5 class="text-h5 font-weight-bold">{{ fair.name }} <small class="ml-2 font-weight-medium" style="font-size: 0.75em;">@ {{ fair.location }}</small></h5>
+          <h5 class="text-h5 font-weight-bold">
+            <span>{{ fair.name }}</span>
+            <small class="ml-2 font-weight-medium" style="font-size: 0.75em;">@ {{ fair.location }}</small>
+          </h5>
           <h6 class="text-subtitle-1 font-weight-light">
             <a v-if="fair.websiteUrl"
                :href="fair.websiteUrl"
