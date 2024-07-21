@@ -14,8 +14,23 @@
           cover />
     <div class="booth-item-image-overlay"></div>
 
+    <!-- *** Status area *** -->
+    <div v-if="boothData.status.status !== BoothStatus.OPEN"
+         class="booth-status rounded-lg pa-2">
+      <VIcon v-if="boothData.status.status === BoothStatus.PAUSE"   size="x-small" icon="mdi-pause-circle-outline" />
+      <VIcon v-if="boothData.status.status === BoothStatus.PREPARE" size="x-small" icon="mdi-store-cog" />
+
+      <VExpandXTransition>
+        <span v-if="isPointerHovering"
+              class="text-caption"
+              style="text-overflow: clip; overflow: hidden; text-wrap: nowrap; line-height: 1">
+          <span class="pl-2">{{ boothStatusText }}</span>
+        </span>
+      </VExpandXTransition>
+    </div>
+
     <!-- *** Bottom info area *** -->
-    <div class="booth-info flex-grow-1 d-flex flex-row justify-start align-center align-self-end pa-3">
+    <div class="booth-info flex-grow-1 d-flex flex-row justify-start align-end align-self-end pa-3">
       <div class="flex-grow-1 overflow-hidden">
         <div class="name text-body-1 font-weight-bold" :title="boothData.name">{{ boothData.name }}</div>
         <div v-if="boothData.description" class="description text-body-2 font-weight-light" :title="boothData.description">{{ boothData.description }}</div>
@@ -26,23 +41,13 @@
            style="max-width: 6em">
         <div class="d-inline-flex flex-column justify-center align-center w-100">
           <div v-if="boothData.boothNumber"
-              class="font-weight-bold"
+              class="font-weight-bold text-center"
               title="부스 번호">
             <VTooltip activator="parent"
                       location="bottom"
                       transition="fade-transition">부스 번호</VTooltip>
 
             <span class="booth-number">{{ boothData.boothNumber }}</span>
-          </div>
-
-          <div v-if="boothData.status.status !== BoothStatus.OPEN">
-            <VTooltip activator="parent" location="bottom" transition="fade-transition">
-              <span      v-if="boothData.status.status === BoothStatus.PAUSE">운영 일시 중지 중</span>
-              <span v-else-if="boothData.status.status === BoothStatus.PREPARE">운영 준비 중</span>
-            </VTooltip>
-
-            <VIcon v-if="boothData.status.status === BoothStatus.PAUSE"   size="x-small" icon="mdi-pause-circle-outline" />
-            <VIcon v-if="boothData.status.status === BoothStatus.PREPARE" size="x-small" icon="mdi-store-cog" />
           </div>
         </div>
       </div>
@@ -80,6 +85,15 @@ export default class BoothListItem extends Vue {
     return this.boothData.bannerImage?.thumbnailData ?? undefined;
   }
 
+  get boothStatusText() {
+    switch(this.boothData.status.status) {
+      case BoothStatus.PAUSE:   return "운영 일시 중지 중";
+      case BoothStatus.PREPARE: return "운영 준비 중";
+      case BoothStatus.CLOSE:   return "운영 종료";
+      default:                  return "?";
+    }
+  }
+
   get shouldShowExtraInfo(): boolean {
     return !!this.boothData.boothNumber || this.boothData.status.status !== BoothStatus.OPEN;
   }
@@ -109,8 +123,30 @@ export default class BoothListItem extends Vue {
 
   background-color: black;
 
-  &.hover:not(:active) {
-    transform: translateY(-2.5%);
+  &.hover {
+    &:not(:active) {
+      transform: translateY(-2.5%);
+    }
+
+    .booth-status {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .booth-status {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.33);
+    backdrop-filter: blur(4px);
+    color: white;
+
+    transition: background 0.5s;
   }
 
   .booth-info {
