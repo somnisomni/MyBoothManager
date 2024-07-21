@@ -16,6 +16,7 @@
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
                 :closeOnCancel="false">
+    <p v-if="!editMode" class="mb-2 text-warning">※ 멤버 이미지는 먼저 굿즈를 추가한 후, 멤버 정보 수정 대화창에서 업로드 가능합니다.</p>
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
