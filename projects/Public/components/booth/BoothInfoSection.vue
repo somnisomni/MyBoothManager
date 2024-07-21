@@ -19,7 +19,9 @@
                 <span>{{ boothData.location }}</span>
               </div>
             </VLayout>
-            <VLayout v-if="boothData.boothNumber" class="d-none d-sm-flex flex-column flex-0-0 text-center">
+            <VLayout v-if="boothData.boothNumber"
+                     class="d-none d-sm-flex flex-column flex-0-0 text-center"
+                     style="max-width: 33.3333%;">
               <div class="text-subtitle-1">부스 번호</div>
               <h2 class="text-h2 pa-2">{{ boothData.boothNumber }}</h2>
             </VLayout>
