@@ -14,6 +14,22 @@
       <p v-if="(data as Goods).type" class="text-subtitle-2 text-center font-weight-light">{{ (data as Goods).type }}</p>
       <p class="text-h5 text-center font-weight-bold">{{ data.name }}</p>
       <p v-if="data.description" class="text-subtitle-1 text-center font-weight-normal">{{ data.description }}</p>
+      <p v-if="data.ownerMemberIds && data.ownerMemberIds.length > 0 && ownerMembersData && ownerMembersData.length > 0"
+         class="text-subtitle-2 text-center my-2">
+        <span>by </span>
+        <span v-for="member in ownerMembersData"
+              :key="member.id">
+          <span v-if="member.id !== data.ownerMemberIds[0]">, </span>
+
+          <VAvatar v-if="member.avatarImage"
+                   class="mr-1">
+            <VImg :src="getUploadFileUrl(member.avatarImage.path) ?? undefined"
+                  :lazy-src="member.avatarImage.thumbnailData ?? undefined" />
+          </VAvatar>
+
+          <span>{{ member.name }}</span>
+        </span>
+      </p>
     </div>
 
     <div class="mt-8">
@@ -41,13 +57,14 @@
 <script lang="ts">
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Model, Prop, Vue } from "vue-facing-decorator";
-import { GoodsStockVisibility, IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
+import { GoodsStockVisibility, IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey, type IBoothMember } from "@myboothmanager/common";
 import { getUploadFileUrl } from "#imports";
 
 @NuxtComponent({})
 export default class GoodsItemDetailsDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: GoodsBase, required: true }) data!: GoodsBase;
+  @Prop({ type: Array, default: [] }) ownerMembersData!: IBoothMember[];
 
   get title() {
     return this.data instanceof GoodsCombination ? "세트 세부 정보" : "굿즈 세부 정보";

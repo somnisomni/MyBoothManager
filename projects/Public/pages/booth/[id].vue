@@ -102,7 +102,8 @@
     </div>
 
     <GoodsItemDetailsDialog v-model="goodsItemDetailsDialogOpen"
-                            :data="goodsItemDetailsDialogTargetData" />
+                            :data="goodsItemDetailsDialogTargetData"
+                            :ownerMembersData="goodsItemDetailsDialogOwnerMembers" />
   </VMain>
 </template>
 
@@ -190,6 +191,7 @@ export default class IndividualBoothPage extends Vue {
 
   goodsItemDetailsDialogOpen: boolean = false;
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
+  goodsItemDetailsDialogOwnerMembers: IBoothMember[] = [];
 
   declare readonly FETCH_KEYS: Record<string, string>;
   declare boothFetchError: ErrorCodes | null;
@@ -307,6 +309,7 @@ export default class IndividualBoothPage extends Vue {
 
     if(targetData) {
       this.goodsItemDetailsDialogTargetData = targetData;
+      this.goodsItemDetailsDialogOwnerMembers = this.members.filter((member) => targetData.ownerMemberIds?.includes(member.id));
       this.goodsItemDetailsDialogOpen = true;
     }
   }
