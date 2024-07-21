@@ -182,6 +182,7 @@ export default class BoothListItem extends Vue {
 
     .booth-number {
       font-size: 1.25em;
+      line-height: 1.25;
     }
   }
 }
