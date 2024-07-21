@@ -202,7 +202,7 @@ export default class BoothManageDialog extends Vue {
       itemValue: "value",
       multiple: true,
       get hide() { return !useProxyStore().formModels.fairId; },
-      get disabled() { return useProxyStore().isCurrentBoothFairPassed; },
+      get disabled() { return useProxyStore().editMode && useProxyStore().isCurrentBoothFairPassed; },
     },
   } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
   resetValidationProxy() { this.form?.resetValidation(); }
