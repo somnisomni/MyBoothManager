@@ -35,6 +35,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       return C.ErrorCodes.UNKNOWN_ERROR;
     }
 
+    // If API call is successful, remove fetch error snackbar if exists
+    $adminStore.globalSnackbarContexts.removeImmediate(apiFetchErrorSnackbarId);
+
     /* Handle API errors */
     if(typeof result === "number") {
       switch(result as C.ErrorCodes) {
