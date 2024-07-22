@@ -13,7 +13,7 @@
               <div v-if="boothData.description" class="text-subtitle-1" style="font-size: 1.125rem !important; line-height: 1.25;">{{ boothData.description }}</div>
               <div class="text-overline mt-4"
                    style="line-height: 1.33;">
-                <span v-if="stringifiedOpenDates">{{ stringifiedOpenDates }}</span>
+                <div v-if="stringifiedOpenDates">{{ stringifiedOpenDates }}</div>
                 <span> @ </span>
                 <span v-if="boothData.fair">{{ boothData.fair.name }} - </span>
                 <span>{{ boothData.location }}</span>
