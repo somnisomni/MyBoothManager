@@ -6,15 +6,8 @@
           max-height="7em"
           :max-width="maxWidth"
           @click="$emit('click', memberData.id)">
-    <VAvatar size="6em"
-             class="no-interaction">
-      <VImg v-if="avatarImageUrl"
-            :src="avatarImageUrl"
-            :lazy-src="memberData.avatarImage?.thumbnailData" />
-      <VIcon v-else
-             icon="mdi-account"
-             size="3em" />
-    </VAvatar>
+    <BoothMemberAvatar :avatarImage="memberData.avatarImage"
+                       size="6em" />
 
     <div class="d-flex flex-column ml-4 overflow-hidden">
       <div class="d-flex align-center" style="white-space: nowrap">
@@ -37,24 +30,23 @@
 import type { IBoothMember } from "@myboothmanager/common";
 import { Component, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
+import BoothMemberAvatar from "./BoothMemberAvatar.vue";
 
 @Component({
+  components: {
+    BoothMemberAvatar,
+  },
   emits: ["click"],
 })
 export default class BoothMemberItem extends Vue {
   @Prop({ type: Object,  required: true }) readonly memberData!: IBoothMember;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
-  @Prop({ type: Function, default: (s: string) => s }) readonly imageUrlResolver!: (rawImageUrl?: string | null) => string | null | undefined;
 
   @Setup(() => useDisplay().smAndUp)
   declare smAndUp: boolean;
 
   get maxWidth(): number | string {
     return this.smAndUp ? "24em" : "100%";
-  }
-
-  get avatarImageUrl() {
-    return this.imageUrlResolver(this.memberData.avatarImage?.path);
   }
 }
 </script>

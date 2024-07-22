@@ -60,8 +60,7 @@
             <div class="d-flex flex-row flex-wrap justify-center">
               <BoothMemberItem v-for="member in members"
                                :key="member.id"
-                               :memberData="member"
-                               :imageUrlResolver="getUploadFileUrl" />
+                               :memberData="member" />
             </div>
           </ExpandableContent>
         </div>
@@ -87,7 +86,6 @@
                            :currencySymbol="booth.currencySymbol"
                            :goodsList="[...goodsNormalized, ...combinationsNormalized]"
                            :goodsCategoryList="categories"
-                           :goodsImageUrlResolver="getUploadFileUrl"
                            omitEmptyGoodsCategory
                            @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
                            @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">

@@ -18,11 +18,9 @@
           <slot name="goods-combination"
                 :goodsData="combination"
                 :currencySymbol="currencySymbol"
-                :imageUrlResolver="goodsImageUrlResolver"
                 @click="onCombinationClick">
             <GoodsItem :goodsData="combination"
                        :currencySymbol="currencySymbol"
-                       :imageUrlResolver="goodsImageUrlResolver"
                        @click="onCombinationClick" />
           </slot>
 
@@ -32,11 +30,9 @@
                   v-for="goods in findGoodsInCombination(combination.id)"
                   :key="goods.id"
                   :goodsData="goods"
-                  :imageUrlResolver="goodsImageUrlResolver"
                   :currencySymbol="currencySymbol"
                   @click="onGoodsClick">
               <GoodsItem :goodsData="goods"
-                         :imageUrlResolver="goodsImageUrlResolver"
                          :currencySymbol="currencySymbol"
                          @click="onGoodsClick" />
             </slot>
@@ -50,11 +46,9 @@
               v-for="goods in findGoodsInCategory(category.id, true)"
               :key="goods.id"
               :goodsData="goods"
-              :imageUrlResolver="goodsImageUrlResolver"
               :currencySymbol="currencySymbol"
               @click="onGoodsClick">
           <GoodsItem :goodsData="goods"
-                     :imageUrlResolver="goodsImageUrlResolver"
                      :currencySymbol="currencySymbol"
                      @click="onGoodsClick" />
         </slot>
@@ -78,7 +72,6 @@ export default class GoodsListView extends Vue {
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
   @Prop({ type: String, required: true })  readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false }) readonly categoryEditable!: boolean;
-  @Prop({ type: Function, default: (s: string) => s }) readonly goodsImageUrlResolver!: (rawGoodsImageUrl?: string) => string | null | undefined;
 
   get goodsListAdjusted(): Array<Goods> {
     if(!this.goodsList) {

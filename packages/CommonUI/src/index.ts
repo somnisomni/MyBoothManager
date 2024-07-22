@@ -2,9 +2,16 @@ import type { App } from "vue";
 import * as C from "./components";
 import "@/styles/styles.scss";
 
+export interface ICommonUIOptions {
+  imageUrlResolver: (rawPath?: string | null) => string | null;
+}
+
 export default {
-  install(app: App) {
+  install(app: App, options: ICommonUIOptions) {
+    app.config.globalProperties.$imageUrlResolver = options?.imageUrlResolver ?? ((rawPath?: string | null) => rawPath);
+
     app.component("BoothMemberItem", C.BoothMemberItem);
+    app.component("BoothMemberAvatar", C.BoothMemberAvatar);
 
     app.component("CommonDialog", C.CommonDialog);
     app.component("CommonErrorDialog", C.CommonErrorDialog);

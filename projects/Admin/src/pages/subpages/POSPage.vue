@@ -19,7 +19,6 @@
              :style="{ 'padding-bottom': !mdAndUp ? `calc(${smDrawerHeight}px + 1rem)` : '' }">
       <GoodsListView :currencySymbol="currencySymbol"
                      :goodsList="boothGoodsCombinedList"
-                     :goodsImageUrlResolver="getUploadFileUrl"
                      :goodsCategoryList="boothGoodsCategoryList"
                      omitEmptyGoodsCategory>
         <template #goods="props">
@@ -50,7 +49,6 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
-import { getUploadFileUrl } from "@/lib/functions";
 import { POSOrderSimulationLayer } from "./POSPage.lib";
 
 @Component({
@@ -61,7 +59,6 @@ import { POSOrderSimulationLayer } from "./POSPage.lib";
 })
 export default class POSPage extends Vue {
   readonly APP_NAME = APP_NAME;
-  readonly getUploadFileUrl = getUploadFileUrl;
   readonly goodsItemForceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   @Setup(() => useDisplay().mdAndUp)

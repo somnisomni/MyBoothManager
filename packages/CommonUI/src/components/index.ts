@@ -1,5 +1,6 @@
 /* DO NOT use wildcard export (export * from "./component.vue") as it causes error while building */
 export { default as BoothMemberItem } from "./booth/member/BoothMemberItem.vue";
+export { default as BoothMemberAvatar } from "./booth/member/BoothMemberAvatar.vue";
 
 export { default as CommonDialog, type CommonDialogButtonParams } from "./dialogs/common/CommonDialog.vue";
 export { default as CommonErrorDialog } from "./dialogs/common/CommonErrorDialog.vue";

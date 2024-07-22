@@ -21,11 +21,9 @@
               :key="member.id">
           <span v-if="member.id !== data.ownerMemberIds[0]">, </span>
 
-          <VAvatar v-if="member.avatarImage"
-                   class="mr-1">
-            <VImg :src="getUploadFileUrl(member.avatarImage.path) ?? undefined"
-                  :lazy-src="member.avatarImage.thumbnailData ?? undefined" />
-          </VAvatar>
+          <BoothMemberAvatar v-if="member.avatarImage"
+                             :avatarImage="member.avatarImage"
+                             class="mr-1" />
 
           <span>{{ member.name }}</span>
         </span>
@@ -55,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
+import { BoothMemberAvatar, Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Model, Prop, Vue } from "vue-facing-decorator";
 import { GoodsStockVisibility, IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey, type IBoothMember } from "@myboothmanager/common";
 import { getUploadFileUrl } from "#imports";

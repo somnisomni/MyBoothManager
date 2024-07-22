@@ -5,7 +5,6 @@
                            v-model="selectedGoods[goods.id]"
                            :key="goods.id"
                            :goodsData="goods"
-                           :imageUrlResolver="getUploadFileUrl"
                            :disabled="goodsDisabledIdList.includes(goods.id)"
                            disabledReason="이미 다른 세트에 포함됨" />
     </VRow>
@@ -15,7 +14,6 @@
 <script lang="ts">
 import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Vue, Watch } from "vue-facing-decorator";
-import { getUploadFileUrl } from "@/lib/functions";
 import GoodsItemSelectable from "./GoodsItemSelectable.vue";
 
 @Component({
@@ -24,8 +22,6 @@ import GoodsItemSelectable from "./GoodsItemSelectable.vue";
   },
 })
 export default class SelectableGoodsListView extends Vue {
-  readonly getUploadFileUrl = getUploadFileUrl;
-
   @Model({ type: Array, default: [] }) selectedGoodsIds!: Array<number>;
   @Prop({ type: Array, required: true }) readonly goodsList!: Array<Goods>;
   @Prop({ type: Array,  default: []   }) readonly goodsDisabledIdList!: Array<number>;
