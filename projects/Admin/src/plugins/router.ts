@@ -22,6 +22,8 @@ const ClosingPage   = () => import(/* webpackChunkName: "pages/admin-booth" */ "
 const GoodsOrdersRootPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderRootPage.vue");
 const GoodsOrdersListPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderListPage.vue");
 const GoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderDetailPage.vue");
+
+const HelpPage = () => import(/* webpackChunkName: "pages/support" */ "@/pages/support/help/HelpRootPage.vue");
 /* === */
 
 const isProd: boolean = import.meta.env.PROD;
@@ -118,6 +120,16 @@ const router = createRouter({
               path: "utility/price-calculator",
               name: "admin-utility-price-calculator",
               component: PlaceholderPage,
+            },
+            {
+              path: "support/help",
+              name: "admin-support-help",
+              component: HelpPage,
+            },
+            {
+              path: "support/help/:name",
+              name: "admin-support-help-individual",
+              component: HelpPage,
             },
           ],
         },

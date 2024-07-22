@@ -40,6 +40,12 @@
 
         <VDivider /> -->
 
+        <VListSubheader>지원</VListSubheader>
+        <VListItem prepend-icon="mdi-help-circle" title="도움말" value="help"
+                   :to="{ name: 'admin-support-help' }" />
+
+        <VDivider />
+
         <VListSubheader>계정</VListSubheader>
         <VListItem density="compact" min-height="30px">
           <span class="text-subtitle-2 text-disabled">로그인 계정: {{ currentAccount?.name }}</span>

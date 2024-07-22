@@ -32,13 +32,15 @@
     "vue": "^3.4.31",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.4.0",
-    "vuetify": "^3.6.12"
+    "vuetify": "^3.6.12",
+    "vue-markdown-render": "^2.2.1"
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/node": "^20.14.10",
+    "@types/markdown-it": "^14.1.1",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^9.6.0",
