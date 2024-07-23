@@ -8,6 +8,7 @@ declare global {
       JWT_SECRET?: string,
       SUPERADMIN_ID?: string,
       SUPERADMIN_PASS?: string,
+      SUPERADMIN_DISCORD_WEBHOOK_URL?: string,
 
       FILE_UPLOAD_FOLDER?: string,
 

@@ -5,6 +5,7 @@ import { PublicGoodsCategoryModule } from "./goods-category/goods-category.modul
 import { PublicGoodsCombinationModule } from "./goods-combination/goods-combination.module";
 import { PublicBoothMemberModule } from "./booth-member/booth-member.module";
 import { PublicFairModule } from "./fair/fair.module";
+import { SupportModule } from "./support/support.module";
 
 @Module({
   imports: [
@@ -14,8 +15,9 @@ import { PublicFairModule } from "./fair/fair.module";
     PublicGoodsModule,
     PublicGoodsCategoryModule,
     PublicGoodsCombinationModule,
+    SupportModule,
   ],
   controllers: [],
   providers: [],
 })
-export class PublicModule {}
+export class PublicModule { }

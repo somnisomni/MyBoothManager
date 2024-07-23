@@ -76,6 +76,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
 
     return result;
   }
+
   async function simplifyAPICall<T>(
     apiFunc: () => Promise<T | C.ErrorCodes>,
     afterFetchFunc: (response: T) => unknown | Promise<unknown>,
@@ -110,6 +111,16 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   }
 
   /* *** Actions *** */
+  /* Support */
+  async function sendFeedback(payload: C.IFeedbackRequest): Promise<true | C.ErrorCodes> {
+    return await simplifyAPICall(
+      () => AdminAPI.sendFeedback(payload),
+      () => { },
+      "피드백 전송 성공. 소중한 의견 감사합니다!",
+      "피드백 전송 실패",
+    );
+  }
+
   /* Account */
   async function fetchCurrentAccountInfo(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
@@ -497,6 +508,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
 
 
   return {
+    sendFeedback,
+
     fetchCurrentAccountInfo,
 
     fetchSingleBoothOfCurrentAccount,

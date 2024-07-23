@@ -41,6 +41,8 @@
         <VDivider /> -->
 
         <VListSubheader>지원</VListSubheader>
+        <VListItem prepend-icon="mdi-comment-quote" title="피드백"
+                   @click="isFeedbackDialogOpen = true" />
         <VListItem prepend-icon="mdi-help-circle" title="도움말" value="help"
                    :to="{ name: 'admin-support-help' }" />
 
@@ -70,6 +72,8 @@
     <VMain class="pb-4" style="overflow: hidden">
       <RouterView />
     </VMain>
+
+    <FeedbackDialog v-model="isFeedbackDialogOpen" />
   </div>
 </template>
 
@@ -81,10 +85,12 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
 import router from "@/plugins/router";
 import { Const } from "@/lib/const";
+import FeedbackDialog from "@/components/dialogs/FeedbackDialog.vue";
 
 @Component({
   components: {
     BoothSelectionArea,
+    FeedbackDialog,
   },
 })
 export default class AdminLayout extends Vue {
@@ -98,6 +104,8 @@ export default class AdminLayout extends Vue {
 
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
+
+  isFeedbackDialogOpen = false;
 
   set navOpen(value: boolean) { this._navOpen = value; }
   get navOpen() {

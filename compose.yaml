@@ -48,6 +48,7 @@ services:
       API_SERVER_PORT: 31111
       SUPERADMIN_ID: admin
       SUPERADMIN_PASS: should1be2changed!
+      SUPERADMIN_DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/...
       MYSQL_HOST: 127.0.0.1
       MYSQL_PORT: 3306
       MYSQL_USER: user

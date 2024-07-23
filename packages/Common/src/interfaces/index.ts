@@ -1,4 +1,5 @@
 export * from "./base";
+export * from "./feedback";
 export * from "./account";
 export * from "./booth";
 export * from "./booth-member";

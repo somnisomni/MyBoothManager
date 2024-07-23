@@ -8,6 +8,8 @@ import {
   type IGoodsResponse,
   type ISingleValueResponse,
   type IFairResponse,
+  type IFeedbackRequest,
+  type ISuccessResponse,
 } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -94,6 +96,11 @@ export default class APICaller {
       console.debug("Can't connect to API server! ;(");
       return false;
     }
+  }
+
+  // Support
+  public async sendFeedback(feedback: IFeedbackRequest) {
+    return await this.createPublicAPI().POST<ISuccessResponse>("support/feedback", feedback);
   }
 
   // Booth

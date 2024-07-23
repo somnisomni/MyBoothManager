@@ -34,6 +34,10 @@ export default class AdminAPI extends BaseAdminAPI {
     return false;
   }
 
+  static async sendFeedback(payload: CT.IFeedbackRequest) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.sendFeedback(payload));
+  }
+
   /* Auth */
   static async login(payload: CT.IAccountLoginRequest) {
     return await this.apiCallWrapper<CT.IAccountLoginResponse>(() => this.API.POST("auth/login", payload, true, false));

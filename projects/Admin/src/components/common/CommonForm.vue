@@ -28,6 +28,7 @@
                    (isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
+                 :auto-grow="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).autoGrow : undefined"
                  :clearable="field.optional"
                  :disabled="field.hide || field.disabled"
                  :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
@@ -80,7 +81,7 @@
 
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
-import { VBtn, VCheckbox, VForm, VSelect, VTextField } from "vuetify/components";
+import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { diff } from "deep-object-diff";
@@ -96,7 +97,7 @@ export enum FormFieldType {
   // DATETIME = "datetime",
   SELECT = "select",
   CHECKBOX = "checkbox",
-  // TEXTAREA = "textarea",
+  TEXTAREA = "textarea",
   PASSWORD = "password",
   // FILE = "file",
   // EMAIL = "email",
@@ -116,7 +117,7 @@ export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent |
   // [FormFieldType.DATETIME]: markRaw(VTextField),
   [FormFieldType.SELECT]: markRaw(VSelect),
   [FormFieldType.CHECKBOX]: markRaw(VCheckbox),
-  // [FormFieldType.TEXTAREA]: "VTextarea",
+  [FormFieldType.TEXTAREA]: markRaw(VTextarea),
   [FormFieldType.PASSWORD]: markRaw(VTextField),
   // [FormFieldType.FILE]: "VFileInput",
   // [FormFieldType.EMAIL]: markRaw(VTextField),
@@ -159,7 +160,7 @@ export interface IFormFieldOptions {
 export interface IFormFieldAdditionalButtonOptions {
   icon: string;
   title: string;
-  variant?: string;
+  variant?: InstanceType<typeof VBtn>["variant"];
   onClick(): void;
 }
 
@@ -176,6 +177,10 @@ export interface IFormFieldNumericOptions extends IFormFieldOptions {
 
 export interface IFormFieldCurrencyOptions extends IFormFieldNumericOptions {
   currencySymbol?: string;
+}
+
+export interface IFormFieldTextareaOptions extends IFormFieldOptions {
+  autoGrow?: boolean;
 }
 
 export interface IFormFieldSelectOptions extends IFormFieldOptions {
@@ -199,7 +204,7 @@ export interface IFormOtherFieldOptions extends Omit<IFormFieldOptions, "label">
 export interface IFormButtonFieldOptions extends IFormOtherFieldOptions {
   size?: string;
   color?: string;
-  variant?: string;
+  variant?: InstanceType<typeof VBtn>["variant"];
   prependIcon?: string;
   appendIcon?: string;
 }
@@ -207,6 +212,7 @@ export interface IFormButtonFieldOptions extends IFormOtherFieldOptions {
 export type FormFieldOptions = IFormFieldOptions
                                | ({ type: FormFieldType.NUMBER } & IFormFieldNumericOptions)
                                | ({ type: FormFieldType.CURRENCY } & IFormFieldCurrencyOptions)
+                               | ({ type: FormFieldType.TEXTAREA } & IFormFieldTextareaOptions)
                                | ({ type: FormFieldType.SELECT } & IFormFieldSelectOptions)
                                | ({ type: FormFieldType.DATE } & IFormFieldDateOptions)
                                | ({ type: FormFieldType.HEADING } & IFormOtherFieldOptions)
@@ -280,6 +286,9 @@ export default class CommonForm extends Vue {
     for(const key in this.initialModels) {
       this.models[key] = deepClone(this.initialModels[key]);
     }
+
+    // Force execute data update callback
+    this.onModelDataUpdate();
   }
 
   public resetValidation() {

@@ -7,6 +7,7 @@ import { PublicGoodsCombinationResponseDto } from "./dto/goods-combination.dto";
 export class PublicGoodsCombinationController {
   constructor(private readonly publicGoodsCombinationService: PublicGoodsCombinationService) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id")
   async findOne(@Param("id") id: string): Promise<PublicGoodsCombinationResponseDto> {
     return new PublicGoodsCombinationResponseDto(await this.publicGoodsCombinationService.findOne(+id));
