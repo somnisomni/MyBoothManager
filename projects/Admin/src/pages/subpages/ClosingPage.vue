@@ -50,7 +50,7 @@
 
             <li v-if="Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue) !== 0"
                 class="d-flex justify-space-between">
-              <span>잔여 금액</span>
+              <span>잔여 금액 <small>(멤버 미지정 굿즈 수익 총합)</small></span>
               <span>{{ currencySymbol }}{{ Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue).toLocaleString() }}</span>
             </li>
           </ul>
