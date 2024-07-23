@@ -70,6 +70,7 @@
  </tr>
 </table>
 
+
 ## 이미지 업로드
 사용자가 이 서비스에 업로드하는 모든 이미지는 사이트 반응 속도 개선 및 원본 이미지 크롤링 방지를 위해 **미리 지정된 형식으로 변환되어 서버에 저장**됩니다. <br />
 이미지의 원본 또는 원본의 사본은 서버에 저장되지 않으며, 사용자는 이미지를 업로드할 때 사용자가 이미지 원본을 요청하더라도 제공해드릴 수 없다는 것에 동의한 것으로 간주합니다. <br />
@@ -99,3 +100,8 @@
 </table>
 
 이 내용은 [소스 코드](https://github.com/somnisomni/MyBoothManager/blob/main/packages/Common/src/utils/image-size-constraints.ts)에서도 확인하실 수 있습니다.
+
+
+## 소스 코드
+이 서비스는 소스 코드를 [PolyForm Strict 라이선스](https://github.com/somnisomni/MyBoothManager/blob/main/LICENSE-ko.md) 하에 공개하고 있는 **[소스 입수 가능 소프트웨어](https://ko.wikipedia.org/wiki/%EC%86%8C%EC%8A%A4_%EC%9E%85%EC%88%98_%EA%B0%80%EB%8A%A5_%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4)** 입니다. <br />
+[GitHub 레포지토리](https://github.com/somnisomni/MyBoothManager)에서 이 서비스의 소스코드를 확인하실 수 있습니다. <br />
