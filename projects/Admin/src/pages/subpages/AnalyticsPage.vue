@@ -226,7 +226,7 @@ export default class AnalyticsPage extends Vue {
     return {
       datasets: [{
         label: "판매 굿즈 수량",
-        type: "bar",
+        type: "line",
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
@@ -238,12 +238,12 @@ export default class AnalyticsPage extends Vue {
         }).filter((item) => typeof item !== "undefined") as Array<Point>,
         borderColor: colors.amber.lighten1,
         backgroundColor: colors.amber.lighten1,
-        order: 1,
+        order: 0,
         stack: "quantity",
         yAxisID: "quantity",
       }, {
         label: "판매 금액",
-        type: "line",
+        type: "bar",
         data: Object.entries(this.orderHistoryInfoMergedByMinute).map((item) => {
           const date = new Date(parseInt(item[0]));
           if(this.currentSelectedDay !== "all" && !Dateonly.fromDate(date).equals(this.currentSelectedDay)) return;
@@ -256,7 +256,7 @@ export default class AnalyticsPage extends Vue {
         borderWidth: 1.5,
         borderColor: colors.indigo.darken1,
         backgroundColor: colors.indigo.darken1,
-        order: 0,
+        order: 1,
         stack: "price",
         yAxisID: "price",
       }],
