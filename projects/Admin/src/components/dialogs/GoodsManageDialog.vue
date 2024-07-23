@@ -72,6 +72,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
+  emits: ["created", "updated", "deleted", "error"],
 })
 export default class GoodsManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -284,10 +285,10 @@ export default class GoodsManageDialog extends Vue {
     }
 
     if(result === true) {
-      this.$emit("updated");
+      this.$emit(this.editMode ? "updated" : "created");
       this.open = false;
     } else {
-      this.$emit("error");
+      this.$emit("error", result);
     }
 
     this.updateInProgress = false;
@@ -303,7 +304,7 @@ export default class GoodsManageDialog extends Vue {
         this.$emit("deleted");
         this.open = false;
       } else {
-        this.$emit("error");
+        this.$emit("error", response);
       }
     }
 

@@ -79,13 +79,32 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function simplifyAPICall<T>(
     apiFunc: () => Promise<T | C.ErrorCodes>,
     afterFetchFunc: (response: T) => unknown | Promise<unknown>,
+    snackbarSuccessText?: string,
+    snackbarErrorText?: string,
   ): Promise<true | C.ErrorCodes> {
     const response = await apiWrapper(apiFunc);
 
     if(response && typeof response !== "number") {
       await afterFetchFunc(response);
+
+      if(snackbarSuccessText) {
+        $adminStore.globalSnackbarContexts.add({
+          type: "success",
+          text: snackbarSuccessText,
+          timeout: 2000,
+        });
+      }
+
       return true;
     } else {
+      if(snackbarErrorText) {
+        $adminStore.globalSnackbarContexts.add({
+          type: "error",
+          text: `${snackbarErrorText} (code: ${response})`,
+          timeout: 5000,
+        });
+      }
+
       return response as C.ErrorCodes;
     }
   }
@@ -122,6 +141,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.createBooth(payload),
       (response) => $adminStore.changeBooth(response.id),
+      "부스 생성 성공",
+      "부스 생성 실패",
     );
   }
 
@@ -129,6 +150,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothInfo($adminStore.currentBooth.booth!.id, payload),
       (response) => $adminStore.currentBooth.booth = response,
+      "부스 정보 업데이트 성공",
+      "부스 정보 업데이트 실패",
     );
   }
 
@@ -136,6 +159,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothStatus($adminStore.currentBooth.booth!.id, payload),
       () => $adminStore.currentBooth.booth!.status = { ...$adminStore.currentBooth.booth!.status, ...payload },
+      "부스 운영 상태 변경 성공",
+      "부스 운영 상태 변경 실패",
     );
   }
 
@@ -143,6 +168,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothBannerImage($adminStore.currentBooth.booth!.id, payload),
       () => fetchSingleBoothOfCurrentAccount($adminStore.currentBooth.booth!.id),
+      "부스 배너 이미지 업로드 성공",
+      "부스 배너 이미지 업로드 실패",
     );
   }
 
@@ -150,6 +177,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothBannerImage($adminStore.currentBooth.booth!.id),
       () => delete $adminStore.currentBooth.booth!.bannerImage,
+      "부스 배너 이미지 삭제 성공",
+      "부스 배너 이미지 삭제 실패",
     );
   }
 
@@ -157,6 +186,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothInfoImage($adminStore.currentBooth.booth!.id, payload),
       () => fetchSingleBoothOfCurrentAccount($adminStore.currentBooth.booth!.id),
+      "부스 인포 이미지 업로드 성공",
+      "부스 인포 이미지 업로드 실패",
     );
   }
 
@@ -164,6 +195,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothInfoImage($adminStore.currentBooth.booth!.id),
       () => delete $adminStore.currentBooth.booth!.infoImage,
+      "부스 인포 이미지 삭제 성공",
+      "부스 인포 이미지 삭제 실패",
     );
   }
 
@@ -186,6 +219,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         if(!$adminStore.currentBooth.boothMembers) $adminStore.currentBooth.boothMembers = {};
         $adminStore.currentBooth.boothMembers[response.id] = response;
       },
+      "부스 멤버 추가 성공",
+      "부스 멤버 추가 실패",
     );
   }
 
@@ -193,6 +228,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothMemberInfo($adminStore.currentBooth.booth!.id, memberId, payload),
       (response) => $adminStore.currentBooth.boothMembers![memberId] = response,
+      "부스 멤버 정보 업데이트 성공",
+      "부스 멤버 정보 업데이트 실패",
     );
   }
 
@@ -200,6 +237,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothMemberImage($adminStore.currentBooth.booth!.id, memberId, payload),
       () => fetchBoothMembersOfCurrentBooth(),
+      "부스 멤버 이미지 업로드 성공",
+      "부스 멤버 이미지 업로드 실패",
     );
   }
 
@@ -207,6 +246,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.deleteBoothMemberImage($adminStore.currentBooth.booth!.id, memberId),
       () => delete $adminStore.currentBooth.boothMembers![memberId].avatarImage,
+      "부스 멤버 이미지 삭제 성공",
+      "부스 멤버 이미지 삭제 실패",
     );
   }
 
@@ -217,6 +258,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         delete $adminStore.currentBooth.boothMembers![memberId];
         await fetchGoodsOfCurrentBooth();
       },
+      "부스 멤버 삭제 성공",
+      "부스 멤버 삭제 실패",
     );
   }
 
@@ -239,6 +282,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
         $adminStore.currentBooth.goods[response.id] = new GoodsAdmin(response);
       },
+      "굿즈 생성 성공",
+      "굿즈 생성 실패",
     );
   }
 
@@ -249,6 +294,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goods![goodsId].update(response);
         if(response.combinationId) await fetchGoodsCombinationsOfCurrentBooth();
       },
+      "굿즈 정보 업데이트 성공",
+      "굿즈 정보 업데이트 실패",
     );
   }
 
@@ -256,6 +303,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.uploadGoodsImage($adminStore.currentBooth.booth!.id, goodsId, payload),
       () => fetchGoodsOfCurrentBooth(),
+      "굿즈 이미지 업로드 성공",
+      "굿즈 이미지 업로드 실패",
     );
   }
 
@@ -263,6 +312,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.deleteGoodsImage(goodsId, $adminStore.currentBooth.booth!.id),
       () => delete $adminStore.currentBooth.goods![goodsId].goodsImage,
+      "굿즈 이미지 삭제 성공",
+      "굿즈 이미지 삭제 실패",
     );
   }
 
@@ -273,6 +324,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         delete $adminStore.currentBooth.goods![goodsId];
         await fetchGoodsCombinationsOfCurrentBooth();
       },
+      "굿즈 삭제 성공",
+      "굿즈 삭제 실패",
     );
   }
 
@@ -296,6 +349,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsCombinations[response.id] = new GoodsCombinationAdmin(response);
         await fetchGoodsOfCurrentBooth();
       },
+      "굿즈 세트 생성 성공",
+      "굿즈 세트 생성 실패",
     );
   }
 
@@ -306,6 +361,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsCombinations![combinationId].update(response);
         await fetchGoodsOfCurrentBooth();
       },
+      "굿즈 세트 정보 업데이트 성공",
+      "굿즈 세트 정보 업데이트 실패",
     );
   }
 
@@ -313,6 +370,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.uploadGoodsCombinationImage($adminStore.currentBooth.booth!.id, combinationId, payload),
       () => fetchGoodsCombinationsOfCurrentBooth(),
+      "굿즈 세트 이미지 업로드 성공",
+      "굿즈 세트 이미지 업로드 실패",
     );
   }
 
@@ -320,6 +379,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.deleteGoodsCombinationImage(combinationId, $adminStore.currentBooth.booth!.id),
       () => delete $adminStore.currentBooth.goodsCombinations![combinationId].goodsImage,
+      "굿즈 세트 이미지 삭제 성공",
+      "굿즈 세트 이미지 삭제 실패",
     );
   }
 
@@ -330,6 +391,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         delete $adminStore.currentBooth.goodsCombinations![combinationId];
         await fetchGoodsOfCurrentBooth();
       },
+      "굿즈 세트 삭제 성공",
+      "굿즈 세트 삭제 실패",
     );
   }
 
@@ -355,6 +418,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsCategories[response.id] = response;
         apiResponse = response;
       },
+      "굿즈 카테고리 생성 성공",
+      "굿즈 카테고리 생성 실패",
     );
 
     return apiResponse;
@@ -369,6 +434,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsCategories![categoryId] = response;
         apiResponse = response;
       },
+      "굿즈 카테고리 정보 업데이트 성공",
+      "굿즈 카테고리 정보 업데이트 실패",
     );
 
     return apiResponse;
@@ -382,6 +449,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         await fetchGoodsOfCurrentBooth();
         await fetchGoodsCombinationsOfCurrentBooth();
       },
+      "굿즈 카테고리 삭제 성공",
+      "굿즈 카테고리 삭제 실패",
     );
   }
 
@@ -407,6 +476,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsOrders[response.id] = response;
         createdOrderId = response.id;
       },
+      // "굿즈 판매 기록 생성 성공",
+      // "굿즈 판매 기록 생성 실패",    // Currently snackbar is being added in the component
     );
 
     return createdOrderId;
@@ -419,6 +490,8 @@ const useAdminAPIStore = defineStore("admin-api", () => {
         $adminStore.currentBooth.goodsOrders![orderId] = { ...$adminStore.currentBooth.goodsOrders![orderId], ...payload };
         await fetchGoodsOfCurrentBooth();
       },
+      "굿즈 판매 기록 상태 변경 성공",
+      "굿즈 판매 기록 상태 변경 실패",
     );
   }
 
