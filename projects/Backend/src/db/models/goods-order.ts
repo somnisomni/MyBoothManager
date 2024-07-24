@@ -4,8 +4,8 @@ import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKe
 import Booth from "./booth";
 
 const orderSanitizerCallback = (order: IGoodsOrderItem): IGoodsOrderItem => {
-  order.price = order.price ? parseFloat(new Number(order.price).toFixed(3)) : undefined;
-  order.quantity = Math.floor(new Number(order.quantity).valueOf());
+  order.price = typeof order.price === "number" ? parseFloat(Number(order.price).toFixed(3)) : undefined;
+  order.quantity = Math.floor(Number(order.quantity));
   return order;
 };
 
