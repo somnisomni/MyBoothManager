@@ -72,6 +72,7 @@
 </template>
 
 <script lang="ts">
+import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 
@@ -87,10 +88,18 @@ export default class ClosingPage extends Vue {
 
   memberRevenueDistributionStrategy: "equal" | "own" = "own";
 
+  get validOrders(): Record<number, IGoodsOrder> {
+    // Only RECORDED orders with at least one item are valid
+    return Object.fromEntries(
+      Object.entries(this.currentBooth.goodsOrders ?? { })
+        .filter(([ , value ]) => value.status === GoodsOrderStatus.RECORDED && value.order.length > 0),
+    );
+  }
+
   get goodsRevenueMap(): Map<number, GoodsWorthMapItem> {
     const map = new Map<number, GoodsWorthMapItem>();
 
-    for(const item of Object.values(this.currentBooth.goodsOrders!)) {
+    for(const item of Object.values(this.validOrders)) {
       for(const goods of Object.values(item.order)) {
         if(goods.gId) {
           const originalGoods = this.currentBooth.goods![goods.gId];
@@ -122,7 +131,7 @@ export default class ClosingPage extends Vue {
   get goodsCombinationRevenueMap(): Map<number, GoodsWorthMapItem> {
     const map = new Map<number, GoodsWorthMapItem>();
 
-    for(const item of Object.values(this.currentBooth.goodsOrders!)) {
+    for(const item of Object.values(this.validOrders)) {
       for(const combination of Object.values(item.order)) {
         if(combination.cId) {
           const originalCombination = this.currentBooth.goodsCombinations![combination.cId];
