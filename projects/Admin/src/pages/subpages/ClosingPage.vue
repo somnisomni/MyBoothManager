@@ -104,7 +104,10 @@ export default class ClosingPage extends Vue {
         if(goods.gId) {
           const originalGoods = this.currentBooth.goods![goods.gId];
           const originalPrice = originalGoods?.price ?? 0;
-          const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
+
+          // TODO: Below line is TEMPORARY; should revert to the commented line after DB reset
+          const calculatedPrice = ((goods.price === undefined ? 0 : goods.price) ?? originalPrice) * goods.quantity;
+          // const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
 
           if(map.has(goods.gId)) {
             map.set(goods.gId, {
