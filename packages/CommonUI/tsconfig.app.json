@@ -5,6 +5,7 @@
   "compilerOptions": {
     "declaration": true,
     "noEmit": false,
+    "noEmitOnError": false,
     "baseUrl": ".",
     "outDir": "./dist",
     "declarationDir": "./dist",
@@ -15,5 +16,6 @@
       "@/*": ["./src/*"]
     },
     "experimentalDecorators": true
-  }
+  },
+  "ts-node": { "files": true }
 }

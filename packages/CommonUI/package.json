@@ -8,7 +8,7 @@
   "scripts": {
     "build": "pnpm clean && run-p type-check \"build-only {@}\" --",
     "clean": "rimraf ./dist",
-    "build-only": "vite build && vue-tsc -p tsconfig.app.json --emitDeclarationOnly",
+    "build-only": "vite build && vue-tsc -p tsconfig.app.json --declaration --emitDeclarationOnly",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint ."
   },

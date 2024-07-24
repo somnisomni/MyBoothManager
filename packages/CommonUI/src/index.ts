@@ -2,6 +2,12 @@ import type { App } from "vue";
 import * as C from "./components";
 import "@/styles/styles.scss";
 
+declare module "vue" {
+  interface ComponentCustomProperties {
+    $imageUrlResolver: (rawPath?: string | null) => string | null;
+  }
+}
+
 export interface ICommonUIOptions {
   imageUrlResolver: (rawPath?: string | null) => string | null;
 }
