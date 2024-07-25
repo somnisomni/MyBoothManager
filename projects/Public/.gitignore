@@ -22,3 +22,17 @@ logs
 .env
 .env.*
 !.env.example
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Generated files which should not be committed to source control
+public/open-source-licenses.json

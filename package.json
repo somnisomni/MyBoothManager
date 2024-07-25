@@ -3,6 +3,7 @@
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "pnpm@9.5.0",
+  "license": "PolyForm-Strict-1.0.0",
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
     "all": "pnpm -r run",

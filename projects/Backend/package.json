@@ -4,6 +4,7 @@
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "pnpm@9.5.0",
+  "license": "PolyForm-Strict-1.0.0",
   "scripts": {
     "__run": "cross-env NODE_OPTIONS=\"--import ./scripts/node/register-esm-loader.cjs\" NODE_ENV=development",
     "__run:prod": "cross-env NODE_OPTIONS=\"--import ./dist/scripts/node/register-esm-loader.cjs\" NODE_ENV=production",

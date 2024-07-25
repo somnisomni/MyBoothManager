@@ -3,5 +3,6 @@
   "version": "0.6.0",
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.5.0",
+  "license": "PolyForm-Strict-1.0.0",
   "private": true
 }

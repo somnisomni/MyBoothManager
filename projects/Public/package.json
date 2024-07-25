@@ -3,6 +3,7 @@
   "version": "0.6.0",
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.5.0",
+  "license": "PolyForm-Strict-1.0.0",
   "private": true,
   "type": "module",
   "files": [
@@ -15,7 +16,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "lint": "eslint .",
-    "start:prod": "node .output/server/index.mjs"
+    "start:prod": "node .output/server/index.mjs",
+    "license": "pnpm licenses ls -P --no-optional",
+    "license:gen": "pnpm --silent run license --json > public/open-source-licenses.json"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

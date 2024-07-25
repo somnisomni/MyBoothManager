@@ -32,3 +32,6 @@ coverage/
 *.njsproj
 *.sln
 *.sw?
+
+# Generated files which should not be committed to source control
+public/open-source-licenses.json
