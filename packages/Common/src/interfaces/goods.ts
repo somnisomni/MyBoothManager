@@ -1,4 +1,5 @@
 import { IImageUploadInfo } from "./base";
+import { IGoodsCategory } from "./goods-category";
 
 /* === Common === */
 export interface IGoodsCommon {
@@ -56,7 +57,14 @@ export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinatio
   stockRemaining: number;
 }
 export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCreateRequest, "boothId">>, Pick<IGoodsCreateRequest, "boothId"> { }
+export interface IGoodsCSVImportRequest  {
+  csv: string;
+}
 
 /* === Responses === */
 export interface IGoodsResponse extends IGoods { }
 export interface IGoodsAdminResponse extends IGoodsAdmin { }
+export interface IGoodsCSVImportPreviewResponse {
+  goods: Array<Pick<IGoodsAdmin, "name" | "categoryId" | "description" | "type" | "price" | "stock">>;
+  categories: Array<Pick<IGoodsCategory, "name">>;
+}

@@ -1,6 +1,7 @@
 import type { FastifyRequest } from "fastify";
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
 import { PublicGoodsService } from "@/modules/public/goods/goods.service";
+import { InvalidRequestBodyException } from "@/lib/exceptions";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
 import { UtilService } from "../util/util.service";
@@ -8,6 +9,7 @@ import { GoodsService } from "./goods.service";
 import { CreateGoodsRequestDto } from "./dto/create-goods.dto";
 import { UpdateGoodsRequestDto } from "./dto/update-goods.dto";
 import { AdminGoodsResponseDto } from "./dto/goods.dto";
+import { GoodsImportPreviewResponseDto } from "./dto/import-goods.dto";
 
 @UseGuards(AdminAuthGuard)
 @Controller("/admin/goods")
@@ -43,6 +45,13 @@ export class GoodsController {
   @Delete(":id")
   async remove(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
     return await this.goodsService.remove(+id, +boothId, authData.id);
+  }
+
+  @Post("csv/preview")
+  async previewCSVImport(@Body("csv") csv: string): Promise<GoodsImportPreviewResponseDto> {
+    if(!csv || csv.length <= 0) throw new InvalidRequestBodyException();
+
+    return await this.goodsService.previewCSVImport(csv);
   }
 
   /* SuperAdmin routes */
