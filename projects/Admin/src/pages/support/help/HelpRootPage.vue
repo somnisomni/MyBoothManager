@@ -9,6 +9,7 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-facing-decorator";
 import VueMarkdown from "vue-markdown-render";
+import { useRoute } from "vue-router";
 
 @Component({
   components: {
@@ -19,7 +20,7 @@ export default class HelpPage extends Vue {
   helpPageSource: string = "";
 
   get helpPageName() {
-    return this.$route.params.name as string ?? "index";
+    return useRoute().params.name as string ?? "index";
   }
 
   @Watch("helpPageName", { immediate: true })

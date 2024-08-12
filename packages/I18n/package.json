@@ -2,7 +2,7 @@
   "name": "@myboothmanager/i18n",
   "version": "0.6.0",
   "author": "somni <me@somni.one>",
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.7.0",
   "license": "PolyForm-Strict-1.0.0",
   "private": true
 }
