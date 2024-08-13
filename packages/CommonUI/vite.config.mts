@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from "node:url";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import dts from "vite-plugin-dts";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -11,10 +10,6 @@ export default defineConfig({
   plugins: [
     vue({ template: { transformAssetUrls } }),
     vuetify({ autoImport: true }),
-    dts({
-      insertTypesEntry: true,
-      pathsToAliases: true,
-    }),
     tsconfigPaths(),
   ],
   resolve: {

@@ -1,7 +1,10 @@
-import type { App } from "vue";
+import type { App, ComponentCustomProperties } from "vue";
 import * as C from "./components";
 import "@/styles/styles.scss";
 
+// FIXME: THIS DECLARATION SEEMS NOT PROPAGATE TO OUR SOURCE CODE FOR NOW
+// SHIT I DUNNO WHAT'S THE PROBLEM
+// Refer `src/components/goods/GoodsItem.vue` for workaround for this typing
 declare module "vue" {
   interface ComponentCustomProperties {
     $imageUrlResolver: (rawPath?: string | null) => string | null;
@@ -9,7 +12,7 @@ declare module "vue" {
 }
 
 export interface ICommonUIOptions {
-  imageUrlResolver: (rawPath?: string | null) => string | null;
+  imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
 }
 
 export default {

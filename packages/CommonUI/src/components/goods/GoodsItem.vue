@@ -64,6 +64,7 @@
 </template>
 
 <script lang="ts">
+import type { ComponentCustomProperties } from "vue";
 import { GoodsStockVisibility } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
@@ -91,6 +92,11 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: Boolean, default: false  }) readonly hideDetails!: boolean;
   @Prop({ type: String,  default: null   }) readonly forceStockVisibility?: GoodsStockVisibility | null;
   @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
+
+  // FIXME: FUCK SHIT TYPE DECLARATION IN `index.ts` IS NOT WORKING IN THIS SCOPE
+  // I DON'T KNOW WHAT'S THE PROBLEM. I TRIED EVERYTHING AT THIS MOMENT
+  // If this somewhat fixed later, simply remove this declare statement
+  declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
 
   readonly ELEVATION_NORMAL = 4;
   readonly ELEVATION_HOVER  = 8;

@@ -32,8 +32,8 @@
     "@fastify/multipart": "^8.3.0",
     "@fastify/static": "^7.0.4",
     "@myboothmanager/common": "workspace:^",
-    "@nestjs/common": "^10.4.0",
-    "@nestjs/core": "^10.4.0",
+    "@nestjs/common": "^10.4.1",
+    "@nestjs/core": "^10.4.1",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-fastify": "^10.4.0",
@@ -58,7 +58,7 @@
     "@myboothmanager/dev-shared": "workspace:^",
     "@nestjs/cli": "^10.4.4",
     "@nestjs/schematics": "^10.1.3",
-    "@nestjs/testing": "^10.4.0",
+    "@nestjs/testing": "^10.4.1",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/jest": "^29.5.12",
@@ -73,6 +73,6 @@
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "=5.5.3"
+    "typescript": "^5.5.4"
   }
 }

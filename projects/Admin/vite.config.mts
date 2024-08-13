@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 import { fileURLToPath, URL } from "node:url";
 import { execSync } from "node:child_process";
