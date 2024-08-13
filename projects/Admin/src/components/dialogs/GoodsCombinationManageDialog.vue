@@ -144,6 +144,8 @@ export default class GoodsCombinationManageDialog extends Vue {
       type: FormFieldType.CURRENCY,
       label: "세트 가격",
       allowDecimal: true,
+      step: 1000,  // for Korean won
+      min: 0,
     },
     stockVisibility: {
       type: FormFieldType.SELECT,

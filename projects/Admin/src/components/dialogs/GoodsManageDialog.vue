@@ -131,6 +131,7 @@ export default class GoodsManageDialog extends Vue {
       type: FormFieldType.CURRENCY,
       label: "가격 (단가)",
       min: 0,
+      step: 1000,  // for Korean Won
       allowDecimal: true,
       hint: "가격을 0으로 설정하면 해당 굿즈를 증정용으로 표시합니다.",
       persistentHint: true,

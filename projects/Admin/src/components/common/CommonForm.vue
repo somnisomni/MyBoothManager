@@ -3,12 +3,12 @@
     <!-- Manual slot (prepend) -->
     <slot name="prepend"></slot>
 
-    <div v-for="(field, fieldname, index) in fields"
+    <div v-for="(field, fieldName, index) in fields"
          :key="field.label"
          class="d-flex flex-row flex-nowrap justify-center align-center">
       <component v-if="isFormField(field.type)"
                  v-show="!field.hide"
-                 v-model.trim.lazy="models[fieldname]"
+                 v-model.trim.lazy="models[fieldName]"
                  :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
                  :tabindex="index + 1    /* tabindex should be started with 1 */"
                  :type="isNumericField(field.type) ? 'number' : field.type"
@@ -22,12 +22,13 @@
                  :prefix="field.type === FormFieldType.CURRENCY ? ((field as IFormFieldCurrencyOptions).currencySymbol ?? currentBoothCurrencySymbol) : field.prefix"
                  :suffix="field.suffix"
                  :min="
-                   (isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)
+                   ((isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)?.toString())
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
                  :max="
-                   (isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)
+                   ((isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)?.toString())
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
+                 :control-variant="isNumericField(field.type) ? 'stacked' : undefined"
                  :auto-grow="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).autoGrow : undefined"
                  :clearable="field.optional"
                  :disabled="field.hide || field.disabled"
@@ -40,8 +41,8 @@
                           ...(field.optional ? [] : RULE_MANDATORY),
                           ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
                  @change="() => {
-                            if(field.onChange) field.onChange(String(models[fieldname]));
-                            if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldname, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldname));
+                            if(field.onChange) field.onChange(String(models[fieldName]));
+                            if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldName, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldName));
                           }"
                  @update:modelValue="() => {
                                        if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
@@ -82,6 +83,7 @@
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField } from "vuetify/components";
+import { VNumberInput } from "vuetify/labs/VNumberInput";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { diff } from "deep-object-diff";
@@ -110,8 +112,8 @@ export enum FormFieldType {
 
 export const FORM_FIELD_TYPE_COMPONENT_MAP: Record<FormFieldType, VueComponent | string> = {
   [FormFieldType.TEXT]: markRaw(VTextField),
-  [FormFieldType.NUMBER]: markRaw(VTextField),
-  [FormFieldType.CURRENCY]: markRaw(VTextField),
+  [FormFieldType.NUMBER]: markRaw(VNumberInput),
+  [FormFieldType.CURRENCY]: markRaw(VNumberInput),
   [FormFieldType.DATE]: markRaw(VTextField),
   // [FormFieldType.TIME]: markRaw(VTextField),
   // [FormFieldType.DATETIME]: markRaw(VTextField),
@@ -267,7 +269,8 @@ export default class CommonForm extends Vue {
     ((typeof v === "string" && v.trim().length > 0)
       || (typeof v === "number" && Number.isFinite(v))
       || (v instanceof Array && v.length > 0))
-      && !!v)
+      && v !== undefined
+      && v !== null)
     || "필수로 입력해야 하는 항목입니다."];
   readonly RULE_NUMBER_PROHIBIT_NEGATIVE = [(v: number) => v >= 0 || "음수는 입력할 수 없습니다."];
 
