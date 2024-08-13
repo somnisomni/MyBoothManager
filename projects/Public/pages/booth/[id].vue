@@ -113,10 +113,10 @@ import { getUploadFileUrl } from "#imports";
 import { IntervalRunner } from "~/utils";
 
 @NuxtComponent({
-  async asyncData(nuxt) {
-    const { $publicAPI } = nuxt;
+  async asyncData(context) {
+    const { $publicAPI } = context;
 
-    const boothId = Number(useRoute().params["id"] as string);
+    const boothId = Number(context.$router.currentRoute.value.params["id"] as string);
     const boothFetchError = useState<ErrorCodes | null>("boothFetchError", () => null);
 
     if(!boothId || boothId <= 0) {
@@ -273,7 +273,7 @@ export default class IndividualBoothPage extends Vue {
 
   @Watch("autoRefreshEnabled")
   onAutoRefreshEnabledChanged(value: boolean) {
-    if(value) {
+    if(!this.boothFetchError && value) {
       if(this.booth && this.booth.status.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
         this.dataPollingRunner = new IntervalRunner(this.fetchData, this.dataPollingInterval, false);
 
