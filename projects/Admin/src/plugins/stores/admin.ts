@@ -1,7 +1,7 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
-import { ref, type ToRefs } from "vue";
-import { type IAccount, type IBooth, type IBoothMember, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { computed, ref, type ToRefs } from "vue";
+import { CURRENCY_INFO, CURRENCY_SYMBOL_TO_CODE_MAP, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { useAdminAPIStore } from "./api";
 
@@ -28,6 +28,9 @@ const useAdminStore = defineStore("admin", () => {
     goodsCategories: ref(null),
     goodsOrders: ref(null),
   };
+
+  // TODO: Ditch symbol to code mapping after altering the booth DB model
+  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[CURRENCY_SYMBOL_TO_CODE_MAP[currentBooth.booth.value?.currencySymbol ?? "₩"]]);
 
   const isBoothDataLoaded = ref<boolean>(false);
   const isAllDataLoaded = ref<boolean>(false);
@@ -62,6 +65,7 @@ const useAdminStore = defineStore("admin", () => {
   return {
     currentAccount,
     currentBooth,
+    currentBoothCurrencyInfo,
     isBoothDataLoaded,
     isAllDataLoaded,
     isFirstLoad,
