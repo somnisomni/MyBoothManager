@@ -56,20 +56,22 @@ export default class BoothInfoSection extends Vue {
   }
 
   get stringifiedOpenDates() {
-    let dates: Array<string> | undefined;
-
     if(this.boothData.fair && this.boothData.datesOpenInFair) {
-      dates = this.boothData.datesOpenInFair
+      const dates = this.boothData.datesOpenInFair
         .map((date) => new Date(date).toLocaleDateString())
         .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+      return dates.join(", ");
     } else if(this.boothData.dateOpen && this.boothData.dateClose) {
-      dates = [
+      const dates = [
         new Date(this.boothData.dateOpen).toLocaleDateString(),
         new Date(this.boothData.dateClose).toLocaleDateString(),
       ];
+
+      return dates.join(" ~ ");
     }
 
-    return dates?.join(", ");
+    return null;
   }
 }
 </script>
