@@ -1,3 +1,4 @@
+import { SupportedCurrencyCodes } from "@/utils/currency";
 import { IFairInfo, IImageUploadInfo } from "./base";
 
 /* === Common === */
@@ -6,14 +7,17 @@ interface IBoothCommon {
   ownerId: number;
   fairId?: number | null;
   name: string;
-  currencySymbol: string;
+  /** @deprecated Use `currencyCode` instead. */ currencySymbol: string;
+  currencyCode: SupportedCurrencyCodes;
   description?: string | null;
+  noticeContent?: string | null;
   boothNumber?: string | null;
   status: IBoothStatus;
   location?: string | null; // For custom fair
   dateOpen?: Date | null;   // For custom fair
   dateClose?: Date | null;  // For custom fair
   datesOpenInFair?: Array<Date> | null;  // Only with fair
+  relatedLinks?: Array<IBoothRelatedLink>;
 }
 
 export interface IBoothStatus {
@@ -25,6 +29,11 @@ export interface IBoothStatus {
 export interface IBoothExpense {
   name: string;
   price: number;
+}
+
+export interface IBoothRelatedLink {
+  title: string;
+  url: string;
 }
 
 /* === Enums === */
@@ -58,11 +67,12 @@ export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "sta
 }
 
 /* === Requests === */
-export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status" | "datesOpenInFair"> { }
-export interface IBoothCreateWithFairRequest extends Omit<IBoothCommon, "id" | "ownerId" | "status" | "location" | "dateOpen" | "dateClose"> { }
-export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol">> { }
-export interface IBoothStatusUpdateRequest extends Partial<IBoothStatus> { }
+export type IBoothCreateRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "datesOpenInFair" | "relatedLinks">;
+export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
+export type IBoothUpdateRequest = Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol" | "currencyCode">>;
+export type IBoothNoticeUpdateRequest = Pick<IBoothCommon, "noticeContent">;
+export type IBoothStatusUpdateRequest = Partial<IBoothStatus>;
 
 /* === Responses === */
-export interface IBoothResponse extends Omit<IBooth, "fairId"> { }
-export interface IBoothAdminResponse extends IBoothAdmin { }
+export type IBoothResponse = Omit<IBooth, "fairId">;
+export type IBoothAdminResponse = IBoothAdmin;

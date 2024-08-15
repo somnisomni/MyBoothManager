@@ -13,7 +13,7 @@ export interface ICurrencyInfo {
   /**
    * ISO 4217 currency code (e.g. "USD" for US dollar)
    */
-  code: string;
+  code: SupportedCurrencyCodes;
 
   /**
    * Unicode symbol (e.g. "$" for US dollar)

@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
-  "include": ["env.d.ts", "./src/**/*.ts"],
+  "include": ["env.d.ts", "./src/**/*.ts", "./scripts/**/*.ts"],
   "exclude": ["./dist"],
   "compilerOptions": {
     "composite": true,

@@ -74,7 +74,7 @@ export const down: Migration = async ({ context }) => {
     type: DataTypes.ENUM("on_sale", "pause", "sold_out"),
     allowNull: false,
     defaultValue: "on_sale",
-  }),
+  });
   await context.addColumn(Goods.name, "statusReason", {
     type: DataTypes.STRING(1024),
     allowNull: true,

@@ -57,7 +57,7 @@
 <script lang="ts">
 import { reactive, ref , computed } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref, Setup } from "vue-facing-decorator";
-import { CURRENCY_INFO, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
+import { CURRENCY_INFO, CURRENCY_SYMBOL_TO_CODE_MAP, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
 import moment from "moment";
 import { defineStore } from "pinia";
 import deepClone from "clone-deep";
@@ -78,7 +78,6 @@ const momentFormat = (date: Date) => moment(date).format("YYYY-MM-DD");
 
 const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
   const _fairId = ref<number | null>(null);
-
   const availableFairList = ref<Array<IFairResponse>>([]);
   const isCurrentBoothFairPassed = computed(() => useAdminStore().currentBooth.booth?.fair && (availableFairList.value.findIndex((fair) => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0));
 
@@ -88,6 +87,7 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
     location: "",
     boothNumber: "",
     currencySymbol: "₩",
+    currencyCode: "KRW",
 
     dateOpen: momentFormat(new Date()),
     dateClose: momentFormat(new Date()),
@@ -261,6 +261,7 @@ export default class BoothManageDialog extends Vue {
         location: boothData.fair?.location ?? boothData.location,
         boothNumber: boothData.boothNumber,
         currencySymbol: boothData.currencySymbol,
+        currencyCode: boothData.currencyCode,
         dateOpen: boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined,
         dateClose: boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined,
         datesOpenInFair: deepClone(boothData.datesOpenInFair),
@@ -273,6 +274,7 @@ export default class BoothManageDialog extends Vue {
         location: "",
         boothNumber: "",
         currencySymbol: "₩",
+        currencyCode: "KRW",
         dateOpen: momentFormat(new Date()),
         dateClose: momentFormat(new Date()),
         datesOpenInFair: [],
@@ -319,6 +321,7 @@ export default class BoothManageDialog extends Vue {
         name: this.formModels.name,
         description: this.formModels.description,
         currencySymbol: this.formModels.currencySymbol,
+        currencyCode: CURRENCY_SYMBOL_TO_CODE_MAP[this.formModels.currencySymbol],
         boothNumber: this.formModels.boothNumber,
       } as IBoothCreateRequest | IBoothCreateWithFairRequest;
 

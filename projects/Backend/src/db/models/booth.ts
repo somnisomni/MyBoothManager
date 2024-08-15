@@ -1,4 +1,4 @@
-import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest } from "@myboothmanager/common";
+import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest, SupportedCurrencyCodes, IBoothRelatedLink } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import { DateTime } from "luxon";
@@ -49,10 +49,18 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Column(DataTypes.STRING(256))
   declare name: string;
 
+  /**
+   * @deprecated Use `currencyCode` instead. This field is kept for backward compatibility and will be removed in the future.
+   */
   @AllowNull(false)
   @Default("₩")
   @Column(DataTypes.STRING(8))
   declare currencySymbol: string;
+
+  @AllowNull(false)
+  @Default("KRW")
+  @Column(DataTypes.STRING(8))
+  declare currencyCode: SupportedCurrencyCodes;
 
   @AllowNull
   @Default(null)
@@ -63,6 +71,11 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Default(null)
   @Column(DataTypes.STRING(512))
   declare location?: string | null;
+
+  @AllowNull
+  @Default(null)
+  @Column(DataTypes.TEXT)
+  declare noticeContent?: string | null;
 
   @AllowNull
   @Default(null)
@@ -109,6 +122,11 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Default(false)
   @Column(DataTypes.BOOLEAN)
   declare statusContentPublished: boolean;
+
+  @AllowNull(true)
+  @Default([])
+  @Column(DataTypes.JSON)
+  declare relatedLinks: IBoothRelatedLink[];
 
   @AllowNull
   @Default(null)
