@@ -57,12 +57,13 @@
 <script lang="ts">
 import { reactive, ref , computed } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref, Setup } from "vue-facing-decorator";
-import { ErrorCodes, currencySymbolInfo, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
+import { CURRENCY_INFO, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
 import moment from "moment";
 import { defineStore } from "pinia";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
+import { useLocalStore } from "@/plugins/stores/local";
 import AdminAPI from "@/lib/api-admin";
 import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
@@ -152,9 +153,9 @@ export default class BoothManageDialog extends Vue {
       type: FormFieldType.SELECT,
       label: "통화 기호",
       get items() {
-        return Object.keys(currencySymbolInfo).map((key) => ({
-          ...currencySymbolInfo[key],
-          name: `${currencySymbolInfo[key].name} (${currencySymbolInfo[key].symbol})`,
+        return Object.values(CURRENCY_INFO).map((info) => ({
+          name: `${info.nameLocalized[useLocalStore().settings.language ?? "ko"]} (${info.symbol})`,
+          symbol: info.symbol,
         }));
       },
       itemTitle: "name",

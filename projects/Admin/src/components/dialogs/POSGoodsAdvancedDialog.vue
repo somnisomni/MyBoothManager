@@ -58,7 +58,6 @@
 </template>
 
 <script lang="ts">
-import { currencySymbolInfo } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
 import deepClone from "clone-deep";
 import { POSOrderSimulationLayer, type IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
@@ -99,14 +98,7 @@ export default class POSGoodsAdvancedDialog extends Vue {
   }
 
   get priceStep(): number {
-    switch(this.currencySymbol) {
-      case currencySymbolInfo["KRW"].symbol:
-        return 1000;
-      case currencySymbolInfo["JPY"].symbol:
-        return 100;
-      default:
-        return 1;
-    }
+    return useAdminStore().currentBoothCurrencyInfo.step;
   }
 
   @Watch("orderDataCopied.price")
