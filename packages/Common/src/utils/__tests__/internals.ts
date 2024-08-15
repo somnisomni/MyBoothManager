@@ -5,6 +5,7 @@ const testBooth: IBoothAdmin = {
   id: 1234,
   ownerId: 5678,
   currencySymbol: "$",
+  currencyCode: "USD",
   name: "TEST BOOTH",
   status: { status: BoothStatus.OPEN },
   location: "SOMEWHERE",

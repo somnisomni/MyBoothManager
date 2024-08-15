@@ -13,7 +13,7 @@
         </VSlideGroupItem>
 
         <VSlideGroupItem v-for="day in orderHistoryDays.asArray()"
-                         :key="day"
+                         :key="day.getTimestamp()"
                          :value="day"
                          v-slot="{ isSelected, toggle }">
           <VChip class="h-auto mx-1"
@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import type { ChartOptions, ChartData, Point } from "chart.js";
-import { currencySymbolInfo, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import ChartJS from "chart.js/auto";
 import "chartjs-adapter-moment";
 import { Component, Vue } from "vue-facing-decorator";
@@ -141,7 +141,7 @@ export default class AnalyticsPage extends Vue {
           autoSkip: true,
           autoSkipPadding: 10,
           callback: (value) => `${this.currencySymbol}${value.toLocaleString()}`,
-          stepSize: (this.currencySymbol === currencySymbolInfo["KRW"].symbol) ? 10000 : 10,
+          stepSize: useAdminStore().currentBoothCurrencyInfo.step,
         },
       },
     },
