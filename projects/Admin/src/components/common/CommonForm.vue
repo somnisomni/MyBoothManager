@@ -29,6 +29,7 @@
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :control-variant="isNumericField(field.type) ? 'stacked' : undefined"
+                 :rows="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).rows : undefined"
                  :auto-grow="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).autoGrow : undefined"
                  :clearable="field.optional"
                  :disabled="field.hide || field.disabled"
@@ -182,6 +183,7 @@ export interface IFormFieldCurrencyOptions extends IFormFieldNumericOptions {
 }
 
 export interface IFormFieldTextareaOptions extends IFormFieldOptions {
+  rows?: number;
   autoGrow?: boolean;
 }
 

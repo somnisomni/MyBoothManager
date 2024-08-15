@@ -102,10 +102,12 @@ export default class GoodsManageDialog extends Vue {
       placeholder: "겁나 귀여운 코하루 아크릴 스탠드",
     },
     description: {
-      type: FormFieldType.TEXT,
+      type: FormFieldType.TEXTAREA,
       label: "굿즈 설명",
       placeholder: "1/10 비율 등신대 아크릴 스탠드",
       optional: true,
+      autoGrow: true,
+      rows: 3,
     },
     categoryId: {
       type: FormFieldType.SELECT,

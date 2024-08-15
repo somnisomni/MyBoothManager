@@ -120,10 +120,12 @@ export default class GoodsCombinationManageDialog extends Vue {
       placeholder: "귀여운 코롯토 세트",
     },
     description: {
-      type: FormFieldType.TEXT,
+      type: FormFieldType.TEXTAREA,
       optional: true,
       label: "세트 설명",
       placeholder: "귀엽고 맛있고 깨물어주고 싶은 코롯토를 세트로 사면 할인!",
+      autoGrow: true,
+      rows: 3,
     },
     categoryId: {
       type: FormFieldType.SELECT,

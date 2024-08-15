@@ -13,7 +13,7 @@
     <div>
       <p v-if="(data as Goods).type" class="text-subtitle-2 text-center font-weight-light">{{ (data as Goods).type }}</p>
       <p class="text-h5 text-center font-weight-bold">{{ data.name }}</p>
-      <p v-if="data.description" class="text-subtitle-1 text-center font-weight-normal">{{ data.description }}</p>
+      <p v-if="data.description" class="text-subtitle-1 text-center font-weight-normal" style="white-space: pre-line;">{{ data.description }}</p>
       <p v-if="data.ownerMemberIds && data.ownerMemberIds.length > 0 && ownerMembersData && ownerMembersData.length > 0"
          class="text-subtitle-2 text-center my-2">
         <span>by </span>
