@@ -32,11 +32,11 @@ COPY --from=build /prod/backend .
 
 # DB migration notice
 RUN printf "\n\n  *** DB MIGRATION WILL BE EXECUTED DURING CONTAINER STARTUP ***  \n"; \
-  printf " - You can undo migration manually by running 'yarn workspace @myboothmanager/backend migrate:prod down' if there's any issue. \n"; \
-  printf " - After undoing migration, Use 'start:prod:no-migration' package.json script to run production without DB migration. \n\n\n";
+  printf " - You can undo migration manually by running 'pnpm -F @myboothmanager/backend migrate:prod down' if there's any issue. \n"; \
+  printf " - After undoing migration, just use 'start:prod' package.json script to run the backend. \n\n\n";
 
 # Expose port
 EXPOSE 31111
 
 # Start server
-ENTRYPOINT ["/bin/sh", "-c", "pnpm migrate:prod && pnpm start:prod"]
+ENTRYPOINT ["/bin/sh", "-c", "pnpm migrate:prod up && pnpm start:prod"]
