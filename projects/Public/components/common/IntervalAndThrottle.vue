@@ -37,6 +37,8 @@ export default class IntervalAndThrottle extends Vue {
   unmounted() {
     this.intervalRunner?.dispose();
     this.intervalRunner = null;
+
+    console.debug("Interval runner disposed");
   }
 
   startThrottle() {
