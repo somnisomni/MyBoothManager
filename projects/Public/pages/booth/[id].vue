@@ -25,32 +25,36 @@
       <SharePanel :boothData="booth"
                   showHomeButton />
 
+      <DataUpdateFloatingButton v-if="booth.status.status !== BoothStatus.CLOSE"
+                                :interval="60"
+                                :fetchCallback="async () => await fetchData()" />
+
       <BoothInfoSection :boothData="booth" />
 
       <VContainer class="adjusted-vcontainer">
         <div>
-          <div v-if="booth.status.status !== BoothStatus.CLOSE"
+          <!-- <div v-if="booth.status.status !== BoothStatus.CLOSE"
                class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
             <VCheckbox v-model="autoRefreshEnabled"
                        hide-details
                        class="flex-grow-0"
                        label="정보 자동 업데이트" />
 
-            <VBtn variant="outlined"
-                  size="large"
-                  prepend-icon="mdi-refresh"
-                  class="ml-4"
-                  text="새로고침"
-                  :disabled="isDataLoading"
-                  :loading="isDataLoading"
-                  @click="dataPollingRunner?.runImmediately()" />
+            <ThrottledButton variant="outlined"
+                             size="large"
+                             prepend-icon="mdi-refresh"
+                             class="ml-4"
+                             :throttle="5"
+                             :callback="async () => { await fetchData(); dataPollingRunner?.updateLastExecutedTimestampToCurrent(); }">
+              <span>새로고침</span>
+            </ThrottledButton>
           </div>
 
           <VExpandTransition>
             <p v-if="dataPollingRunner"
                class="text-right text-primary"
                style="opacity: 0.5">※ 부스 정보가 {{ dataPollingInterval / 1000 }}초마다 자동 업데이트됩니다.</p>
-          </VExpandTransition>
+          </VExpandTransition> -->
         </div>
 
         <VSpacer class="my-8" />
@@ -108,9 +112,8 @@
 <script lang="ts">
 import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
-import { Vue, Watch } from "vue-facing-decorator";
+import { Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
-import { IntervalRunner } from "~/utils";
 
 @NuxtComponent({
   async asyncData(context) {
@@ -183,10 +186,6 @@ export default class IndividualBoothPage extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly ErrorCodes = ErrorCodes;
 
-  isDataLoading: boolean = false;
-  dataPollingRunner: IntervalRunner | null = null;
-  readonly dataPollingInterval: number = 60000; // microseconds
-
   goodsItemDetailsDialogOpen: boolean = false;
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
   goodsItemDetailsDialogOwnerMembers: IBoothMember[] = [];
@@ -219,9 +218,6 @@ export default class IndividualBoothPage extends Vue {
   set autoRefreshEnabled(value: boolean) { useLocalStore().boothPageSettings.enableAutoRefresh = value; }
 
   mounted() {
-    /* *** Force call auto refresh changed handler *** */
-    this.onAutoRefreshEnabledChanged(this.autoRefreshEnabled);
-
     /* *** Set last visited booth id *** */
     useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
   }
@@ -266,38 +262,9 @@ export default class IndividualBoothPage extends Vue {
     });
   }
 
-  unmounted() {
-    /* *** Clear data polling timer *** */
-    this.stopDataPolling();
-  }
-
-  @Watch("autoRefreshEnabled")
-  onAutoRefreshEnabledChanged(value: boolean) {
-    if(!this.boothFetchError && value) {
-      if(this.booth && this.booth.status.status !== BoothStatus.CLOSE && this.autoRefreshEnabled) {
-        this.dataPollingRunner = new IntervalRunner(this.fetchData, this.dataPollingInterval, false);
-
-        console.info("Start polling");
-      }
-    } else {
-      this.stopDataPolling();
-    }
-  }
-
   async fetchData() {
     /* *** Refresh data *** */
-    this.isDataLoading = true;
     await refreshNuxtData(Object.values(this.FETCH_KEYS ?? {}));
-    this.isDataLoading = false;
-  }
-
-  stopDataPolling() {
-    if(this.dataPollingRunner) {
-      this.dataPollingRunner.dispose();
-      this.dataPollingRunner = null;
-
-      console.info("Stop polling");
-    }
   }
 
   openGoodsItemDetailsDialog(id: number, isCombination: boolean = false) {

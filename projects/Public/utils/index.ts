@@ -8,28 +8,48 @@ export class IntervalRunner {
   private disposed: boolean = false;
   private requestId: number | null = null;
   private lastExecutedTimestamp: number = 0;
+  private lastSecondTickTimestamp: number = 0;
 
   constructor(
-    private readonly callback: () => void,
-    private readonly interval: number = 1000,
-    private readonly immediate: boolean = true,
+    private readonly options: {
+      callback: () => void | Promise<void>,
+      onSecondTick?: (remainingSeconds: number) => void,
+      interval?: number,  // in seconds
+    },
+    immediate: boolean = true,
   ) {
-    if(!this.immediate) {
-      this.lastExecutedTimestamp = Date.now();
+    if(!immediate) {
+      this.lastExecutedTimestamp = this.lastSecondTickTimestamp = Date.now();
     }
 
     this.run();
   }
 
+  private get normalizedOptions() {
+    return {
+      onSecondTick: () => {},
+      interval: 1,
+      ...this.options,
+    } as Required<typeof this.options>;
+  }
+
   public run() {
     if(this.disposed) return;
 
-    this.requestId = window.requestAnimationFrame(() => {
+    this.requestId = window.requestAnimationFrame(async () => {
       const now = Date.now();
+      const intervalMs = this.normalizedOptions.interval * 1000;
 
-      if(this.lastExecutedTimestamp + this.interval <= now) {
+      if(this.lastSecondTickTimestamp + 1000 <= now) {
+        const remainingSeconds = Math.ceil((this.lastExecutedTimestamp + intervalMs - now) / 1000);
+
+        this.normalizedOptions.onSecondTick(remainingSeconds);
+        this.lastSecondTickTimestamp = now;
+      }
+
+      if(this.lastExecutedTimestamp + intervalMs <= now) {
+        await this.normalizedOptions.callback();
         this.lastExecutedTimestamp = now;
-        this.callback();
       }
 
       this.run();
@@ -37,7 +57,11 @@ export class IntervalRunner {
   }
 
   public runImmediately() {
-    this.lastExecutedTimestamp = 0;
+    this.lastExecutedTimestamp = this.lastSecondTickTimestamp = 0;
+  }
+
+  public updateLastExecutedTimestampToCurrent() {
+    this.lastExecutedTimestamp = this.lastSecondTickTimestamp = Date.now();
   }
 
   public dispose() {
