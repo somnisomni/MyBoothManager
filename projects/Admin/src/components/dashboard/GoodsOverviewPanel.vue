@@ -1,46 +1,113 @@
 <template>
-  <DashboardPanel title="굿즈 현황">
+  <DashboardPanel title="굿즈 재고 및 판매 현황">
     <VContainer class="flex-column">
       <VRow>
         <VCol>
-          <span>총 재고 개수: {{ goodsOverviewData.totalSumStockCount.toLocaleString() }}개</span>
+          <VSheet class="mx-1"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2 d-flex flex-column align-center">
+              <span>유효 주문 기록 개수</span>
+              <span class="text-h4 font-weight-bold">{{ validRecordedOrdersCount.toLocaleString() }}개</span>
+            </VLayout>
+          </VSheet>
         </VCol>
+
         <VCol>
-          <span>남아있는 재고 개수: {{ goodsOverviewData.remainingSumStockCount.toLocaleString() }}개</span>
+          <VSheet class="mx-1"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2 d-flex flex-column align-center">
+              <span>판매가 기록된 재고 개수</span>
+              <span class="text-h4 font-weight-bold">{{ totalSoldStockCount.toLocaleString() }}개</span>
+            </VLayout>
+          </VSheet>
+        </VCol>
+
+        <VCol>
+          <VSheet class="mx-1"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2 d-flex flex-column align-center">
+              <span>총 판매 수익</span>
+              <span class="text-h4 font-weight-bold">{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
+            </VLayout>
+          </VSheet>
         </VCol>
       </VRow>
-      <VRow>
+
+      <VRow style="opacity: 0.5825">
         <VCol>
-          <span>판매 개수: {{ goodsOverviewData.totalSumSoldCount.toLocaleString() }}개</span>
+          <VSheet class="mx-1"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2 d-flex flex-column align-center">
+              <span>전체 굿즈 재고 개수/가치</span>
+              <span class="text-h4 font-weight-bold">{{ totalGoodsInitialStockCount.toLocaleString() }}개</span>
+              <span class="text-h6 font-weight-bold">{{ currencySymbol }}{{ totalGoodsWorthByInitialStock.toLocaleString() }}</span>
+            </VLayout>
+          </VSheet>
         </VCol>
+
         <VCol>
-          <span>???</span>
+          <VSheet class="mx-1"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2 d-flex flex-column align-center">
+              <span>남은 굿즈 재고 개수/가치</span>
+              <span class="text-h4 font-weight-bold">{{ totalGoodsRemainingStockCount.toLocaleString() }}개</span>
+              <span class="text-h6 font-weight-bold">{{ currencySymbol }}{{ totalGoodsWorthByRemainingStock.toLocaleString() }}</span>
+            </VLayout>
+          </VSheet>
         </VCol>
-      </VRow>
-      <VRow>
+
         <VCol>
-          <span>총 재고 가치: {{ currencySymbol }}{{ goodsOverviewData.totalSumStockValue.toLocaleString() }}</span>
-        </VCol>
-        <VCol>
-          <span>현재까지 판매된 재고 가치: {{ currencySymbol }}{{ goodsOverviewData.totalSumSoldValue.toLocaleString() }}</span>
+          <VSheet class="mx-1 text-center"
+                  variant="outlined"
+                  @click.prevent>
+            <VLayout class="px-2">
+              <div v-if="!isRemainingStockMismatchWithOrderHistory"
+                   class="d-flex flex-column align-center text-success">
+                <VIcon icon="mdi-check-circle-outline"
+                      size="x-large" />
+                <span class="mt-2" style="word-break: keep-all; font-size: 0.9em; line-height: 1.2;"> 판매 기록과 등록된 굿즈들의 재고 개수 차이가 일치함</span>
+              </div>
+              <div v-else
+                   class="d-flex flex-column align-center text-warning">
+                <VIcon icon="mdi-alert-outline"
+                      size="x-large" />
+                <span class="mt-2" style="word-break: keep-all; font-size: 0.9em; line-height: 1.2;"> 판매 기록과 등록된 굿즈들의 재고 개수 차이가 일치하지 않음
+                  <VBtn icon="mdi-help-circle"
+                        size="x-small"
+                        variant="text"
+                        @click="stockMismatchDialogShown = true" />
+                </span>
+              </div>
+            </VLayout>
+          </VSheet>
         </VCol>
       </VRow>
     </VContainer>
+
+    <CommonDialog v-model="stockMismatchDialogShown"
+                  dialogTitle="굿즈 재고 개수 미일치 안내"
+                  dialogPrimaryText="닫기"
+                  :dialogCancelText="null"
+                  @primary="stockMismatchDialogShown = false">
+      <p>전체 굿즈 재고 개수에서 남은 굿즈 재고 개수를 뺀 값과 판매가 기록된 재고 개수가 서로 다르면 이 경고가 표시됩니다.</p><br />
+
+      <p>판매 수익 계산이 부정확해지는 등 문제가 발생할 수 있어 <strong>개별 굿즈의 현재 재고 개수를 굿즈 관리 페이지에서 직접 수정하는 것은 권장하지 않습니다.</strong></p>
+      <!-- <p>만약 굿즈가 판매는 되었지만 기록이 누락된 건이 있다면, 잠시 부스를 운영 상태로 전환한 후 POS 페이지에서 누락된 만큼 판매 기록을 생성할 수도 있습니다.</p> -->
+    </CommonDialog>
   </DashboardPanel>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminOrderStore } from "@/plugins/stores/order-utils";
+import { useAdminGoodsStore } from "@/plugins/stores/goods-utils";
 import DashboardPanel from "./DashboardPanel.vue";
-
-interface IGoodsOverviewData {
-  totalSumStockCount: number;
-  remainingSumStockCount: number;
-  totalSumStockValue: number;
-  totalSumSoldCount: number;
-  totalSumSoldValue: number;
-}
 
 @Component({
   components: {
@@ -48,28 +115,37 @@ interface IGoodsOverviewData {
   },
 })
 export default class GoodsOverviewPanel extends Vue {
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
-  get goodsOverviewData(): IGoodsOverviewData {
-    const data: IGoodsOverviewData = {
-      totalSumStockCount: 0,
-      remainingSumStockCount: 0,
-      totalSumStockValue: 0,
-      totalSumSoldCount: 0,
-      totalSumSoldValue: 0,
-    };
+  @Setup(() => useAdminOrderStore().validRecordedOrdersCount)
+  declare readonly validRecordedOrdersCount: number;
 
-    for(const goods of Object.values(useAdminStore().currentBooth.goods ?? {})) {
-      data.totalSumStockCount += Number(goods.stock.initial);
-      data.remainingSumStockCount += Number(goods.stock.remaining);
-      data.totalSumStockValue += Number(goods.price) * Number(goods.stock.initial);
-      data.totalSumSoldCount += Number(goods.stock.initial) - Number(goods.stock.remaining);
-      data.totalSumSoldValue += Number(goods.price) * (Number(goods.stock.initial) - Number(goods.stock.remaining));
-    }
+  @Setup(() => useAdminOrderStore().totalSoldStockCount)
+  declare readonly totalSoldStockCount: number;
 
-    return data;
+  @Setup(() => useAdminOrderStore().totalMergedRevenue)
+  declare readonly totalMergedRevenue: number;
+
+  @Setup(() => useAdminGoodsStore().totalGoodsInitialStockCount)
+  declare readonly totalGoodsInitialStockCount: number;
+
+  @Setup(() => useAdminGoodsStore().totalGoodsWorthByInitialStock)
+  declare readonly totalGoodsWorthByInitialStock: number;
+
+  @Setup(() => useAdminGoodsStore().totalGoodsRemainingStockCount)
+  declare readonly totalGoodsRemainingStockCount: number;
+
+  @Setup(() => useAdminGoodsStore().totalGoodsWorthByRemainingStock)
+  declare readonly totalGoodsWorthByRemainingStock: number;
+
+  @Setup(() => useAdminGoodsStore().totalGoodsStockDifference)
+  declare readonly totalGoodsStockDifference: number;
+
+  stockMismatchDialogShown: boolean = false;
+
+  get isRemainingStockMismatchWithOrderHistory(): boolean {
+    return this.totalGoodsStockDifference !== this.totalSoldStockCount;
   }
 }
 </script>
