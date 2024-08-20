@@ -17,9 +17,9 @@
       <p v-if="data.ownerMemberIds && data.ownerMemberIds.length > 0 && ownerMembersData && ownerMembersData.length > 0"
          class="text-subtitle-2 text-center my-2">
         <span>by </span>
-        <span v-for="member in ownerMembersData"
+        <span v-for="(member, index) in ownerMembersData"
               :key="member.id">
-          <span v-if="member.id !== data.ownerMemberIds[0]">, </span>
+          <span v-if="index !== 0">, </span>
 
           <BoothMemberAvatar v-if="member.avatarImage"
                              :avatarImage="member.avatarImage"
