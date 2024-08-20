@@ -9,8 +9,8 @@
                  variant="outlined"
                  @click.prevent>
             <VLayout class="px-2 d-inline-flex flex-column align-center">
-              <small>소진된 총 재고 수량</small>
-              <span class="text-h5 font-weight-bold">{{ totalSaleCount.toLocaleString() }}개</span>
+              <small>유효 주문 기록 개수</small>
+              <span class="text-h5 font-weight-bold">{{ validRecordedOrdersCount.toLocaleString() }}개</span>
             </VLayout>
           </VSheet>
           <VDivider class="my-1 my-sm-0 mx-2 w-100 w-sm-auto" :vertical="smAndUp" />
@@ -18,8 +18,17 @@
                  variant="outlined"
                  @click.prevent>
             <VLayout class="px-2 d-inline-flex flex-column align-center">
-              <small>총 매출액</small>
-              <span class="text-h5 font-weight-bold">{{ currencySymbol }}{{ totalSaleRevenue.toLocaleString() }}</span>
+              <small>판매된 재고 개수</small>
+              <span class="text-h5 font-weight-bold">{{ totalSoldStockCount.toLocaleString() }}개</span>
+            </VLayout>
+          </VSheet>
+          <VDivider class="my-1 my-sm-0 mx-2 w-100 w-sm-auto" :vertical="smAndUp" />
+          <VSheet class="mx-1"
+                 variant="outlined"
+                 @click.prevent>
+            <VLayout class="px-2 d-inline-flex flex-column align-center">
+              <small>총 판매 수익</small>
+              <span class="text-h5 font-weight-bold">{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
             </VLayout>
           </VSheet>
         </VLayout>
@@ -57,13 +66,13 @@
 
 <script lang="ts">
 import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
-import { GoodsOrderStatus } from "@myboothmanager/common";
 import { useDisplay } from "vuetify";
 import { ref } from "vue";
 import { type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/plugins/stores/admin";
-import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
+import { useAdminOrderStore } from "@/plugins/stores/order-utils";
+import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDialog.vue";
 
 @Component({
@@ -73,6 +82,24 @@ import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDia
   },
 })
 export default class GoodsOrdersListPage extends Vue {
+  @Setup(() => useDisplay().smAndUp)
+  declare readonly smAndUp: boolean;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
+
+  @Setup(() => useAdminOrderStore().validRecordedOrdersCount)
+  declare readonly validRecordedOrdersCount: number;
+
+  @Setup(() => useAdminOrderStore().totalSoldStockCount)
+  declare readonly totalSoldStockCount: number;
+
+  @Setup(() => useAdminOrderStore().totalMergedRevenue)
+  declare readonly totalMergedRevenue: number;
+
+  @Ref("goodsOrderListView")
+  readonly goodsOrderListView!: GoodsOrderListView;
+
   dataLoading: boolean = true;
 
   filterSettingDialogShown: boolean = false;
@@ -80,12 +107,6 @@ export default class GoodsOrdersListPage extends Vue {
     targetGoodsIds: [],
     onlyShowOrdersWithFreeGoods: false,
   } as IGoodsOrderFilterSetting);
-
-  @Setup(() => useDisplay().smAndUp)
-  readonly smAndUp!: boolean;
-
-  @Ref("goodsOrderListView")
-  readonly goodsOrderListView!: GoodsOrderListView;
 
   async mounted() {
     await this.onRefreshClick();
@@ -120,21 +141,6 @@ export default class GoodsOrdersListPage extends Vue {
 
   get boothGoodsOrdersLength(): number {
     return Object.keys(this.boothGoodsOrders).length;
-  }
-
-  get totalSaleCount(): number {
-    return Object.values(this.boothGoodsOrders).filter((order) => order.status !== GoodsOrderStatus.CANCELED).reduce((acc, cur) =>
-      acc + cur.order.reduce((orderAcc, orderCur) =>
-        orderAcc + (orderCur.cId ? orderCur.quantity * (orderCur.combinedGoods ?? []).length : orderCur.quantity), 0), 0);
-  }
-
-  get totalSaleRevenue(): number {
-    return Object.values(this.boothGoodsOrders).filter((order) => order.status !== GoodsOrderStatus.CANCELED).reduce((acc, cur) =>
-      acc + Number(cur.totalRevenue), 0);
-  }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   async onRefreshClick() {

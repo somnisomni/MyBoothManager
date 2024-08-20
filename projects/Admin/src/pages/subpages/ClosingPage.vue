@@ -5,23 +5,23 @@
       <h2>굿즈 판매 목록</h2>
 
       <ul style="list-style: none">
-        <li v-for="[ combinationId, data ] in goodsCombinationRevenueMap"
+        <li v-for="[ combinationId, data ] in combinationRevenueMap"
             :key="combinationId"
             class="d-flex justify-space-between">
           <span><small class="d-inline-block text-right mr-1" style="width: 4em; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> <VIcon icon="mdi-set-all" /> {{ data.name }}</span>
-          <span>{{ currencySymbol }}{{ data.total.toLocaleString() }} </span>
+          <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }} </span>
         </li>
 
         <li v-for="[ goodsId, data ] in goodsRevenueMap"
             :key="goodsId"
             class="d-flex justify-space-between">
           <span><small class="d-inline-block text-right mr-1" style="width: 4em; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> {{ data.name }}</span>
-          <span>{{ currencySymbol }}{{ data.total.toLocaleString() }}</span>
+          <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }}</span>
         </li>
 
         <li class="d-flex justify-space-between font-weight-bold">
           <span><small class="d-inline-block text-right mr-1" style="width: 4em;"></small> 총 판매 수익</span>
-          <span>{{ currencySymbol }}{{ totalRevenue.toLocaleString() }}</span>
+          <span>{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
         </li>
       </ul>
     </div>
@@ -48,10 +48,10 @@
               <span>{{ currencySymbol }}{{ revenue.toLocaleString() }}</span>
             </li>
 
-            <li v-if="Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue) !== 0"
+            <li v-if="Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalMergedRevenue) !== 0"
                 class="d-flex justify-space-between">
               <span>잔여 금액 <small>(멤버 미지정 굿즈 수익 총합)</small></span>
-              <span>{{ currencySymbol }}{{ Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalRevenue).toLocaleString() }}</span>
+              <span>{{ currencySymbol }}{{ Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalMergedRevenue).toLocaleString() }}</span>
             </li>
           </ul>
         </VTabsWindowItem>
@@ -62,7 +62,7 @@
                 :key="member.id"
                 class="d-flex justify-space-between">
               <span>{{ member.name }}</span>
-              <span>{{ currencySymbol }}{{ (totalRevenue / Object.values(currentBooth.boothMembers!).length).toLocaleString() }}</span>
+              <span>{{ currencySymbol }}{{ (totalMergedRevenue / Object.values(currentBooth.boothMembers!).length).toLocaleString() }}</span>
             </li>
           </ul>
         </VTabsWindowItem>
@@ -72,148 +72,31 @@
 </template>
 
 <script lang="ts">
-import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
-
-type GoodsWorthMapItem = { name: string, quantity: number, total: number, memberLength?: number };
+import { useAdminOrderStore } from "@/plugins/stores/order-utils";
 
 @Component({})
 export default class ClosingPage extends Vue {
   @Setup(() => useAdminStore().currentBooth)
   declare readonly currentBooth: Readonly<ReturnType<typeof useAdminStore>["currentBooth"]>;
 
-  @Setup(() => useAdminStore().currentBooth.booth?.currencySymbol)
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
+  @Setup(() => useAdminOrderStore().goodsRevenueMap)
+  declare readonly goodsRevenueMap: ReturnType<typeof useAdminOrderStore>["goodsRevenueMap"];
+
+  @Setup(() => useAdminOrderStore().combinationRevenueMap)
+  declare readonly combinationRevenueMap: ReturnType<typeof useAdminOrderStore>["combinationRevenueMap"];
+
+  @Setup(() => useAdminOrderStore().memberRevenueMap)
+  declare readonly memberRevenueMap: ReturnType<typeof useAdminOrderStore>["memberRevenueMap"];
+
+  @Setup(() => useAdminOrderStore().totalMergedRevenue)
+  declare readonly totalMergedRevenue: ReturnType<typeof useAdminOrderStore>["totalMergedRevenue"];
+
   memberRevenueDistributionStrategy: "equal" | "own" = "own";
-
-  get validOrders(): Record<number, IGoodsOrder> {
-    // Only RECORDED orders with at least one item are valid
-    return Object.fromEntries(
-      Object.entries(this.currentBooth.goodsOrders ?? { })
-        .filter(([ , value ]) => value.status === GoodsOrderStatus.RECORDED && value.order.length > 0),
-    );
-  }
-
-  get goodsRevenueMap(): Map<number, GoodsWorthMapItem> {
-    const map = new Map<number, GoodsWorthMapItem>();
-
-    for(const item of Object.values(this.validOrders)) {
-      for(const goods of Object.values(item.order)) {
-        if(goods.gId) {
-          const originalGoods = this.currentBooth.goods![goods.gId];
-          const originalPrice = originalGoods?.price ?? 0;
-
-          // TODO: Below line is TEMPORARY; should revert to the commented line after DB reset
-          const calculatedPrice = ((goods.price === undefined ? 0 : goods.price) ?? originalPrice) * goods.quantity;
-          // const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
-
-          if(map.has(goods.gId)) {
-            map.set(goods.gId, {
-              name: goods.name ?? originalGoods?.name,
-              quantity: map.get(goods.gId)!.quantity + goods.quantity,
-              total: map.get(goods.gId)!.total + calculatedPrice,
-              memberLength: originalGoods?.ownerMemberIds?.length,
-            });
-          } else {
-            map.set(goods.gId, {
-              name: goods.name ?? originalGoods?.name,
-              quantity: goods.quantity,
-              total: calculatedPrice,
-              memberLength: originalGoods?.ownerMemberIds?.length,
-            });
-          }
-        }
-      }
-    }
-
-    return new Map(Array.from(map.entries()).sort((a, b) => a[1].name.localeCompare(b[1].name)));
-  }
-
-  get goodsCombinationRevenueMap(): Map<number, GoodsWorthMapItem> {
-    const map = new Map<number, GoodsWorthMapItem>();
-
-    for(const item of Object.values(this.validOrders)) {
-      for(const combination of Object.values(item.order)) {
-        if(combination.cId) {
-          const originalCombination = this.currentBooth.goodsCombinations![combination.cId];
-          const originalPrice = originalCombination?.price ?? 0;
-          const calculatedPrice = (combination.price ?? originalPrice) * combination.quantity;
-
-          if(map.has(combination.cId)) {
-            map.set(combination.cId, {
-              name: combination.name ?? originalCombination?.name,
-              quantity: map.get(combination.cId)!.quantity + combination.quantity,
-              total: map.get(combination.cId)!.total + calculatedPrice,
-              memberLength: originalCombination?.ownerMemberIds?.length,
-            });
-          } else {
-            map.set(combination.cId, {
-              name: combination.name ?? originalCombination?.name,
-              quantity: combination.quantity,
-              total: calculatedPrice,
-              memberLength: originalCombination?.ownerMemberIds?.length,
-            });
-          }
-        }
-      }
-    }
-
-    return new Map(Array.from(map.entries()).sort((a, b) => a[1].name.localeCompare(b[1].name)));
-  }
-
-  get totalRevenue(): number {
-    return Array.from(this.goodsRevenueMap.values()).reduce((acc, cur) => acc + cur.total, 0) +
-           Array.from(this.goodsCombinationRevenueMap.values()).reduce((acc, cur) => acc + cur.total, 0);
-  }
-
-  get goodsMemberMap(): Map<number, Array<number>> {
-    const map = new Map<number, Array<number>>();
-
-    for(const member of Object.values(this.currentBooth.boothMembers ?? {})) {
-      map.set(member.id,
-              Object.values(this.currentBooth.goods ?? {}).filter(
-                (goods) => goods.ownerMemberIds?.includes(member.id),
-              ).map((goods) => goods.id));
-    }
-
-    return map;
-  }
-
-  get goodsCombinationMemberMap(): Map<number, Array<number>> {
-    const map = new Map<number, Array<number>>();
-
-    for(const member of Object.values(this.currentBooth.boothMembers ?? {})) {
-      map.set(member.id,
-              Object.values(this.currentBooth.goodsCombinations ?? {}).filter(
-                (goods) => goods.ownerMemberIds?.includes(member.id),
-              ).map((goods) => goods.id));
-    }
-
-    return map;
-  }
-
-  get memberRevenueMap(): Map<number, number> {
-    const map = new Map<number, number>();
-
-    for(const member of Object.values(this.currentBooth.boothMembers ?? {})) {
-      const goodsTotal = this.goodsMemberMap.get(member.id)!
-        .map((goodsId) => {
-          const rev = this.goodsRevenueMap.get(goodsId);
-          return rev ? rev.total / (rev.memberLength ?? 1) : 0;
-        }).reduce((acc, cur) => acc + cur, 0);
-      const combinationTotal = this.goodsCombinationMemberMap.get(member.id)!
-        .map((combinationId) => {
-          const rev = this.goodsCombinationRevenueMap.get(combinationId);
-          return rev ? rev.total / (rev.memberLength ?? 1) : 0;
-        }).reduce((acc, cur) => acc + cur, 0);
-
-      map.set(member.id, goodsTotal + combinationTotal);
-    }
-
-    return map;
-  }
 
   beforeCreate() {
     /* if(this.currentBooth.booth && this.currentBooth.booth!.status !== BoothStatus.CLOSE) {

@@ -29,14 +29,15 @@ const useAdminStore = defineStore("admin", () => {
     goodsOrders: ref(null),
   };
 
-  // TODO: Ditch symbol to code mapping after altering the booth DB model
-  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[CURRENCY_SYMBOL_TO_CODE_MAP[currentBooth.booth.value?.currencySymbol ?? "₩"]]);
-
   const isBoothDataLoaded = ref<boolean>(false);
   const isAllDataLoaded = ref<boolean>(false);
   const isFirstLoad = ref<boolean>(true);
 
   const globalSnackbarContexts = new SnackbarContextWrapper();
+
+  /* Computed States */
+  // TODO: Ditch symbol to code mapping after altering the booth DB model
+  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[CURRENCY_SYMBOL_TO_CODE_MAP[currentBooth.booth.value?.currencySymbol ?? "₩"]]);
 
   /* Actions */
   function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {
