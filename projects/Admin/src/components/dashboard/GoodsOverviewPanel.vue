@@ -44,7 +44,7 @@
             <VLayout class="px-2 d-flex flex-column align-center">
               <span>전체 굿즈 재고 개수/가치</span>
               <span class="text-h4 font-weight-bold">{{ totalGoodsInitialStockCount.toLocaleString() }}개</span>
-              <span class="text-h6 font-weight-bold">{{ currencySymbol }}{{ totalGoodsWorthByInitialStock.toLocaleString() }}</span>
+              <span class="text-h6 font-weight-medium">{{ currencySymbol }}{{ totalGoodsWorthByInitialStock.toLocaleString() }}</span>
             </VLayout>
           </VSheet>
         </VCol>
@@ -56,7 +56,7 @@
             <VLayout class="px-2 d-flex flex-column align-center">
               <span>남은 굿즈 재고 개수/가치</span>
               <span class="text-h4 font-weight-bold">{{ totalGoodsRemainingStockCount.toLocaleString() }}개</span>
-              <span class="text-h6 font-weight-bold">{{ currencySymbol }}{{ totalGoodsWorthByRemainingStock.toLocaleString() }}</span>
+              <span class="text-h6 font-weight-medium">{{ currencySymbol }}{{ totalGoodsWorthByRemainingStock.toLocaleString() }}</span>
             </VLayout>
           </VSheet>
         </VCol>
