@@ -1,6 +1,6 @@
 {
   "name": "@myboothmanager/backend",
-  "version": "0.7.0-dev.1",
+  "version": "0.7.0-dev.2",
   "author": "somni <me@somni.one>",
   "private": true,
   "packageManager": "pnpm@9.7.1",
