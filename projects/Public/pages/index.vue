@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
 import { Vue } from "vue-facing-decorator";
 
 function filterBoothList(boothList: Array<IBooth>) {
@@ -121,6 +121,14 @@ export default class LandingPage extends Vue {
     });
 
     return map;
+  }
+
+  mounted() {
+    /* *** Set document metadata *** */
+    useHeadSafe({
+      title: `${APP_NAME} - 부스 목록`,
+    });
+    useSeoMeta({ });
   }
 
   reloadWindow() { window.location.reload(); }
