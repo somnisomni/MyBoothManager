@@ -96,6 +96,9 @@
               <template #goods="props">
                 <GoodsItemPublic v-bind="props" />
               </template>
+              <template #goods-combination="props">
+                <GoodsItemPublic v-bind="props" />
+              </template>
             </GoodsListView>
             <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
           </ExpandableContent>
