@@ -2,12 +2,15 @@
   <section>
     <!-- Booth image & info area -->
     <VSheet class="booth-info-section">
-      <VParallax class="booth-image d-flex align-end" :src="bannerImageUrl" scale="0.8">
+      <VParallax class="booth-image d-flex align-end bg-white"
+                 :src="bannerImageUrl"
+                 scale="0.8">
         <div class="booth-image-overlay"></div>
 
         <VContainer>
           <VLayout class="booth-info-content w-100 d-flex flex-row align-end pa-2 pa-sm-4">
-            <VLayout class="d-flex flex-column flex-1-1" style="max-width: 100%">
+            <VLayout class="d-flex flex-column flex-1-1"
+                     style="max-width: 100%">
               <h4 v-if="boothData.boothNumber" class="d-sm-none text-h4 mb-2">{{ boothData.boothNumber }}</h4>
               <h3 class="text-h3 font-weight-bold mb-2">{{ boothData.name }}</h3>
               <div v-if="boothData.description" class="text-subtitle-1" style="font-size: 1.125rem !important; line-height: 1.25;">{{ boothData.description }}</div>
