@@ -24,6 +24,9 @@ export default [
         ...globals.es2022,
       },
     },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
   },
 ];
 

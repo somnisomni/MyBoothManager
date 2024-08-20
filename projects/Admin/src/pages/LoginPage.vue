@@ -26,7 +26,7 @@
                         class="mb-2"
                         label="&nbsp;로그인 ID 기억하기"
                         color="primary"
-                        density="dense"
+                        density="compact"
                         hide-details />
             <VExpandTransition>
               <VSheet v-if="shouldRememberLoginId">
@@ -65,12 +65,12 @@
 
     <CommonWarningDialog v-model="confirmLoginDialogShown"
                          dialogTitle="로그인 확인"
-                         headlineText="이미 다른 곳에서 로그인되어 있습니다."
+                         headlineText="이미 다른 곳에서 로그인되어 있거나 정상적으로 로그아웃되지 않았습니다."
                          primaryText="로그인"
                          cancelText="취소"
                          @primary="doLogin(true)"
                          @cancel="confirmLoginDialogShown = false">
-      <p>기존 세션을 끊고 로그인하시겠습니까?</p>
+      <p>기존 세션을 종료하고 로그인하시겠습니까?</p>
     </CommonWarningDialog>
   </VContainer>
 </template>

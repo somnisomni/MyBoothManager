@@ -15,4 +15,7 @@ export default tseslint.config({
       ...globals.builtin,
     },
   },
+  rules: {
+    "@typescript-eslint/no-unused-vars": "warn",
+  },
 });
