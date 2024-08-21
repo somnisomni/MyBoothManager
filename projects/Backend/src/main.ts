@@ -11,6 +11,7 @@ import MBMSequelize from "./db/sequelize";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import { LoggingInterceptor } from "./logging.interceptor";
 import { RootModule } from "./modules/root.module";
+import { UtilService } from "./modules/common/util/util.service";
 
 async function bootstrap() {
   /* *** dotenv configuration *** */

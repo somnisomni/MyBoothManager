@@ -68,7 +68,7 @@ export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "sta
 
 /* === Requests === */
 export type IBoothCreateRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "datesOpenInFair" | "relatedLinks">;
-export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
+export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
 export type IBoothUpdateRequest = Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol" | "currencyCode">>;
 export type IBoothNoticeUpdateRequest = Pick<IBoothCommon, "noticeContent">;
 export type IBoothStatusUpdateRequest = Partial<IBoothStatus>;
