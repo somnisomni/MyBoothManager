@@ -2,7 +2,7 @@ import type { FastifyRequest } from "fastify";
 import { Observable, tap } from "rxjs";
 import chalk from "chalk";
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
-import { AppController } from "@/app.controller";
+import { RootController } from "./modules/root.controller";
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -29,7 +29,7 @@ export class LoggingInterceptor implements NestInterceptor {
     }
 
     // Special logging for health check requests
-    if(contextClass === AppController && contextHandler === AppController.prototype.healthCheck) {
+    if(contextHandler === RootController.prototype.healthCheck) {
       return next.handle().pipe(tap({
         finalize: () => {
           console.log(generateLogHeader("🔄", chalk`health check from {bold ${ip}}`));

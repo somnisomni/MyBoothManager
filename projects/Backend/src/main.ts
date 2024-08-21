@@ -9,7 +9,7 @@ import { default as fastifyStatic, type FastifyStaticOptions } from "@fastify/st
 import { default as fastifyCookie, type FastifyCookieOptions } from "@fastify/cookie";
 import MBMSequelize from "./db/sequelize";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
-import { LoggingInterceptor } from "./modules/common/logging.interceptor";
+import { LoggingInterceptor } from "./logging.interceptor";
 import { RootModule } from "./modules/root.module";
 
 async function bootstrap() {
