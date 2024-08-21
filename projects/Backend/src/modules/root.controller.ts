@@ -2,7 +2,7 @@ import { Controller, Delete, Get, HttpCode, NotFoundException, Patch, Post, Put 
 import { HTTP_HEALTH_CHECK_STATUS_CODE, SUCCESS_RESPONSE } from "@myboothmanager/common";
 
 @Controller()
-export class AppControllerV2 {
+export class RootController {
   constructor() { }
 
   @Get()

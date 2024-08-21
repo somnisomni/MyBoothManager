@@ -1,17 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundException } from "@nestjs/common";
 import { SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { AppControllerV2 } from "./app.v2.controller";
+import { RootController } from "./root.controller";
+import { AppModuleV2 } from "./v2/app.v2.module";
 
-describe("AppControllerV2", () => {
-  let controller: AppControllerV2;
+describe("RootController", () => {
+  let controller: RootController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AppControllerV2],
+      imports: [AppModuleV2],
+      controllers: [RootController],
     }).compile();
 
-    controller = module.get<AppControllerV2>(AppControllerV2);
+    controller = module.get<RootController>(RootController);
   });
 
   it("should be defined", () => {

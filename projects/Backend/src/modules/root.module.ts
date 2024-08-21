@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { AppModuleV2 } from "./v2/app.v2.module";
 import { RouterModule } from "@nestjs/core";
+import { RootController } from "./root.controller";
 
 @Module({
   imports: [
@@ -12,5 +13,6 @@ import { RouterModule } from "@nestjs/core";
       },
     ]),
   ],
+  controllers: [RootController],
 })
 export class RootModule { }
