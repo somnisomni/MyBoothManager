@@ -203,8 +203,8 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
   }
 
-  static async deleteGoodsCategory(categoryId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/category/${categoryId}`));
+  static async deleteGoodsCategory(categoryId: number, boothId: number) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/category/${categoryId}?bId=${boothId}`));
   }
 
   static async deleteGoodsCombination(combinationId: number, boothId: number) {

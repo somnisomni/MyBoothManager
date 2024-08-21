@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor, Query } from "@nestjs/common";
 import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
 import { AuthData, AdminAuthGuard, SuperAdmin } from "../auth/auth.guard";
 import { IAuthPayload } from "../auth/jwt";
@@ -27,8 +27,8 @@ export class GoodsCategoryController {
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.goodsCategoryService.remove(+id);
+  remove(@Param("id") id: string, @Query("bId") boothId: string, @AuthData() authData: IAuthPayload) {
+    return this.goodsCategoryService.remove(+id, +boothId, authData.id);
   }
 
   /* SuperAdmin routes */

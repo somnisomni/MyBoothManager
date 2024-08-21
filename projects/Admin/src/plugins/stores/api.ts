@@ -454,7 +454,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
 
   async function deleteGoodsCategory(categoryId: number): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
-      () => AdminAPI.deleteGoodsCategory(categoryId),
+      () => AdminAPI.deleteGoodsCategory(categoryId, $adminStore.currentBooth.booth!.id),
       async () => {
         delete $adminStore.currentBooth.goodsCategories![categoryId];
         await fetchGoodsOfCurrentBooth();

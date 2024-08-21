@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ISuccessResponse } from "@myboothmanager/common";
 import GoodsCategory from "@/db/models/goods-category";
-import { create, removeTarget } from "@/lib/common-functions";
+import { create, findOneByPk, removeTarget } from "@/lib/common-functions";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
 import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { PublicGoodsCategoryService } from "@/modules/public/goods-category/goods-category.service";
 import GoodsCombination from "@/db/models/goods-combination";
 import { CreateGoodsCategoryRequestDto } from "./dto/create-goods-category.dto";
 import { UpdateGoodsCategoryRequestDto } from "./dto/update-goods-category.dto";
@@ -13,10 +12,10 @@ import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoun
 
 @Injectable()
 export class GoodsCategoryService {
-  constructor(private readonly publicGoodsCategoryService: PublicGoodsCategoryService) { }
+  constructor() { }
 
   async getGoodsCategoryAndParentBooth(categoryId: number, boothId: number, callerAccountId: number): Promise<{ booth: Booth, category: GoodsCategory }> {
-    const category = await this.publicGoodsCategoryService.findOne(categoryId, true);
+    const category = await findOneByPk(GoodsCategory, categoryId);
 
     if(!category) throw new EntityNotFoundException();
     else if(category.boothId !== boothId) throw new NoAccessException();
@@ -64,8 +63,8 @@ export class GoodsCategoryService {
     return category;
   }
 
-  async remove(id: number): Promise<ISuccessResponse> {
-    const category = await this.publicGoodsCategoryService.findOne(id);
+  async remove(id: number, boothId: number, callerAccountId: number): Promise<ISuccessResponse> {
+    const category = await this.findGoodsCategoryBelongsToBooth(id, boothId, callerAccountId);
 
     // Find goods/combinations by category and set to default(uncategorized)
     for(const g of await Goods.findAll({ where: { categoryId: id } })) {
