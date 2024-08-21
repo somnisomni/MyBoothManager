@@ -1,18 +1,15 @@
 import type { FastifyPluginCallback } from "fastify";
+import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import { default as fastifyMultipart, type FastifyMultipartOptions } from "@fastify/multipart";
 import { default as fastifyHelmet, type FastifyHelmetOptions } from "@fastify/helmet";
 import { default as fastifyStatic, type FastifyStaticOptions } from "@fastify/static";
 import { default as fastifyCookie, type FastifyCookieOptions } from "@fastify/cookie";
-import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
-import { AppModule } from "@/app.module";
-import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import MBMSequelize from "./db/sequelize";
-import { UtilService } from "./modules/admin/util/util.service";
-import { LoggingInterceptor } from "./modules/global/logging/logging.interceptor";
-
-let app: NestFastifyApplication;
+import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
+import { LoggingInterceptor } from "./modules/common/logging.interceptor";
+import { RootModule } from "./modules/root.module";
 
 async function bootstrap() {
   /* *** dotenv configuration *** */
@@ -27,16 +24,17 @@ async function bootstrap() {
   }
 
   /* *** NestJS application initialization *** */
-  app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
+  const app = await NestFactory.create<NestFastifyApplication>(
+    RootModule,
     new FastifyAdapter({
       trustProxy: process.env.TRUST_LOCALHOST_PROXY?.toLowerCase() === "true" ? "127.0.0.1" : false,
     }),
   );
 
   /* *** Fastify plugins *** */
+  // Cookie
   await app.register(fastifyCookie as unknown as FastifyPluginCallback<FastifyCookieOptions>, {
-    secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime()}`,
+    secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime() + performance.now()}`,
     algorithm: "sha384",
     parseOptions: {
       path: "/",
@@ -45,6 +43,8 @@ async function bootstrap() {
       secure: true,
     },
   });
+
+  // Helmet
   await app.register(fastifyHelmet as unknown as FastifyPluginCallback<FastifyHelmetOptions>, {
     global: true,
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -54,11 +54,15 @@ async function bootstrap() {
     noSniff: true,
     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   });
+
+  // Multipart upload
   await app.register(fastifyMultipart, {
     limits: {
       fileSize: MAX_UPLOAD_FILE_BYTES,
     },
   } as FastifyMultipartOptions);
+
+  // Static file serving for uploads
   await app.register(fastifyStatic, {
     root: UtilService.RESOLVED_UPLOAD_PATH || "uploads",
     prefix: "/uploads/",
@@ -70,19 +74,23 @@ async function bootstrap() {
     immutable: false,
   } as FastifyStaticOptions);
 
-  app.enableCors({
-    origin: [ process.env.FRONTEND_ADMIN_URL ?? "", process.env.FRONTEND_PUBLIC_URL ?? "" ],
-    credentials: true,
-  });
-
   /* *** Nest.js app globals *** */
+  // Global filters
   app.useGlobalFilters(
     new AllExceptionsFilter(),
     new RouteNotFoundExceptionFilter(),
   );
+
+  // Global interceptors
   app.useGlobalInterceptors(
     new LoggingInterceptor(),
   );
+
+  // CORS
+  app.enableCors({
+    origin: [ process.env.FRONTEND_ADMIN_URL ?? "", process.env.FRONTEND_PUBLIC_URL ?? "" ],
+    credentials: true,
+  });
 
   /* *** Start the backend server *** */
   await app.listen(

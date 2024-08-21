@@ -1,28 +1,27 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundException } from "@nestjs/common";
 import { SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+import { AppControllerV2 } from "./app.v2.controller";
 
-describe("AppController", () => {
-  let controller: AppController;
+describe("AppControllerV2", () => {
+  let controller: AppControllerV2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+      controllers: [AppControllerV2],
     }).compile();
 
-    controller = module.get<AppController>(AppController);
+    controller = module.get<AppControllerV2>(AppControllerV2);
   });
 
   it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  it("should throw NotFoundException", () => {
+  it("routeNotFound(): should throw NotFoundException", () => {
     try {
-      controller.notFound();
+      controller.routeNotFound();
+
       fail("This should not be reached");
     } catch(e) {
       expect(e).toBeInstanceOf(NotFoundException);
@@ -35,7 +34,7 @@ describe("AppController", () => {
     }
   });
 
-  it("should have success response", () => {
+  it("healthCheck(): should have success response", () => {
     const response = controller.healthCheck();
     expect(response).toEqual(SUCCESS_RESPONSE);
   });
