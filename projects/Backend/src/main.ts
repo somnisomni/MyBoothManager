@@ -1,6 +1,7 @@
 import type { FastifyPluginCallback } from "fastify";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
+import { ClassSerializerInterceptor } from "@nestjs/common";
 import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import { default as fastifyMultipart, type FastifyMultipartOptions } from "@fastify/multipart";
 import { default as fastifyHelmet, type FastifyHelmetOptions } from "@fastify/helmet";
@@ -84,6 +85,7 @@ async function bootstrap() {
   // Global interceptors
   app.useGlobalInterceptors(
     new LoggingInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector)),
   );
 
   // CORS
