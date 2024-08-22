@@ -163,6 +163,8 @@ export class BoothService {
     // Delete all images of the booth
     await this.image.deleteAllImages(id, accountId);
 
+    // TODO: Remove all related entities like goods, orders, etc.
+
     return await removeTarget(booth);
   }
 }
