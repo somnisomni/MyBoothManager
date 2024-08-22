@@ -127,6 +127,8 @@ export default class AccountService {
    * @returns `SUCCESS_RESPONSE`
    */
   async remove(id: number): Promise<ISuccessResponse> {
+    // TODO: Remove all booths associated with the account
+
     return await removeOne(Account, { id });
   }
 }

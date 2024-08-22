@@ -7,7 +7,7 @@ import { UpdateAccountRequestDto } from "./dto/update.dto";
 import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
 
-@Controller("account")
+@Controller("/account")
 export default class AccountController {
   constructor(
     private readonly account: AccountService,
