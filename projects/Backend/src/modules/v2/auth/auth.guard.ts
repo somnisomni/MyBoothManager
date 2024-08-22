@@ -4,7 +4,7 @@ import { JwtService, TokenExpiredError } from "@nestjs/jwt";
 import { FastifyRequest } from "fastify";
 import { IAuthData, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt-util.service";
 import { AuthTokenNeedRefreshException, InvalidAuthTokenException } from "./auth.exception";
-import AuthStorage from "./auth.storage";
+import { AuthStorage } from "./auth.service";
 
 /**
  * Request user type

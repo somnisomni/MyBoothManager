@@ -20,7 +20,7 @@ export const SUPER_ADMIN_AUTH_DATA = Object.freeze<IAuthData>({
 
 
 /** Static storage class for auth tokens */
-export default class AuthStorage {
+export class AuthStorage {
   private constructor() { }
 
   /** Refresh token UUID memory storage */
