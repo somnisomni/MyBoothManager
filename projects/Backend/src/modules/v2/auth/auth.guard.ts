@@ -5,6 +5,7 @@ import { FastifyRequest } from "fastify";
 import { IAuthData, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt-util.service";
 import { AuthTokenNeedRefreshException, InvalidAuthTokenException } from "./auth.exception";
 import { AuthStorage } from "./auth.service";
+import { NoAccessException } from "@/lib/exceptions";
 
 /**
  * Request user type
@@ -136,21 +137,25 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    let isAllowed = true;
 
     if(allowedFor && allowedFor.length > 0) {
       // Check only if `AllowedFor` decorator is specified and has at least one user type
 
-      isAllowed = false;
+      let isAllowed = false;
       for(const permission of allowedFor) {
         if(UserTypeUtil.havePermission((request.params as ICustomRequestParams).userType, permission)) {
           isAllowed = true;
           break;
         }
       }
+
+      if(!isAllowed) {
+        // If user has no permission to access the route, throw an error
+        throw new NoAccessException();
+      }
     }
 
-    return isAllowed;
+    return true;
   }
 
   private extractAccessTokenFromHeader(request: FastifyRequest): string | null {
