@@ -9,7 +9,6 @@ import { InvalidRefreshTokenException, LoginAccountNotFoundException, LoginSessi
 import { RefreshRequestDto } from "./dto/refresh.dto";
 import { LogoutRequestDto } from "./dto/logout.dto";
 import AccountService from "../account/account.service";
-import AuthStorage from "./auth.storage";
 
 export type IAccountLoginResponseWithRefreshToken = IAccountLoginResponse & { refreshToken: string };
 
@@ -18,6 +17,18 @@ export const SUPER_ADMIN_AUTH_DATA = Object.freeze<IAuthData>({
   id: randomInt(Number.MIN_SAFE_INTEGER, -1),
   name: randomBytes(32).toString("base64"),
 });
+
+
+/** Static storage class for auth tokens */
+export default class AuthStorage {
+  private constructor() { }
+
+  /** Refresh token UUID memory storage */
+  public static readonly REFRESH_UUID_STORE = new Map<number, string>();
+
+  /** Auth token JWT memory storage */
+  public static readonly AUTH_TOKEN_STORE = new Map<number, string>();
+}
 
 @Injectable()
 export class AuthService {
