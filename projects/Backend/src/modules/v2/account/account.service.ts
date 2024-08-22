@@ -4,10 +4,10 @@ import Account from "@/db/models/account";
 import { create, removeOne, stringCompareCaseSensitive } from "@/lib/common-functions";
 import { EntityNotFoundException, InvalidRequestBodyException } from "@/lib/exceptions";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { CreateAccountDto } from "./dto/create.dto";
-import { UpdateAccountDto } from "./dto/update.dto";
+import { CreateAccountRequestDto } from "./dto/create.dto";
+import { UpdateAccountRequestDto } from "./dto/update.dto";
 import { AccountInfoUpdateFailedException, AccountPasswordUpdateFailedException } from "./account.exception";
-import { UpdateAccountPasswordDto } from "./dto/update-password.dto";
+import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
 import { WhereOptions } from "sequelize";
 import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
 
@@ -68,8 +68,8 @@ export default class AccountService {
    * @param createDto DTO for creating a new account
    * @returns Created `Account` entity
    */
-  async create(createDto: CreateAccountDto): Promise<Account> {
-    const request: CreateAccountDto & { loginPassHash: string } = {
+  async create(createDto: CreateAccountRequestDto): Promise<Account> {
+    const request: CreateAccountRequestDto & { loginPassHash: string } = {
       ...createDto,
       loginPassHash: await argon2.hash(createDto.loginPass),
     };
@@ -84,7 +84,7 @@ export default class AccountService {
    * @returns Updated `Account` entity
    * @throws `AccountInfoUpdateFailedException` if the update failed
    */
-  async update(id: number, updateDto: UpdateAccountDto): Promise<Account> {
+  async update(id: number, updateDto: UpdateAccountRequestDto): Promise<Account> {
     // Updating account information of super admin is prohibited
     if(id === SUPER_ADMIN_AUTH_DATA.id) throw new InvalidRequestBodyException();
 
@@ -104,7 +104,7 @@ export default class AccountService {
    * @returns `SUCCESS_RESPONSE`
    * @throws `AccountPasswordUpdateFailedException` if the update failed
    */
-  async updatePassword(id: number, updatePasswordDto: UpdateAccountPasswordDto): Promise<ISuccessResponse> {
+  async updatePassword(id: number, updatePasswordDto: UpdateAccountPasswordRequestDto): Promise<ISuccessResponse> {
     // Updating account information of super admin is prohibited
     if(id === SUPER_ADMIN_AUTH_DATA.id) throw new InvalidRequestBodyException();
 

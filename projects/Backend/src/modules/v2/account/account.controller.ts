@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch } from "@nest
 import AccountService from "./account.service";
 import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
 import { IAuthData } from "../auth/jwt-util.service";
-import { AccountResponseDto } from "./dto/account.dto";
-import { UpdateAccountDto } from "./dto/update.dto";
-import { UpdateAccountPasswordDto } from "./dto/update-password.dto";
+import { AccountResponseDto, SuperAdminAccountResponseDto } from "./dto/account.dto";
+import { UpdateAccountRequestDto } from "./dto/update.dto";
+import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
 
 @Controller("account")
@@ -20,7 +20,7 @@ export default class AccountController {
   @Patch()
   @AllowedFor(UserTypes.BOOTH_ADMIN)
   async updateCurrent(
-    @Body() updateDto: UpdateAccountDto,
+    @Body() updateDto: UpdateAccountRequestDto,
     @AuthData() authData: IAuthData): Promise<AccountResponseDto> {
     return new AccountResponseDto(await this.account.update(authData.id, updateDto));
   }
@@ -31,7 +31,7 @@ export default class AccountController {
   @Patch("password")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
   async updateCurrentPassword(
-    @Body() updatePasswordDto: UpdateAccountPasswordDto,
+    @Body() updatePasswordDto: UpdateAccountPasswordRequestDto,
     @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.account.updatePassword(authData.id, updatePasswordDto);
   }
@@ -52,9 +52,9 @@ export default class AccountController {
    */
   @Get("all")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async findAll(): Promise<AccountResponseDto[]> {
+  async findAll(): Promise<SuperAdminAccountResponseDto[]> {
     return (await this.account.findAll(false))
-      .map(account => new AccountResponseDto(account));
+      .map(account => new SuperAdminAccountResponseDto(account));
   }
 
   /**
@@ -62,8 +62,8 @@ export default class AccountController {
    */
   @Get(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async findOne(@Param("id", new ParseIntPipe()) id: number): Promise<AccountResponseDto> {
-    return new AccountResponseDto(await this.account.findOne(id));
+  async findOne(@Param("id", new ParseIntPipe()) id: number): Promise<SuperAdminAccountResponseDto> {
+    return new SuperAdminAccountResponseDto(await this.account.findOne(id));
   }
 
   /**
@@ -72,8 +72,8 @@ export default class AccountController {
   @Patch(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
   async update(@Param("id", new ParseIntPipe()) id: number,
-               @Body() updateDto: UpdateAccountDto): Promise<AccountResponseDto> {
-    return new AccountResponseDto(await this.account.update(id, updateDto));
+               @Body() updateDto: UpdateAccountRequestDto): Promise<SuperAdminAccountResponseDto> {
+    return new SuperAdminAccountResponseDto(await this.account.update(id, updateDto));
   }
 
   /**
