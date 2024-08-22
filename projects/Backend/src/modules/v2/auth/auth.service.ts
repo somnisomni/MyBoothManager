@@ -14,7 +14,7 @@ export type IAccountLoginResponseWithRefreshToken = IAccountLoginResponse & { re
 
 /** Super admin internal account ID and name will be generated at run-time */
 export const SUPER_ADMIN_AUTH_DATA = Object.freeze<IAuthData>({
-  id: randomInt(Number.MIN_SAFE_INTEGER, -1),
+  id: randomInt(-(2 ** 48), -1),
   name: randomBytes(32).toString("base64"),
 });
 
