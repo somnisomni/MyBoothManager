@@ -25,7 +25,8 @@ export interface IAccountCreateRequest {
   loginPass: string;
 }
 
-export interface IAccountUpdateRequest extends Partial<Omit<IAccountCreateRequest, "loginId">> { }
+export interface IAccountUpdateRequest extends Partial<Omit<IAccountCreateRequest, "loginId" | "loginPass">> { }
+export interface IAccountUpdatePasswordRequest extends Pick<IAccountCreateRequest, "loginPass"> { }
 
 export interface IAccountLoginRequest {
   loginId: string;
@@ -34,7 +35,7 @@ export interface IAccountLoginRequest {
 }
 
 export interface IAccountAuthRefreshRequest {
-  id: number;  // Account ID
+  id: number;  // Account ID (PK)
 }
 
 /* === Responses === */

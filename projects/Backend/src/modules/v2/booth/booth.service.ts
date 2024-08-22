@@ -9,8 +9,9 @@ import { Op } from "sequelize";
 import { CreateBoothRequestDto } from "./dto/create.dto";
 import { BoothImageService } from "./booth.image.service";
 import { UpdateBoothRequestDto } from "./dto/update.dto";
-import { BoothInfoUpdateFailedException, BoothStatusUpdateFailedException } from "@/modules-old/admin/booth/booth.exception";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
+import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
+import { BoothInfoUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
 
 @Injectable()
 export class BoothService {
@@ -40,11 +41,12 @@ export class BoothService {
   /**
    * Finds a booth entity by ID. If `accountId` is specified, it checks if the booth belongs to the account.
    * @param id ID of the booth
+   * @param onlyPublished Whether to find only published booths. default: `false`. published condition: `status != PREPARE || statusContentPublished == true`
    * @param accountId ID of the account
-   * @param setLastSelected Whether to set the booth as the last selected booth of the account
+   * @param setLastSelected Whether to set the booth as the last selected booth of the account. default: `false`
    * @returns Found `Booth` entity
    */
-  async findOne(id: number, accountId?: number, setLastSelected: boolean = false): Promise<Booth> {
+  async findOne(id: number, onlyPublished = false, accountId?: number, setLastSelected = false): Promise<Booth> {
     if(typeof accountId === "number") {
       // ADMIN
       const booth = await this.getBoothBelongsToAccount(id, accountId);
@@ -56,7 +58,14 @@ export class BoothService {
       return booth;
     } else {
       // PUBLIC
-      return await findOneByPk(Booth, id);
+      const booth = await findOneByPk(Booth, id);
+
+      if(onlyPublished && (booth.status === BoothStatus.PREPARE && !booth.statusContentPublished)) {
+        // If booth is not published, throw an error
+        throw new BoothNotPublishedException();
+      }
+
+      return booth;
     }
   }
 
@@ -83,7 +92,7 @@ export class BoothService {
       } : { }),
     });
 
-    // associatedFair.isPassed == false
+    // associatedFair.isPassed === false
     return booths.filter(
       booth => !onlyAvailable
                 || (onlyAvailable && (typeof booth.fairId !== "number" || !booth.associatedFair?.isPassed)));
@@ -102,9 +111,10 @@ export class BoothService {
   /**
    * Updates information of a booth.
    * @param id ID of the booth
-   * @param updateDto DTO for updating a booth
+   * @param updateDto DTO for updating booth information
    * @param accountId ID of the account
    * @returns Updated `Booth` entity
+   * @throws `BoothInfoUpdateFailedException` if the update failed
    */
   async update(id: number, updateDto: UpdateBoothRequestDto, accountId: number): Promise<Booth> {
     try {
@@ -142,11 +152,13 @@ export class BoothService {
   /**
    * Removes a booth entity. Also removes all images associated with the booth.
    * @param id ID of the booth
-   * @param accountId ID of the account
+   * @param accountId ID of the account. If super admin ID is specified, it bypasses the owner check.
    * @returns `SUCCESS_RESPONSE`
    */
   async remove(id: number, accountId: number): Promise<ISuccessResponse> {
-    const booth = await this.getBoothBelongsToAccount(id, accountId);
+    const booth = accountId === SUPER_ADMIN_AUTH_DATA.id
+      ? await findOneByPk(Booth, id)
+      : await this.getBoothBelongsToAccount(id, accountId);
 
     // Delete all images of the booth
     await this.image.deleteAllImages(id, accountId);

@@ -1,7 +1,7 @@
-import { UtilService } from "@/modules/common/util/util.service";
 import { MultipartFile } from "@fastify/multipart";
-import { IImageUploadInfo, ImageSizeConstraintKey, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { IImageUploadInfo, ImageSizeConstraintKey, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { UtilService } from "@/modules/common/util/util.service";
 import { BoothService } from "./booth.service";
 
 @Injectable()
@@ -17,7 +17,7 @@ export class BoothImageService {
 
   async uploadBannerImage(id: number, file: MultipartFile, accountId: number): Promise<IImageUploadInfo> {
     return await this.util.processImageUpload(
-      await this.booth.findOne(id, accountId),
+      await this.booth.findOne(id, false, accountId),
       "bannerImageId",
       file,
       this.BANNER_IMAGE_PATH,
@@ -28,7 +28,7 @@ export class BoothImageService {
 
   async uploadInfoImage(id: number, file: MultipartFile, accountId: number): Promise<IImageUploadInfo> {
     return await this.util.processImageUpload(
-      await this.booth.findOne(id, accountId),
+      await this.booth.findOne(id, false, accountId),
       "infoImageId",
       file,
       this.INFO_IMAGE_PATH,
@@ -39,14 +39,14 @@ export class BoothImageService {
 
   async deleteBannerImage(id: number, accountId: number): Promise<ISuccessResponse> {
     return await this.util.processImageDelete(
-      await this.booth.findOne(id, accountId),
+      await this.booth.findOne(id, false, accountId),
       "bannerImageId",
     );
   }
 
   async deleteInfoImage(id: number, accountId: number): Promise<ISuccessResponse> {
     return await this.util.processImageDelete(
-      await this.booth.findOne(id, accountId),
+      await this.booth.findOne(id, false, accountId),
       "infoImageId",
     );
   }
