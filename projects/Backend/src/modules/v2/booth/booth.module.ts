@@ -20,4 +20,4 @@ import { BoothImageController } from "./booth.image.controller";
     // BoothImageService,
   ],
 })
-export class BoothModule { }
+export default class BoothModule { }

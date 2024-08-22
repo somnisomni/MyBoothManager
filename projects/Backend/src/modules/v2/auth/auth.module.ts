@@ -25,4 +25,4 @@ import AccountModule from "../account/account.module";
   ],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export default class AuthModule {}
