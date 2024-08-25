@@ -99,7 +99,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
           // Create a new revenue information
           map.set(goods.gId, {
             id: goods.gId,
-            name: goods.name ?? originalGoods?.name,
+            name: originalGoods.name ?? goods.name ?? "(deleted)",
             quantity: goods.quantity,
             totalRevenue: calculatedPrice,
             memberLength: originalGoods.ownerMemberIds?.length,
@@ -141,7 +141,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
           // Create a new revenue information
           map.set(combination.cId, {
             id: combination.cId,
-            name: combination.name ?? originalCombination?.name,
+            name: originalCombination.name ?? combination.name ?? "(deleted)",
             quantity: combination.quantity,
             totalRevenue: calculatedPrice,
             memberLength: originalCombination.ownerMemberIds?.length,
