@@ -8,20 +8,34 @@
         <li v-for="[ combinationId, data ] in combinationRevenueMap"
             :key="combinationId"
             class="d-flex justify-space-between">
-          <span><small class="d-inline-block text-right mr-1" style="width: 4em; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> <VIcon icon="mdi-set-all" /> {{ data.name }}</span>
+          <span><small class="d-inline-block text-right mr-1" style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> <VIcon icon="mdi-set-all" /> {{ data.name }}</span>
           <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }} </span>
         </li>
 
         <li v-for="[ goodsId, data ] in goodsRevenueMap"
             :key="goodsId"
             class="d-flex justify-space-between">
-          <span><small class="d-inline-block text-right mr-1" style="width: 4em; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> {{ data.name }}</span>
+          <span><small class="d-inline-block text-right mr-1" style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> {{ data.name }}</span>
           <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }}</span>
         </li>
 
-        <li class="d-flex justify-space-between font-weight-bold">
-          <span><small class="d-inline-block text-right mr-1" style="width: 4em;"></small> 총 판매 수익</span>
-          <span>{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
+        <li class="d-flex flex-column mt-2">
+          <div class="d-flex justify-space-between font-weight-bold"
+               style="font-size: 1.25em;">
+            <span><small class="d-inline-block text-right mr-1" style="width: 3rem;"></small> 총 판매 수익</span>
+            <span>{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
+          </div>
+
+          <ul v-if="paymentTypeRevenueMap.size > 0"
+              class="font-weight-light"
+              style="padding-left: 4rem; font-size: 0.9em">
+            <li v-for="[ paymentType, revenue ] in paymentTypeRevenueMap"
+                :key="paymentType"
+                class="d-flex justify-space-between">
+              <span>└ {{ getPaymentMethodString(paymentType) }}</span>
+              <span>{{ currencySymbol }}{{ revenue.toLocaleString() }}</span>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
@@ -75,9 +89,12 @@
 import { Component, Setup, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
+import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
 export default class ClosingPage extends Vue {
+  readonly getPaymentMethodString = getPaymentMethodString;
+
   @Setup(() => useAdminStore().currentBooth)
   declare readonly currentBooth: Readonly<ReturnType<typeof useAdminStore>["currentBooth"]>;
 
@@ -92,6 +109,9 @@ export default class ClosingPage extends Vue {
 
   @Setup(() => useAdminOrderStore().memberRevenueMap)
   declare readonly memberRevenueMap: ReturnType<typeof useAdminOrderStore>["memberRevenueMap"];
+
+  @Setup(() => useAdminOrderStore().paymentTypeRevenueMap)
+  declare readonly paymentTypeRevenueMap: ReturnType<typeof useAdminOrderStore>["paymentTypeRevenueMap"];
 
   @Setup(() => useAdminOrderStore().totalMergedRevenue)
   declare readonly totalMergedRevenue: ReturnType<typeof useAdminOrderStore>["totalMergedRevenue"];

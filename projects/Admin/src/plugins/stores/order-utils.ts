@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, type ComputedRef } from "vue";
-import { GoodsOrderStatus } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 import { useAdminStore } from "./admin";
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { useAdminMemberStore } from "./member-utils";
@@ -162,33 +162,56 @@ const useAdminOrderStore = defineStore("booth-order", () => {
    * - Value: Total revenue of the member
    */
   const memberRevenueMap: ComputedRef<Map<number, number>>
-  = computed(() => {
-    const map = new Map<number, number>();
+    = computed(() => {
+      const map = new Map<number, number>();
 
-    for(const member of Object.values($adminStore.currentBooth.boothMembers ?? { })) {
-      const goodsList = $memberStore.goodsMemberMap.get(member.id);
-      const combinationList = $memberStore.goodsCombinationMemberMap.get(member.id);
+      for(const member of Object.values($adminStore.currentBooth.boothMembers ?? { })) {
+        const goodsList = $memberStore.goodsMemberMap.get(member.id);
+        const combinationList = $memberStore.goodsCombinationMemberMap.get(member.id);
 
-      if(!goodsList || !combinationList) continue;
+        if(!goodsList || !combinationList) continue;
 
-      const goodsRevenue = goodsList.map(id => {
-        const rev = goodsRevenueMap.value.get(id);
-        return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
-      }).reduce((prev, cur) => prev + cur, 0);
+        const goodsRevenue = goodsList.map(id => {
+          const rev = goodsRevenueMap.value.get(id);
+          return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
+        }).reduce((prev, cur) => prev + cur, 0);
 
-      const combinationRevenue = combinationList.map(id => {
-        const rev = combinationRevenueMap.value.get(id);
-        return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
-      }).reduce((prev, cur) => prev + cur, 0);
+        const combinationRevenue = combinationList.map(id => {
+          const rev = combinationRevenueMap.value.get(id);
+          return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
+        }).reduce((prev, cur) => prev + cur, 0);
 
-      map.set(member.id, goodsRevenue + combinationRevenue);
-    }
+        map.set(member.id, goodsRevenue + combinationRevenue);
+      }
 
-    // Sort by member ID and reconstruct a new Map
-    return new Map(
-      Array.from(map.entries())
-        .sort((a, b) => a[0] - b[0]));
-  });
+      // Sort by member ID and reconstruct a new Map
+      return new Map(
+        Array.from(map.entries())
+          .sort((a, b) => a[0] - b[0]));
+    });
+
+  /**
+   * Calculated and merged revenue of each payment type, based on `validRecordedOrders`.
+   *
+   * - Key: Payment method (enum `GoodsOrderPaymentMethod`)
+   * - Value: Total revenue of the payment method
+   */
+  const paymentTypeRevenueMap: ComputedRef<Map<GoodsOrderPaymentMethod, number>>
+    = computed(() => {
+      const map = new Map<GoodsOrderPaymentMethod, number>();
+
+      for(const order of Object.values(validRecordedOrders.value)) {
+        if(!order.paymentMethod) continue;
+
+        if(map.has(order.paymentMethod)) {
+          map.set(order.paymentMethod, map.get(order.paymentMethod)! + order.totalRevenue);
+        } else {
+          map.set(order.paymentMethod, order.totalRevenue);
+        }
+      }
+
+      return map;
+    });
 
   /**
    * Accumulated revenue of all valid recorded orders. (using `goodsRevenueMap` and `combinationRevenueMap`)
@@ -211,6 +234,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
     goodsRevenueMap,
     combinationRevenueMap,
     memberRevenueMap,
+    paymentTypeRevenueMap,
 
     totalMergedRevenue,
   };
