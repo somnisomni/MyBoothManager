@@ -97,7 +97,11 @@
       <p>전체 굿즈 재고 개수에서 남은 굿즈 재고 개수를 뺀 값과 판매가 기록된 재고 개수가 서로 다르면 이 경고가 표시됩니다.</p><br />
 
       <p>판매 수익 계산이 부정확해지는 등 문제가 발생할 수 있어 <strong>개별 굿즈의 현재 재고 개수를 굿즈 관리 페이지에서 직접 수정하는 것은 권장하지 않습니다.</strong></p>
-      <!-- <p>만약 굿즈가 판매는 되었지만 기록이 누락된 건이 있다면, 잠시 부스를 운영 상태로 전환한 후 POS 페이지에서 누락된 만큼 판매 기록을 생성할 수도 있습니다.</p> -->
+      <!-- <p>만약 굿즈가 판매는 되었지만 기록이 누락된 건이 있다면, 잠시 부스를 운영 상태로 전환한 후 POS 페이지에서 누락된 만큼 판매 기록을 생성할 수도 있습니다.</p> --><br />
+
+      <p>현재 굿즈 등록 정보 상 재고 수 차이는 <strong>{{ totalGoodsStockDifference.toLocaleString() }}개</strong> 입니다.</p>
+      <p>판매 기록을 취합하여 계산된 소진 재고 수는 <strong>{{ totalSoldStockCount.toLocaleString() }}개</strong> 입니다.</p>
+      <p>총 <strong>{{ Math.abs(totalGoodsStockDifference - totalSoldStockCount) }}개</strong>의 괴리가 발생하였습니다.</p>
     </CommonDialog>
   </DashboardPanel>
 </template>
