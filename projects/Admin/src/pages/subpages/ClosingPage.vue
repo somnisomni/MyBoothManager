@@ -52,18 +52,19 @@
         <VTab value="equal">동률 분배 (1/N)</VTab>
       </VTabs>
 
-      <VTabsWindow v-model="memberRevenueDistributionStrategy">
+      <VTabsWindow v-model="memberRevenueDistributionStrategy"
+                   class="pa-2">
         <VTabsWindowItem value="own">
           <ul style="list-style: none">
             <li v-for="[ memberId, revenue ] in memberRevenueMap"
                 :key="memberId"
-                class="d-flex justify-space-between">
+                class="d-flex justify-space-between my-1">
               <span>{{ currentBooth.boothMembers![memberId].name }}</span>
               <span>{{ currencySymbol }}{{ revenue.toLocaleString() }}</span>
             </li>
 
             <li v-if="Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalMergedRevenue) !== 0"
-                class="d-flex justify-space-between">
+                class="d-flex justify-space-between my-1">
               <span>잔여 금액 <small>(멤버 미지정 굿즈 수익 총합)</small></span>
               <span>{{ currencySymbol }}{{ Array.from(memberRevenueMap.values()).reduce((acc, cur) => acc - cur, totalMergedRevenue).toLocaleString() }}</span>
             </li>
@@ -74,7 +75,7 @@
           <ul style="list-style: none">
             <li v-for="member in currentBooth.boothMembers"
                 :key="member.id"
-                class="d-flex justify-space-between">
+                class="d-flex justify-space-between my-1">
               <span>{{ member.name }}</span>
               <span>{{ currencySymbol }}{{ (totalMergedRevenue / Object.values(currentBooth.boothMembers!).length).toLocaleString() }}</span>
             </li>
