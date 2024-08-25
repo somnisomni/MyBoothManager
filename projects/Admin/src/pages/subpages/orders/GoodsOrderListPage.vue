@@ -52,10 +52,18 @@
             variant="flat"
             prepend-icon="mdi-filter"
             @click="filterSettingDialogShown = true">필터 설정</VBtn>
+
+      <div> <!-- TODO: v-if filterSettings is not default -->
+        <div>표시 중인 판매 기록 개수: {{ filterResult.listCount.toLocaleString() }}개</div>
+        <div>표시 판매 기록의 총 소진 재고 수: {{ filterResult.totalStockCount.toLocaleString() }}개</div>
+        <div>표시 판매 기록의 총 수익: {{ currencySymbol }}{{ filterResult.totalRevenue.toLocaleString() }}</div>
+      </div>
     </VLayout>
+
     <GoodsOrderListView v-if="Object.keys(boothGoodsOrders).length > 0"
                         ref="goodsOrderListView"
-                        :filter="filterSettings" />
+                        :filter="filterSettings"
+                        @update:filter-result="(result: IGoodsOrderFilterResult) => filterResult = result" />
     <h2 v-else-if="!dataLoading && Object.keys(boothGoodsOrders).length <= 0" class="text-center">등록된 판매 기록이 없습니다.</h2>
 
     <OrderFilterSettingDialog v-model="filterSettingDialogShown"
@@ -65,14 +73,14 @@
 </template>
 
 <script lang="ts">
+import type { RouteRecordRaw } from "vue-router";
 import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { ref } from "vue";
-import { type RouteRecordRaw } from "vue-router";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
-import GoodsOrderListView, { type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
+import GoodsOrderListView, { type IGoodsOrderFilterResult, type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDialog.vue";
 
 @Component({
@@ -102,6 +110,11 @@ export default class GoodsOrdersListPage extends Vue {
 
   dataLoading: boolean = true;
 
+  filterResult: IGoodsOrderFilterResult = {
+    listCount: 0,
+    totalStockCount: 0,
+    totalRevenue: 0,
+  };
   filterSettingDialogShown: boolean = false;
   readonly filterSettings = ref({
     targetGoodsIds: [],

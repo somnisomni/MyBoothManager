@@ -1,7 +1,7 @@
 <template>
   <VList class="overflow-visible bg-transparent">
     <VSlideXReverseTransition leave-absolute group>
-      <VListItem v-for="item in orderList"
+      <VListItem v-for="item in filteredList"
                  ref="orderListDOMItems"
                  :key="item.id"
                  class="px-0 px-sm-4 py-0 py-sm-2 my-0 my-sm-2">
@@ -15,7 +15,7 @@
 <script lang="ts">
 import type { GoodsOrderPaymentMethod, IGoodsOrder } from "@myboothmanager/common";
 import type { VListItem } from "vuetify/components";
-import { Component, Prop, Ref, Vue } from "vue-facing-decorator";
+import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
@@ -26,17 +26,24 @@ export interface IGoodsOrderFilterSetting {
   paymentMethods?: Array<GoodsOrderPaymentMethod> | null;
 }
 
+export interface IGoodsOrderFilterResult {
+  listCount: number;
+  totalStockCount: number;
+  totalRevenue: number;
+}
+
 @Component({
+  emits: ["update:filter-result"],
   components: {
     GoodsOrderListItem,
   },
 })
 export default class GoodsOrderListView extends Vue {
-  @Prop({ type: Object, default: {} }) filter!: IGoodsOrderFilterSetting;
+  @Prop({ type: Object, default: {} }) declare readonly filter: IGoodsOrderFilterSetting;
 
-  @Ref("orderListDOMItems") readonly orderListItemsRefs!: Array<VListItem>;
+  @Ref("orderListDOMItems") declare readonly orderListItemsRefs: Array<VListItem>;
 
-  get orderList(): Record<number, IGoodsOrder> {
+  get filteredList(): Array<IGoodsOrder> {
     return Object.values(useAdminStore().currentBooth.goodsOrders ?? {})
       .filter((order) => (
         ((this.filter.targetGoodsIds.length > 0) ? order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!)) : true)
@@ -44,6 +51,17 @@ export default class GoodsOrderListView extends Vue {
         && ((this.filter.paymentMethods && this.filter.paymentMethods.length > 0) ? this.filter.paymentMethods.includes(order.paymentMethod!) : true)
       ))
       .sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
+  }
+
+  @Watch("filteredList", { deep: true, immediate: true })
+  onFilteredListChange() {
+    this.$emit("update:filter-result", {
+      listCount: this.filteredList.length,
+      totalStockCount: this.filteredList.reduce(
+        (acc, order) => acc + order.order.reduce(
+          (oAcc, oItem) => oAcc + ((oItem.cId && oItem.combinedGoods ? oItem.combinedGoods.length : 1) * oItem.quantity), 0), 0),
+      totalRevenue: this.filteredList.reduce((acc, order) => acc + order.totalRevenue, 0),
+    } as IGoodsOrderFilterResult);
   }
 
   onGoodsOrderItemClick(data: IGoodsOrder) {
