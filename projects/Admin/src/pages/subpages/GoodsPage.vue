@@ -2,8 +2,7 @@
   <VContainer class="mt-4 pa-2 pa-md-6">
     <GoodsManagePanel />
 
-    <GoodsListView categoryEditable
-                   :currencySymbol="currencySymbol"
+    <GoodsListView :currencySymbol="currencySymbol"
                    :goodsList="goodsList"
                    :goodsCategoryList="goodsCategoryList">
       <template #goods-category="props">
@@ -109,6 +108,8 @@ export default class GoodsPage extends Vue {
   }
 
   openGoodsCategoryEditDialog(categoryId: number) {
+    if(categoryId < 0) return;
+
     this.editDialogCategoryId = categoryId;
     this.goodsCategoryEditDialogOpen = true;
   }
