@@ -1,6 +1,6 @@
 <template>
   <GoodsItem ref="base"
-             class="public bg-black">
+             class="public">
     <template #extra-top-indicator>
       <!-- Out of stock indicator -->
       <div v-if="isMounted && !shouldHideStock && isOutOfStock" class="top-indicator out-of-stock bg-error">
