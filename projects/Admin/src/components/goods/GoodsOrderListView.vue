@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts">
-import type { GoodsOrderPaymentMethod, IGoodsOrder } from "@myboothmanager/common";
 import type { VListItem } from "vuetify/components";
-import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
+import { GoodsOrderStatus, type GoodsOrderPaymentMethod, type IGoodsOrder } from "@myboothmanager/common";
+import { Component, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
@@ -28,6 +28,7 @@ export interface IGoodsOrderFilterSetting {
 
 export interface IGoodsOrderFilterResult {
   listCount: number;
+  listCountCancelled: number;
   totalStockCount: number;
   totalRevenue: number;
 }
@@ -55,12 +56,16 @@ export default class GoodsOrderListView extends Vue {
 
   @Watch("filteredList", { deep: true, immediate: true })
   onFilteredListChange() {
+    const validList = this.filteredList.filter((order) => order.status === GoodsOrderStatus.RECORDED);
+    const cancelledList = this.filteredList.filter((order) => order.status === GoodsOrderStatus.CANCELED);
+
     this.$emit("update:filter-result", {
-      listCount: this.filteredList.length,
-      totalStockCount: this.filteredList.reduce(
+      listCount: validList.length,
+      listCountCancelled: cancelledList.length,
+      totalStockCount: validList.reduce(
         (acc, order) => acc + order.order.reduce(
           (oAcc, oItem) => oAcc + ((oItem.cId && oItem.combinedGoods ? oItem.combinedGoods.length : 1) * oItem.quantity), 0), 0),
-      totalRevenue: this.filteredList.reduce((acc, order) => acc + order.totalRevenue, 0),
+      totalRevenue: validList.reduce((acc, order) => acc + order.totalRevenue, 0),
     } as IGoodsOrderFilterResult);
   }
 

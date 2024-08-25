@@ -54,9 +54,9 @@
             @click="filterSettingDialogShown = true">필터 설정</VBtn>
 
       <div> <!-- TODO: v-if filterSettings is not default -->
-        <div>표시 중인 판매 기록 개수: {{ filterResult.listCount.toLocaleString() }}개</div>
-        <div>표시 판매 기록의 총 소진 재고 수: {{ filterResult.totalStockCount.toLocaleString() }}개</div>
-        <div>표시 판매 기록의 총 수익: {{ currencySymbol }}{{ filterResult.totalRevenue.toLocaleString() }}</div>
+        <div>표시 중인 판매 기록 개수: 유효 {{ filterResult.listCount.toLocaleString() }}개, 취소 {{ filterResult.listCountCancelled.toLocaleString() }}개</div>
+        <div>표시 판매 기록의 총 유효 소진 재고 수: {{ filterResult.totalStockCount.toLocaleString() }}개</div>
+        <div>표시 판매 기록의 총 유효 수익: {{ currencySymbol }}{{ filterResult.totalRevenue.toLocaleString() }}</div>
       </div>
     </VLayout>
 
@@ -112,6 +112,7 @@ export default class GoodsOrdersListPage extends Vue {
 
   filterResult: IGoodsOrderFilterResult = {
     listCount: 0,
+    listCountCancelled: 0,
     totalStockCount: 0,
     totalRevenue: 0,
   };
