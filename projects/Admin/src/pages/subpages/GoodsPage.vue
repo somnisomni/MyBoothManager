@@ -80,6 +80,8 @@ export default class GoodsPage extends Vue {
   deleteDialogOpen = false;
   deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
 
+  goodsImportDialogOpen = false;
+
   get currencySymbol(): string {
     return useAdminStore().currentBooth.booth!.currencySymbol;
   }

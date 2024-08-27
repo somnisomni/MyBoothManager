@@ -32,7 +32,7 @@
             min-width="64px"
             size="x-large"
             @click.stop="onLoadGoodsFromFileClick">
-        <VTooltip activator="parent" location="bottom">파일로부터 굿즈 목록 불러오기</VTooltip>
+        <VTooltip activator="parent" location="bottom">굿즈 목록 가져오기</VTooltip>
         <VIcon>mdi-file-upload</VIcon>
       </VBtn>
     </VRow>
@@ -40,6 +40,7 @@
 
   <GoodsManageDialog v-model="goodsAddDialogOpen" />
   <GoodsCombinationManageDialog v-model="combinationAddDialogOpen" />
+  <GoodsImportDialog v-model="goodsImportDialogOpen" />
 </template>
 
 <script lang="ts">
@@ -50,22 +51,25 @@ import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialog.vue";
+import GoodsImportDialog from "../dialogs/GoodsImportDialog.vue";
 
 @Component({
   components: {
     DashboardPanel,
     GoodsManageDialog,
     GoodsCombinationManageDialog,
+    GoodsImportDialog,
   },
 })
 export default class GoodsManagePanel extends Vue {
   goodsAddDialogOpen = false;
   combinationAddDialogOpen = false;
+  goodsImportDialogOpen = false;
 
   goodsListRefreshing = false;
 
   @Setup(() => useDisplay().smAndUp)
-  smAndUp!: boolean;
+  declare smAndUp: boolean;
 
   get goodsCount(): string {
     return Object.keys(useAdminStore().currentBooth.goods ?? {}).length.toLocaleString();
@@ -80,7 +84,7 @@ export default class GoodsManagePanel extends Vue {
   }
 
   onLoadGoodsFromFileClick(): void {
-    alert("준비 중인 기능입니다.");
+    this.goodsImportDialogOpen = true;
   }
 }
 </script>
