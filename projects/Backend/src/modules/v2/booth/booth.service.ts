@@ -38,6 +38,24 @@ export class BoothService {
     return await findOneByPk(Booth, boothId);
   }
 
+  async isBoothBelongsToAccount(boothId: number, accountId: number): Promise<boolean> {
+    return await this.boothOwnerCache.testValue(boothId, accountId);
+  }
+
+  isBoothPublished(booth?: Booth): boolean {
+    if(!booth) return false;
+
+    return booth.status !== BoothStatus.PREPARE || booth.statusContentPublished;
+  }
+
+  isBoothAvailable(booth?: Booth): boolean {
+    if(!booth) return false;
+
+    return this.isBoothPublished(booth)
+            && booth.status !== BoothStatus.CLOSE
+            && (!booth.fairId || !booth.associatedFair?.isPassed);
+  }
+
   /**
    * Finds a booth entity by ID. If `accountId` is specified, it checks if the booth belongs to the account.
    * @param id ID of the booth
@@ -60,7 +78,7 @@ export class BoothService {
       // PUBLIC
       const booth = await findOneByPk(Booth, id);
 
-      if(onlyPublished && (booth.status === BoothStatus.PREPARE && !booth.statusContentPublished)) {
+      if(onlyPublished && this.isBoothPublished(booth)) {
         // If booth is not published, throw an error
         throw new BoothNotPublishedException();
       }
@@ -173,7 +191,7 @@ class BoothOwnerCache extends CacheMap<number, number> {
   override async fetch(key: number): Promise<number> {
     const booth = await findOneByPk(Booth, key);
 
-    if(typeof booth.ownerId === "undefined") throw new NoAccessException();
+    if(typeof booth.ownerId !== "number") throw new NoAccessException();
 
     return booth.ownerId;
   }

@@ -4,9 +4,13 @@ import { GoodsService } from "./goods.service";
 import { GoodsController } from "./goods.controller";
 import { GoodsImageService } from "./goods.image.service";
 import { GoodsImageController } from "./goods.image.controller";
+import BoothModule from "../booth/booth.module";
 
 @Module({
-  imports: [UtilModule],
+  imports: [
+    BoothModule,
+    UtilModule,
+  ],
   providers: [
     GoodsService,
     GoodsImageService,
