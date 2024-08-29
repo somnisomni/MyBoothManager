@@ -8,6 +8,7 @@ import BoothModule from "./booth/booth.module";
 import FairModule from "./fair/fair.module";
 import GoodsModule from "./goods/goods.module";
 import GoodsCategoryModule from "./goods-category/goods-category.module";
+import GoodsCombinationModule from "./goods-combination/goods-combination.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import GoodsCategoryModule from "./goods-category/goods-category.module";
     FairModule,
     GoodsModule,
     GoodsCategoryModule,
+    GoodsCombinationModule,
     UtilModule,
   ],
   providers: [
