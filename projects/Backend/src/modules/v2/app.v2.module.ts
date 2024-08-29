@@ -7,6 +7,7 @@ import AuthModule from "./auth/auth.module";
 import BoothModule from "./booth/booth.module";
 import FairModule from "./fair/fair.module";
 import GoodsModule from "./goods/goods.module";
+import GoodsCategoryModule from "./goods-category/goods-category.module";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import GoodsModule from "./goods/goods.module";
     BoothModule,
     FairModule,
     GoodsModule,
+    GoodsCategoryModule,
     UtilModule,
   ],
   providers: [
