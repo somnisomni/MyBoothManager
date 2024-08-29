@@ -1,15 +1,11 @@
-import { Controller, Delete, Get, HttpCode, NotFoundException, Patch, Post, Put } from "@nestjs/common";
+import { All, Controller, Get, HttpCode, NotFoundException } from "@nestjs/common";
 import { HTTP_HEALTH_CHECK_STATUS_CODE, SUCCESS_RESPONSE } from "@myboothmanager/common";
 
 @Controller()
 export class RootController {
   constructor() { }
 
-  @Get()
-  @Post()
-  @Patch()
-  @Put()
-  @Delete()
+  @All()
   routeNotFound() {
     throw new NotFoundException();
   }

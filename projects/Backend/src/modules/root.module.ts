@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { AppModuleV2 } from "./v2/app.v2.module";
 import { RouterModule } from "@nestjs/core";
+import { AppModuleV2 } from "./v2/app.v2.module";
 import { RootController } from "./root.controller";
 
 export const ROUTE_PREFIX = "v2" as const;
