@@ -1,6 +1,6 @@
 <template>
   <VSheet v-ripple
-          class="goods-item no-selection d-flex ma-2"
+          class="goods-item no-selection bg-black d-flex ma-2"
           :class="{ 'combination-item': isCombination,
                     'disabled no-interaction': disabled,
                     'small': !displayMdAndUp,

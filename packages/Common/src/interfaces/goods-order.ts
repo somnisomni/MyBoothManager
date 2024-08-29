@@ -33,9 +33,9 @@ export enum GoodsOrderStatus {
 
 export enum GoodsOrderPaymentMethod {
   CASH = "cash",
-  CARD = "card",
   TRANSFER = "transfer",
   PREPAID = "prepaid",
+  CARD = "card",
 }
 
 /* === Frontend === */

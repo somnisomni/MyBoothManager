@@ -4,6 +4,7 @@
       <VBtn class="d-flex flex-row flex-0-0 align-center justify-start text-left px-2"
             variant="text"
             size="large"
+            :style="{ 'pointer-events': isNonEditable((categoryData as IGoodsCategory).id) ? 'none' : 'auto' }"
             @click.stop="onClick((categoryData as IGoodsCategory).id)"
             @pointerenter="isHovering = true"
             @pointerleave="isHovering = false">
@@ -26,6 +27,10 @@ import { Component, Emit, Vue } from "vue-facing-decorator";
 })
 export default class GoodsCategoryTitleManageable extends Vue {
   isHovering: boolean = false;
+
+  isNonEditable(categoryId: number) {
+    return categoryId < 0;
+  }
 
   @Emit("click")
   onClick(categoryId: number) {
