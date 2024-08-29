@@ -6,6 +6,7 @@ import AccountModule from "./account/account.module";
 import AuthModule from "./auth/auth.module";
 import BoothModule from "./booth/booth.module";
 import FairModule from "./fair/fair.module";
+import GoodsModule from "./goods/goods.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import FairModule from "./fair/fair.module";
     AuthModule,
     BoothModule,
     FairModule,
+    GoodsModule,
     UtilModule,
   ],
   providers: [
