@@ -43,5 +43,4 @@ export class GoodsImageService {
       throw new InternalServerErrorException("Failed to delete all images");
     }
   }
-
 }

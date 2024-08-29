@@ -6,6 +6,7 @@ import { IAuthData } from "../auth/jwt-util.service";
 import { BOOTH_ID_QUERY } from "@/modules/root.module";
 import { CreateGoodsRequestDto } from "./dto/create.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
+import { UpdateGoodsRequestDto } from "./dto/update.dto";
 
 @Controller("/goods")
 export class GoodsController {
@@ -44,7 +45,7 @@ export class GoodsController {
   @Patch(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
   async update(@Param("id", new ParseIntPipe()) id: number,
-               @Body() updateDto: CreateGoodsRequestDto,
+               @Body() updateDto: UpdateGoodsRequestDto,
                @AuthData() authData: IAuthData): Promise<AdminGoodsResponseDto> {
     return new AdminGoodsResponseDto(await this.goods.update(id, updateDto, authData.id));
   }
