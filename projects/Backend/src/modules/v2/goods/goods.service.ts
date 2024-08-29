@@ -140,11 +140,11 @@ export class GoodsService {
         goods = await goods.set("combinationId", null).save();
       }
 
-      return await goods.update({
+      return await (await goods.update({
         ...updateDto,
         categoryId,
         boothId: undefined,  // Prevent boothId from being updated
-      });
+      })).save();
     } catch(err) {
       throw new GoodsInfoUpdateFailedException();
     }
