@@ -47,24 +47,16 @@ export interface ICustomRequestParams {
 }
 
 /**
- * Parameter decorator for user type
- *
- * Decorator returns `UserType` enum value
- */
-export const UserType = createParamDecorator((data: unknown, context: ExecutionContext): UserTypes => {
-  const request = context.switchToHttp().getRequest<FastifyRequest>();
-  return (request.params as ICustomRequestParams).userType;
-});
-
-/**
  * `AllowedFor` decorator key
  */
 export const ALLOWED_FOR_KEY = "permission";
 
 /**
- * `AllowedFor` decorator, to specify which user type can access the route
+ * `AllowedFor` decorator, to specify which user type can access the route.
  *
- * If this decorator is not specified, the route is allowed for all user types
+ * If this decorator is not specified, the route is allowed for all user types.
+ *
+ * If some user types are specified, the access permission is determined by OR condition. This means, if the user type matches at least one of the specified user types, the user can access the route.
  *
  * This decorator can be used when if WHOLE logic of the route should be limited to specified user types.
  * If you want to limit only some part of the route or should have conditional branch for multiple user types,
@@ -75,13 +67,25 @@ export const ALLOWED_FOR_KEY = "permission";
 export const AllowedFor = (...permissions: UserTypes[]) => SetMetadata(ALLOWED_FOR_KEY, permissions);
 
 /**
- * Parameter decorator for auth data
+ * Parameter decorator for user type.
+ * This only can be used in the context with `AuthGuard` injected.
+ *
+ * Decorator returns `UserType` enum value. At least `UserTypes.PUBLIC` is guaranteed.
+ */
+export const UserType = createParamDecorator((data: unknown, context: ExecutionContext): UserTypes => {
+  const params = context.switchToHttp().getRequest<FastifyRequest>().params as ICustomRequestParams;
+  return params.userType;
+});
+
+/**
+ * Parameter decorator for auth data.
+ * This only can be used in the context with `AuthGuard` injected.
  *
  * Decorator returns `IAuthData` object, but it can be `undefined` if the user is not authenticated
  */
 export const AuthData = createParamDecorator((data: unknown, context: ExecutionContext): IAuthData | undefined => {
-  const request = context.switchToHttp().getRequest<FastifyRequest>();
-  return (request.params as ICustomRequestParams).authData;
+  const params = context.switchToHttp().getRequest<FastifyRequest>().params as ICustomRequestParams;
+  return params.authData;
 });
 
 @Injectable()
@@ -93,11 +97,12 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
+    const params = request.params as ICustomRequestParams;
     const token = this.extractAccessTokenFromHeader(request);
 
     if(!token) {
       // If authorization token is not provided, set user type to public
-      (request.params as ICustomRequestParams).userType = UserTypes.PUBLIC;
+      params.userType = UserTypes.PUBLIC;
     } else {
       // If authorization token is provided, process admin determination
       try {
@@ -111,9 +116,9 @@ export class AuthGuard implements CanActivate {
 
         // If token is valid, set user type
         if(payload.id === -1) {
-          (request.params as ICustomRequestParams).userType = UserTypes.SUPER_ADMIN;
+          params.userType = UserTypes.SUPER_ADMIN;
         } else {
-          (request.params as ICustomRequestParams).userType = UserTypes.BOOTH_ADMIN;
+          params.userType = UserTypes.BOOTH_ADMIN;
         }
       } catch(error) {
         // If token is available but invalid, should throw an error
