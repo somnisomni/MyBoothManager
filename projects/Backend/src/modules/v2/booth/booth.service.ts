@@ -78,7 +78,7 @@ export class BoothService {
       // PUBLIC
       const booth = await findOneByPk(Booth, id);
 
-      if(onlyPublished && this.isBoothPublished(booth)) {
+      if(onlyPublished && !this.isBoothPublished(booth)) {
         // If booth is not published, throw an error
         throw new BoothNotPublishedException();
       }
