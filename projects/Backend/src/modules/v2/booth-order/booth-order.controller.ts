@@ -6,8 +6,9 @@ import { IAuthData } from "../auth/jwt-util.service";
 import { BoothOrderResponseDto } from "./dto/booth-order.dto";
 import { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
+import { BOOTH_ID_QUERY } from "../../root.module";
 
-@Controller("/booth/:bId/order")
+@Controller(`/booth/:${BOOTH_ID_QUERY}/order`)
 export class BoothOrderController {
   constructor(
     private readonly order: BoothOrderService,
@@ -16,7 +17,7 @@ export class BoothOrderController {
   /* === Admin routes === */
   @Get()
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async findAll(@Param("bId", new ParseIntPipe()) boothId: number,
+  async findAll(@Param(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
                 @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto[]> {
     return (await this.order.findAll(boothId, authData.id))
       .map((order) => new BoothOrderResponseDto(order));
@@ -24,7 +25,7 @@ export class BoothOrderController {
 
   @Get(":oId")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async findOne(@Param("bId", new ParseIntPipe()) boothId: number,
+  async findOne(@Param(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
                 @Param("oId", new ParseIntPipe()) orderId: number,
                 @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto> {
     return new BoothOrderResponseDto(await this.order.findOne(orderId, boothId, authData.id));
@@ -32,7 +33,7 @@ export class BoothOrderController {
 
   @Post()
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async create(@Param("bId", new ParseIntPipe()) boothId: number,
+  async create(@Param(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
                @Body() createDto: CreateBoothOrderRequestDto,
                @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto> {
     return new BoothOrderResponseDto(await this.order.create(createDto, boothId, authData.id));
@@ -40,7 +41,7 @@ export class BoothOrderController {
 
   @Patch(":oId/status")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async updateStatus(@Param("bId", new ParseIntPipe()) boothId: number,
+  async updateStatus(@Param(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
                      @Param("oId", new ParseIntPipe()) orderId: number,
                      @Body() updateStatusDto: UpdateBoothOrderStatusRequestDto,
                      @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
