@@ -40,7 +40,7 @@ export class BoothController {
    *  - for **public user**: returns the booth if it is published
    */
   @Get(":id")
-  async findOne(@Param("id", new ParseIntPipe()) id: number,
+  async findOne(@Param("id", ParseIntPipe) id: number,
                 @UserType() userType: UserTypes,
                 @Query("setLast", new ParseBoolPipe({ optional: true })) setLast?: boolean,
                 @AuthData() authData?: IAuthData): Promise<BoothResponseDto> {
@@ -68,7 +68,7 @@ export class BoothController {
    */
   @Patch(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() updateDto: UpdateBoothRequestDto,
                @AuthData() authData: IAuthData): Promise<AdminBoothResponseDto> {
     return new AdminBoothResponseDto(await this.booth.update(id, updateDto, authData.id));
@@ -79,7 +79,7 @@ export class BoothController {
    */
   @Patch(":id/status")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async updateStatus(@Param("id", new ParseIntPipe()) id: number,
+  async updateStatus(@Param("id", ParseIntPipe) id: number,
                      @Body() updateStatusDto: UpdateBoothStatusRequestDto,
                      @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.booth.updateStatus(id, updateStatusDto, authData.id);
@@ -92,7 +92,7 @@ export class BoothController {
    */
   @Delete(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async delete(@Param("id", new ParseIntPipe()) id: number,
+  async delete(@Param("id", ParseIntPipe) id: number,
                @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.booth.remove(id, authData.id);
   }

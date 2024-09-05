@@ -21,8 +21,8 @@ export class GoodsCategoryController {
    *  - for **public user**: returns a goods category belonging to the booth, with limited information for each
    */
   @Get(":id")
-  async findOne(@Param("id", new ParseIntPipe()) id: number,
-                @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async findOne(@Param("id", ParseIntPipe) id: number,
+                @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @UserType() userType: UserTypes,
                 @AuthData() authData?: IAuthData): Promise<GoodsCategoryResponseDto> {
     if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN)) {
@@ -43,7 +43,7 @@ export class GoodsCategoryController {
 
   @Patch(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() updateDto: CreateGoodsCategoryRequestDto,
                @AuthData() authData: IAuthData): Promise<AdminGoodsCategoryResponseDto> {
     return new AdminGoodsCategoryResponseDto(await this.category.update(id, updateDto, authData.id));
@@ -51,8 +51,8 @@ export class GoodsCategoryController {
 
   @Delete(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async remove(@Param("id", new ParseIntPipe()) id: number,
-               @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async remove(@Param("id", ParseIntPipe) id: number,
+               @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.category.remove(id, boothId, authData.id);
   }

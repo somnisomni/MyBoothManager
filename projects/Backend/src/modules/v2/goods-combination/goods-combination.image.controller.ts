@@ -17,8 +17,8 @@ export class GoodsCombinationImageController {
   /* === Admin routes === */
   @Post("primary")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async uploadPrimaryImage(@Param("id", new ParseIntPipe()) id: number,
-                           @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async uploadPrimaryImage(@Param("id", ParseIntPipe) id: number,
+                           @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                            @Req() request: FastifyRequest,
                            @AuthData() authData: IAuthData): Promise<IImageUploadInfo> {
     return await this.image.uploadPrimaryImage(id, boothId, await this.util.getFileFromRequest(request), authData.id);
@@ -26,8 +26,8 @@ export class GoodsCombinationImageController {
 
   @Delete("primary")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async deletePrimaryImage(@Param("id", new ParseIntPipe()) id: number,
-                           @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async deletePrimaryImage(@Param("id", ParseIntPipe) id: number,
+                           @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                            @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.image.deletePrimaryImage(id, boothId, authData.id);
   }

@@ -40,6 +40,7 @@
     "app-root-path": "^3.1.0",
     "argon2": "^0.40.3",
     "chalk": "^4",
+    "class-validator": "^0.14.1",
     "class-transformer": "^0.5.1",
     "clone-deep": "^4.0.1",
     "cross-env": "^7.0.3",

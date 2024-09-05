@@ -36,7 +36,7 @@ export class FairController {
    *  - for **public user**: returns the fair only if it's not passed
    */
   @Get(":id")
-  async findOne(@Param("id", new ParseIntPipe()) id: number,
+  async findOne(@Param("id", ParseIntPipe) id: number,
                 @UserType() userType: UserTypes): Promise<FairResponseDto> {
     if(UserTypeUtil.havePermission(userType, UserTypes.SUPER_ADMIN)) {
       return new SuperAdminFairResponseDto(await this.fair.findOne(id, true));
@@ -61,7 +61,7 @@ export class FairController {
    */
   @Patch(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() dto: CreateFairRequestDto): Promise<SuperAdminFairResponseDto> {
     return new SuperAdminFairResponseDto(await this.fair.update(id, dto));
   }
@@ -71,7 +71,7 @@ export class FairController {
    */
   @Delete(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async remove(@Param("id", new ParseIntPipe()) id: number): Promise<ISuccessResponse> {
+  async remove(@Param("id", ParseIntPipe) id: number): Promise<ISuccessResponse> {
     throw new NotAcceptableException("Removing fairs is prohibited for now.");
 
     return await this.fair.remove(id);

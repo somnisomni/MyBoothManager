@@ -30,4 +30,6 @@ import GoodsCombinationModule from "./goods-combination/goods-combination.module
     },
   ],
 })
-export class AppModuleV2 { }
+export class AppModuleV2 {
+  public static readonly ROUTE_PREFIX = "v2" as const;
+}

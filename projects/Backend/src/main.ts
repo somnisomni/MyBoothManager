@@ -77,6 +77,9 @@ async function bootstrap() {
   } as FastifyStaticOptions);
 
   /* *** Nest.js app globals *** */
+  // Global prefix
+  app.setGlobalPrefix(RootModule.CURRENT_PREFIX);
+
   // Global filters
   app.useGlobalFilters(
     new AllExceptionsFilter(),

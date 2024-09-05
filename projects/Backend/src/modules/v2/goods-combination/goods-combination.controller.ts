@@ -22,8 +22,8 @@ export class GoodsCombinationController {
    *  - for **public user**: returns a goods combination belonging to the booth, with limited information for each
    */
   @Get(":id")
-  async findOne(@Param("id", new ParseIntPipe()) id: number,
-                @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async findOne(@Param("id", ParseIntPipe) id: number,
+                @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @UserType() userType: UserTypes,
                 @AuthData() authData?: IAuthData): Promise<GoodsCombinationResponseDto> {
     if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN)) {
@@ -44,7 +44,7 @@ export class GoodsCombinationController {
 
   @Patch(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() updateDto: UpdateGoodsCombinationRequestDto,
                @AuthData() authData: IAuthData): Promise<AdminGoodsCombinationResponseDto> {
     return new AdminGoodsCombinationResponseDto(await this.combination.update(id, updateDto, authData.id));
@@ -52,8 +52,8 @@ export class GoodsCombinationController {
 
   @Delete(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async remove(@Param("id", new ParseIntPipe()) id: number,
-               @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async remove(@Param("id", ParseIntPipe) id: number,
+               @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.combination.remove(id, boothId, authData.id);
   }

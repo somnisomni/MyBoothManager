@@ -16,7 +16,7 @@ export class BoothImageController {
   /* === Admin routes === */
   @Post("banner")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async uploadBannerImage(@Param("id", new ParseIntPipe()) id: number,
+  async uploadBannerImage(@Param("id", ParseIntPipe) id: number,
                           @Req() request: FastifyRequest,
                           @AuthData() authData: IAuthData): Promise<IImageUploadInfo> {
     return await this.image.uploadBannerImage(id, await this.util.getFileFromRequest(request), authData.id);
@@ -24,14 +24,14 @@ export class BoothImageController {
 
   @Delete("banner")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async deleteBannerImage(@Param("id", new ParseIntPipe()) id: number,
+  async deleteBannerImage(@Param("id", ParseIntPipe) id: number,
                           @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.image.deleteBannerImage(id, authData.id);
   }
 
   @Post("info")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async uploadInfoImage(@Param("id", new ParseIntPipe()) id: number,
+  async uploadInfoImage(@Param("id", ParseIntPipe) id: number,
                         @Req() request: FastifyRequest,
                         @AuthData() authData: IAuthData): Promise<IImageUploadInfo> {
     return await this.image.uploadInfoImage(id, await this.util.getFileFromRequest(request), authData.id);
@@ -39,7 +39,7 @@ export class BoothImageController {
 
   @Delete("info")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async deleteInfoImage(@Param("id", new ParseIntPipe()) id: number,
+  async deleteInfoImage(@Param("id", ParseIntPipe) id: number,
                         @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.image.deleteInfoImage(id, authData.id);
   }

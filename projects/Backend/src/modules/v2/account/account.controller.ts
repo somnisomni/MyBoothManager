@@ -62,7 +62,7 @@ export default class AccountController {
    */
   @Get(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async findOne(@Param("id", new ParseIntPipe()) id: number): Promise<SuperAdminAccountResponseDto> {
+  async findOne(@Param("id", ParseIntPipe) id: number): Promise<SuperAdminAccountResponseDto> {
     return new SuperAdminAccountResponseDto(await this.account.findOne(id));
   }
 
@@ -71,7 +71,7 @@ export default class AccountController {
    */
   @Patch(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() updateDto: UpdateAccountRequestDto): Promise<SuperAdminAccountResponseDto> {
     return new SuperAdminAccountResponseDto(await this.account.update(id, updateDto));
   }
@@ -81,7 +81,7 @@ export default class AccountController {
    */
   @Delete(":id")
   @AllowedFor(UserTypes.SUPER_ADMIN)
-  async remove(@Param("id", new ParseIntPipe()) id: number): Promise<ISuccessResponse> {
+  async remove(@Param("id", ParseIntPipe) id: number): Promise<ISuccessResponse> {
     return await this.account.remove(id);
   }
 }

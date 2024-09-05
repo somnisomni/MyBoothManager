@@ -22,10 +22,11 @@ export class GoodsController {
    *  - for **public user**: returns a goods belonging to the booth, with limited information for each
    */
   @Get(":id")
-  async findOne(@Param("id", new ParseIntPipe()) id: number,
-                @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async findOne(@Param("id", ParseIntPipe) id: number,
+                @Query(BOOTH_ID_QUERY) boothId: number,
                 @UserType() userType: UserTypes,
                 @AuthData() authData?: IAuthData): Promise<GoodsResponseDto> {
+    console.log(boothId);
     if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN)) {
       return new AdminGoodsResponseDto(await this.goods.findOne(id, boothId, true, authData!.id));
     }
@@ -44,7 +45,7 @@ export class GoodsController {
 
   @Patch(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async update(@Param("id", new ParseIntPipe()) id: number,
+  async update(@Param("id", ParseIntPipe) id: number,
                @Body() updateDto: UpdateGoodsRequestDto,
                @AuthData() authData: IAuthData): Promise<AdminGoodsResponseDto> {
     return new AdminGoodsResponseDto(await this.goods.update(id, updateDto, authData.id));
@@ -52,8 +53,8 @@ export class GoodsController {
 
   @Delete(":id")
   @AllowedFor(UserTypes.BOOTH_ADMIN)
-  async remove(@Param("id", new ParseIntPipe()) id: number,
-               @Query(BOOTH_ID_QUERY, new ParseIntPipe()) boothId: number,
+  async remove(@Param("id", ParseIntPipe) id: number,
+               @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.goods.remove(id, boothId, authData.id);
   }
