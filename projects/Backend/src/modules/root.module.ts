@@ -8,6 +8,4 @@ export const BOOTH_ID_QUERY = "bId" as const;
   imports: [AppModuleV2],
   controllers: [RootController],
 })
-export class RootModule {
-  public static readonly CURRENT_PREFIX = AppModuleV2.ROUTE_PREFIX;
-}
+export class RootModule { }

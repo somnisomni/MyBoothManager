@@ -12,6 +12,7 @@ import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exce
 import { LoggingInterceptor } from "./logging.interceptor";
 import { RootModule } from "./modules/root.module";
 import { UtilService } from "./modules/common/util/util.service";
+import { AppModuleV2 } from "./modules/v2/app.v2.module";
 
 async function bootstrap() {
   /* *** dotenv configuration *** */
@@ -78,7 +79,7 @@ async function bootstrap() {
 
   /* *** Nest.js app globals *** */
   // Global prefix
-  app.setGlobalPrefix(RootModule.CURRENT_PREFIX);
+  app.setGlobalPrefix(AppModuleV2.ROUTE_PREFIX);
 
   // Global filters
   app.useGlobalFilters(
