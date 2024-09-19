@@ -10,7 +10,6 @@ export class BoothResponseDto implements IBoothResponse {
   @Expose() declare location?: string | null;
   @Expose() declare noticeContent?: string | null;
   @Expose() declare boothNumber?: string | null;
-  @Expose() declare currencySymbol: string;
   @Expose() declare currencyCode: SupportedCurrencyCodes;
   @Expose() declare status: IBoothStatus;
   @Expose() declare dateOpen?: Date | null;
@@ -21,7 +20,7 @@ export class BoothResponseDto implements IBoothResponse {
   @Expose() declare infoImage?: IImageUploadInfo;
   @Expose() declare bannerImage?: IImageUploadInfo;
 
-  @Exclude() ownerId = NaN;
+  @Exclude() ownerId: number = NaN;
 
   constructor(model: Booth) {
     const values = model.get();
@@ -31,7 +30,6 @@ export class BoothResponseDto implements IBoothResponse {
     this.description = values.description;
     this.noticeContent = values.noticeContent;
     this.boothNumber = values.boothNumber;
-    this.currencySymbol = values.currencySymbol;
     this.currencyCode = values.currencyCode;
     this.status = {
       status: values.status,

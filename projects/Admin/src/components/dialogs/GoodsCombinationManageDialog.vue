@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
-import { Component, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
+import { Component, Model, Prop, Ref, Setup, toNative, Vue, Watch } from "vue-facing-decorator";
 import { reactive, readonly } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -95,13 +95,16 @@ import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
   },
   emits: [ "updated", "deleted", "error" ],
 })
-export default class GoodsCombinationManageDialog extends Vue {
+class GoodsCombinationManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Number,  default: null  }) readonly combinationId?: number | string | null;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
   @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
   @Ref("form") readonly form?: CommonForm;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   readonly formModels: IGoodsCombinationCreateRequest = reactive({
     boothId: -1,
@@ -212,10 +215,6 @@ export default class GoodsCombinationManageDialog extends Vue {
 
   get boothGoodsList() {
     return Object.values(useAdminStore().currentBooth.goods ?? {});
-  }
-
-  get currencySymbol() {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get alreadyCombinatedGoodsIdList() {
@@ -330,4 +329,6 @@ export default class GoodsCombinationManageDialog extends Vue {
     return await useAdminAPIStore().deleteGoodsCombinationImage(Number(this.combinationId!));
   }
 }
+
+export default toNative(GoodsCombinationManageDialog);
 </script>

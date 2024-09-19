@@ -1,7 +1,7 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
 import { computed, ref, type ToRefs } from "vue";
-import { CURRENCY_INFO, CURRENCY_SYMBOL_TO_CODE_MAP, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { CURRENCY_INFO, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { useAdminAPIStore } from "./api";
 
@@ -36,8 +36,7 @@ const useAdminStore = defineStore("admin", () => {
   const globalSnackbarContexts = new SnackbarContextWrapper();
 
   /* Computed States */
-  // TODO: Ditch symbol to code mapping after altering the booth DB model
-  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[CURRENCY_SYMBOL_TO_CODE_MAP[currentBooth.booth.value?.currencySymbol ?? "₩"]]);
+  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[currentBooth.booth.value?.currencyCode ?? "KRW"]);
 
   /* Actions */
   function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {

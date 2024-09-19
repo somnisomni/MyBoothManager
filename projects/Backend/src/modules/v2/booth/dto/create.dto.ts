@@ -6,7 +6,6 @@ export class CreateBoothRequestDto implements IBoothCreateRequest /* , IBoothCre
   declare description?: string;
   declare location: string;
   declare boothNumber?: string;
-  declare currencySymbol: string;
   declare currencyCode: SupportedCurrencyCodes;
   declare dateOpen?: Date | null;
   declare dateClose?: Date | null;

@@ -48,9 +48,9 @@ import type { ChartOptions, ChartData, Point } from "chart.js";
 import { GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
 import ChartJS from "chart.js/auto";
 import "chartjs-adapter-moment";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Setup, toNative, Vue } from "vue-facing-decorator";
 import { Chart } from "vue-chartjs";
-import colors from "vuetify/util/colors";
+import * as colors from "vuetify/lib/util/colors.mjs";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { Dateonly, OrderedDateonlySet } from "@/lib/classes";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -62,7 +62,10 @@ ChartJS.register();
     Chart,
   },
 })
-export default class AnalyticsPage extends Vue {
+class AnalyticsPage extends Vue {
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
+
   readonly CHART_ANALYTICS_OPTIONS: ChartOptions = {
     responsive: true,
     maintainAspectRatio: true,
@@ -154,10 +157,6 @@ export default class AnalyticsPage extends Vue {
     await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
 
     this.dataLoading = false;
-  }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol ?? "";
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
@@ -277,4 +276,6 @@ export default class AnalyticsPage extends Vue {
         (acc2, cur2) => acc2 + (cur2.cId ? cur2.quantity * (cur2.combinedGoods ?? []).length : cur2.quantity), 0), 0);
   }
 }
+
+export default toNative(AnalyticsPage);
 </script>

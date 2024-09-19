@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { GoodsOrderPaymentMethod, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
-import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon } from "@/lib/enum-to-string";
@@ -43,13 +43,16 @@ import { getPaymentMethodIcon } from "@/lib/enum-to-string";
 @Component({
   emits: ["click"],
 })
-export default class GoodsOrderListItem extends Vue {
+class GoodsOrderListItem extends Vue {
   readonly GoodsOrderStatus = GoodsOrderStatus;
 
-  @Prop({ type: Object, required: true }) orderData!: IGoodsOrder;
+  @Prop({ type: Object, required: true }) declare readonly orderData: IGoodsOrder;
 
   @Setup(() => useDisplay().smAndUp)
-  smAndUp!: boolean;
+  declare readonly smAndUp: boolean;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   get statusIcon(): { icon: string; color: string; textColor: string, class: string } {
     switch(this.orderData.status) {
@@ -79,10 +82,6 @@ export default class GoodsOrderListItem extends Vue {
 
   get paymentMethodIcon(): string {
     return getPaymentMethodIcon(this.orderData.paymentMethod ?? GoodsOrderPaymentMethod.CASH);
-  }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get createdTime(): Date | undefined {
@@ -129,6 +128,8 @@ export default class GoodsOrderListItem extends Vue {
     return this.orderData;
   }
 }
+
+export default toNative(GoodsOrderListItem);
 </script>
 
 <style lang="scss" scoped>
