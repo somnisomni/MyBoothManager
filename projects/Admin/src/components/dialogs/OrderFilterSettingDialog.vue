@@ -29,7 +29,7 @@
 <script lang="ts">
 import type { IGoodsOrderFilterSetting } from "../goods/GoodsOrderListView.vue";
 import { GoodsOrderPaymentMethod, type IGoods } from "@myboothmanager/common";
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
 import SelectableGoodsListView from "../goods/SelectableGoodsListView.vue";
@@ -40,11 +40,14 @@ import SelectableGoodsListView from "../goods/SelectableGoodsListView.vue";
   },
   emits: ["primary"],
 })
-export default class OrderFilterSettingDialog extends Vue {
+class OrderFilterSettingDialog extends Vue {
   readonly GoodsOrderPaymentMethod = GoodsOrderPaymentMethod;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Object, default: {} }) filterSetting!: IGoodsOrderFilterSetting;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   get paymentMethods() {
     const data = [];
@@ -62,14 +65,12 @@ export default class OrderFilterSettingDialog extends Vue {
     return Object.values(useAdminStore().currentBooth.goods ?? {});
   }
 
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
-
   @Emit("primary")
   onDialogConfirm() {
     this.open = false;
     return this.filterSetting;
   }
 }
+
+export default toNative(OrderFilterSettingDialog);
 </script>

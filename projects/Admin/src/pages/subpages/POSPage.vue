@@ -42,8 +42,8 @@
 <script lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 import type { Goods, GoodsCombination, SnackbarContextWrapper } from "@myboothmanager/common-ui";
-import { APP_NAME, BoothStatus, GoodsStockVisibility, type IBooth, type IGoodsCategory } from "@myboothmanager/common";
-import { Component, Hook, Setup, Vue } from "vue-facing-decorator";
+import { APP_NAME, BoothStatus, GoodsStockVisibility, type IGoodsCategory } from "@myboothmanager/common";
+import { Component, Hook, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
@@ -57,15 +57,21 @@ import { POSOrderSimulationLayer } from "./POSPage.lib";
     POSPageLeaveConfirmDialog,
   },
 })
-export default class POSPage extends Vue {
+class POSPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly goodsItemForceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   @Setup(() => useDisplay().mdAndUp)
-  readonly mdAndUp!: boolean;
+  declare readonly mdAndUp: boolean;
 
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
+
+  @Setup(() => useAdminStore().currentBooth.booth)
+  declare readonly currentBooth: NonNullable<ReturnType<typeof useAdminStore>["currentBooth"]["booth"]>;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   orderSimulationLayer: POSOrderSimulationLayer | null = null;
 
@@ -78,8 +84,6 @@ export default class POSPage extends Vue {
   private orderCreateSuccessSnackbarId = "";
   private orderCreateFailedSnackbarId = "";
 
-  get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
-  get currencySymbol(): string { return this.currentBooth.currencySymbol; }
   get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().currentBooth.goodsCategories ?? {}); }
   get boothGoodsCombinedList(): Array<Goods | GoodsCombination> {
     return [
@@ -170,6 +174,8 @@ export default class POSPage extends Vue {
     });
   }
 }
+
+export default toNative(POSPage);
 </script>
 
 <style lang="scss">

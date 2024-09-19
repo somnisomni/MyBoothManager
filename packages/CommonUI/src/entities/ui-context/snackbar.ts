@@ -1,10 +1,8 @@
 import { ref, type Ref } from "vue";
 
 /* Part of https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/anchor.ts#L8-L14 */
-const block = ["top", "bottom"] as const;
-const inline = ["start", "end", "left", "right"] as const;
-type Tblock = typeof block[number];
-type Tinline = typeof inline[number];
+type Tblock = ["top", "bottom"][number];
+type Tinline = ["start", "end", "left", "right"][number];
 type VuetifyAnchor =
   | Tblock
   | Tinline

@@ -40,7 +40,35 @@ export async function findOneByPk<T extends Model<any, any>>(model: { new (): T 
   }
 
   if(!target) throw new EntityNotFoundException();
-  else return target as unknown as T;
+  return target as T;
+}
+
+export async function findAll<T extends Model<any, any>>(model: { new (): T }, where: WhereOptions<T>, includeModels?: Includeable[], transaction?: Transaction, excludeSequelizeInternalKeys: boolean = true): Promise<T[]> {
+  let target: Model<any, any>[] | null = null;
+
+  try {
+    target = await (model as unknown as ModelDefined<any, any>).findAll({
+      where,
+      include: includeModels,
+      attributes: {
+        exclude: excludeSequelizeInternalKeys ? SEQUELIZE_INTERNAL_KEYS : [],
+      },
+      transaction,
+    });
+  } catch(error) {
+    console.error(error);
+
+    if(error instanceof BaseError) {
+      // DB error
+      throw new InternalServerErrorException("DB 오류");
+    } else {
+      // Unknown error
+      throw new BadRequestException();
+    }
+  }
+
+  if(!target) throw new EntityNotFoundException();
+  return target as T[];
 }
 
 export async function create<T extends Model<any, any>>(model: { new (): T }, dto: object, transaction?: Transaction, additionalParams?: Record<string, unknown>): Promise<T> {

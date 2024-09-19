@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, toNative, Vue } from "vue-facing-decorator";
 import CommonDialog from "./CommonDialog.vue";
 
 @Component({
@@ -23,7 +23,7 @@ import CommonDialog from "./CommonDialog.vue";
     CommonDialog,
   },
 })
-export default class CommonWarningDialog extends Vue {
+class CommonWarningDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: String, default: null }) headlineText!: string | null;
   @Prop({ type: String, default: "확인" }) primaryText!: string | null;
@@ -35,4 +35,6 @@ export default class CommonWarningDialog extends Vue {
   @Emit("primary") onDialogPrimary() { if(this.closeOnPrimary) this.open = false; }
   @Emit("cancel") onDialogCancel() { }
 }
+
+export default toNative(CommonWarningDialog);
 </script>

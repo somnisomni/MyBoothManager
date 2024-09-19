@@ -37,7 +37,7 @@
       <VTextField v-model.number="orderDataCopied.price"
                   type="number"
                   min="0"
-                  :step="priceStep"
+                  :step="currencyPriceStep"
                   label="판매 단가 (가격)"
                   :hint="`비워두면 ${targetTypeString}의 기본 가격 사용`"
                   persistent-hint
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Setup, toNative, Vue, Watch } from "vue-facing-decorator";
 import deepClone from "clone-deep";
 import { POSOrderSimulationLayer, type IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -66,7 +66,7 @@ import { useAdminStore } from "@/plugins/stores/admin";
 @Component({
   emits: ["confirm", "deleteRequest"],
 })
-export default class POSGoodsAdvancedDialog extends Vue {
+class POSGoodsAdvancedDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: Object, required: true }) orderData!: IGoodsOrderInternal;
   @Prop({ type: POSOrderSimulationLayer, required: true }) currentOrderSimulationLayer!: POSOrderSimulationLayer;
@@ -74,6 +74,12 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   formValid: boolean = false;
   orderDataCopied: IGoodsOrderInternal = deepClone(this.orderData);
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.step)
+  declare readonly currencyPriceStep: number;
 
   @Watch("open") mounted() {
     this.orderDataCopied = deepClone(this.orderData);
@@ -91,14 +97,6 @@ export default class POSGoodsAdvancedDialog extends Vue {
 
   get targetItemMaxQuantity(): number {
     return this.currentOrderSimulationLayer.getMaxAvailableQuantity(this.isCombination ? "combination" : "goods", this.orderData.id);
-  }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
-
-  get priceStep(): number {
-    return useAdminStore().currentBoothCurrencyInfo.step;
   }
 
   @Watch("orderDataCopied.price")
@@ -127,4 +125,6 @@ export default class POSGoodsAdvancedDialog extends Vue {
     };
   }
 }
+
+export default toNative(POSGoodsAdvancedDialog);
 </script>

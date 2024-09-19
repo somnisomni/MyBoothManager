@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import type { Goods } from "@myboothmanager/common-ui";
-import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "@/lib/functions";
 import { useAdminStore } from "@/plugins/stores/admin";
 import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
@@ -25,13 +25,16 @@ import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.
     SelectableGoodsListView,
   },
 })
-export default class GoodsSelectionDialog extends Vue {
+class GoodsSelectionDialog extends Vue {
   readonly getUploadFileUrl = getUploadFileUrl;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Model({ name: "selectedGoodsIds", type: Array }) selectedGoodsIds!: Array<number>;
   @Prop({ type: Array, default: [] }) disabledIdList!: Array<number>;
   @Prop({ type: Number, default: null }) categoryId!: number | null | undefined;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   get goodsList(): Array<Goods> {
     if(this.categoryId) {
@@ -40,9 +43,7 @@ export default class GoodsSelectionDialog extends Vue {
       return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === null);
     }
   }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
 }
+
+export default toNative(GoodsSelectionDialog);
 </script>

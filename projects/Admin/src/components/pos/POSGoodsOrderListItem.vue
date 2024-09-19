@@ -1,6 +1,6 @@
 <template>
   <VImg class="order-item"
-        :src="currentTargetImageUrl"
+        :src="currentTargetImageUrl ?? undefined"
         v-ripple
         cover
         :height="singleLine ? '48px' : '72px'"
@@ -41,26 +41,25 @@
 <script lang="ts">
 import type { IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
 import type { IGoods, IGoodsCombination } from "@myboothmanager/common";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getUploadFileUrl } from "@/lib/functions";
 
 @Component({
   emits: ["quantityChange", "click"],
 })
-export default class POSGoodsOrderListItem extends Vue {
-  @Prop({ type: Object, required: true }) item!: IGoodsOrderInternal;
-  @Prop({ type: Boolean, default: undefined }) isCombination?: true;
-  @Prop({ type: Boolean, default: false }) singleLine!: boolean;
+class POSGoodsOrderListItem extends Vue {
+  @Prop({ type: Object, required: true }) declare readonly item: IGoodsOrderInternal;
+  @Prop({ type: Boolean, default: undefined }) declare readonly isCombination?: true;
+  @Prop({ type: Boolean, default: false }) declare readonly singleLine: boolean;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   showAdvancedDialog: boolean = false;
 
   get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().currentBooth.goods!; }
   get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().currentBooth.goodsCombinations!; }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
 
   get currentTarget(): IGoods | IGoodsCombination {
     return this.isCombination
@@ -97,6 +96,8 @@ export default class POSGoodsOrderListItem extends Vue {
     };
   }
 }
+
+export default toNative(POSGoodsOrderListItem);
 </script>
 
 <style lang="scss" scoped>

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Model, Prop, toNative, Vue } from "vue-facing-decorator";
 import CommonErrorDialog from "../common/CommonErrorDialog.vue";
 
 @Component({
@@ -14,7 +14,7 @@ import CommonErrorDialog from "../common/CommonErrorDialog.vue";
     CommonErrorDialog,
   },
 })
-export default class ServerDataLoadErrorDialog extends Vue {
+class ServerDataLoadErrorDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Number, default: null }) errorCode!: number | null;
 
@@ -22,4 +22,6 @@ export default class ServerDataLoadErrorDialog extends Vue {
     return `서버로부터 데이터를 불러오는 중 오류가 발생했습니다. ${this.errorCode ? `(${this.errorCode})` : ""}`;
   }
 }
+
+export default toNative(ServerDataLoadErrorDialog);
 </script>

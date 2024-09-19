@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from "vue-facing-decorator";
+import { Component, Model, toNative, Vue } from "vue-facing-decorator";
 import CommonErrorDialog from "../common/CommonErrorDialog.vue";
 
 @Component({
@@ -16,7 +16,9 @@ import CommonErrorDialog from "../common/CommonErrorDialog.vue";
     CommonErrorDialog,
   },
 })
-export default class ServerNotRespondErrorDialog extends Vue {
+class ServerNotRespondErrorDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 }
+
+export default toNative(ServerNotRespondErrorDialog);
 </script>

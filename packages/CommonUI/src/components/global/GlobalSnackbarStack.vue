@@ -29,10 +29,10 @@
 <script lang="ts">
 import type { VSnackbar } from "vuetify/components";
 import type { ISnackbarContext } from "@/entities";
-import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
+import { Component, Model, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
 
 @Component({})
-export default class GlobalSnackbarStack extends Vue {
+class GlobalSnackbarStack extends Vue {
   readonly STACK_MARGIN = 8;
 
   @Model({ type: Array, required: true }) declare queue: Array<ISnackbarContext>;
@@ -178,6 +178,8 @@ export default class GlobalSnackbarStack extends Vue {
     return undefined;
   }
 }
+
+export default toNative(GlobalSnackbarStack);
 </script>
 
 <style lang="scss">

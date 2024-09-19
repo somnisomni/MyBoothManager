@@ -66,11 +66,12 @@
 <script lang="ts">
 import type { ComponentCustomProperties } from "vue";
 import { GoodsStockVisibility } from "@myboothmanager/common";
-import { Component, Emit, Prop, Setup, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { isDisplayXXS } from "@/plugins/vuetify";
 import { Goods, GoodsBase, GoodsCombination } from "@/entities";
 
+// eslint-disable-next-line import/exports-last
 export interface GoodsItemProps {
   readonly goodsData: GoodsBase;
   readonly currencySymbol: string;
@@ -84,7 +85,7 @@ export interface GoodsItemProps {
 @Component({
   emits: ["click"],
 })
-export default class GoodsItem extends Vue implements GoodsItemProps {
+class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: GoodsBase, required: true }) readonly goodsData!: GoodsBase;
   @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
@@ -218,6 +219,8 @@ export default class GoodsItem extends Vue implements GoodsItemProps {
     return this.normalizedData.id;
   }
 }
+
+export default toNative(GoodsItem);
 </script>
 
 <style lang="scss">

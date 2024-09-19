@@ -49,14 +49,6 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @Column(DataTypes.STRING(256))
   declare name: string;
 
-  /**
-   * @deprecated Use `currencyCode` instead. This field is kept for backward compatibility and will be removed in the future.
-   */
-  @AllowNull(false)
-  @Default("₩")
-  @Column(DataTypes.STRING(8))
-  declare currencySymbol: string;
-
   @AllowNull(false)
   @Default("KRW")
   @Column(DataTypes.STRING(8))

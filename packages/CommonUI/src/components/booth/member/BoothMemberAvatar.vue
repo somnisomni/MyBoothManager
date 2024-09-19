@@ -13,10 +13,10 @@
 <script lang="ts">
 import type { IImageUploadInfo } from "@myboothmanager/common";
 import type { ComponentCustomProperties } from "vue";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-export default class BoothMemberAvatar extends Vue {
+class BoothMemberAvatar extends Vue {
   @Prop({ type: Object, default: null }) declare readonly avatarImage: IImageUploadInfo | null;
   @Prop({ type: String, default: undefined }) declare readonly size?: string;
 
@@ -29,4 +29,6 @@ export default class BoothMemberAvatar extends Vue {
     return this.$imageUrlResolver(this.avatarImage?.path);
   }
 }
+
+export default toNative(BoothMemberAvatar);
 </script>

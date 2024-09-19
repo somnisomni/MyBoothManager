@@ -11,12 +11,14 @@
 
 <script lang="ts">
 import type { IGoodsCategory } from "@myboothmanager/common";
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-export default class GoodsCategoryTitle extends Vue {
+class GoodsCategoryTitle extends Vue {
   @Prop({ type: Object, required: true }) readonly categoryData!: IGoodsCategory;
 }
+
+export default toNative(GoodsCategoryTitle);
 </script>
 
 <style lang="scss">

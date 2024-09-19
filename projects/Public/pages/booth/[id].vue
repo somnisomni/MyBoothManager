@@ -87,7 +87,7 @@
         <div>
           <ExpandableContent heading="굿즈 목록">
             <GoodsListView v-if="goodsNormalized.length > 0"
-                           :currencySymbol="booth.currencySymbol"
+                           :currencySymbol="currencySymbol"
                            :goodsList="[...goodsNormalized, ...combinationsNormalized]"
                            :goodsCategoryList="categories"
                            omitEmptyGoodsCategory
@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, CURRENCY_CODE_TO_SYMBOL_MAP, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
 import { Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
@@ -208,6 +208,10 @@ export default class IndividualBoothPage extends Vue {
 
   get combinationsNormalized(): Array<GoodsCombination> {
     return this.combinations.map((combination) => new GoodsCombination(combination));
+  }
+
+  get currencySymbol(): string {
+    return CURRENCY_CODE_TO_SYMBOL_MAP[this.booth?.currencyCode ?? "KRW"];
   }
 
   get infoImage() {

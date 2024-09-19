@@ -84,9 +84,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Setup, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
+// eslint-disable-next-line import/exports-last
 export interface CommonDialogButtonParams {
   title: string;
   icon: string;
@@ -97,7 +98,7 @@ export interface CommonDialogButtonParams {
 @Component({
   emits: ["close", "primary", "secondary", "leftbutton", "cancel"],
 })
-export default class CommonDialog extends Vue {
+class CommonDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
   @Prop({ type: Boolean, default: true }) scrollable!: boolean;
@@ -154,4 +155,6 @@ export default class CommonDialog extends Vue {
     if(this.closeOnCancel) this.open = false;
   }
 }
+
+export default toNative(CommonDialog);
 </script>

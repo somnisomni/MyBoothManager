@@ -54,18 +54,21 @@
 <script lang="ts">
 import type { POSOrderList } from "@/pages/subpages/POSPage.lib";
 import { type IGoods, type IGoodsCombination, GoodsOrderPaymentMethod } from "@myboothmanager/common";
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({
   emits: ["confirm"],
 })
-export default class POSOrderConfirmDialog extends Vue {
+class POSOrderConfirmDialog extends Vue {
   readonly GoodsOrderPaymentMethod = GoodsOrderPaymentMethod;
 
-  @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Object, required: true }) orders!: POSOrderList;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
+  @Prop({ type: Object, required: true }) declare readonly orders: POSOrderList;
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   get paymentMethodsInfo() {
     const data = [];
@@ -77,10 +80,6 @@ export default class POSOrderConfirmDialog extends Vue {
       });
     }
     return data;
-  }
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get orderTotalWorth(): number {
@@ -105,4 +104,6 @@ export default class POSOrderConfirmDialog extends Vue {
     return method;
   }
 }
+
+export default toNative(POSOrderConfirmDialog);
 </script>

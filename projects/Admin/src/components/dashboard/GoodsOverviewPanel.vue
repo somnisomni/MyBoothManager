@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Setup, Vue } from "vue-facing-decorator";
+import { Component, toNative, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
 import { useAdminGoodsStore } from "@/plugins/stores/goods-utils";
@@ -117,33 +117,29 @@ import DashboardPanel from "./DashboardPanel.vue";
   components: {
     DashboardPanel,
   },
+  setup() {
+    return {
+      currencySymbol: useAdminStore().currentBoothCurrencyInfo.symbol,
+      validRecordedOrdersCount: useAdminOrderStore().validRecordedOrdersCount,
+      totalSoldStockCount: useAdminOrderStore().totalSoldStockCount,
+      totalMergedRevenue: useAdminOrderStore().totalMergedRevenue,
+      totalGoodsInitialStockCount: useAdminGoodsStore().totalGoodsInitialStockCount,
+      totalGoodsWorthByInitialStock: useAdminGoodsStore().totalGoodsWorthByInitialStock,
+      totalGoodsRemainingStockCount: useAdminGoodsStore().totalGoodsRemainingStockCount,
+      totalGoodsWorthByRemainingStock: useAdminGoodsStore().totalGoodsWorthByRemainingStock,
+      totalGoodsStockDifference: useAdminGoodsStore().totalGoodsStockDifference,
+    };
+  },
 })
-export default class GoodsOverviewPanel extends Vue {
-  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+class GoodsOverviewPanel extends Vue {
   declare readonly currencySymbol: string;
-
-  @Setup(() => useAdminOrderStore().validRecordedOrdersCount)
   declare readonly validRecordedOrdersCount: number;
-
-  @Setup(() => useAdminOrderStore().totalSoldStockCount)
   declare readonly totalSoldStockCount: number;
-
-  @Setup(() => useAdminOrderStore().totalMergedRevenue)
   declare readonly totalMergedRevenue: number;
-
-  @Setup(() => useAdminGoodsStore().totalGoodsInitialStockCount)
   declare readonly totalGoodsInitialStockCount: number;
-
-  @Setup(() => useAdminGoodsStore().totalGoodsWorthByInitialStock)
   declare readonly totalGoodsWorthByInitialStock: number;
-
-  @Setup(() => useAdminGoodsStore().totalGoodsRemainingStockCount)
   declare readonly totalGoodsRemainingStockCount: number;
-
-  @Setup(() => useAdminGoodsStore().totalGoodsWorthByRemainingStock)
   declare readonly totalGoodsWorthByRemainingStock: number;
-
-  @Setup(() => useAdminGoodsStore().totalGoodsStockDifference)
   declare readonly totalGoodsStockDifference: number;
 
   stockMismatchDialogShown: boolean = false;
@@ -152,4 +148,6 @@ export default class GoodsOverviewPanel extends Vue {
     return this.totalGoodsStockDifference !== this.totalSoldStockCount;
   }
 }
+
+export default toNative(GoodsOverviewPanel);
 </script>

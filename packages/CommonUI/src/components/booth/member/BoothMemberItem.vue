@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import type { IBoothMember } from "@myboothmanager/common";
-import { Component, Prop, Setup, Vue } from "vue-facing-decorator";
+import { Component, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import BoothMemberAvatar from "./BoothMemberAvatar.vue";
 
@@ -38,7 +38,7 @@ import BoothMemberAvatar from "./BoothMemberAvatar.vue";
   },
   emits: ["click"],
 })
-export default class BoothMemberItem extends Vue {
+class BoothMemberItem extends Vue {
   @Prop({ type: Object,  required: true }) readonly memberData!: IBoothMember;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
 
@@ -49,6 +49,8 @@ export default class BoothMemberItem extends Vue {
     return this.smAndUp ? "24em" : "100%";
   }
 }
+
+export default toNative(BoothMemberItem);
 </script>
 
 <style lang="scss" scoped>

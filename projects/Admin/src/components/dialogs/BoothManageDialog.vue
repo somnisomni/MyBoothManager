@@ -56,8 +56,8 @@
 
 <script lang="ts">
 import { reactive, ref , computed } from "vue";
-import { Vue, Component, Model, Watch, Prop, Ref, Setup } from "vue-facing-decorator";
-import { CURRENCY_INFO, CURRENCY_SYMBOL_TO_CODE_MAP, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
+import { Vue, Component, Model, Watch, Prop, Ref, Setup, toNative } from "vue-facing-decorator";
+import { CURRENCY_INFO, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
 import moment from "moment";
 import { defineStore } from "pinia";
 import deepClone from "clone-deep";
@@ -86,7 +86,6 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
     description: "",
     location: "",
     boothNumber: "",
-    currencySymbol: "₩",
     currencyCode: "KRW",
 
     dateOpen: momentFormat(new Date()),
@@ -117,7 +116,7 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
   },
   emits: ["updated", "error"],
 })
-export default class BoothManageDialog extends Vue {
+class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
 
@@ -149,17 +148,17 @@ export default class BoothManageDialog extends Vue {
       persistentHint: true,
       optional: true,
     },
-    currencySymbol: {
+    currencyCode: {
       type: FormFieldType.SELECT,
       label: "통화 기호",
       get items() {
         return Object.values(CURRENCY_INFO).map((info) => ({
           name: `${info.nameLocalized[useLocalStore().settings.language ?? "ko"]} (${info.symbol})`,
-          symbol: info.symbol,
+          code: info.code,
         }));
       },
       itemTitle: "name",
-      itemValue: "symbol",
+      itemValue: "code",
       hint: "굿즈 가격에 표시될 통화(화폐) 기호입니다. 부스 생성 시에만 변경 가능하며, 이후에는 변경할 수 없습니다.",
       persistentHint: true,
       get disabled() { return useProxyStore().editMode; },
@@ -260,7 +259,6 @@ export default class BoothManageDialog extends Vue {
         description: boothData.description,
         location: boothData.fair?.location ?? boothData.location,
         boothNumber: boothData.boothNumber,
-        currencySymbol: boothData.currencySymbol,
         currencyCode: boothData.currencyCode,
         dateOpen: boothData.dateOpen ? momentFormat(new Date(boothData.dateOpen)) : undefined,
         dateClose: boothData.dateClose ? momentFormat(new Date(boothData.dateClose)) : undefined,
@@ -273,7 +271,6 @@ export default class BoothManageDialog extends Vue {
         description: "",
         location: "",
         boothNumber: "",
-        currencySymbol: "₩",
         currencyCode: "KRW",
         dateOpen: momentFormat(new Date()),
         dateClose: momentFormat(new Date()),
@@ -320,8 +317,7 @@ export default class BoothManageDialog extends Vue {
       let requestData = {
         name: this.formModels.name,
         description: this.formModels.description,
-        currencySymbol: this.formModels.currencySymbol,
-        currencyCode: CURRENCY_SYMBOL_TO_CODE_MAP[this.formModels.currencySymbol],
+        currencyCode: this.formModels.currencyCode,
         boothNumber: this.formModels.boothNumber,
       } as IBoothCreateRequest | IBoothCreateWithFairRequest;
 
@@ -353,4 +349,6 @@ export default class BoothManageDialog extends Vue {
     this.updateInProgress = false;
   }
 }
+
+export default toNative(BoothManageDialog);
 </script>

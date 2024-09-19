@@ -142,7 +142,7 @@
 
 <script lang="ts">
 import { APP_NAME, GoodsOrderStatus, type IGoodsOrder, type IGoodsOrderItem } from "@myboothmanager/common";
-import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
+import { Component, Hook, Ref, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useRoute, type RouteRecordRaw } from "vue-router";
 import html2canvas from "html2canvas";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -150,7 +150,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
-export default class GoodsOrderDetailPage extends Vue {
+class GoodsOrderDetailPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly GoodsOrderStatus = GoodsOrderStatus;
   readonly getPaymentMethodString = getPaymentMethodString;
@@ -159,10 +159,14 @@ export default class GoodsOrderDetailPage extends Vue {
   isCreatingOrderContentAsImage = false;
 
   @Ref("orderContentDOM")
-  readonly orderContentDOM!: HTMLElement;
+  declare readonly orderContentDOM: HTMLElement;
 
   @Setup(() => useRoute().params.id)
-  readonly orderId!: number;
+  declare readonly orderId: number;
+
+  // TODO: Use currency symbol from orderData, after backend is updated
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   async mounted() {
     if(!this.orderData) {
@@ -191,11 +195,6 @@ export default class GoodsOrderDetailPage extends Vue {
       else if(b.cId) return 1;
       else return (a.gId || 0) - (b.gId || 0);
     });
-  }
-
-  get currencySymbol(): string {
-    // TODO: Use currency symbol from orderData, after backend is updated
-    return useAdminStore().currentBooth.booth!.currencySymbol;
   }
 
   get totalStockQuantity(): number {
@@ -240,6 +239,8 @@ export default class GoodsOrderDetailPage extends Vue {
     this.isCreatingOrderContentAsImage = false;
   }
 }
+
+export default toNative(GoodsOrderDetailPage);
 </script>
 
 <style lang="scss" scoped>

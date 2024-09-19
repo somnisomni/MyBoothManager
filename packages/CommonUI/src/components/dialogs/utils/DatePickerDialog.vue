@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-export default class DatePickerDialog extends Vue {
+class DatePickerDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: String, default: "날짜 선택" }) title!: string;
   @Prop({ type: Date }) min!: Date;
@@ -34,6 +34,8 @@ export default class DatePickerDialog extends Vue {
     return this.date;
   }
 }
+
+export default toNative(DatePickerDialog);
 </script>
 
 <style lang="scss">

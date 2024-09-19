@@ -23,7 +23,7 @@
       <VList v-show="!sm" nav class="flex-shrink-0">
         <VListItem class="text-center">
           <div class="appname text-grey">{{ APP_NAME }}</div>
-          <div class="boothname text-darken-2">{{ boothName }}</div>
+          <div class="boothname text-darken-2">{{ currentBooth.name }}</div>
           <div class="mt-1 text-h4 font-weight-bold">주문 목록</div>
         </VListItem>
       </VList>
@@ -71,8 +71,8 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, type GoodsOrderPaymentMethod, type IBooth, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { APP_NAME, type GoodsOrderPaymentMethod, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/POSPage.lib";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -98,10 +98,19 @@ import POSGoodsOrderListView from "./POSGoodsOrderListView.vue";
     "orderListResetRequest",
   ],
 })
-export default class POSOrderDrawer extends Vue {
+class POSOrderDrawer extends Vue {
   @Prop({ type: POSOrderSimulationLayer, required: true }) orderSimulationLayer!: POSOrderSimulationLayer;
   @Prop({ type: Boolean, default: false }) sm!: boolean;
   @Prop({ type: Number }) smDrawerHeight!: number;
+
+  @Setup(() => useAdminStore().currentBooth.booth)
+  declare readonly currentBooth: NonNullable<ReturnType<typeof useAdminStore>["currentBooth"]["booth"]>;
+
+  @Setup(() => useAdminStore().currentBooth.goods)
+  declare readonly currentBoothGoods: ReturnType<typeof useAdminStore>["currentBooth"]["goods"];
+
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
 
   readonly APP_NAME = APP_NAME;
 
@@ -114,17 +123,18 @@ export default class POSOrderDrawer extends Vue {
   orderAdvancedDialogOrderData: IGoodsOrderInternal | null = null;
   orderAdvancedDialogOrderIsCombination?: boolean;
 
-  get currentBooth(): IBooth { return useAdminStore().currentBooth.booth!; }
-  get currentBoothGoods(): Record<number, IGoods> { return useAdminStore().currentBooth.goods!; }
-  get boothName(): string { return this.currentBooth.name; }
-  get currencySymbol(): string { return this.currentBooth.currencySymbol; }
-  get isOrderListEmpty(): boolean { return this.orderSimulationLayer.orderList.length() <= 0; }
+  get isOrderListEmpty(): boolean {
+    return this.orderSimulationLayer.orderList.length() <= 0;
+  }
 
   get totalOrderWorth(): number {
     return this.orderSimulationLayer.orderList.values().reduce(
       (acc, order) => (acc + ((order.price ?? this.getTargetOriginalInfo(order.id, order.what === "combination").price) * order.quantity)), 0);
   }
-  get totalOrderWorthString(): string { return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`; }
+
+  get totalOrderWorthString(): string {
+    return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`;
+  }
 
   mounted() {
     new ResizeObserver((entries) => {
@@ -211,6 +221,8 @@ export default class POSOrderDrawer extends Vue {
     return eventData;
   }
 }
+
+export default toNative(POSOrderDrawer);
 </script>
 
 <style lang="scss" scoped>
