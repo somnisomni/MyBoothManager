@@ -1,5 +1,5 @@
 import type Booth from "@/db/models/booth";
-import { IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes } from "@myboothmanager/common";
+import { BoothStatus, IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
@@ -33,8 +33,10 @@ export class BoothResponseDto implements IBoothResponse {
     this.currencyCode = values.currencyCode;
     this.status = {
       status: values.status,
-      reason: values.statusReason ?? undefined,
-      contentPublished: values.statusContentPublished ?? false,
+      // `reason` is available only when status is `PAUSE`
+      reason: values.status === BoothStatus.PAUSE ? (values.statusReason ?? undefined) : undefined,
+      // `contentPublished` is available only when status is `PREPARE` or `CLOSE`
+      contentPublished: (values.status === BoothStatus.PREPARE || values.status === BoothStatus.CLOSE) ? (values.statusContentPublished ?? false) : undefined,
     };
     this.relatedLinks = values.relatedLinks ?? [];
     this.infoImage = model.infoImage?.toImageUploadInfo();
