@@ -2,7 +2,7 @@
   "name": "@myboothmanager/common",
   "version": "0.7.0-dev.4",
   "author": "somni <me@somni.one>",
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.13.0",
   "license": "PolyForm-Strict-1.0.0",
   "private": true,
   "main": "./dist/cjs/index.js",
@@ -22,14 +22,14 @@
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
     "@tsconfig/node20": "^20.1.4",
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.16.5",
-    "eslint": "^9.10.0",
-    "execa": "^9.4.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.6",
+    "eslint": "^9.14.0",
+    "execa": "^9.5.1",
     "jest": "^29.7.0",
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
     "tsc-alias": "^1.8.10"
   },
   "dependencies": {
