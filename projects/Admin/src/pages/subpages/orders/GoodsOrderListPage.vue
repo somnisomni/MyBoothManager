@@ -150,7 +150,7 @@ class GoodsOrdersListPage extends Vue {
   }
 
   get boothGoodsOrders() {
-    return useAdminStore().currentBooth.goodsOrders!;
+    return useAdminStore().currentBooth.orders!;
   }
 
   get boothGoodsOrdersLength(): number {

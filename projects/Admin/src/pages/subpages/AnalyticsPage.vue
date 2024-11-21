@@ -160,7 +160,7 @@ class AnalyticsPage extends Vue {
   }
 
   get orderHistory(): Record<number, IGoodsOrder> {
-    return useAdminStore().currentBooth.goodsOrders ?? {};
+    return useAdminStore().currentBooth.orders ?? {};
   }
 
   get orderHistoryFilteredArray(): Array<IGoodsOrder> {

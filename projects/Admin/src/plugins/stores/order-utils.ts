@@ -5,7 +5,7 @@ import { useAdminStore } from "./admin";
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { useAdminMemberStore } from "./member-utils";
 
-type GoodsOrdersRecord = ReturnType<typeof useAdminStore>["currentBooth"]["goodsOrders"];
+type GoodsOrdersRecord = ReturnType<typeof useAdminStore>["currentBooth"]["orders"];
 
 interface GoodsRevenueMapItem {
   id: number;            // ID of goods
@@ -26,7 +26,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
    */
   const validOrders: ComputedRef<NonNullable<GoodsOrdersRecord>>
     = computed(() => Object.fromEntries(
-      Object.entries($adminStore.currentBooth.goodsOrders ?? { })
+      Object.entries($adminStore.currentBooth.orders ?? { })
         .filter(([, value]) => value.order.length > 0),
     ));
 

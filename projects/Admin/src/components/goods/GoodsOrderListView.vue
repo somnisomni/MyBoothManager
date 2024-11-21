@@ -45,7 +45,7 @@ export default class GoodsOrderListView extends Vue {
   @Ref("orderListDOMItems") declare readonly orderListItemsRefs: Array<VListItem>;
 
   get filteredList(): Array<IGoodsOrder> {
-    return Object.values(useAdminStore().currentBooth.goodsOrders ?? {})
+    return Object.values(useAdminStore().currentBooth.orders ?? {})
       .filter((order) => (
         ((this.filter.targetGoodsIds.length > 0) ? order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!)) : true)
         && ((this.filter.onlyShowOrdersWithFreeGoods) ? order.order.some((item) => Number(item.price) <= 0 || item.price === null || item.price === undefined) : true)

@@ -185,7 +185,7 @@ class GoodsOrderDetailPage extends Vue {
   }
 
   get orderData(): IGoodsOrder {
-    return useAdminStore().currentBooth.goodsOrders![this.orderId];
+    return useAdminStore().currentBooth.orders![this.orderId];
   }
 
   get ordersSorted(): Array<IGoodsOrderItem> {

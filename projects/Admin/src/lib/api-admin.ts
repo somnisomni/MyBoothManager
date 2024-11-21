@@ -72,6 +72,10 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<Array<CT.IBoothMemberResponse>>(() => this.API.GET(`booth/${boothId}/member`));
   }
 
+  static async fetchAllOrdersOfBooth(boothId: number) {
+    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/order`));
+  }
+
   static async fetchAllGoodsOfBooth(boothId: number) {
     return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(() => this.API.GET(`booth/${boothId}/goods`));
   }
@@ -82,10 +86,6 @@ export default class AdminAPI extends BaseAdminAPI {
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number) {
     return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(() => this.API.GET(`booth/${boothId}/goods/category`));
-  }
-
-  static async fetchAllGoodsOrdersOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/order`));
   }
 
   static async fetchAvailableFairs() {
@@ -105,16 +105,16 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.PATCH(`booth/${boothId}/member/${memberId}`, payload));
   }
 
+  static async updateBoothOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`booth/${boothId}/order/${orderId}/status`, payload));
+  }
+
   static async updateGoodsInfo(goodsId: number, payload: CT.IGoodsUpdateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.PATCH(`goods/${goodsId}`, payload));
   }
 
   static async updateGoodsCategoryInfo(categoryId: number, payload: CT.IGoodsCategoryUpdateRequest) {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(() => this.API.PATCH(`goods/category/${categoryId}`, payload));
-  }
-
-  static async updateGoodsOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`goods/order/${orderId}/status?bId=${boothId}`, payload));
   }
 
   static async updateGoodsCombinationInfo(combinationId: number, payload: CT.IGoodsCombinationUpdateRequest) {
@@ -130,16 +130,16 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.POST(`booth/${boothId}/member`, payload));
   }
 
+  static async createBoothOrder(boothId: number, payload: CT.IGoodsOrderCreateRequest) {
+    return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST(`booth/${boothId}/order`, payload));
+  }
+
   static async createGoods(payload: CT.IGoodsCreateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.POST("goods", payload));
   }
 
   static async createGoodsCategory(payload: CT.IGoodsCategoryCreateRequest) {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(() => this.API.POST("goods/category", payload));
-  }
-
-  static async createGoodsOrder(payload: CT.IGoodsOrderCreateRequest) {
-    return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST("goods/order", payload));
   }
 
   static async createGoodsCombination(payload: CT.IGoodsCombinationCreateRequest) {

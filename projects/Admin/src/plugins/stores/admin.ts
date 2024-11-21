@@ -8,10 +8,10 @@ import { useAdminAPIStore } from "./api";
 interface CurrentBoothStates {
   booth: IBooth | null;
   boothMembers: Record<number, IBoothMember> | null;
+  orders: Record<number, IGoodsOrder> | null;
   goods: Record<number, GoodsAdmin> | null;
   goodsCombinations: Record<number, GoodsCombinationAdmin> | null;
   goodsCategories: Record<number, IGoodsCategory> | null;
-  goodsOrders: Record<number, IGoodsOrder> | null;
 }
 
 const useAdminStore = defineStore("admin", () => {
@@ -23,10 +23,10 @@ const useAdminStore = defineStore("admin", () => {
   const currentBooth: ToRefs<CurrentBoothStates> = {
     booth: ref(null),
     boothMembers: ref(null),
+    orders: ref(null),
     goods: ref(null),
     goodsCombinations: ref(null),
     goodsCategories: ref(null),
-    goodsOrders: ref(null),
   };
 
   const isBoothDataLoaded = ref<boolean>(false);
