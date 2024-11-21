@@ -4,7 +4,7 @@ import { CookieSerializeOptions } from "@fastify/cookie";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { LoginRequestDto, LoginResponseDto } from "./dto/login.dto";
 import { RefreshRequestDto } from "./dto/refresh.dto";
-import { AllowedFor, UserTypes } from "./auth.guard";
+import { AllowedFor, BypassAuth, UserTypes } from "./auth.guard";
 import { LogoutRequestDto } from "./dto/logout.dto";
 import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { V2_ROUTE_PREFIX } from "@/lib/const";
@@ -62,6 +62,7 @@ export class AuthController {
    * Refresh access token using refresh token
    */
   @Post("refresh")
+  @BypassAuth()
   @HttpCode(200)
   async refresh(@Body() refreshDto: RefreshRequestDto,
                 @Req() request: FastifyRequest,

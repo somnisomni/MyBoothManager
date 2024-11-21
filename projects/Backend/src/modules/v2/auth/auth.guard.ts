@@ -88,6 +88,20 @@ export const AuthData = createParamDecorator((data: unknown, context: ExecutionC
   return params.authData;
 });
 
+/**
+ * `BypassAuth` decorator key
+ */
+export const BYPASS_AUTH_KEY = "bypassAuth";
+
+/**
+ * `BypassAuth` decorator, to bypass the authentication process.
+ *
+ * If this decorator is specified, the route is allowed for all user types, and the authentication process is skipped.
+ *
+ * This decorator should be used only for auth refresh route.
+ */
+export const BypassAuth = () => SetMetadata(BYPASS_AUTH_KEY, true);
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -102,6 +116,13 @@ export class AuthGuard implements CanActivate {
 
     // By default the user type is public.
     params.userType = UserTypes.PUBLIC;
+
+    // Check `BypassAuth` decorator and skip the authentication process if specified
+    const bypassAuth = this.reflector.getAllAndOverride<boolean>(BYPASS_AUTH_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if(bypassAuth) return true;
 
     if(token) {
       // If authorization token is provided, process admin determination
