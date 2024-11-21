@@ -120,6 +120,9 @@ export class AuthGuard implements CanActivate {
         } else {
           params.userType = UserTypes.BOOTH_ADMIN;
         }
+
+        // Set auth data
+        params.authData = { ...payload };
       } catch(error) {
         // If token is available but invalid, should throw an error
 
