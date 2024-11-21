@@ -99,10 +99,10 @@ const useAdminOrderStore = defineStore("booth-order", () => {
           // Create a new revenue information
           map.set(goods.gId, {
             id: goods.gId,
-            name: originalGoods.name ?? goods.name ?? "(deleted)",
+            name: (originalGoods ?? goods).name ?? "(deleted)",
             quantity: goods.quantity,
             totalRevenue: calculatedPrice,
-            memberLength: originalGoods.ownerMemberIds?.length,
+            memberLength: originalGoods?.ownerMemberIds?.length,
           });
         }
       }
@@ -141,10 +141,10 @@ const useAdminOrderStore = defineStore("booth-order", () => {
           // Create a new revenue information
           map.set(combination.cId, {
             id: combination.cId,
-            name: originalCombination.name ?? combination.name ?? "(deleted)",
+            name: (originalCombination ?? combination).name ?? "(deleted)",
             quantity: combination.quantity,
             totalRevenue: calculatedPrice,
-            memberLength: originalCombination.ownerMemberIds?.length,
+            memberLength: originalCombination?.ownerMemberIds?.length,
           });
         }
       }

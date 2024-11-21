@@ -465,14 +465,14 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     );
   }
 
-  /* Goods Order */
+  /* Booth Order */
   async function fetchBoothOrdersOfCurrentBooth(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllOrdersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
         if(!$adminStore.currentBooth.orders) $adminStore.currentBooth.orders = {};
         C.emptyNumberKeyObject($adminStore.currentBooth.orders);
-        for(const order of response) $adminStore.currentBooth.orders[order.id] = order;
+        for(const order of response) $adminStore.currentBooth.orders[order.id] = { ...order };
       },
     );
   }
