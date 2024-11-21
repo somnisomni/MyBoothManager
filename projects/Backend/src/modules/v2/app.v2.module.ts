@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { APP_GUARD } from "@nestjs/core";
+import { APP_GUARD, RouterModule } from "@nestjs/core";
 import { UtilModule } from "../common/util/util.module";
 import { AuthGuard } from "./auth/auth.guard";
 import AccountModule from "./account/account.module";
@@ -22,6 +22,22 @@ import GoodsCombinationModule from "./goods-combination/goods-combination.module
     GoodsCategoryModule,
     GoodsCombinationModule,
     UtilModule,
+
+    RouterModule.register([
+      {
+        path: AppModuleV2.ROUTE_PREFIX,
+        children: [
+          { path: "/", module: AccountModule },
+          { path: "/", module: AuthModule },
+          { path: "/", module: BoothModule },
+          { path: "/", module: BoothOrderModule },
+          { path: "/", module: FairModule },
+          { path: "/", module: GoodsModule },
+          { path: "/", module: GoodsCategoryModule },
+          { path: "/", module: GoodsCombinationModule },
+        ],
+      },
+    ]),
   ],
   providers: [
     {
