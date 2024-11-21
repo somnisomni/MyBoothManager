@@ -100,10 +100,10 @@ export class AuthGuard implements CanActivate {
     const params = request.params as ICustomRequestParams;
     const token = this.extractAccessTokenFromHeader(request);
 
-    if(!token) {
-      // If authorization token is not provided, set user type to public
-      params.userType = UserTypes.PUBLIC;
-    } else {
+    // By default the user type is public.
+    params.userType = UserTypes.PUBLIC;
+
+    if(token) {
       // If authorization token is provided, process admin determination
       try {
         // Verify JWT token
