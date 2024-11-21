@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 import { GoodsCategoryService } from "./goods-category.service";
 import { AdminGoodsCategoryResponseDto, GoodsCategoryResponseDto } from "./dto/goods-category.dto";
-import { BOOTH_ID_QUERY } from "@/modules/root.module";
+import { BOOTH_ID_QUERY } from "@/lib/const";
 import { UserType, UserTypes, AuthData, UserTypeUtil, AllowedFor } from "../auth/auth.guard";
 import { IAuthData } from "../auth/jwt-util.service";
 import { CreateGoodsCategoryRequestDto } from "./dto/create.dto";

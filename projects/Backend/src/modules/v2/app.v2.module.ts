@@ -10,12 +10,15 @@ import FairModule from "./fair/fair.module";
 import GoodsModule from "./goods/goods.module";
 import GoodsCategoryModule from "./goods-category/goods-category.module";
 import GoodsCombinationModule from "./goods-combination/goods-combination.module";
+import BoothMemberModule from "./booth-member/booth-member.module";
+import { V2_ROUTE_PREFIX } from "@/lib/const";
 
 @Module({
   imports: [
     AccountModule,
     AuthModule,
     BoothModule,
+    BoothMemberModule,
     BoothOrderModule,
     FairModule,
     GoodsModule,
@@ -25,11 +28,12 @@ import GoodsCombinationModule from "./goods-combination/goods-combination.module
 
     RouterModule.register([
       {
-        path: AppModuleV2.ROUTE_PREFIX,
+        path: V2_ROUTE_PREFIX,
         children: [
           { path: "/", module: AccountModule },
           { path: "/", module: AuthModule },
           { path: "/", module: BoothModule },
+          { path: "/", module: BoothMemberModule },
           { path: "/", module: BoothOrderModule },
           { path: "/", module: FairModule },
           { path: "/", module: GoodsModule },
@@ -46,6 +50,4 @@ import GoodsCombinationModule from "./goods-combination/goods-combination.module
     },
   ],
 })
-export class AppModuleV2 {
-  public static readonly ROUTE_PREFIX = "v2" as const;
-}
+export class AppModuleV2 { }

@@ -30,7 +30,7 @@ export class GoodsCombinationService {
    * @param accountId ID of the account which owns the booth. If omitted, the parent booth is not checked and `booth` becomes `undefined`.
    * @returns `GoodsCombination` entity
    * @throws `NoAccessException` if the goods combination does not belong to the booth or the booth does not belong to the account
-   * @throws `EntityNotFoundException` if the goods with the ID does not exist
+   * @throws `EntityNotFoundException` if the goods combination with the ID does not exist
    */
   private async getCombinationAndParentBooth(combinationId: number, boothId: number, accountId?: number): Promise<{ combination: GoodsCombination, booth?: Booth }> {
     if(!await this.combinationBoothCache.testValue(combinationId, boothId)) {

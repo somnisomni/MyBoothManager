@@ -7,7 +7,7 @@ import { RefreshRequestDto } from "./dto/refresh.dto";
 import { AllowedFor, UserTypes } from "./auth.guard";
 import { LogoutRequestDto } from "./dto/logout.dto";
 import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { AppModuleV2 } from "../app.v2.module";
+import { V2_ROUTE_PREFIX } from "@/lib/const";
 
 @Controller("/auth")
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
   ) { }
 
   private readonly REFRESH_TOKEN_COOKIE_KEY = "refreshToken" as const;
-  private readonly REFRESH_TOKEN_COOKIE_OPTIONS: Readonly<CookieSerializeOptions> = { path: `/${AppModuleV2.ROUTE_PREFIX}/auth/refresh` as const } as const;
+  private readonly REFRESH_TOKEN_COOKIE_OPTIONS: Readonly<CookieSerializeOptions> = { path: `/${V2_ROUTE_PREFIX}/auth/refresh` as const } as const;
   private setRefreshTokenCookie = (response: FastifyReply, value: string) => response.setCookie(this.REFRESH_TOKEN_COOKIE_KEY, response.signCookie(value), this.REFRESH_TOKEN_COOKIE_OPTIONS);
 
   /* === Public routes === */

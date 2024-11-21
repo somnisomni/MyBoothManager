@@ -3,10 +3,11 @@ import { GoodsService } from "./goods.service";
 import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
 import { AdminGoodsResponseDto, GoodsResponseDto } from "./dto/goods.dto";
 import { IAuthData } from "../auth/jwt-util.service";
-import { BOOTH_ID_QUERY } from "@/modules/root.module";
+import { BOOTH_ID_QUERY } from "@/lib/const";
 import { CreateGoodsRequestDto } from "./dto/create.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
 import { UpdateGoodsRequestDto } from "./dto/update.dto";
+import { NoAccessException } from "../../../lib/exceptions";
 
 @Controller("/goods")
 export class GoodsController {
@@ -23,10 +24,9 @@ export class GoodsController {
    */
   @Get(":id")
   async findOne(@Param("id", ParseIntPipe) id: number,
-                @Query(BOOTH_ID_QUERY) boothId: number,
+                @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @UserType() userType: UserTypes,
                 @AuthData() authData?: IAuthData): Promise<GoodsResponseDto> {
-    console.log(boothId);
     if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN)) {
       return new AdminGoodsResponseDto(await this.goods.findOne(id, boothId, true, authData!.id));
     }
@@ -57,5 +57,30 @@ export class GoodsController {
                @Query(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
     return await this.goods.remove(id, boothId, authData.id);
+  }
+
+  /* === Super admin routes === */
+  /**
+   * Find all goods
+   *
+   *  - for **super admin**: returns all available goods across all booths
+   *  - for other user types, is handled in `BoothIndividualController` with different routing.
+   */
+  @Get()
+  async findAll(@Query(BOOTH_ID_QUERY, new ParseIntPipe({ optional: true })) boothId: number | null | undefined,
+                @UserType() userType: UserTypes,
+                @AuthData() authData?: IAuthData) : Promise<GoodsResponseDto[]> {
+    // Super admin
+    if(UserTypeUtil.havePermission(userType, UserTypes.SUPER_ADMIN) && authData) {
+      if(boothId) {
+        return (await this.goods.findAll(boothId, true, authData.id))
+          .map(goods => new AdminGoodsResponseDto(goods));
+      } else {
+        return (await this.goods.findAll())
+          .map(goods => new AdminGoodsResponseDto(goods));
+      }
+    }
+
+    throw new NoAccessException();
   }
 }

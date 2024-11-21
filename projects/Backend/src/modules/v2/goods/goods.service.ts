@@ -86,14 +86,14 @@ export class GoodsService {
    * @param accountId ID of the account
    * @returns Array of found `Goods` entities
    */
-  async findAll(boothId: number, force = false, accountId?: number): Promise<Goods[]> {
-    if(typeof accountId !== "number") {
+  async findAll(boothId?: number, force = false, accountId?: number): Promise<Goods[]> {
+    if(boothId && typeof accountId !== "number") {
       // PUBLIC booth check
       // `BoothService.findOne()` will throw errors on its own
       await this.booth.findOne(boothId, !force);
     }
 
-    return await commonFindAll(Goods, { boothId });
+    return await commonFindAll(Goods, boothId ? { boothId } : { });
   }
 
   /**

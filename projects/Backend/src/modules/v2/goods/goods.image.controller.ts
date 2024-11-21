@@ -1,7 +1,7 @@
 import { Controller, Delete, Param, ParseIntPipe, Post, Query, Req } from "@nestjs/common";
 import { GoodsImageService } from "./goods.image.service";
 import { UtilService } from "@/modules/common/util/util.service";
-import { BOOTH_ID_QUERY } from "@/modules/root.module";
+import { BOOTH_ID_QUERY } from "@/lib/const";
 import { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
 import { FastifyRequest } from "fastify";
 import { AllowedFor, UserTypes, AuthData } from "../auth/auth.guard";

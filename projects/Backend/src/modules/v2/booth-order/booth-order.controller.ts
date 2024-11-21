@@ -6,9 +6,10 @@ import { IAuthData } from "../auth/jwt-util.service";
 import { BoothOrderResponseDto } from "./dto/booth-order.dto";
 import { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
 import { ISuccessResponse } from "@myboothmanager/common";
-import { BOOTH_ID_QUERY } from "../../root.module";
+import { BOOTH_ID_QUERY } from "@/lib/const";
 
 @Controller(`/booth/:${BOOTH_ID_QUERY}/order`)
+@AllowedFor(UserTypes.BOOTH_ADMIN)
 export class BoothOrderController {
   constructor(
     private readonly order: BoothOrderService,
@@ -16,7 +17,6 @@ export class BoothOrderController {
 
   /* === Admin routes === */
   @Get()
-  @AllowedFor(UserTypes.BOOTH_ADMIN)
   async findAll(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto[]> {
     return (await this.order.findAll(boothId, authData.id))
@@ -24,7 +24,6 @@ export class BoothOrderController {
   }
 
   @Get(":oId")
-  @AllowedFor(UserTypes.BOOTH_ADMIN)
   async findOne(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @Param("oId", ParseIntPipe) orderId: number,
                 @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto> {
@@ -32,7 +31,6 @@ export class BoothOrderController {
   }
 
   @Post()
-  @AllowedFor(UserTypes.BOOTH_ADMIN)
   async create(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                @Body() createDto: CreateBoothOrderRequestDto,
                @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto> {
@@ -40,7 +38,6 @@ export class BoothOrderController {
   }
 
   @Patch(":oId/status")
-  @AllowedFor(UserTypes.BOOTH_ADMIN)
   async updateStatus(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                      @Param("oId", ParseIntPipe) orderId: number,
                      @Body() updateStatusDto: UpdateBoothOrderStatusRequestDto,

@@ -3,7 +3,7 @@ import { GoodsCombinationService } from "./goods-combination.service";
 import { AdminGoodsCombinationResponseDto, GoodsCombinationResponseDto } from "./dto/goods-combination.dto";
 import { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
 import { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
-import { BOOTH_ID_QUERY } from "@/modules/root.module";
+import { BOOTH_ID_QUERY } from "@/lib/const";
 import { ISuccessResponse } from "@myboothmanager/common";
 import { UserType, UserTypes, AuthData, UserTypeUtil, AllowedFor } from "../auth/auth.guard";
 import { IAuthData } from "../auth/jwt-util.service";

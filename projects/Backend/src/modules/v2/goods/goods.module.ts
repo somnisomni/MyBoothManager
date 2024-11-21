@@ -1,5 +1,5 @@
 import { UtilModule } from "@/modules/common/util/util.module";
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { GoodsService } from "./goods.service";
 import { GoodsController } from "./goods.controller";
 import { GoodsImageService } from "./goods.image.service";
@@ -8,7 +8,7 @@ import BoothModule from "../booth/booth.module";
 
 @Module({
   imports: [
-    BoothModule,
+    forwardRef(() => BoothModule),
     UtilModule,
   ],
   providers: [
