@@ -10,10 +10,7 @@ export default defineNuxtPlugin((nuxt) => {
       : useRuntimeConfig().public.apiServerUrl;
 
   const $internalStore = useInternalStore();
-  const apiCaller = new APICaller({
-    host: apiServerUrl,
-    group: "public",
-  });
+  const apiCaller = new APICaller({ host: apiServerUrl });
 
   const calleeNameMatcher = /.+\.apiCaller\.(.+)\((.+)?\)$/;
 

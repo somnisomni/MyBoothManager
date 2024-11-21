@@ -4,7 +4,6 @@ import { useAuthLocalStore } from "@/plugins/stores/auth";
 export class BaseAdminAPI {
   protected static readonly API: CT.APICaller = new CT.APICaller({
     host: import.meta.env.VITE_MBM_API_SERVER_URL,
-    group: "admin",
     getAuthorizationToken: () => useAuthLocalStore().accessToken!,
   });
 
@@ -86,7 +85,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async fetchAllGoodsOrdersOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/goods/order`));
+    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/order`));
   }
 
   static async fetchAvailableFairs() {
