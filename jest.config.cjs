@@ -6,6 +6,7 @@ module.exports = {
     "<rootDir>/projects/*",
   ],
   coverageDirectory: "./coverage",
-  collectCoverageFrom: ["**/*.(t|j)s"],
+  coverageReporters: ["text", "text-summary", "json"],
+  collectCoverageFrom: ["**/*.(t|j)s", "!**/node_modules/**", "!**/dist/**"],
   extensionsToTreatAsEsm: [".ts"],
 };
