@@ -1,13 +1,11 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from "@nestjs/common";
 import { AuthService, IAccountLoginResponseWithRefreshToken } from "./auth.service";
-import { CookieSerializeOptions } from "@fastify/cookie";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { LoginRequestDto, LoginResponseDto } from "./dto/login.dto";
 import { RefreshRequestDto } from "./dto/refresh.dto";
 import { AllowedFor, BypassAuth, UserTypes } from "./auth.guard";
 import { LogoutRequestDto } from "./dto/logout.dto";
 import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { V2_ROUTE_PREFIX } from "@/lib/const";
 
 @Controller("/auth")
 export class AuthController {
@@ -16,8 +14,8 @@ export class AuthController {
   ) { }
 
   private readonly REFRESH_TOKEN_COOKIE_KEY = "refreshToken" as const;
-  private readonly REFRESH_TOKEN_COOKIE_OPTIONS: Readonly<CookieSerializeOptions> = { path: `/${V2_ROUTE_PREFIX}/auth/refresh` as const } as const;
-  private setRefreshTokenCookie = (response: FastifyReply, value: string) => response.setCookie(this.REFRESH_TOKEN_COOKIE_KEY, response.signCookie(value), this.REFRESH_TOKEN_COOKIE_OPTIONS);
+  // private readonly REFRESH_TOKEN_COOKIE_OPTIONS: Readonly<CookieSerializeOptions> = { path: `/${V2_ROUTE_PREFIX}/auth/` as const } as const;
+  private setRefreshTokenCookie = (response: FastifyReply, value: string) => response.setCookie(this.REFRESH_TOKEN_COOKIE_KEY, response.signCookie(value)); // , this.REFRESH_TOKEN_COOKIE_OPTIONS);
 
   /* === Public routes === */
   /**
