@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize-typescript";
 import generateConfig from "../config";
 
 const testEnvVars = {
@@ -6,8 +7,7 @@ const testEnvVars = {
   MYSQL_USER: "test",
   MYSQL_PASSWORD: "test",
   MYSQL_DATABASE: "testdb",
-  SEQUELIZE_TIMEZONE: "+09:00",
-};
+} satisfies NodeJS.ProcessEnv;
 
 describe("DB Config", () => {
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("DB Config", () => {
     expect(() => generateConfig()).toThrow(Error);
   });
 
-  it("should return a valid config with process.env values", () => {
+  it("should return a valid MySQL config with process.env values", () => {
     const config = generateConfig();
 
     expect(config).toBeInstanceOf(Object);
@@ -33,6 +33,20 @@ describe("DB Config", () => {
     expect(config).toHaveProperty("username", testEnvVars.MYSQL_USER);
     expect(config).toHaveProperty("password", testEnvVars.MYSQL_PASSWORD);
     expect(config).toHaveProperty("database", testEnvVars.MYSQL_DATABASE);
-    expect(config).toHaveProperty("timezone", testEnvVars.SEQUELIZE_TIMEZONE);
+  });
+
+  it("should be able to use as configuration while initializing Sequelize", () => {
+    let instance: Sequelize;
+
+    try {
+      instance = new Sequelize(generateConfig());
+    } catch(error) {
+      fail(error);
+    }
+
+    expect(instance).not.toBeNull();
+    expect(instance).not.toBeUndefined();
+    expect(instance).toBeInstanceOf(Sequelize);
+    expect(instance).toHaveProperty("config");
   });
 });
