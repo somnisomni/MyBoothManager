@@ -9,7 +9,7 @@
 export abstract class CacheMap<K, V> {
   protected cache: Map<K, V> = new Map<K, V>();
 
-  abstract fetch(key: K): Promise<V>;
+  protected abstract fetch(key: K): Promise<V>;
 
   async get(key: K): Promise<V> {
     if(!this.has(key)) {
@@ -29,5 +29,9 @@ export abstract class CacheMap<K, V> {
 
   invalidate(key: K): boolean {
     return this.cache.delete(key);
+  }
+
+  count(): number {
+    return this.cache.size;
   }
 }

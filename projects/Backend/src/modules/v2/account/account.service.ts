@@ -9,7 +9,7 @@ import { AccountInfoUpdateFailedException, AccountPasswordUpdateFailedException 
 import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
 import { WhereOptions } from "sequelize";
 import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
-import { create as dbCreate, findOneByPk, removeByPk, removeInstance, stringCompareCaseSensitive } from "@/lib/utils/db";
+import { create as dbCreate, removeByPk, stringCompareCaseSensitive } from "@/lib/utils/db";
 
 @Injectable()
 export default class AccountService {

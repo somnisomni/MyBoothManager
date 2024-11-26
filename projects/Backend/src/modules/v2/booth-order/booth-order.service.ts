@@ -210,7 +210,7 @@ export class BoothOrderService {
 }
 
 class OrderBoothCache extends CacheMap<number, number> {
-  override async fetch(key: number): Promise<number> {
+  protected override async fetch(key: number): Promise<number> {
     const order = await findOneByPk(BoothOrder, key);
 
     if(typeof order.boothId !== "number") throw new NoAccessException();

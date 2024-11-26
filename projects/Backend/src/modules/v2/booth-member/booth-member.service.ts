@@ -154,7 +154,7 @@ export class BoothMemberService {
 }
 
 class MemberBoothCache extends CacheMap<number, number> {
-  override async fetch(key: number): Promise<number> {
+  protected override async fetch(key: number): Promise<number> {
     const member = await findOneByPk(BoothMember, key);
 
     if(typeof member.boothId !== "number") throw new NoAccessException();
