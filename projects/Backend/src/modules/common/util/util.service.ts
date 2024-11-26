@@ -1,7 +1,6 @@
 import type { Model } from "sequelize-typescript";
 import type { MultipartFile } from "@fastify/multipart";
 import type { FastifyRequest } from "fastify";
-import type { IUploadStorage } from "@/lib/types";
 import path from "path";
 import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
@@ -10,9 +9,9 @@ import AppRootPath from "app-root-path";
 import { ISuccessResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE, IImageUploadInfo } from "@myboothmanager/common";
 import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import UploadStorage from "@/db/models/uploadstorage";
-import { create, generateRandomDigestFileName } from "@/lib/common-functions";
-import { InternalKeysWithId } from "@/lib/types";
 import ImageManipulator from "@/lib/image-manipulation";
+import { generateRandomDigestFileName } from "@/lib/utils/security";
+import { create } from "@/lib/utils/db";
 
 @Injectable()
 export class UtilService {
@@ -184,7 +183,7 @@ export class UtilService {
         fileName: digest.withExt("webp"),
         extensions: ["webp", "jpg"],
         imageThumbnailBase64,
-      } as Omit<IUploadStorage, InternalKeysWithId>)).save();
+      })).save();
 
       await targetModelInstance.update({ [targetModelImageIdColumnKey]: upload.id });
 

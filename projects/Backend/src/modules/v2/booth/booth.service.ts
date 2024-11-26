@@ -1,8 +1,6 @@
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
-import { findOneByPk, findAll as commonFindAll, create as commonCreate, removeTarget } from "@/lib/common-functions";
 import { NoAccessException } from "@/lib/exceptions";
-import { CacheMap } from "@/lib/types";
 import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { Op } from "sequelize";
@@ -12,6 +10,8 @@ import { UpdateBoothRequestDto } from "./dto/update.dto";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
 import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
 import { BoothInfoUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { create as dbCreate, findAll as dbFindAll, findOneByPk, removeInstance } from "@/lib/utils/db";
 
 @Injectable()
 export class BoothService {
@@ -94,20 +94,22 @@ export class BoothService {
    * @returns Array of found `Booth` entities
    */
   async findAll(onlyAvailable = false, accountId?: number): Promise<Booth[]> {
-    const booths = await commonFindAll(Booth, {
-      ...(accountId ? { ownerId: accountId } : { }),
-      ...(onlyAvailable ? {
-        // status != CLOSE && !(status == PREPARE && statusContentPublished == false)
-        [Op.and]: {
-          status: { [Op.not]: BoothStatus.CLOSE },
-          [Op.not]: {
-            [Op.and]: {
-              status: BoothStatus.PREPARE,
-              statusContentPublished: false,
+    const booths = await dbFindAll(Booth, {
+      where: {
+        ...(accountId ? { ownerId: accountId } : { }),
+        ...(onlyAvailable ? {
+          // status != CLOSE && !(status == PREPARE && statusContentPublished == false)
+          [Op.and]: {
+            status: { [Op.not]: BoothStatus.CLOSE },
+            [Op.not]: {
+              [Op.and]: {
+                status: BoothStatus.PREPARE,
+                statusContentPublished: false,
+              },
             },
           },
-        },
-      } : { }),
+        } : { }),
+      },
     });
 
     // associatedFair.isPassed === false
@@ -123,7 +125,7 @@ export class BoothService {
    * @returns Newly created `Booth` entity
    */
   async create(createDto: CreateBoothRequestDto, accountId: number): Promise<Booth> {
-    return await commonCreate(Booth, createDto, undefined, { ownerId: accountId });
+    return await dbCreate(Booth, { ...createDto, ownerId: accountId });
   }
 
   /**
@@ -183,7 +185,7 @@ export class BoothService {
 
     // TODO: Remove all related entities like goods, orders, etc.
 
-    return await removeTarget(booth);
+    return await removeInstance(booth) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }
 

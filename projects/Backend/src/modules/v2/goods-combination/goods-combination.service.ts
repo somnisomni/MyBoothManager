@@ -4,10 +4,10 @@ import { GoodsCombinationImageService } from "./goods-combination.image.service"
 import GoodsCombination from "@/db/models/goods-combination";
 import Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
-import { findOneByPk, removeTarget, findAll as commonFindAll, create as commonCreate } from "@/lib/common-functions";
+import { findOneByPk, removeInstance, findAll as dbFindAll, create as dbCreate } from "@/lib/utils/db";
 import { NoAccessException, EntityNotFoundException } from "@/lib/exceptions";
-import { CacheMap } from "@/lib/types";
-import { GoodsStockVisibility, ISuccessResponse } from "@myboothmanager/common";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { GoodsStockVisibility, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
 import { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
 import { GoodsCombinationParentBoothNotFoundException, GoodsCombinationInfoUpdateFailedException } from "./goods-combination.exception";
@@ -94,7 +94,7 @@ export class GoodsCombinationService {
       await this.booth.findOne(boothId, !force);
     }
 
-    return await commonFindAll(GoodsCombination, { boothId });
+    return await dbFindAll(GoodsCombination, { where: { boothId } });
   }
 
   /**
@@ -135,7 +135,7 @@ export class GoodsCombinationService {
     }
 
     // Create combination
-    const combination = await commonCreate(GoodsCombination, createDto);
+    const combination = await dbCreate(GoodsCombination, createDto);
 
     // Update existing goods to associate with the combination
     const goodsToBeUpdated = await Goods.findAll({
@@ -253,7 +253,7 @@ export class GoodsCombinationService {
     // Delete all images of the goods combination
     await this.image.deleteAllImages(id, boothId, accountId);
 
-    return await removeTarget(combination);
+    return await removeInstance(combination) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }
 

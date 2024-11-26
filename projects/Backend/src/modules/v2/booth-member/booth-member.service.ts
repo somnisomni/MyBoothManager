@@ -1,16 +1,16 @@
 import type Booth from "@/db/models/booth";
 import BoothMember from "@/db/models/booth-member";
 import Goods from "@/db/models/goods";
-import { create as commonCreate, findAll as commonFindAll, findOneByPk, jsonContains, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import type { ISuccessResponse } from "@myboothmanager/common";
+import { SUCCESS_RESPONSE, type ISuccessResponse } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { CacheMap } from "../../../lib/types";
 import { BoothService } from "../booth/booth.service";
 import { BoothMemberParentBoothNotFoundException } from "./booth-member.exception";
 import type { CreateBoothMemberRequestDto } from "./dto/create.dto";
 import { BoothMemberImageService } from "./booth-member.image.service";
 import type { UpdateBoothMemberRequestDto } from "./dto/update.dto";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { create as dbCreate, findAll as dbFindAll, findOneByPk, jsonContains, removeInstance } from "@/lib/utils/db";
 
 @Injectable()
 export class BoothMemberService {
@@ -94,7 +94,7 @@ export class BoothMemberService {
       await this.booth.findOne(boothId, !force);
     }
 
-    return await commonFindAll(BoothMember, { boothId });
+    return await dbFindAll(BoothMember, { where: { boothId } });
   }
 
   /**
@@ -110,7 +110,7 @@ export class BoothMemberService {
     }
 
     // Create
-    return await commonCreate(BoothMember, createDto);
+    return await dbCreate(BoothMember, createDto);
   }
 
   /**
@@ -149,7 +149,7 @@ export class BoothMemberService {
     }
 
     // Remove the entity
-    return await removeTarget(member);
+    return await removeInstance(member) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }
 

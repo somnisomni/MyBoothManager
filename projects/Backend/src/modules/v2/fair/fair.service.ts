@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse } from "@myboothmanager/common";
+import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Fair from "@/db/models/fair";
-import { create as commonCreate, removeOne, findAll as commonFindAll, findOneByPk } from "@/lib/common-functions";
 import { CreateFairRequestDto } from "./dto/create.dto";
 import { FairInfoUpdateFailedException, FairPassedException } from "./fair.exception";
 import { UpdateFairRequestDto } from "./dto/update.dto";
+import { findOneByPk, findAll as dbFindAll, create as dbCreate, removeByPk } from "@/lib/utils/db";
 
 @Injectable()
 export class FairService {
@@ -16,7 +16,7 @@ export class FairService {
    * @returns Array of found `Fair` entities
    */
   async findAll(includePassed = false): Promise<Fair[]> {
-    const fairs = await commonFindAll(Fair, { });
+    const fairs = await dbFindAll(Fair, { });
 
     return fairs.filter(fair => includePassed || (!includePassed && !fair.isPassed));
   }
@@ -43,7 +43,7 @@ export class FairService {
    * @param dto DTO for creating a new fair
    */
   async create(dto: CreateFairRequestDto): Promise<Fair> {
-    return await commonCreate(Fair, dto);
+    return await dbCreate(Fair, dto);
   }
 
   /**
@@ -72,6 +72,6 @@ export class FairService {
   async remove(id: number): Promise<ISuccessResponse> {
     // TODO: Unassociate booths with the fair
 
-    return await removeOne(Fair, { id });
+    return await removeByPk(Fair, id) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }

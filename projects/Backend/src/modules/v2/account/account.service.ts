@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
 import Account from "@/db/models/account";
-import { create, removeOne, stringCompareCaseSensitive } from "@/lib/common-functions";
 import { EntityNotFoundException, InvalidRequestBodyException } from "@/lib/exceptions";
 import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { CreateAccountRequestDto } from "./dto/create.dto";
@@ -10,6 +9,7 @@ import { AccountInfoUpdateFailedException, AccountPasswordUpdateFailedException 
 import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
 import { WhereOptions } from "sequelize";
 import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
+import { create as dbCreate, findOneByPk, removeByPk, removeInstance, stringCompareCaseSensitive } from "@/lib/utils/db";
 
 @Injectable()
 export default class AccountService {
@@ -74,7 +74,7 @@ export default class AccountService {
       loginPassHash: await argon2.hash(createDto.loginPass),
     };
 
-    return await create(Account, request);
+    return await dbCreate(Account, request);
   }
 
   /**
@@ -129,6 +129,6 @@ export default class AccountService {
   async remove(id: number): Promise<ISuccessResponse> {
     // TODO: Remove all booths associated with the account
 
-    return await removeOne(Account, { id });
+    return await removeByPk(Account, id) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }

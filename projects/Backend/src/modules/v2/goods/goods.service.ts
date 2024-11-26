@@ -1,15 +1,15 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { GoodsImageService } from "./goods.image.service";
 import Goods from "@/db/models/goods";
-import { CacheMap } from "@/lib/types";
-import { findOneByPk, findAll as commonFindAll, create as commonCreate, removeTarget } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { BoothService } from "../booth/booth.service";
 import Booth from "@/db/models/booth";
 import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
 import { CreateGoodsRequestDto } from "./dto/create.dto";
 import { UpdateGoodsRequestDto } from "./dto/update.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
+import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { findOneByPk, removeInstance, findAll as dbFindAll, create as dbCreate } from "@/lib/utils/db";
 
 @Injectable()
 export class GoodsService {
@@ -93,7 +93,11 @@ export class GoodsService {
       await this.booth.findOne(boothId, !force);
     }
 
-    return await commonFindAll(Goods, boothId ? { boothId } : { });
+    return await dbFindAll(Goods, {
+      where: {
+        boothId: boothId ?? undefined,
+      },
+    });
   }
 
   /**
@@ -120,7 +124,7 @@ export class GoodsService {
     }
 
     // Create
-    return await commonCreate(Goods, createDto);
+    return await dbCreate(Goods, createDto);
   }
 
   /**
@@ -163,7 +167,7 @@ export class GoodsService {
     // Delete all images of the goods
     await this.image.deleteAllImages(id, boothId, accountId);
 
-    return await removeTarget(goods);
+    return await removeInstance(goods) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }
 

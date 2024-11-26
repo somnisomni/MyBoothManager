@@ -1,14 +1,14 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { BoothService } from "../booth/booth.service";
-import { CacheMap } from "@/lib/types";
-import { findOneByPk, findAll as commonFindAll, create as commonCreate, removeTarget } from "@/lib/common-functions";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { findOneByPk, findAll as dbFindAll, create as dbCreate, removeInstance } from "@/lib/utils/db";
 import GoodsCategory from "@/db/models/goods-category";
 import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import Booth from "@/db/models/booth";
 import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoundException } from "./goods-category.exception";
 import { CreateGoodsCategoryRequestDto } from "./dto/create.dto";
 import { UpdateGoodsCategoryRequestDto } from "./dto/update.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
+import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Goods from "@/db/models/goods";
 import GoodsCombination from "@/db/models/goods-combination";
 
@@ -92,7 +92,7 @@ export class GoodsCategoryService {
       await this.booth.findOne(boothId, !force);
     }
 
-    return await commonFindAll(GoodsCategory, { boothId });
+    return await dbFindAll(GoodsCategory, { where: { boothId } });
   }
 
   /**
@@ -118,7 +118,7 @@ export class GoodsCategoryService {
     }
 
     // Create
-    return await commonCreate(GoodsCategory, createDto);
+    return await dbCreate(GoodsCategory, createDto);
   }
 
   /**
@@ -160,7 +160,7 @@ export class GoodsCategoryService {
     }
 
     // Remove
-    return await removeTarget(category, undefined, true);
+    return await removeInstance(category, { force: true }) ? SUCCESS_RESPONSE : SUCCESS_RESPONSE;
   }
 }
 

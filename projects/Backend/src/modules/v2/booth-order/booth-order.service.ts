@@ -1,11 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { GoodsService } from "../goods/goods.service";
 import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
 import BoothOrder from "@/db/models/goods-order";
 import Booth from "@/db/models/booth";
-import { findOneByPk, create as commonCreate } from "@/lib/common-functions";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { CacheMap } from "@/lib/types";
 import { BoothService } from "../booth/booth.service";
 import { BoothOrderCreateGoodsCombinationNotFoundException, BoothOrderCreateGoodsNotFoundException, BoothOrderCreateInvalidGoodsAmountException, BoothOrderCreateInvalidGoodsCombinationException, BoothOrderCreateOrderEmptyException, BoothOrderParentBoothNotFoundException, BoothOrderStatusUpdateFailedException, BoothOrderStatusUpdateProhibitedException } from "./booth-order.exception";
 import { CreateBoothOrderRequestDto } from "./dto/create.dto";
@@ -13,13 +11,18 @@ import { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
 import Goods from "@/db/models/goods";
 import GoodsCombination from "@/db/models/goods-combination";
 import MBMSequelize from "@/db/sequelize";
-import { IGoodsOrderItem, ISuccessResponse, SUCCESS_RESPONSE, GoodsOrderStatus, SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
+import { IGoodsOrderItem, ISuccessResponse, SUCCESS_RESPONSE, GoodsOrderStatus } from "@myboothmanager/common";
+import { CacheMap } from "@/lib/utils/cache-map";
+import { findOneByPk, create as dbCreate, findAll as dbFindAll } from "@/lib/utils/db";
 
 @Injectable()
 export class BoothOrderService {
   constructor(
+    @Inject(forwardRef(() => BoothService))
     private readonly booth: BoothService,
+    @Inject(forwardRef(() => GoodsService))
     private readonly goods: GoodsService,
+    @Inject(forwardRef(() => GoodsCombinationService))
     private readonly combination: GoodsCombinationService,
   ) { }
 
@@ -55,12 +58,12 @@ export class BoothOrderService {
 
     return {
       booth,
-      order: await findOneByPk(BoothOrder, orderId),
+      order: await findOneByPk(BoothOrder, orderId, { includeSequelizeInternalKeys: true }),
     };
   }
 
   async create(createDto: CreateBoothOrderRequestDto, boothId: number, accountId: number): Promise<BoothOrder> {
-    if(!(await Booth.findOne({ where: { ownerId: accountId } }))) {
+    if(!(await Booth.findOne({ where: { id: boothId, ownerId: accountId } }))) {
       throw new BoothOrderParentBoothNotFoundException();
     }
 
@@ -92,7 +95,7 @@ export class BoothOrderService {
           // Not using GoodsService function for transaction
           // const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createBoothOrderDto.boothId, callerAccountId);
 
-          const goods = await findOneByPk(Goods, order.gId, [], transaction);
+          const goods = await findOneByPk(Goods, order.gId, { transaction });
           if(!goods) throw new BoothOrderCreateGoodsNotFoundException();
           if(goods.boothId !== createDto.boothId) throw new NoAccessException();
 
@@ -104,7 +107,7 @@ export class BoothOrderService {
           // Not using GoodsCombinationService function for transaction
           // const combination = await this.goodsCombinationService.findGoodsCombinationBelongsToBooth(order.cId, createBoothOrderDto.boothId, callerAccountId);
 
-          const combination = await findOneByPk(GoodsCombination, order.cId, [], transaction);
+          const combination = await findOneByPk(GoodsCombination, order.cId, { transaction });
           if(!combination) throw new BoothOrderCreateGoodsCombinationNotFoundException();
           if(combination.boothId !== createDto.boothId) throw new NoAccessException();
 
@@ -127,7 +130,7 @@ export class BoothOrderService {
         }
       }
 
-      const created = await commonCreate(BoothOrder, createDto, transaction);
+      const created = await dbCreate(BoothOrder, createDto, { transaction });
       await transaction.commit();
       return created;
     } catch(err) {
@@ -193,14 +196,15 @@ export class BoothOrderService {
   }
 
   async findAll(boothId: number, accountId: number): Promise<BoothOrder[]> {
-    const where = boothId ? { boothId } : undefined;
+    // Check if the booth belongs to the account
+    // `BoothService.findOne()` will throw errors on its own
+    await this.booth.findOne(boothId, false, accountId);
 
-    return await BoothOrder.findAll({
-      where,
-      attributes: {
-        include: ["createdAt"],
-        exclude: SEQUELIZE_INTERNAL_KEYS,
+    return await dbFindAll(BoothOrder, {
+      where: {
+        boothId: boothId ?? undefined,
       },
+      includeSequelizeInternalKeys: true,
     });
   }
 }
