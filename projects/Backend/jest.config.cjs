@@ -9,9 +9,10 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   rootDir: ".",
-  roots: ["<rootDir>"],
+  roots: ["<rootDir>/src"],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
   coverageDirectory: "./coverage",
-  testRegex: ".*\\.spec\\.ts$",
+  // testRegex: [".*\\.spec\\.ts$", "**/__tests__/**/*.[jt]s?(x)"],
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
 };

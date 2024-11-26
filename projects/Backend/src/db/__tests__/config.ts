@@ -1,4 +1,4 @@
-import generateConfig from "./config";
+import generateConfig from "../config";
 
 const testEnvVars = {
   MYSQL_HOST: "localhost",
