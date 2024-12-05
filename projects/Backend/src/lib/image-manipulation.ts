@@ -7,14 +7,18 @@ export default class ImageManipulator {
 
   constructor(input: ArrayBuffer) {
     try {
-      this.imageInstance = Sharp(input, {
-        limitInputPixels: 0x1FFF * 0x1FFF,  // 8191 * 8191
-        ignoreIcc: true,
-      });
+      this.imageInstance = this.createInstanceFromBuffer(Buffer.from(input));
     } catch(e) {
       console.error(e);
       throw new InvalidImageException();
     }
+  }
+
+  private createInstanceFromBuffer(buffer: Buffer): Sharp.Sharp {
+    return Sharp(buffer, {
+      limitInputPixels: 0x1FFF * 0x1FFF,  // 8191 * 8191
+      ignoreIcc: true,
+    });
   }
 
   /**
@@ -24,7 +28,7 @@ export default class ImageManipulator {
    * @returns {{ width: number, height: number }} Resized width and height
    * @throws {ImageManipulationException} When the image manipulation failed
    */
-  private async _resizeAndCrop(widthLimit: number, heightLimit: number, fit: "cover" | "inside" | "outside" = "cover"): Promise<{ width: number, height: number }> {
+  private async _resizeAndCrop(constraint: NonNullable<ReturnType<(typeof IMAGE_SIZE_CONSTRAINTS)["get"]>>): Promise<{ width: number, height: number }> {
     let width: number, height: number;
 
     try {
@@ -38,14 +42,19 @@ export default class ImageManipulator {
       throw new InvalidImageException();
     }
 
+    if(constraint.fit === "cover" && constraint.coverAspectRatio) {
+      width = height * constraint.coverAspectRatio;
+    }
+
     try {
-      return await new Promise((resolve) => {
-        this.imageInstance.resize(Math.min(width, widthLimit), Math.min(height, heightLimit), {
-          fit,
+      this.imageInstance = this.createInstanceFromBuffer(
+        await this.imageInstance.resize(Math.min(width, constraint.width), Math.min(height, constraint.height), {
+          fit: constraint.fit,
           position: "center",
           kernel: "lanczos3",
-        });
+        }).toBuffer());
 
+      return new Promise((resolve) => {
         this.imageInstance.metadata().then((metadata) => {
           resolve({ width: metadata.width!, height: metadata.height! });
         });
@@ -56,11 +65,11 @@ export default class ImageManipulator {
     }
   }
 
-  async resizeAndCrop(constraint: ImageSizeConstraintKey): Promise<{ width: number, height: number }> {
-    const size = IMAGE_SIZE_CONSTRAINTS.get(constraint);
-    if(!size) throw new ImageManipulationException();
+  async resizeAndCrop(constraintKey: ImageSizeConstraintKey): Promise<{ width: number, height: number }> {
+    const constraint = IMAGE_SIZE_CONSTRAINTS.get(constraintKey);
+    if(!constraint) throw new ImageManipulationException();
 
-    return await this._resizeAndCrop(size.width, size.height, size.fit);
+    return await this._resizeAndCrop(constraint);
   }
 
   async toWebP(): Promise<Blob> {
