@@ -150,40 +150,40 @@ export default class AdminAPI extends BaseAdminAPI {
   static async uploadBoothBannerImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/image/banner`, formData));
   }
 
   static async uploadBoothInfoImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/image/info`, formData));
   }
 
   static async uploadBoothMemberImage(boothId: number, memberId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image/avatar`, formData));
   }
 
   static async uploadGoodsImage(boothId: number, goodsId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/${goodsId}/image/primary?bId=${boothId}`, formData));
   }
 
   static async uploadGoodsCombinationImage(boothId: number, combinationId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image/primary?bId=${boothId}`, formData));
   }
 
   /* Delete */
   static async deleteBoothBannerImage(boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/banner`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/image/banner`));
   }
 
   static async deleteBoothInfoImage(boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/infoimage`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/image/info`));
   }
 
   static async deleteBoothMember(boothId: number, memberId: number) {
@@ -191,7 +191,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteBoothMemberImage(boothId: number, memberId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}/image`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}/image/avatar`));
   }
 
   static async deleteGoods(goodsId: number, boothId: number) {
@@ -199,7 +199,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteGoodsImage(goodsId: number, boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image/primary?bId=${boothId}`));
   }
 
   static async deleteGoodsCategory(categoryId: number, boothId: number) {
@@ -211,6 +211,6 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteGoodsCombinationImage(combinationId: number, boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image?bId=${boothId}`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image/primary?bId=${boothId}`));
   }
 }
