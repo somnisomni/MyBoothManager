@@ -150,8 +150,7 @@ export class UtilService {
       // Do not try-catch here; ignore the file nonexistence
       const existingUpload = await UploadStorage.findByPk(targetModelInstance[targetModelImageIdColumnKey] as number);
       if(existingUpload) {
-        await this.removeFile(existingUpload.fileName, existingUpload.savePath);
-        await existingUpload.destroy({ force: true });
+        await this.processImageDelete(targetModelInstance, targetModelImageIdColumnKey);
       }
     }
 
