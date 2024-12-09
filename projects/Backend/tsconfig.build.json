@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "include": ["./src/**/*.ts", "./scripts/**/*"],
-  "exclude": ["node_modules", "tests", "dist/", "**/*spec.ts"],
+  "exclude": ["node_modules", "tests", "dist/", "**/*spec.ts", "**/__tests__/**"],
   "compilerOptions": {
     "composite": false,
     "module": "CommonJS",

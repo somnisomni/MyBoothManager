@@ -465,26 +465,26 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     );
   }
 
-  /* Goods Order */
-  async function fetchGoodsOrdersOfCurrentBooth(): Promise<true | C.ErrorCodes> {
+  /* Booth Order */
+  async function fetchBoothOrdersOfCurrentBooth(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
-      () => AdminAPI.fetchAllGoodsOrdersOfBooth($adminStore.currentBooth.booth!.id),
+      () => AdminAPI.fetchAllOrdersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.goodsOrders) $adminStore.currentBooth.goodsOrders = {};
-        C.emptyNumberKeyObject($adminStore.currentBooth.goodsOrders);
-        for(const order of response) $adminStore.currentBooth.goodsOrders[order.id] = order;
+        if(!$adminStore.currentBooth.orders) $adminStore.currentBooth.orders = {};
+        C.emptyNumberKeyObject($adminStore.currentBooth.orders);
+        for(const order of response) $adminStore.currentBooth.orders[order.id] = { ...order };
       },
     );
   }
 
-  async function createGoodsOrder(payload: C.IGoodsOrderCreateRequest): Promise<number | C.ErrorCodes> {
+  async function createBoothOrder(payload: C.IGoodsOrderCreateRequest): Promise<number | C.ErrorCodes> {
     let createdOrderId = -1;
 
     await simplifyAPICall(
-      () => AdminAPI.createGoodsOrder(payload),
+      () => AdminAPI.createBoothOrder($adminStore.currentBooth.booth!.id, payload),
       (response) => {
-        if(!$adminStore.currentBooth.goodsOrders) $adminStore.currentBooth.goodsOrders = {};
-        $adminStore.currentBooth.goodsOrders[response.id] = response;
+        if(!$adminStore.currentBooth.orders) $adminStore.currentBooth.orders = {};
+        $adminStore.currentBooth.orders[response.id] = response;
         createdOrderId = response.id;
       },
       // "굿즈 판매 기록 생성 성공",
@@ -494,11 +494,11 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return createdOrderId;
   }
 
-  async function updateGoodsOrderStatus(orderId: number, payload: C.IGoodsOrderStatusUpdateRequest): Promise<true | C.ErrorCodes> {
+  async function updateBoothOrderStatus(orderId: number, payload: C.IGoodsOrderStatusUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
-      () => AdminAPI.updateGoodsOrderStatus(orderId, $adminStore.currentBooth.booth!.id, payload),
+      () => AdminAPI.updateBoothOrderStatus(orderId, $adminStore.currentBooth.booth!.id, payload),
       async () => {
-        $adminStore.currentBooth.goodsOrders![orderId] = { ...$adminStore.currentBooth.goodsOrders![orderId], ...payload };
+        $adminStore.currentBooth.orders![orderId] = { ...$adminStore.currentBooth.orders![orderId], ...payload };
         await fetchGoodsOfCurrentBooth();
       },
       "굿즈 판매 기록 상태 변경 성공",
@@ -548,9 +548,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     updateGoodsCategoryInfo,
     deleteGoodsCategory,
 
-    fetchGoodsOrdersOfCurrentBooth,
-    createGoodsOrder,
-    updateGoodsOrderStatus,
+    fetchGoodsOrdersOfCurrentBooth: fetchBoothOrdersOfCurrentBooth,
+    createGoodsOrder: createBoothOrder,
+    updateGoodsOrderStatus: updateBoothOrderStatus,
   };
 });
 

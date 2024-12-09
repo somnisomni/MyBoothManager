@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { DEVELOPER_TWITTER_HANDLE } from "@myboothmanager/common";
-import { Component, Emit, Model, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, toNative, Vue } from "vue-facing-decorator";
 import CommonDialog from "./CommonDialog.vue";
 
 @Component({
@@ -25,7 +25,7 @@ import CommonDialog from "./CommonDialog.vue";
     CommonDialog,
   },
 })
-export default class CommonErrorDialog extends Vue {
+class CommonErrorDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: String, default: null }) headlineText!: string | null;
   @Prop({ type: String, default: "오류" }) dialogTitle!: string;
@@ -44,4 +44,6 @@ export default class CommonErrorDialog extends Vue {
 
   @Emit("primary") reloadWindow() { window.location.reload(); }
 }
+
+export default toNative(CommonErrorDialog);
 </script>

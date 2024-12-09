@@ -18,7 +18,8 @@ export const MAX_UPLOAD_FILE_BYTES = (1024 * 1024) * 15;  // 15MB
 
 export interface APICallerOptions {
   host: string;
-  group: string;
+  prefix: string,
+  /** @deprecated */ group: string;
   healthCheckPath: string;
   getAuthorizationToken: () => string | null | undefined;
 }
@@ -35,19 +36,24 @@ export default class APICaller {
   private get normalizedOptions(): APICallerOptions {
     return {
       host: "http://localhost:20000",
-      group: "",
+      prefix: "v2",
       healthCheckPath: "healthcheck",
       getAuthorizationToken: () => undefined,
       ...this.options,
+
+      // deprecated
+      group: "",
     };
   }
 
   /* Public APIs */
-  private readonly createPublicAPI = () => new APICaller({ host: this.normalizedOptions.host, group: "public" });
+  private readonly createPublicAPI = () => new APICaller({ host: this.normalizedOptions.host });
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
-    const url: string = `${this.normalizedOptions.host}${this.normalizedOptions.group.length > 0 ? `/${this.normalizedOptions.group}` : ""}/${path}`;
+    const prefix = this.normalizedOptions.prefix.length > 0 ? `/${this.normalizedOptions.prefix}` : "";
+    const group = this.normalizedOptions.group.length > 0 ? `/${this.normalizedOptions.group}` : "";
+    const url = new URL(`${prefix}${group}/${path}`, this.normalizedOptions.host);
 
     const response = await fetch(url, {
       ...additionalInitOptions,

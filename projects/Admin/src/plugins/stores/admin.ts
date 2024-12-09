@@ -1,17 +1,17 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
 import { computed, ref, type ToRefs } from "vue";
-import { CURRENCY_INFO, CURRENCY_SYMBOL_TO_CODE_MAP, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { CURRENCY_INFO, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { useAdminAPIStore } from "./api";
 
 interface CurrentBoothStates {
   booth: IBooth | null;
   boothMembers: Record<number, IBoothMember> | null;
+  orders: Record<number, IGoodsOrder> | null;
   goods: Record<number, GoodsAdmin> | null;
   goodsCombinations: Record<number, GoodsCombinationAdmin> | null;
   goodsCategories: Record<number, IGoodsCategory> | null;
-  goodsOrders: Record<number, IGoodsOrder> | null;
 }
 
 const useAdminStore = defineStore("admin", () => {
@@ -23,10 +23,10 @@ const useAdminStore = defineStore("admin", () => {
   const currentBooth: ToRefs<CurrentBoothStates> = {
     booth: ref(null),
     boothMembers: ref(null),
+    orders: ref(null),
     goods: ref(null),
     goodsCombinations: ref(null),
     goodsCategories: ref(null),
-    goodsOrders: ref(null),
   };
 
   const isBoothDataLoaded = ref<boolean>(false);
@@ -36,8 +36,7 @@ const useAdminStore = defineStore("admin", () => {
   const globalSnackbarContexts = new SnackbarContextWrapper();
 
   /* Computed States */
-  // TODO: Ditch symbol to code mapping after altering the booth DB model
-  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[CURRENCY_SYMBOL_TO_CODE_MAP[currentBooth.booth.value?.currencySymbol ?? "₩"]]);
+  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[currentBooth.booth.value?.currencyCode ?? "KRW"]);
 
   /* Actions */
   function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {

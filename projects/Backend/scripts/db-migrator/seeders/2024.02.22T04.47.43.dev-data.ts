@@ -22,7 +22,7 @@ export const up: Seeder = async ({ context }) => {
       loginPassHash: await argon2.hash("empty"),
     },
   ] as IAccountModel[]);
-  
+
   // Booth
   const testAccount = await Account.findOne({ where: { loginId: "test" } });
   if(testAccount) {
@@ -32,7 +32,6 @@ export const up: Seeder = async ({ context }) => {
         name: "[T] Main Test Booth",
         description: "Awesome Booth for testing",
         location: "Somewhere over the rainbow",
-        currencySymbol: "₩",
         status: BoothStatus.OPEN,
         dateOpen: new Date("2023-01-01"),
         dateClose: new Date("2025-01-01"),
@@ -42,7 +41,6 @@ export const up: Seeder = async ({ context }) => {
         name: "[T] Test booth #2",
         description: "Awesome Booth #2",
         location: "Icheon, South Korea",
-        currencySymbol: "$",
         status: BoothStatus.PAUSE,
         statusReason: "Lunch time ;)",
         dateOpen: new Date("2023-03-01"),

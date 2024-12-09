@@ -87,13 +87,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Setup, Vue } from "vue-facing-decorator";
+import { Component, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
 import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
-export default class ClosingPage extends Vue {
+class ClosingPage extends Vue {
   readonly getPaymentMethodString = getPaymentMethodString;
 
   @Setup(() => useAdminStore().currentBooth)
@@ -127,4 +127,6 @@ export default class ClosingPage extends Vue {
     } */
   }
 }
+
+export default toNative(ClosingPage);
 </script>

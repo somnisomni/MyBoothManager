@@ -44,7 +44,7 @@
 <script lang="ts">
 import type { ErrorCodes, IGoodsCategory } from "@myboothmanager/common";
 import type { Goods, GoodsCombination, GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component, toNative, Setup } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
@@ -66,7 +66,10 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
     GoodsCategoryTitleManageable,
   },
 })
-export default class GoodsPage extends Vue {
+class GoodsPage extends Vue {
+  @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
+  declare readonly currencySymbol: string;
+
   goodsManageDialogOpen = false;
   goodsManageDialogDuplicateMode = false;
   manageDialogGoodsId: number | null = null;
@@ -79,10 +82,6 @@ export default class GoodsPage extends Vue {
   editDialogCategoryId: number | null = null;
   deleteDialogOpen = false;
   deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
-
-  get currencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
-  }
 
   get goodsList(): Array<Goods | GoodsCombination> {
     return [
@@ -145,4 +144,6 @@ export default class GoodsPage extends Vue {
     }
   }
 }
+
+export default toNative(GoodsPage);
 </script>

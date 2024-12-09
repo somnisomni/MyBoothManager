@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import type { RouteRecordRaw } from "vue-router";
-import { Component, Hook, Ref, Setup, Vue } from "vue-facing-decorator";
+import { Component, Hook, Ref, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { ref } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -89,7 +89,7 @@ import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDia
     OrderFilterSettingDialog,
   },
 })
-export default class GoodsOrdersListPage extends Vue {
+class GoodsOrdersListPage extends Vue {
   @Setup(() => useDisplay().smAndUp)
   declare readonly smAndUp: boolean;
 
@@ -150,7 +150,7 @@ export default class GoodsOrdersListPage extends Vue {
   }
 
   get boothGoodsOrders() {
-    return useAdminStore().currentBooth.goodsOrders!;
+    return useAdminStore().currentBooth.orders!;
   }
 
   get boothGoodsOrdersLength(): number {
@@ -167,4 +167,6 @@ export default class GoodsOrdersListPage extends Vue {
     this.filterSettings.value = filterSetting;
   }
 }
+
+export default toNative(GoodsOrdersListPage);
 </script>

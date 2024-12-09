@@ -7,7 +7,6 @@ interface IBoothCommon {
   ownerId: number;
   fairId?: number | null;
   name: string;
-  /** @deprecated Use `currencyCode` instead. */ currencySymbol: string;
   currencyCode: SupportedCurrencyCodes;
   description?: string | null;
   noticeContent?: string | null;
@@ -68,8 +67,8 @@ export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "sta
 
 /* === Requests === */
 export type IBoothCreateRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "datesOpenInFair" | "relatedLinks">;
-export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
-export type IBoothUpdateRequest = Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencySymbol" | "currencyCode">>;
+export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
+export type IBoothUpdateRequest = Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencyCode">>;
 export type IBoothNoticeUpdateRequest = Pick<IBoothCommon, "noticeContent">;
 export type IBoothStatusUpdateRequest = Partial<IBoothStatus>;
 

@@ -11,16 +11,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Test
-    strategy:
-      matrix:
-        node-version: [ "20.x", "lts/*", "*" ]
+    env:
+      node-version: "lts/*"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.node-version }}
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -29,5 +28,18 @@ jobs:
               args: [--frozen-lockfile]
       - name: Initialize project
         run: pnpm common:build
-      - name: Do test
-        run: pnpm test
+      - name: Run test and generate coverage report
+        run: |
+          echo "## Test coverage summary" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          pnpm jest --ci --coverage --coverageReporters=text --coverageReporters=text-summary --testLocationInResults >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      # - name: Run test and generate coverage report
+      #   uses: ArtiomTr/jest-coverage-report-action@v2
+      #   id: coverage
+      #   with:
+      #     package-manager: pnpm
+      #     output: report-markdown
+      # - name: Write test coverage summary
+      #   run: echo "${{ steps.coverage.outputs.report }}" >> $GITHUB_STEP_SUMMARY

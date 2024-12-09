@@ -2,10 +2,11 @@
   "name": "myboothmanager",
   "author": "somni <me@somni.one>",
   "private": true,
-  "packageManager": "pnpm@9.7.1",
+  "packageManager": "pnpm@9.14.2",
   "license": "PolyForm-Strict-1.0.0",
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
+    "postinstall": "pnpm run common:build",
     "all": "pnpm -r run",
     "all:version": "pnpm -r exec npm version",
     "all:build": "pnpm all build",
@@ -24,10 +25,10 @@
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",
-    "@types/node": "^20.16.1",
-    "concurrently": "^8.2.2",
+    "@types/node": "^20.17.6",
+    "concurrently": "^9.1.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.4",
-    "typescript": "^5.5.4"
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
   }
 }

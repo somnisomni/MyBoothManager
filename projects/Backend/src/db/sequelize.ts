@@ -22,10 +22,22 @@ export default class MBMSequelize {
 
   private static async setupModels(): Promise<void> {
     /* == Model initialization == */
-    MBMSequelize.instance.addModels([Account, Fair, Booth, BoothMember, Goods, GoodsCategory, GoodsOrder, GoodsCombination, UploadStorage]);
+    MBMSequelize.instance.addModels([
+      Account,
+      Fair,
+      Booth,
+      BoothMember,
+      Goods,
+      GoodsCombination,
+      GoodsCategory,
+      GoodsOrder,
+      UploadStorage,
+    ]);
 
     /* == Sync model == */
-    await MBMSequelize.instance.sync({ alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true" });
+    await MBMSequelize.instance.sync({
+      alter: process.env.NODE_ENV === "development" && process.env.SEQUELIZE_ALTERDB === "true",
+    });
 
     /* == End == */
     console.debug("Sequelize models are set up.");

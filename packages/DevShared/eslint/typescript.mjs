@@ -17,5 +17,8 @@ export default tseslint.config({
   },
   rules: {
     "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-empty-object-type": ["error", {
+      allowInterfaces: "with-single-extends",
+    }],
   },
 });

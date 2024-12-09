@@ -60,13 +60,13 @@
 
 <script lang="ts">
 import type { IGoodsCategory } from "@myboothmanager/common";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, toNative, Vue } from "vue-facing-decorator";
 import { Goods, GoodsCombination, type GoodsBase } from "@/entities";
 
 @Component({
   emits: ["click:goods", "click:combination"],
 })
-export default class GoodsListView extends Vue {
+class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<GoodsBase>;
   @Prop({ type: Object, required: true })  readonly goodsCategoryList!: Array<IGoodsCategory>;
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
@@ -141,4 +141,6 @@ export default class GoodsListView extends Vue {
   @Emit("click:goods") onGoodsClick(goodsId: number) { return goodsId; }
   @Emit("click:combination") onCombinationClick(combinationId: number) { return combinationId; }
 }
+
+export default toNative(GoodsListView);
 </script>

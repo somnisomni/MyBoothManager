@@ -4,7 +4,6 @@ import { useAuthLocalStore } from "@/plugins/stores/auth";
 export class BaseAdminAPI {
   protected static readonly API: CT.APICaller = new CT.APICaller({
     host: import.meta.env.VITE_MBM_API_SERVER_URL,
-    group: "admin",
     getAuthorizationToken: () => useAuthLocalStore().accessToken!,
   });
 
@@ -73,6 +72,10 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<Array<CT.IBoothMemberResponse>>(() => this.API.GET(`booth/${boothId}/member`));
   }
 
+  static async fetchAllOrdersOfBooth(boothId: number) {
+    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/order`));
+  }
+
   static async fetchAllGoodsOfBooth(boothId: number) {
     return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(() => this.API.GET(`booth/${boothId}/goods`));
   }
@@ -83,10 +86,6 @@ export default class AdminAPI extends BaseAdminAPI {
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number) {
     return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(() => this.API.GET(`booth/${boothId}/goods/category`));
-  }
-
-  static async fetchAllGoodsOrdersOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/goods/order`));
   }
 
   static async fetchAvailableFairs() {
@@ -106,16 +105,16 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.PATCH(`booth/${boothId}/member/${memberId}`, payload));
   }
 
+  static async updateBoothOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`booth/${boothId}/order/${orderId}/status`, payload));
+  }
+
   static async updateGoodsInfo(goodsId: number, payload: CT.IGoodsUpdateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.PATCH(`goods/${goodsId}`, payload));
   }
 
   static async updateGoodsCategoryInfo(categoryId: number, payload: CT.IGoodsCategoryUpdateRequest) {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(() => this.API.PATCH(`goods/category/${categoryId}`, payload));
-  }
-
-  static async updateGoodsOrderStatus(orderId: number, boothId: number, payload: CT.IGoodsOrderStatusUpdateRequest) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`goods/order/${orderId}/status?bId=${boothId}`, payload));
   }
 
   static async updateGoodsCombinationInfo(combinationId: number, payload: CT.IGoodsCombinationUpdateRequest) {
@@ -131,16 +130,16 @@ export default class AdminAPI extends BaseAdminAPI {
     return await this.apiCallWrapper<CT.IBoothMember>(() => this.API.POST(`booth/${boothId}/member`, payload));
   }
 
+  static async createBoothOrder(boothId: number, payload: CT.IGoodsOrderCreateRequest) {
+    return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST(`booth/${boothId}/order`, payload));
+  }
+
   static async createGoods(payload: CT.IGoodsCreateRequest) {
     return await this.apiCallWrapper<CT.IGoodsResponse>(() => this.API.POST("goods", payload));
   }
 
   static async createGoodsCategory(payload: CT.IGoodsCategoryCreateRequest) {
     return await this.apiCallWrapper<CT.IGoodsCategoryResponse>(() => this.API.POST("goods/category", payload));
-  }
-
-  static async createGoodsOrder(payload: CT.IGoodsOrderCreateRequest) {
-    return await this.apiCallWrapper<CT.IGoodsOrderResponse>(() => this.API.POST("goods/order", payload));
   }
 
   static async createGoodsCombination(payload: CT.IGoodsCombinationCreateRequest) {
@@ -151,40 +150,40 @@ export default class AdminAPI extends BaseAdminAPI {
   static async uploadBoothBannerImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/banner`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/image/banner`, formData));
   }
 
   static async uploadBoothInfoImage(boothId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/infoimage`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/image/info`, formData));
   }
 
   static async uploadBoothMemberImage(boothId: number, memberId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`booth/${boothId}/member/${memberId}/image/avatar`, formData));
   }
 
   static async uploadGoodsImage(boothId: number, goodsId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/${goodsId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/${goodsId}/image/primary?bId=${boothId}`, formData));
   }
 
   static async uploadGoodsCombinationImage(boothId: number, combinationId: number, image: Blob) {
     const formData = new FormData();
     formData.set("0", image);
-    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image?bId=${boothId}`, formData));
+    return await this.apiCallWrapper<CT.ISingleValueResponse<string>>(() => this.API.POSTMultipart(`goods/combination/${combinationId}/image/primary?bId=${boothId}`, formData));
   }
 
   /* Delete */
   static async deleteBoothBannerImage(boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/banner`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/image/banner`));
   }
 
   static async deleteBoothInfoImage(boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/infoimage`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/image/info`));
   }
 
   static async deleteBoothMember(boothId: number, memberId: number) {
@@ -192,7 +191,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteBoothMemberImage(boothId: number, memberId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}/image`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`booth/${boothId}/member/${memberId}/image/avatar`));
   }
 
   static async deleteGoods(goodsId: number, boothId: number) {
@@ -200,7 +199,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteGoodsImage(goodsId: number, boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image?bId=${boothId}`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/${goodsId}/image/primary?bId=${boothId}`));
   }
 
   static async deleteGoodsCategory(categoryId: number, boothId: number) {
@@ -212,6 +211,6 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async deleteGoodsCombinationImage(combinationId: number, boothId: number) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image?bId=${boothId}`));
+    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image/primary?bId=${boothId}`));
   }
 }

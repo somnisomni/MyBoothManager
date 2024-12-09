@@ -79,10 +79,10 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, import/exports-last */
 
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
-import { Component, Emit, Model, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
 import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField } from "vuetify/components";
 import { VNumberInput } from "vuetify/labs/VNumberInput";
 import deepEqual from "fast-deep-equal";
@@ -226,7 +226,7 @@ export type FormFieldOptions = IFormFieldOptions
 @Component({
   emits: ["submit"],
 })
-export default class CommonForm extends Vue {
+class CommonForm extends Vue {
   readonly FormFieldType = FormFieldType;
   readonly FORM_FIELD_TYPE_COMPONENT_MAP = FORM_FIELD_TYPE_COMPONENT_MAP;
 
@@ -278,7 +278,7 @@ export default class CommonForm extends Vue {
 
   /* Common getters */
   get currentBoothCurrencySymbol(): string {
-    return useAdminStore().currentBooth.booth!.currencySymbol;
+    return useAdminStore().currentBoothCurrencyInfo.symbol;
   }
 
   /* Component event emits */
@@ -329,4 +329,6 @@ export default class CommonForm extends Vue {
     this.models[fieldName] = value ? value : 0;
   }
 }
+
+export default toNative(CommonForm);
 </script>
