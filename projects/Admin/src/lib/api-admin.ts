@@ -98,7 +98,7 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async updateBoothStatus(boothId: number, payload: CT.IBoothStatusUpdateRequest) {
-    return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.PATCH(`booth/${boothId}/status`, payload));
+    return await this.apiCallWrapper<CT.IBoothStatus>(() => this.API.PATCH(`booth/${boothId}/status`, payload));
   }
 
   static async updateBoothMemberInfo(boothId: number, memberId: number, payload: CT.IBoothMemberUpdateRequest) {

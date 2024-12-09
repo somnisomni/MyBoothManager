@@ -1,7 +1,7 @@
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
-import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE, type IBoothStatus } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { Op } from "sequelize";
 import { CreateBoothRequestDto } from "./dto/create.dto";
@@ -153,7 +153,7 @@ export class BoothService {
    * @param accountId ID of the account
    * @returns `SUCCESS_RESPONSE`
    */
-  async updateStatus(id: number, updateStatusDto: UpdateBoothStatusRequestDto, accountId: number): Promise<ISuccessResponse> {
+  async updateStatus(id: number, updateStatusDto: UpdateBoothStatusRequestDto, accountId: number): Promise<IBoothStatus> {
     try {
       const booth = await this.getBoothBelongsToAccount(id, accountId);
 
@@ -167,16 +167,20 @@ export class BoothService {
         updateStatusDto.reason = undefined;
       }
 
-      await (await booth.update({
+      const result = await (await booth.update({
         status: updateStatusDto.status,
         statusReason: updateStatusDto.reason ?? null,
         statusContentPublished: updateStatusDto.contentPublished,
       })).save();
+
+      return {
+        status: result.status,
+        reason: result.statusReason ?? undefined,
+        contentPublished: result.statusContentPublished,
+      };
     } catch(err) {
       throw new BoothStatusUpdateFailedException();
     }
-
-    return SUCCESS_RESPONSE;
   }
 
   /**

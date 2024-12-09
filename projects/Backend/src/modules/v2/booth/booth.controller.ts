@@ -5,7 +5,7 @@ import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth
 import { IAuthData } from "../auth/jwt-util.service";
 import { CreateBoothRequestDto } from "./dto/create.dto";
 import { UpdateBoothRequestDto } from "./dto/update.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
+import { ISuccessResponse, type IBoothStatus } from "@myboothmanager/common";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
 
 @Controller("/booth")
@@ -81,7 +81,7 @@ export class BoothController {
   @AllowedFor(UserTypes.BOOTH_ADMIN)
   async updateStatus(@Param("id", ParseIntPipe) id: number,
                      @Body() updateStatusDto: UpdateBoothStatusRequestDto,
-                     @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
+                     @AuthData() authData: IAuthData): Promise<IBoothStatus> {
     return await this.booth.updateStatus(id, updateStatusDto, authData.id);
   }
 

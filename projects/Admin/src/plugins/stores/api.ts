@@ -169,7 +169,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function updateCurrentBoothStatus(payload: C.IBoothStatusUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothStatus($adminStore.currentBooth.booth!.id, payload),
-      () => $adminStore.currentBooth.booth!.status = { ...$adminStore.currentBooth.booth!.status, ...payload },
+      (response) => {
+        $adminStore.currentBooth.booth!.status = { ...$adminStore.currentBooth.booth!.status, ...response };
+      },
       "부스 운영 상태 변경 성공",
       "부스 운영 상태 변경 실패",
     );
