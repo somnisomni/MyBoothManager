@@ -110,15 +110,12 @@ export default class APICaller {
   }
 
   // Booth
-  public async fetchAllBooths() {
-    return await this.createPublicAPI().GET<Array<IBoothResponse>>("booth");
+  public async checkBoothPublicAccess(boothId: number) {
+    return await this.createPublicAPI().GET<ISingleValueResponse<boolean>>(`booth/${boothId}/public-access`);
   }
 
-  public async fetchCountAllBooths() {
-    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>("booth/count");
-
-    if("value" in response) return +response.value;
-    else return response;
+  public async fetchAllBooths() {
+    return await this.createPublicAPI().GET<Array<IBoothResponse>>("booth");
   }
 
   public async fetchSingleBooth(boothId: number) {
@@ -129,33 +126,12 @@ export default class APICaller {
     return await this.createPublicAPI().GET<Array<IGoodsResponse>>(`booth/${boothId}/goods`);
   }
 
-  public async fetchCountAllGoodsOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/count`);
-
-    if("value" in response) return +response.value;
-    else return response;
-  }
-
   public async fetchAllGoodsCategoryOfBooth(boothId: number) {
     return await this.createPublicAPI().GET<Array<IGoodsCategoryResponse>>(`booth/${boothId}/goods/category`);
   }
 
-  public async fetchCountAllGoodsCategoryOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/category/count`);
-
-    if("value" in response) return +response.value;
-    else return response;
-  }
-
   public async fetchAllGoodsCombinationOfBooth(boothId: number) {
     return await this.createPublicAPI().GET<Array<IGoodsCombinationResponse>>(`booth/${boothId}/goods/combination`);
-  }
-
-  public async fetchCountAllGoodsCombinationOfBooth(boothId: number) {
-    const response = await this.createPublicAPI().GET<ISingleValueResponse<number>>(`booth/${boothId}/goods/combination/count`);
-
-    if("value" in response) return +response.value;
-    else return response;
   }
 
   public async fetchAvailableFairs() {

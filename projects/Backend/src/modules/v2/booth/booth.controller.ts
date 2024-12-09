@@ -5,7 +5,7 @@ import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth
 import { IAuthData } from "../auth/jwt-util.service";
 import { CreateBoothRequestDto } from "./dto/create.dto";
 import { UpdateBoothRequestDto } from "./dto/update.dto";
-import { ISuccessResponse, type IBoothStatus } from "@myboothmanager/common";
+import { ISuccessResponse, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
 
 @Controller("/booth")
@@ -49,6 +49,16 @@ export class BoothController {
     }
 
     return new BoothResponseDto(await this.booth.findOne(id, true));
+  }
+
+
+  /* === Public routes === */
+  /**
+   * Checks if a booth is publicly accessible
+   */
+  @Get(":id/public-access")
+  async checkPublicAccess(@Param("id", ParseIntPipe) id: number): Promise<ISingleValueResponse<boolean>> {
+    return { value: await this.booth.isBoothAvailable(id) };
   }
 
 

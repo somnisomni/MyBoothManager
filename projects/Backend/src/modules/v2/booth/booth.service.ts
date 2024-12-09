@@ -45,15 +45,22 @@ export class BoothService {
   isBoothPublished(booth?: Booth): boolean {
     if(!booth) return false;
 
-    return booth.status !== BoothStatus.PREPARE || booth.statusContentPublished;
+    return booth.status === BoothStatus.OPEN || booth.statusContentPublished;
   }
 
-  isBoothAvailable(booth?: Booth): boolean {
+  async isBoothAvailable(booth?: Booth | number): Promise<boolean> {
     if(!booth) return false;
 
-    return this.isBoothPublished(booth)
-            && booth.status !== BoothStatus.CLOSE
-            && (!booth.fairId || !booth.associatedFair?.isPassed);
+    let boothInstance: Booth;
+    if(typeof booth === "number") {
+      boothInstance = await findOneByPk(Booth, booth);
+    } else {
+      boothInstance = booth;
+    }
+
+    return this.isBoothPublished(boothInstance)
+            && (boothInstance.status !== BoothStatus.CLOSE || (boothInstance.status === BoothStatus.CLOSE && boothInstance.statusContentPublished))
+            && (!boothInstance.fairId || !boothInstance.associatedFair?.isPassed);
   }
 
   /**
