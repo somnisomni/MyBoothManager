@@ -157,9 +157,19 @@ export class BoothService {
     try {
       const booth = await this.getBoothBelongsToAccount(id, accountId);
 
+      // Force setting `contentPublished` to true if the status is `OPEN` or `PAUSE`
+      if(updateStatusDto.status === BoothStatus.OPEN || updateStatusDto.status === BoothStatus.PAUSE) {
+        updateStatusDto.contentPublished = true;
+      }
+
+      // Clear `reason` if the status is not `PAUSE`
+      if(updateStatusDto.status !== BoothStatus.PAUSE) {
+        updateStatusDto.reason = undefined;
+      }
+
       await (await booth.update({
         status: updateStatusDto.status,
-        statusReason: updateStatusDto.reason,
+        statusReason: updateStatusDto.reason ?? null,
         statusContentPublished: updateStatusDto.contentPublished,
       })).save();
     } catch(err) {
