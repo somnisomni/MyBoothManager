@@ -99,13 +99,13 @@ export default class ImageManipulator {
   }
 
   /**
-   * Default size 16x16
+   * Default size 32x32
    */
-  async toThumbnailBase64(width: number = 16, height: number = 16): Promise<string> {
+  async toThumbnailBase64(width: number = 32, height: number = 32): Promise<string> {
     try {
       return await new Promise((resolve) => {
         this.imageInstance.clone().resize(width, height, {
-          fit: "cover",
+          fit: "inside",
           position: "center",
           kernel: "lanczos3",
         }).flatten({ background: { r: 255, g: 255, b: 255 }}).png().toBuffer().then((buffer) => {
