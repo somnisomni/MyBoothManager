@@ -6,22 +6,36 @@
                    :goodsList="goodsList"
                    :goodsCategoryList="goodsCategoryList">
       <template #goods-category="props">
-        <GoodsCategoryTitleManageable v-bind="props"
+        <GoodsCategoryTitleManageable v-if="!isBoothClosed"
+                                      v-bind="props"
                                       @click="openGoodsCategoryEditDialog((props.categoryData as IGoodsCategory).id)" />
+        <GoodsCategoryTitle v-else
+                            v-bind="props"
+                            style="cursor: default;" />
       </template>
       <template #goods="props">
-        <GoodsItemManageable v-bind="props"
+        <GoodsItemManageable v-if="!isBoothClosed"
+                             v-bind="props"
                              @click="openGoodsManageDialog"
                              @menu:edit="openGoodsManageDialog"
                              @menu:duplicate="openGoodsCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(false, (props as GoodsItemProps).goodsData!.id)" />
+        <GoodsItem v-else
+                   v-bind="props"
+                   style="cursor: default;"
+                   :forceStockVisibility="GoodsStockVisibility.SHOW_ALL" />
       </template>
       <template #goods-combination="props">
-        <GoodsItemManageable v-bind="props"
+        <GoodsItemManageable v-if="!isBoothClosed"
+                             v-bind="props"
                              @click="openGoodsCombinationManageDialog"
                              @menu:edit="openGoodsCombinationManageDialog"
                              @menu:duplicate="openGoodsCombinationCreateDialogWithDuplication((props as GoodsItemProps).goodsData!.id)"
                              @menu:delete="openDeleteDialog(true, (props as GoodsItemProps).goodsData!.id)" />
+        <GoodsItem v-else
+                   v-bind="props"
+                   style="cursor: default;"
+                   :forceStockVisibility="GoodsStockVisibility.SHOW_ALL" />
       </template>
     </GoodsListView>
   </VContainer>
@@ -42,8 +56,8 @@
 </template>
 
 <script lang="ts">
-import type { ErrorCodes, IGoodsCategory } from "@myboothmanager/common";
 import type { Goods, GoodsCombination, GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
+import { BoothStatus, GoodsStockVisibility, type ErrorCodes, type IGoodsCategory } from "@myboothmanager/common";
 import { Vue, Component, toNative, Setup } from "vue-facing-decorator";
 import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
@@ -67,6 +81,8 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
   },
 })
 class GoodsPage extends Vue {
+  readonly GoodsStockVisibility = GoodsStockVisibility;
+
   @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
@@ -83,6 +99,10 @@ class GoodsPage extends Vue {
   deleteDialogOpen = false;
   deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
 
+  get isBoothClosed(): boolean {
+    return useAdminStore().currentBooth.booth!.status.status === BoothStatus.CLOSE;
+  }
+
   get goodsList(): Array<Goods | GoodsCombination> {
     return [
       ...Object.values(useAdminStore().currentBooth.goods ?? {}),
@@ -95,18 +115,23 @@ class GoodsPage extends Vue {
   }
 
   openGoodsManageDialog(goodsId: number) {
+    if(this.isBoothClosed) return;
+
     this.manageDialogGoodsId = goodsId;
     this.goodsManageDialogDuplicateMode = false;
     this.goodsManageDialogOpen = true;
   }
 
   openGoodsCombinationManageDialog(combinationId: number) {
+    if(this.isBoothClosed) return;
+
     this.manageDialogCombinationId = combinationId;
     this.goodsCombinationManageDialogDuplicateMode = false;
     this.goodsCombinationManageDialogOpen = true;
   }
 
   openGoodsCategoryEditDialog(categoryId: number) {
+    if(this.isBoothClosed) return;
     if(categoryId < 0) return;
 
     this.editDialogCategoryId = categoryId;
@@ -114,16 +139,22 @@ class GoodsPage extends Vue {
   }
 
   openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
+    if(this.isBoothClosed) return;
+
     this.openGoodsManageDialog(targetGoodsId);
     this.goodsManageDialogDuplicateMode = true;
   }
 
   openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number) {
+    if(this.isBoothClosed) return;
+
     this.openGoodsCombinationManageDialog(targetCombinationId);
     this.goodsCombinationManageDialogDuplicateMode = true;
   }
 
   openDeleteDialog(isCombination: boolean, id: number) {
+    if(this.isBoothClosed) return;
+
     this.deleteDialogTarget = { isCombination, id };
     this.deleteDialogOpen = true;
   }

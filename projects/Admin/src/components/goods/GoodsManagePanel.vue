@@ -1,6 +1,7 @@
 <template>
   <DashboardPanel>
-    <VRow class="pa-2">
+    <VRow class="pa-2 flex-column">
+      <p v-if="isBoothClosed" class="mb-2 d-inline-flex align-center text-warning"><VIcon icon="mdi-information-outline" class="mr-1" /> 실수를 방지하기 위해 부스가 운영 종료된 상태에서는 굿즈 정보 수정 기능이 비활성화됩니다.</p>
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
     <VRow class="pa-2 justify-space-between">
@@ -20,17 +21,20 @@
               variant="outlined"
               size="x-large"
               prepend-icon="mdi-plus"
+              :disabled="isBoothClosed"
               @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen">굿즈 추가</VBtn>
         <VBtn class="my-1 mx-sm-1"
               variant="outlined"
               size="x-large"
               prepend-icon="mdi-set-all"
+              :disabled="isBoothClosed"
               @click.stop="combinationAddDialogOpen = !combinationAddDialogOpen">세트 구성 추가</VBtn>
       </VLayout>
       <VBtn class="ml-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
             min-width="64px"
             size="x-large"
+            :disabled="isBoothClosed"
             @click.stop="onLoadGoodsFromFileClick">
         <VTooltip activator="parent" location="bottom">파일로부터 굿즈 목록 불러오기</VTooltip>
         <VIcon>mdi-file-upload</VIcon>
@@ -45,6 +49,7 @@
 <script lang="ts">
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
+import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -66,6 +71,10 @@ export default class GoodsManagePanel extends Vue {
 
   @Setup(() => useDisplay().smAndUp)
   smAndUp!: boolean;
+
+  get isBoothClosed(): boolean {
+    return useAdminStore().currentBooth.booth!.status.status === BoothStatus.CLOSE;
+  }
 
   get goodsCount(): string {
     return Object.keys(useAdminStore().currentBooth.goods ?? {}).length.toLocaleString();
