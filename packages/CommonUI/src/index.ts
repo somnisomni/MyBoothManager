@@ -34,6 +34,7 @@ export default {
     app.component("GoodsListView", C.GoodsListView);
 
     app.component("GlobalSnackbarStack", C.GlobalSnackbarStack);
+    app.component("MarkdownRenderer", C.MarkdownRenderer);
   },
 };
 

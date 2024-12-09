@@ -1,17 +1,18 @@
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
-import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE, type IBoothStatus } from "@myboothmanager/common";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
+import { forwardRef, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Op } from "sequelize";
 import { CreateBoothRequestDto } from "./dto/create.dto";
 import { BoothImageService } from "./booth.image.service";
 import { UpdateBoothRequestDto } from "./dto/update.dto";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
 import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
-import { BoothInfoUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
+import { BoothInfoUpdateFailedException, BoothNoticeUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { create as dbCreate, findAll as dbFindAll, findOneByPk, removeInstance } from "@/lib/utils/db";
+import type { UpdateBoothNoticeRequestDto } from "@/modules/v2/booth/dto/update-notice.dto";
 
 @Injectable()
 export class BoothService {
@@ -158,7 +159,7 @@ export class BoothService {
    * @param id ID of the booth
    * @param updateStatusDto DTO for updating status of a booth
    * @param accountId ID of the account
-   * @returns `SUCCESS_RESPONSE`
+   * @returns Updated status (satisfies `IBoothStatus`)
    */
   async updateStatus(id: number, updateStatusDto: UpdateBoothStatusRequestDto, accountId: number): Promise<IBoothStatus> {
     try {
@@ -174,19 +175,42 @@ export class BoothService {
         updateStatusDto.reason = undefined;
       }
 
-      const result = await (await booth.update({
+      const instance = await (await booth.update({
         status: updateStatusDto.status,
         statusReason: updateStatusDto.reason ?? null,
         statusContentPublished: updateStatusDto.contentPublished,
       })).save();
 
       return {
-        status: result.status,
-        reason: result.statusReason ?? undefined,
-        contentPublished: result.statusContentPublished,
+        status: instance.status,
+        reason: instance.statusReason ?? undefined,
+        contentPublished: instance.statusContentPublished,
       };
     } catch(err) {
       throw new BoothStatusUpdateFailedException();
+    }
+  }
+
+  /**
+   * Updates notice of a booth.
+   * @param id ID of the booth
+   * @param notice DTO for updating notice of a booth
+   * @param accountId ID of the account
+   * @returns Updated notice content (in `value` field)
+   */
+  async updateNotice(id: number, notice: UpdateBoothNoticeRequestDto, accountId: number): Promise<ISingleValueResponse<string>> {
+    try {
+      const booth = await this.getBoothBelongsToAccount(id, accountId);
+
+      const instance = await (await booth.update({
+        noticeContent: notice.noticeContent || null,
+      })).save();
+
+      return {
+        value: instance.noticeContent!,
+      };
+    } catch(err) {
+      throw new BoothNoticeUpdateFailedException();
     }
   }
 
