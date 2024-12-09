@@ -177,6 +177,15 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     );
   }
 
+  async function updateCurrentBoothNotice(payload: string): Promise<true | C.ErrorCodes> {
+    return await simplifyAPICall(
+      () => AdminAPI.updateBoothNotice($adminStore.currentBooth.booth!.id, { noticeContent: payload }),
+      (response) => $adminStore.currentBooth.booth!.noticeContent = response.value,
+      "부스 공지사항 업데이트 성공",
+      "부스 공지사항 업데이트 실패",
+    );
+  }
+
   async function uploadBoothBannerImage(payload: File | Blob): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.uploadBoothBannerImage($adminStore.currentBooth.booth!.id, payload),
@@ -518,6 +527,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     createBooth,
     updateCurrentBoothInfo,
     updateCurrentBoothStatus,
+    updateCurrentBoothNotice,
     uploadBoothBannerImage,
     deleteBoothBannerImage,
     uploadBoothInfoImage,

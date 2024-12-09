@@ -33,7 +33,8 @@ export default {
     app.component("GoodsCategoryTitle", IC.GoodsCategoryTitleComponent);
     app.component("GoodsListView", IC.GoodsListViewComponent);
 
-    app.component("GlobalSnackbarStack", IC.GlobalSnackbarStackComponent);
+    app.component("GlobalSnackbarStack", IC.GlobalSnackbarStack);
+    app.component("MarkdownRenderer", IC.MarkdownRenderer);
   },
 };
 

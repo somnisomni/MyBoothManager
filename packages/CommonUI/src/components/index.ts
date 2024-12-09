@@ -14,3 +14,4 @@ export { GoodsCategoryTitle } from "./goods/GoodsCategoryTitle.vue";
 export { GoodsListView } from "./goods/GoodsListView.vue";
 
 export { GlobalSnackbarStack } from "./global/GlobalSnackbarStack.vue";
+export { MarkdownRenderer } from "./global/MarkdownRenderer.vue";

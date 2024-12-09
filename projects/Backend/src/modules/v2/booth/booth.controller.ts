@@ -7,6 +7,7 @@ import { CreateBoothRequestDto } from "./dto/create.dto";
 import { UpdateBoothRequestDto } from "./dto/update.dto";
 import { ISuccessResponse, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
 import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
+import type { UpdateBoothNoticeRequestDto } from "@/modules/v2/booth/dto/update-notice.dto";
 
 @Controller("/booth")
 export class BoothController {
@@ -93,6 +94,17 @@ export class BoothController {
                      @Body() updateStatusDto: UpdateBoothStatusRequestDto,
                      @AuthData() authData: IAuthData): Promise<IBoothStatus> {
     return await this.booth.updateStatus(id, updateStatusDto, authData.id);
+  }
+
+  /**
+   * Updates notice of a booth
+   */
+  @Patch(":id/notice")
+  @AllowedFor(UserTypes.BOOTH_ADMIN)
+  async updateNotice(@Param("id", ParseIntPipe) id: number,
+                     @Body() notice: UpdateBoothNoticeRequestDto,
+                     @AuthData() authData: IAuthData): Promise<ISingleValueResponse<string>> {
+    return await this.booth.updateNotice(id, notice, authData.id);
   }
 
 
