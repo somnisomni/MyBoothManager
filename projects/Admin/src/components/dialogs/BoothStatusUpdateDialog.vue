@@ -92,7 +92,7 @@ export default class BoothStatusUpdateDialog extends Vue {
 
     const result = await useAdminAPIStore().updateCurrentBoothStatus({
       status: this.targetStatus,
-      reason: this.statusReason,
+      reason: this.statusReason || undefined,
     });
 
     if(result === true) {
