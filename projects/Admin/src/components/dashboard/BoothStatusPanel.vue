@@ -13,18 +13,21 @@
 
     <!-- When status is PREPARE: Content publish setting -->
     <VExpandTransition>
-      <VLayout v-if="currentBoothStatus === BoothStatus.PREPARE" class="mt-6 text-center flex-column">
+      <VLayout v-if="currentBoothStatus === BoothStatus.PREPARE || currentBoothStatus === BoothStatus.CLOSE"
+               class="mt-6 text-center flex-column">
         <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
         <VLayout class="flex-row justify-stretch mt-1">
           <VBtn :variant="currentBoothStatusContentPublished ? 'flat' : 'outlined'"
                 :disabled="currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
-                color="green" class="mr-1 flex-grow-1"
+                :color="currentBoothStatus === BoothStatus.CLOSE ? 'red' : 'green'"
+                class="mr-1 flex-grow-1"
                 @click.stop="updateContentPublishStatus(true)">공개</VBtn>
           <VBtn :variant="!currentBoothStatusContentPublished ? 'flat' : 'outlined'"
                 :disabled="!currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
-                color="grey" class="ml-1 flex-grow-1"
+                color="grey"
+                class="ml-1 flex-grow-1"
                 @click.stop="updateContentPublishStatus(false)">비공개</VBtn>
         </VLayout>
       </VLayout>

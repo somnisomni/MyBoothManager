@@ -130,7 +130,7 @@ export default class AdminLayout extends Vue {
   }
 
   get currentBoothIsNotPublished(): boolean {
-    return this.currentBooth.status.status === BoothStatus.PREPARE && !this.currentBooth.status.contentPublished;
+    return !this.currentBooth.status.contentPublished;
   }
 
   get boothPublicPageHref(): string {
