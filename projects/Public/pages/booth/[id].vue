@@ -130,6 +130,15 @@ import { getUploadFileUrl } from "#imports";
       return { boothFetchError };
     }
 
+    const boothAccessCheck = await $publicAPI.apiCaller.checkBoothPublicAccess(boothId);
+    if("errorCode" in boothAccessCheck) {
+      boothFetchError.value = boothAccessCheck.errorCode;
+      return { boothFetchError, booth: null };
+    } else if(!boothAccessCheck.value) {
+      boothFetchError.value = ErrorCodes.BOOTH_NOT_PUBLISHED;
+      return { boothFetchError, booth: null };
+    }
+
     let booth: IBoothResponse | IErrorResponse | null = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchSingleBooth(boothId));
     let members: Array<IBoothMember> = [];
     let categories: Array<IGoodsCategory> = [];
