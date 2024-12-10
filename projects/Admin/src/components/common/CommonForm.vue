@@ -226,7 +226,7 @@ export type FormFieldOptions = IFormFieldOptions
 @Component({
   emits: ["submit"],
 })
-class CommonForm extends Vue {
+export class CommonForm extends Vue {
   readonly FormFieldType = FormFieldType;
   readonly FORM_FIELD_TYPE_COMPONENT_MAP = FORM_FIELD_TYPE_COMPONENT_MAP;
 

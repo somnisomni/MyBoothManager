@@ -20,7 +20,7 @@
 import { Component, Emit, Model, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-class DatePickerDialog extends Vue {
+export class DatePickerDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
   @Prop({ type: String, default: "날짜 선택" }) title!: string;
   @Prop({ type: Date }) min!: Date;

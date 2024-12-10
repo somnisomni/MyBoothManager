@@ -71,7 +71,6 @@ import { useDisplay } from "vuetify";
 import { isDisplayXXS } from "@/plugins/vuetify";
 import { Goods, GoodsBase, GoodsCombination } from "@/entities";
 
-// eslint-disable-next-line import/exports-last
 export interface GoodsItemProps {
   readonly goodsData: GoodsBase;
   readonly currencySymbol: string;
@@ -85,7 +84,7 @@ export interface GoodsItemProps {
 @Component({
   emits: ["click"],
 })
-class GoodsItem extends Vue implements GoodsItemProps {
+export class GoodsItem extends Vue implements GoodsItemProps {
   @Prop({ type: GoodsBase, required: true }) readonly goodsData!: GoodsBase;
   @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
   @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;

@@ -32,7 +32,7 @@ import type { ISnackbarContext } from "@/entities";
 import { Component, Model, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
 
 @Component({})
-class GlobalSnackbarStack extends Vue {
+export class GlobalSnackbarStack extends Vue {
   readonly STACK_MARGIN = 8;
 
   @Model({ type: Array, required: true }) declare queue: Array<ISnackbarContext>;

@@ -14,7 +14,7 @@ import type { IGoodsCategory } from "@myboothmanager/common";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-class GoodsCategoryTitle extends Vue {
+export class GoodsCategoryTitle extends Vue {
   @Prop({ type: Object, required: true }) readonly categoryData!: IGoodsCategory;
 }
 

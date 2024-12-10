@@ -33,7 +33,7 @@ import { FeedbackSenderType, FeedbackType, type IFeedbackRequest } from "@myboot
 import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 @Component({

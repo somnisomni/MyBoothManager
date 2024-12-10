@@ -23,7 +23,7 @@ import CommonDialog from "./CommonDialog.vue";
     CommonDialog,
   },
 })
-class CommonWarningDialog extends Vue {
+export class CommonWarningDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: String, default: null }) headlineText!: string | null;
   @Prop({ type: String, default: "확인" }) primaryText!: string | null;

@@ -38,7 +38,7 @@ import BoothMemberAvatar from "./BoothMemberAvatar.vue";
   },
   emits: ["click"],
 })
-class BoothMemberItem extends Vue {
+export class BoothMemberItem extends Vue {
   @Prop({ type: Object,  required: true }) readonly memberData!: IBoothMember;
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean;
 

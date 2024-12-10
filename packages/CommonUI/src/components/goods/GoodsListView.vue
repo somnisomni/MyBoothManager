@@ -66,7 +66,7 @@ import { Goods, GoodsCombination, type GoodsBase } from "@/entities";
 @Component({
   emits: ["click:goods", "click:combination"],
 })
-class GoodsListView extends Vue {
+export class GoodsListView extends Vue {
   @Prop({ type: Object, required: true })  readonly goodsList!: Array<GoodsBase>;
   @Prop({ type: Object, required: true })  readonly goodsCategoryList!: Array<IGoodsCategory>;
   @Prop({ type: Boolean, default: false }) readonly omitEmptyGoodsCategory!: boolean;
