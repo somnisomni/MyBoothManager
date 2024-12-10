@@ -5,6 +5,7 @@ import { AdminBoothMemberResponseDto, BoothMemberResponseDto } from "./dto/booth
 import { UserType, UserTypes, AuthData, UserTypeUtil, AllowedFor } from "../auth/auth.guard";
 import type { IAuthData } from "../auth/jwt-util.service";
 import type { CreateBoothMemberRequestDto } from "./dto/create.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
 
 @Controller(`/booth/:${BOOTH_ID_QUERY}/member`)
 export class BoothMemberController {
@@ -81,7 +82,7 @@ export class BoothMemberController {
   @AllowedFor(UserTypes.BOOTH_ADMIN)
   async remove(@Param("id", ParseIntPipe) id: number,
                @Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
-               @AuthData() authData: IAuthData): Promise<void> {
-    await this.member.remove(id, boothId, authData.id);
+               @AuthData() authData: IAuthData): Promise<ISuccessResponse> {
+    return await this.member.remove(id, boothId, authData.id);
   }
 }
