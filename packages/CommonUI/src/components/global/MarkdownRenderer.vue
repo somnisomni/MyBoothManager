@@ -18,7 +18,7 @@ export class MarkdownRenderer extends Vue {
         async: false,
         breaks: true,
       }), {
-        FORBID_TAGS: ["script", "style", "img", "picture", "video", "audio", "iframe"],
+        FORBID_TAGS: ["script", "noscript", "style", "img", "picture", "video", "audio", "iframe", "button", "input", "form", "embed", "applet", "canvas", "svg", "html", "head", "body", "meta", "link", "frame", "frameset", "title", "source", "template"],
         SANITIZE_DOM: true,
       });
   }
