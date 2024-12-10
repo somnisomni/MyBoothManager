@@ -20,6 +20,6 @@ import { Component, Model, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class GoodsItemSelectable extends Vue {
-  @Model({ type: Boolean, default: false }) selected!: boolean;
+  @Model({ type: Boolean, default: false }) declare selected: boolean;
 }
 </script>

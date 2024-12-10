@@ -42,7 +42,7 @@ export interface IGoodsOrderFilterResult {
 export default class GoodsOrderListView extends Vue {
   @Prop({ type: Object, default: {} }) declare readonly filter: IGoodsOrderFilterSetting;
 
-  @Ref("orderListDOMItems") declare readonly orderListItemsRefs: Array<VListItem>;
+  @Ref("orderListDOMItems") declare readonly orderListItemsRefs: VListItem[];
 
   get filteredList(): Array<IGoodsOrder> {
     return Object.values(useAdminStore().currentBooth.orders ?? {})

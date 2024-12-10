@@ -99,9 +99,9 @@ import POSGoodsOrderListView from "./POSGoodsOrderListView.vue";
   ],
 })
 class POSOrderDrawer extends Vue {
-  @Prop({ type: POSOrderSimulationLayer, required: true }) orderSimulationLayer!: POSOrderSimulationLayer;
-  @Prop({ type: Boolean, default: false }) sm!: boolean;
-  @Prop({ type: Number }) smDrawerHeight!: number;
+  @Prop({ type: POSOrderSimulationLayer, required: true }) declare readonly orderSimulationLayer: POSOrderSimulationLayer;
+  @Prop({ type: Boolean, default: false }) declare readonly sm: boolean;
+  @Prop({ type: Number }) declare readonly smDrawerHeight: number;
 
   @Setup(() => useAdminStore().currentBooth.booth)
   declare readonly currentBooth: NonNullable<ReturnType<typeof useAdminStore>["currentBooth"]["booth"]>;

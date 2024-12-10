@@ -1,30 +1,32 @@
 <template>
   <DashboardPanel title="부스 운영 상태">
     <!-- Booth status text -->
-    <div class="status-text">{{ getBoothStatusString(currentBoothStatus) }}</div>
+    <div class="status-text">{{ getBoothStatusString(currentBoothStatus.status) }}</div>
 
     <!-- When status is PAUSE: Reason text if available-->
     <VExpandTransition>
-      <div v-if="currentBoothStatus === BoothStatus.PAUSE && currentBoothStatusReason" class="status-reason">
+      <div v-if="currentBoothStatus.status === BoothStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
         <div class="text-grey-darken-2 reason-title">사유</div>
-        <div class="reason-text">{{ currentBoothStatusReason }}</div>
+        <div class="reason-text">{{ currentBoothStatus.reason }}</div>
       </div>
     </VExpandTransition>
 
     <!-- When status is PREPARE: Content publish setting -->
     <VExpandTransition>
-      <VLayout v-if="currentBoothStatus === BoothStatus.PREPARE || currentBoothStatus === BoothStatus.CLOSE"
-               class="mt-6 text-center flex-column">
+      <VLayout v-if="currentBoothStatus.status === BoothStatus.PREPARE || currentBoothStatus.status === BoothStatus.CLOSE"
+               class="text-center flex-column">
+        <div class="mt-6"><!-- Inner margin for smooth transition --></div>
+
         <div class="text-grey-darken-2">부스 정보 공개 상태 변경: </div>
         <VLayout class="flex-row justify-stretch mt-1">
-          <VBtn :variant="currentBoothStatusContentPublished ? 'flat' : 'outlined'"
-                :disabled="currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
+          <VBtn :variant="currentBoothStatus.contentPublished ? 'flat' : 'outlined'"
+                :disabled="currentBoothStatus.contentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
-                :color="currentBoothStatus === BoothStatus.CLOSE ? 'red' : 'green'"
+                :color="currentBoothStatus.status === BoothStatus.CLOSE ? 'red' : 'green'"
                 class="mr-1 flex-grow-1"
                 @click.stop="updateContentPublishStatus(true)">공개</VBtn>
-          <VBtn :variant="!currentBoothStatusContentPublished ? 'flat' : 'outlined'"
-                :disabled="!currentBoothStatusContentPublished || contentPublishStatusUpdateProgress"
+          <VBtn :variant="!currentBoothStatus.contentPublished ? 'flat' : 'outlined'"
+                :disabled="!currentBoothStatus.contentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
                 color="grey"
                 class="ml-1 flex-grow-1"
@@ -39,8 +41,8 @@
       <VBtn v-for="item in STATUSES"
             :key="item.status"
             :color="item.color"
-            :variant="currentBoothStatus === item.status ? 'flat' : 'outlined'"
-            :disabled="currentBoothStatus === item.status"
+            :variant="currentBoothStatus.status === item.status ? 'flat' : 'outlined'"
+            :disabled="currentBoothStatus.status === item.status"
             class="my-1"
             height="42"
             @click="onBoothStatusUpdateButtonClick(item.status)">
@@ -56,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
-import { BoothStatus } from "@myboothmanager/common";
+import { BoothStatus, type IBoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothStatusUpdateDialog from "@/components/dialogs/BoothStatusUpdateDialog.vue";
@@ -101,16 +103,8 @@ export default class BoothStatusPanel extends Vue {
   statusUpdateDialogOpen = false;
   statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
-  get currentBoothStatus(): BoothStatus {
-    return useAdminStore().currentBooth.booth!.status.status;
-  }
-
-  get currentBoothStatusReason(): string {
-    return useAdminStore().currentBooth.booth!.status.reason || "";
-  }
-
-  get currentBoothStatusContentPublished(): boolean {
-    return useAdminStore().currentBooth.booth!.status.contentPublished || false;
+  get currentBoothStatus(): IBoothStatus {
+    return useAdminStore().currentBooth.booth!.status;
   }
 
   onBoothStatusUpdateButtonClick(newStatus: BoothStatus): void {

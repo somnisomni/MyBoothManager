@@ -50,7 +50,10 @@
 
         <VListSubheader>계정</VListSubheader>
         <VListItem density="compact" min-height="30px">
-          <span class="text-subtitle-2 text-disabled">로그인 계정: {{ currentAccount?.name }}</span>
+          <div class="d-flex flex-column text-subtitle-2 text-disabled">
+            <span>현재 로그인 계정: {{ currentAccount?.name }}</span>
+            <span style="font-size: 0.8em">로그인 ID: {{ currentAccount?.loginId }}</span>
+          </div>
         </VListItem>
         <VListItem prepend-icon="mdi-logout" title="로그아웃" value="logout"
                    :href="logoutPageHref" />
@@ -78,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, type IBooth } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, type IAccount, type IBooth } from "@myboothmanager/common";
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -100,7 +103,13 @@ export default class AdminLayout extends Vue {
   readonly GIT_HASH = Const.APP_GIT_HASH;
 
   @Setup(() => useDisplay().mdAndUp)
-  readonly mdAndUp!: boolean;
+  declare readonly mdAndUp: boolean;
+
+  @Setup(() => useAdminStore().currentAccount)
+  declare readonly currentAccount: IAccount;
+
+  @Setup(() => useAdminStore().currentBooth.booth)
+  declare readonly currentBooth: IBooth;
 
   _navOpen = false;
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
@@ -117,10 +126,6 @@ export default class AdminLayout extends Vue {
     return this.mdAndUp;
   }
 
-  get currentBooth(): IBooth {
-    return useAdminStore().currentBooth.booth!;
-  }
-
   get currentBoothIsOpened(): boolean {
     return this.currentBooth.status.status === BoothStatus.OPEN;
   }
@@ -134,11 +139,7 @@ export default class AdminLayout extends Vue {
   }
 
   get boothPublicPageHref(): string {
-    return `${import.meta.env.VITE_MBM_PUBLIC_URL}/booth/${useAdminStore().currentBooth.booth!.id}`;
-  }
-
-  get currentAccount() {
-    return useAdminStore().currentAccount;
+    return `${import.meta.env.VITE_MBM_PUBLIC_URL}/booth/${this.currentBooth.id}`;
   }
 
   get isDevEnv(): boolean {

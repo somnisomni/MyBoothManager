@@ -22,9 +22,9 @@ import GoodsItemSelectable from "./GoodsItemSelectable.vue";
   },
 })
 export default class SelectableGoodsListView extends Vue {
-  @Model({ type: Array, default: [] }) selectedGoodsIds!: Array<number>;
-  @Prop({ type: Array, required: true }) readonly goodsList!: Array<Goods>;
-  @Prop({ type: Array,  default: []   }) readonly goodsDisabledIdList!: Array<number>;
+  @Model({ type: Array, default: [] }) declare selectedGoodsIds: number[];
+  @Prop({ type: Array, required: true }) declare readonly goodsList: Goods[];
+  @Prop({ type: Array,  default: [] }) declare readonly goodsDisabledIdList: number[];
 
   selectedGoods: Record<number, boolean> = {};
 
@@ -36,7 +36,7 @@ export default class SelectableGoodsListView extends Vue {
 
   @Watch("selectedGoods", { deep: true })
   onSelectedGoodsChange() {
-    const temp: Array<number> = [];
+    const temp: number[] = [];
 
     Object.entries(this.selectedGoods).forEach(([id, hasSelected]) => {
       if(hasSelected) temp.push(Number(id));

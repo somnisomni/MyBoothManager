@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any, import/exports-last */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";

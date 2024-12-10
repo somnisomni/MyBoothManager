@@ -43,8 +43,8 @@ import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
   emits: ["click:item", "request:itemQuantityUpdate"],
 })
 export default class POSGoodsOrderListView extends Vue {
-  @Prop({ type: Object, required: true }) orderList!: POSOrderList;
-  @Prop({ type: Boolean, default: false }) singleLine!: boolean;
+  @Prop({ type: Object, required: true }) declare readonly orderList: POSOrderList;
+  @Prop({ type: Boolean, default: false }) declare readonly singleLine: boolean;
 
   @Emit("click:item")
   onGoodsOrderItemClick(item: IGoodsOrderInternal & { isCombination?: true }) { return item; }
