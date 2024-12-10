@@ -6,6 +6,7 @@
     "declaration": true,
     "noEmit": false,
     "noEmitOnError": false,
+    "emitDeclarationOnly": true,
     "baseUrl": ".",
     "outDir": "./dist",
     "declarationDir": "./dist",

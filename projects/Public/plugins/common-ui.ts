@@ -1,4 +1,4 @@
-import "@myboothmanager/common-ui/dist/style.css";
+import "@myboothmanager/common-ui/dist/common-ui.css";
 import CommonUI from "@myboothmanager/common-ui";
 
 export default defineNuxtPlugin((app) => {

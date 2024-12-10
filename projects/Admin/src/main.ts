@@ -3,7 +3,7 @@ import { createPinia } from "pinia";
 import piniaPersistedState from "pinia-plugin-persistedstate";
 import CommonUI from "@myboothmanager/common-ui";
 
-import "@myboothmanager/common-ui/dist/style.css";
+import "@myboothmanager/common-ui/dist/common-ui.css";
 import "@/styles/styles.scss";
 
 import { getUploadFileUrl } from "./lib/functions";
