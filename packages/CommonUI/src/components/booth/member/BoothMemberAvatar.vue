@@ -16,7 +16,7 @@ import type { ComponentCustomProperties } from "vue";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
-class BoothMemberAvatar extends Vue {
+export class BoothMemberAvatar extends Vue {
   @Prop({ type: Object, default: null }) declare readonly avatarImage: IImageUploadInfo | null;
   @Prop({ type: String, default: undefined }) declare readonly size?: string;
 

@@ -87,7 +87,6 @@
 import { Component, Emit, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 
-// eslint-disable-next-line import/exports-last
 export interface CommonDialogButtonParams {
   title: string;
   icon: string;
@@ -98,7 +97,7 @@ export interface CommonDialogButtonParams {
 @Component({
   emits: ["close", "primary", "secondary", "leftbutton", "cancel"],
 })
-class CommonDialog extends Vue {
+export class CommonDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) persistent!: boolean;
   @Prop({ type: Boolean, default: true }) scrollable!: boolean;

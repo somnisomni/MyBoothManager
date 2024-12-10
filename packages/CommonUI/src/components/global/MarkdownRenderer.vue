@@ -8,7 +8,7 @@ import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 import DOMPurify from "isomorphic-dompurify";
 
 @Component({})
-class MarkdownRenderer extends Vue {
+export class MarkdownRenderer extends Vue {
   @Prop({ type: String, required: true }) declare readonly source: string;
 
   get compiled() {

@@ -52,7 +52,7 @@ import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";

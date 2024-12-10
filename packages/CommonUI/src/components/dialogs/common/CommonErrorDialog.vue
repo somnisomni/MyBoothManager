@@ -25,7 +25,7 @@ import CommonDialog from "./CommonDialog.vue";
     CommonDialog,
   },
 })
-class CommonErrorDialog extends Vue {
+export class CommonErrorDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: String, default: null }) headlineText!: string | null;
   @Prop({ type: String, default: "오류" }) dialogTitle!: string;

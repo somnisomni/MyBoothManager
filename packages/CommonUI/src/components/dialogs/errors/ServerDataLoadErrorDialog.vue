@@ -14,7 +14,7 @@ import CommonErrorDialog from "../common/CommonErrorDialog.vue";
     CommonErrorDialog,
   },
 })
-class ServerDataLoadErrorDialog extends Vue {
+export class ServerDataLoadErrorDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Number, default: null }) errorCode!: number | null;
 

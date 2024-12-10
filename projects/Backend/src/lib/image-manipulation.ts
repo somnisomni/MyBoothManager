@@ -5,7 +5,7 @@ import { ImageManipulationException, InvalidImageException } from "./image-manip
 export default class ImageManipulator {
   private imageInstance: Sharp.Sharp;
 
-  constructor(input: ArrayBuffer) {
+  constructor(input: Buffer) {
     try {
       this.imageInstance = this.createInstanceFromBuffer(Buffer.from(input));
     } catch(e) {

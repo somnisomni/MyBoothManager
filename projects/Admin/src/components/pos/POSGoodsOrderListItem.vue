@@ -56,21 +56,24 @@ class POSGoodsOrderListItem extends Vue {
   @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
-  showAdvancedDialog: boolean = false;
+  @Setup(() => useAdminStore().currentBooth.goods)
+  declare readonly boothGoods: Record<number, IGoods>;
 
-  get boothGoodsDict(): Record<number, IGoods> { return useAdminStore().currentBooth.goods!; }
-  get boothGoodsCombinationDict(): Record<number, IGoodsCombination> { return useAdminStore().currentBooth.goodsCombinations!; }
+  @Setup(() => useAdminStore().currentBooth.goodsCombinations)
+  declare readonly boothGoodsCombinations: Record<number, IGoodsCombination>;
+
+  showAdvancedDialog: boolean = false;
 
   get currentTarget(): IGoods | IGoodsCombination {
     return this.isCombination
-      ? this.boothGoodsCombinationDict[this.item.id]
-      : this.boothGoodsDict[this.item.id];
+      ? this.boothGoodsCombinations[this.item.id]
+      : this.boothGoods[this.item.id];
   }
 
   get currentTargetImageUrl() {
     return getUploadFileUrl(this.isCombination
-      ? this.boothGoodsCombinationDict[this.item.id].goodsImage?.path
-      : this.boothGoodsDict[this.item.id].goodsImage?.path,
+      ? this.boothGoodsCombinations[this.item.id].goodsImage?.path
+      : this.boothGoods[this.item.id].goodsImage?.path,
     );
   }
 

@@ -70,7 +70,7 @@ export default class GoodsManagePanel extends Vue {
   goodsListRefreshing = false;
 
   @Setup(() => useDisplay().smAndUp)
-  smAndUp!: boolean;
+  declare readonly smAndUp: boolean;
 
   get isBoothClosed(): boolean {
     return useAdminStore().currentBooth.booth!.status.status === BoothStatus.CLOSE;

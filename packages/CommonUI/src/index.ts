@@ -1,5 +1,5 @@
 import type { App, ComponentCustomProperties } from "vue";
-import * as C from "./components";
+import * as IC from "./components/index.internal";
 import "@/styles/styles.scss";
 
 // FIXME: THIS DECLARATION SEEMS NOT PROPAGATE TO OUR SOURCE CODE FOR NOW
@@ -19,22 +19,22 @@ export default {
   install(app: App, options: ICommonUIOptions) {
     app.config.globalProperties.$imageUrlResolver = options?.imageUrlResolver ?? ((rawPath?: string | null) => rawPath);
 
-    app.component("BoothMemberItem", C.BoothMemberItem);
-    app.component("BoothMemberAvatar", C.BoothMemberAvatar);
+    app.component("BoothMemberItem", IC.BoothMemberItemComponent);
+    app.component("BoothMemberAvatar", IC.BoothMemberAvatarComponent);
 
-    app.component("CommonDialog", C.CommonDialog);
-    app.component("CommonErrorDialog", C.CommonErrorDialog);
-    app.component("CommonWarningDialog", C.CommonWarningDialog);
-    app.component("ServerDataLoadErrorDialog", C.ServerDataLoadErrorDialog);
-    app.component("ServerNotRespondErrorDialog", C.ServerNotRespondErrorDialog);
-    app.component("DatePickerDialog", C.DatePickerDialog);
+    app.component("CommonDialog", IC.CommonDialogComponent);
+    app.component("CommonErrorDialog", IC.CommonErrorDialogComponent);
+    app.component("CommonWarningDialog", IC.CommonWarningDialogComponent);
+    app.component("ServerDataLoadErrorDialog", IC.ServerDataLoadErrorDialogComponent);
+    app.component("ServerNotRespondErrorDialog", IC.ServerNotRespondErrorDialogComponent);
+    app.component("DatePickerDialog", IC.DatePickerDialogComponent);
 
-    app.component("GoodsItem", C.GoodsItem);
-    app.component("GoodsCategoryTitle", C.GoodsCategoryTitle);
-    app.component("GoodsListView", C.GoodsListView);
+    app.component("GoodsItem", IC.GoodsItemComponent);
+    app.component("GoodsCategoryTitle", IC.GoodsCategoryTitleComponent);
+    app.component("GoodsListView", IC.GoodsListViewComponent);
 
-    app.component("GlobalSnackbarStack", C.GlobalSnackbarStack);
-    app.component("MarkdownRenderer", C.MarkdownRenderer);
+    app.component("GlobalSnackbarStack", IC.GlobalSnackbarStackComponent);
+    app.component("MarkdownRenderer", IC.MarkdownRendererComponent);
   },
 };
 

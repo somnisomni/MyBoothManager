@@ -65,7 +65,7 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { useLocalStore } from "@/plugins/stores/local";
 import AdminAPI from "@/lib/api-admin";
-import CommonForm, { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 interface IBoothCreateRequestInternal extends Omit<IBoothCreateRequest, "dateOpen" | "dateClose">, Omit<IBoothCreateWithFairRequest, "datesOpenInFair"> {

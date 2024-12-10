@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any, import/exports-last */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
@@ -226,7 +226,7 @@ export type FormFieldOptions = IFormFieldOptions
 @Component({
   emits: ["submit"],
 })
-class CommonForm extends Vue {
+export class CommonForm extends Vue {
   readonly FormFieldType = FormFieldType;
   readonly FORM_FIELD_TYPE_COMPONENT_MAP = FORM_FIELD_TYPE_COMPONENT_MAP;
 
