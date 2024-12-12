@@ -1,5 +1,5 @@
-import { eslintConfigs } from "@myboothmanager/dev-shared";
+import { generateVueTsLintConfig } from "@somni/eslint-config";
 
 export default [
-  ...eslintConfigs.vue,
+  ...generateVueTsLintConfig(import.meta.dirname),
 ];
