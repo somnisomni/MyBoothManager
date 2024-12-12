@@ -1,5 +1,5 @@
-import { eslintConfigs } from "@myboothmanager/dev-shared";
+import { generateTsLintConfig } from "@somni/eslint-config";
 
 export default [
-  ...eslintConfigs.typescript,
+  ...generateTsLintConfig(import.meta.dirname),
 ];

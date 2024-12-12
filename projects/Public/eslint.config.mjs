@@ -1,6 +1,6 @@
-import { eslintConfigs } from "@myboothmanager/dev-shared";
-import withNuxt from "./.nuxt/eslint.config.mjs";
+import { generateVueTsLintConfig } from "@somni/eslint-config";
+import { withNuxt } from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt(
-  ...eslintConfigs.vue,
+  ...generateVueTsLintConfig(import.meta.dirname),
 );
