@@ -39,10 +39,10 @@
     "vue-markdown-render": "^2.2.1"
   },
   "devDependencies": {
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",

@@ -21,11 +21,11 @@
   "module": "./dist/common-ui.js",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@myboothmanager/common": "workspace:^",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.16.0",
