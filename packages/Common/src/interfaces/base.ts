@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 import { ErrorCodes } from "../enums/errors";
 import { IFair } from "./fair";
 
@@ -14,7 +16,7 @@ export interface ISuccessResponse {
 }
 export const SUCCESS_RESPONSE: Readonly<ISuccessResponse> = Object.freeze({ success: true } as const);
 
-export interface ISingleValueResponse<T>  {
+export interface ISingleValueResponse<T> {
   value: T;
 }
 

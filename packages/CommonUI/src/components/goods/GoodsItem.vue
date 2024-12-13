@@ -15,23 +15,33 @@
     <!-- *** Goods / Combination image *** -->
     <VImg class="goods-item-image no-interaction"
           :src="imageUrlComputed"
-          :lazy-src="normalizedData.imageThumbnailData ?? undefined"
+          :lazySrc="normalizedData.imageThumbnailData ?? undefined"
           cover />
-    <div class="goods-item-image-overlay"></div>
+    <div class="goods-item-image-overlay" />
 
     <!-- *** Top indicator *** -->
-    <VSlideYTransition leave-absolute group>
+    <VSlideYTransition leaveAbsolute
+                       group>
       <div v-if="disabled && disabledReason"
-           class="top-indicator">{{ disabledReason }}</div>
+           class="top-indicator">
+        <span>{{ disabledReason }}</span>
+      </div>
+
       <div v-if="!disabled && isCombination"
-           class="top-indicator"><VIcon v-if="isCombination" icon="mdi-set-all" class="mr-1" /> 세트 구성</div>
+           class="top-indicator">
+        <VIcon v-if="isCombination"
+               icon="mdi-set-all"
+               class="mr-1" />
+        <span>세트 구성</span>
+      </div>
 
       <!-- *** Extra indicator slot for extensibility *** -->
-      <slot v-if="!disabled" name="extra-top-indicator"></slot>
+      <slot v-if="!disabled"
+            name="extra-top-indicator" />
     </VSlideYTransition>
 
     <!-- *** Extra slot for extensibility *** -->
-    <slot></slot>
+    <slot />
 
     <!-- *** Bottom info area *** -->
     <VLayout class="d-flex flex-row align-self-end pa-2">
@@ -44,12 +54,20 @@
                  class="d-flex flex-row flex-wrap justify-space-between">
           <!-- Price -->
           <div class="price flex-0-0">
-            <span v-if="isCombination" class="mr-1" style="font-size: smaller">세트</span>
-            <span><VIcon v-if="normalizedData.price === 0" icon="mdi-gift" size="x-small" /> {{ priceString }}</span>
+            <span v-if="isCombination"
+                  class="mr-1"
+                  style="font-size: smaller">세트</span>
+            <span>
+              <VIcon v-if="normalizedData.price === 0"
+                     icon="mdi-gift"
+                     size="x-small" />
+              <span>{{ priceString }}</span>
+            </span>
           </div>
 
           <!-- Stock -->
-          <div v-if="!shouldHideStock" class="stock flex-1-0">
+          <div v-if="!shouldHideStock"
+               class="stock flex-1-0">
             <span class="remaining">{{ normalizedData.stockRemaining }}</span>
 
             <span v-if="shouldHideInitialStock"
@@ -64,12 +82,11 @@
 </template>
 
 <script lang="ts">
-import type { ComponentCustomProperties } from "vue";
 import { GoodsStockVisibility } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { isDisplayXXS } from "@/plugins/vuetify";
 import { Goods, GoodsBase, GoodsCombination } from "@/entities";
+import { isDisplayXXS } from "@/plugins/vuetify";
 
 export interface GoodsItemProps {
   readonly goodsData: GoodsBase;
@@ -82,28 +99,28 @@ export interface GoodsItemProps {
 }
 
 @Component({
-  emits: ["click"],
+  emits: [ "click" ],
 })
 export class GoodsItem extends Vue implements GoodsItemProps {
-  @Prop({ type: GoodsBase, required: true }) readonly goodsData!: GoodsBase;
-  @Prop({ type: String,  default: "₩"    }) readonly currencySymbol!: string;
-  @Prop({ type: Boolean, default: false  }) readonly disabled!: boolean;
-  @Prop({ type: String,  default: null   }) readonly disabledReason?: string | null;
-  @Prop({ type: Boolean, default: false  }) readonly hideDetails!: boolean;
-  @Prop({ type: String,  default: null   }) readonly forceStockVisibility?: GoodsStockVisibility | null;
-  @Prop({ type: String,  default: "auto" }) readonly forceSize!: "auto" | "small" | "normal";
+  @Prop({ type: GoodsBase, required: true }) declare readonly goodsData: GoodsBase;
+  @Prop({ type: String, default: "₩" }) declare readonly currencySymbol: string;
+  @Prop({ type: Boolean, default: false }) declare readonly disabled: boolean;
+  @Prop({ type: String, default: null }) declare readonly disabledReason?: string | null;
+  @Prop({ type: Boolean, default: false }) declare readonly hideDetails: boolean;
+  @Prop({ type: String, default: null }) declare readonly forceStockVisibility?: GoodsStockVisibility | null;
+  @Prop({ type: String, default: "auto" }) declare readonly forceSize: "auto" | "small" | "normal";
 
   // FIXME: FUCK SHIT TYPE DECLARATION IN `index.ts` IS NOT WORKING IN THIS SCOPE
   // I DON'T KNOW WHAT'S THE PROBLEM. I TRIED EVERYTHING AT THIS MOMENT
   // If this somewhat fixed later, simply remove this declare statement
-  declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
+  // declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
 
   readonly ELEVATION_NORMAL = 4;
-  readonly ELEVATION_HOVER  = 8;
-  readonly WIDTH_NORMAL     = 200;
-  readonly WIDTH_SMALL      = 150;
-  readonly HEIGHT_NORMAL    = 250;
-  readonly HEIGHT_SMALL     = 150;
+  readonly ELEVATION_HOVER = 8;
+  readonly WIDTH_NORMAL = 200;
+  readonly WIDTH_SMALL = 150;
+  readonly HEIGHT_NORMAL = 250;
+  readonly HEIGHT_SMALL = 150;
 
   @Setup(() => useDisplay().mdAndUp)
   declare displayMdAndUp: boolean;
@@ -124,8 +141,11 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    * Returns dynamic width
    */
   get width(): number | string {
-    if(this.forceSize === "normal") return this.WIDTH_NORMAL;
-    else if(this.forceSize === "small") return this.WIDTH_SMALL;
+    if(this.forceSize === "normal") {
+      return this.WIDTH_NORMAL;
+    } else if(this.forceSize === "small") {
+      return this.WIDTH_SMALL;
+    }
 
     return this.displayMdAndUp
       ? this.WIDTH_NORMAL
@@ -136,8 +156,11 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    * Returns dynamic height
    */
   get height(): number | string {
-    if(this.forceSize === "normal") return this.HEIGHT_NORMAL;
-    else if(this.forceSize === "small") return this.HEIGHT_SMALL;
+    if(this.forceSize === "normal") {
+      return this.HEIGHT_NORMAL;
+    } else if(this.forceSize === "small") {
+      return this.HEIGHT_SMALL;
+    }
 
     return this.displayMdAndUp ? this.HEIGHT_NORMAL : this.HEIGHT_SMALL;
   }
@@ -164,8 +187,11 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    */
   get priceString() {
     if(this.normalizedData.price === 0) {
-      if((this.goodsData as Goods).combinationId) return "세트에 포함";
-      else return "증정용";
+      if((this.goodsData as Goods).combinationId) {
+        return "세트에 포함";
+      } else {
+        return "증정용";
+      }
     }
 
     return `${this.currencySymbol}${this.normalizedData.price.toLocaleString()}`;
@@ -175,8 +201,11 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    * Returns the stock remaining text string.
    */
   get stockRemainingTextString() {
-    if(this.isCombination) return "세트 가능";
-    else return "개 남음";
+    if(this.isCombination) {
+      return "세트 가능";
+    } else {
+      return "개 남음";
+    }
   }
 
   /**
@@ -213,7 +242,9 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    */
   @Emit("click")
   onClick(): number | null {
-    if(this.disabled) return null;
+    if(this.disabled) {
+      return null;
+    }
 
     return this.normalizedData.id;
   }

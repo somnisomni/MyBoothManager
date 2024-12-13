@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Setup } from "vue-facing-decorator";
 import { APP_PRIMARY_COLOR, SnackbarContextWrapper } from "@myboothmanager/common-ui";
+import { Vue, Component, Setup } from "vue-facing-decorator";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./plugins/stores/admin";
 

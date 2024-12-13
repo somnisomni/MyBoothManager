@@ -1,16 +1,15 @@
-import {
-  HTTP_HEALTH_CHECK_STATUS_CODE,
-  type IErrorResponse,
-  type IBoothMemberResponse,
-  type IBoothResponse,
-  type IGoodsCategoryResponse,
-  type IGoodsCombinationResponse,
-  type IGoodsResponse,
-  type ISingleValueResponse,
-  type IFairResponse,
-  type IFeedbackRequest,
-  type ISuccessResponse,
-} from "..";
+import type {
+  IErrorResponse,
+  IBoothMemberResponse,
+  IBoothResponse,
+  IGoodsCategoryResponse,
+  IGoodsCombinationResponse,
+  IGoodsResponse,
+  ISingleValueResponse,
+  IFairResponse,
+  IFeedbackRequest,
+  ISuccessResponse } from "@/interfaces";
+import { HTTP_HEALTH_CHECK_STATUS_CODE } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -18,7 +17,7 @@ export const MAX_UPLOAD_FILE_BYTES = (1024 * 1024) * 15;  // 15MB
 
 export interface APICallerOptions {
   host: string;
-  prefix: string,
+  prefix: string;
   /** @deprecated */ group: string;
   healthCheckPath: string;
   getAuthorizationToken: () => string | null | undefined;
@@ -96,10 +95,13 @@ export default class APICaller {
     try {
       const response = await fetch(`${this.normalizedOptions.host}/${this.normalizedOptions.healthCheckPath}`, APICaller.FETCH_COMMON_OPTIONS);
 
-      if(response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE) return true;
-      else return false;
+      if(response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE) {
+        return true;
+      } else {
+        return false;
+      }
     } catch(error) {
-      console.debug("Can't connect to API server! ;(");
+      console.debug("Can't connect to API server! ;(", error);
       return false;
     }
   }
@@ -115,7 +117,7 @@ export default class APICaller {
   }
 
   public async fetchAllBooths() {
-    return await this.createPublicAPI().GET<Array<IBoothResponse>>("booth");
+    return await this.createPublicAPI().GET<IBoothResponse[]>("booth");
   }
 
   public async fetchSingleBooth(boothId: number) {
@@ -123,28 +125,28 @@ export default class APICaller {
   }
 
   public async fetchAllGoodsOfBooth(boothId: number) {
-    return await this.createPublicAPI().GET<Array<IGoodsResponse>>(`booth/${boothId}/goods`);
+    return await this.createPublicAPI().GET<IGoodsResponse[]>(`booth/${boothId}/goods`);
   }
 
-  public async fetchAllGoodsCategoryOfBooth(boothId: number) {
-    return await this.createPublicAPI().GET<Array<IGoodsCategoryResponse>>(`booth/${boothId}/goods/category`);
+  public async fetchAllGoodsCategoryOfBooth(boothId: number): ReturnType<typeof this.GET<IGoodsCategoryResponse[]>> {
+    return await this.createPublicAPI().GET<IGoodsCategoryResponse[]>(`booth/${boothId}/goods/category`);
   }
 
   public async fetchAllGoodsCombinationOfBooth(boothId: number) {
-    return await this.createPublicAPI().GET<Array<IGoodsCombinationResponse>>(`booth/${boothId}/goods/combination`);
+    return await this.createPublicAPI().GET<IGoodsCombinationResponse[]>(`booth/${boothId}/goods/combination`);
   }
 
-  public async fetchAvailableFairs() {
-    return await this.createPublicAPI().GET<Array<IFairResponse>>("fair");
+  public async fetchAvailableFairs(): ReturnType<typeof this.GET<IFairResponse[]>> {
+    return await this.createPublicAPI().GET<IFairResponse[]>("fair");
   }
 
-  public async fetchSingleFair(fairId: number) {
+  public async fetchSingleFair(fairId: number): ReturnType<typeof this.GET<IFairResponse>> {
     return await this.createPublicAPI().GET<IFairResponse>(`fair/${fairId}`);
   }
 
   // Booth member
   public async fetchAllMembersOfBooth(boothId: number) {
-    return await this.createPublicAPI().GET<Array<IBoothMemberResponse>>(`booth/${boothId}/member`);
+    return await this.createPublicAPI().GET<IBoothMemberResponse[]>(`booth/${boothId}/member`);
   }
 
   public async fetchSingleMemberOfBooth(boothId: number, memberId: number) {
@@ -157,7 +159,7 @@ export default class APICaller {
   }
 
   // Goods category
-  public async fetchSingleGoodsCategory(goodsCategoryId: number) {
+  public async fetchSingleGoodsCategory(goodsCategoryId: number): ReturnType<typeof this.GET<IGoodsCategoryResponse>> {
     return await this.createPublicAPI().GET<IGoodsCategoryResponse>(`goods/category/${goodsCategoryId}`);
   }
 

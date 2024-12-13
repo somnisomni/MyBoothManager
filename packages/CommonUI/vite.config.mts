@@ -1,7 +1,7 @@
-import { fileURLToPath, URL } from "node:url";
 import { resolve } from "node:path";
-import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
+import { defineConfig } from "vite";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -22,6 +22,7 @@ export default defineConfig({
     minify: "terser",
     terserOptions: {
       compress: {
+        // eslint-disable-next-line camelcase
         keep_classnames: true,
       },
     },
@@ -29,11 +30,11 @@ export default defineConfig({
       entry: resolve(__dirname, "src/index.ts"),
       name: "CommonUI",
       fileName: "common-ui",
-      formats: ["es"],
+      formats: [ "es" ],
     },
     rollupOptions: {
       treeshake: "recommended",
-      external: ["vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", /^@?myboothmanager(\/.*)?$/ ],
+      external: [ "vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", /^@?myboothmanager(\/.*)?$/ ],
       output: {
         globals: {
           "vue": "Vue",

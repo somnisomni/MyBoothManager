@@ -1,7 +1,7 @@
 interface ISequelizeInternals {
-  createdAt: Date,
-  updatedAt: Date,
-  deletedAt?: Date,
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 }
 
 /**
@@ -12,7 +12,7 @@ export type SequelizeInternalKeys = "createdAt" | "updatedAt" | "deletedAt";
 /**
  * Array: Internal keys that are automatically added and managed by Sequelize.
  */
-export const SEQUELIZE_INTERNAL_KEYS = ["createdAt", "updatedAt", "deletedAt"];
+export const SEQUELIZE_INTERNAL_KEYS = [ "createdAt", "updatedAt", "deletedAt" ];
 
 /**
  * Helper type to include Sequelize internal keys to a data model interface.
@@ -24,6 +24,8 @@ export function deleteSequelizeInternalKeys<T>(dataModelObj: T & Partial<ISequel
 
   for(const key of SEQUELIZE_INTERNAL_KEYS) {
     newObj[key] = undefined;
+
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete newObj[key];
   }
 

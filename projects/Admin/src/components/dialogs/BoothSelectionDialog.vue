@@ -15,7 +15,7 @@
             min-height="120px"
             ref="boothItems"
             v-ripple
-            @click.stop="onBoothSelect(booth.id)">
+            @click.stop="async () => await onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
         <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
         <div class="booth-item-image-overlay"></div>
@@ -101,8 +101,8 @@ export default class BoothSelectionDialog extends Vue {
     this.boothListFetching = false;
   }
 
-  onBoothSelect(boothId: number) {
-    useAdminStore().changeBooth(boothId);
+  async onBoothSelect(boothId: number) {
+    await useAdminStore().changeBooth(boothId);
     this.open = false;
   }
 }

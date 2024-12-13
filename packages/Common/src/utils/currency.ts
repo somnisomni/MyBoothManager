@@ -1,5 +1,15 @@
 import getSymbolFromCurrency from "currency-symbol-map";
 
+function safeGetSymbolFromCurrency(currencyCode: string): string {
+  const symbol = getSymbolFromCurrency(currencyCode);
+
+  if(!symbol) {
+    return currencyCode;
+  }
+
+  return symbol;
+}
+
 /**
  * Interface for providing currency information.
  */
@@ -37,32 +47,32 @@ export type SupportedCurrencyCodes = "KRW" | "USD" | "JPY" | "CNY" | "EUR" | "GB
  * Mapping from currency code to currency symbol.
  */
 export const CURRENCY_CODE_TO_SYMBOL_MAP = Object.freeze<Record<SupportedCurrencyCodes, string>>({
-  KRW: getSymbolFromCurrency("KRW")!,
-  USD: getSymbolFromCurrency("USD")!,
-  JPY: getSymbolFromCurrency("JPY")!,
-  CNY: `CN${getSymbolFromCurrency("CNY")!}`,
-  EUR: getSymbolFromCurrency("EUR")!,
-  GBP: getSymbolFromCurrency("GBP")!,
-  AUD: `AU${getSymbolFromCurrency("AUD")!}`,
-  CAD: `CA${getSymbolFromCurrency("CAD")!}`,
-  HKD: `HK${getSymbolFromCurrency("HKD")!}`,
-  NZD: `NZ${getSymbolFromCurrency("NZD")!}`,
+  KRW: safeGetSymbolFromCurrency("KRW"),
+  USD: safeGetSymbolFromCurrency("USD"),
+  JPY: safeGetSymbolFromCurrency("JPY"),
+  CNY: `CN${safeGetSymbolFromCurrency("CNY")}`,
+  EUR: safeGetSymbolFromCurrency("EUR"),
+  GBP: safeGetSymbolFromCurrency("GBP"),
+  AUD: `AU${safeGetSymbolFromCurrency("AUD")}`,
+  CAD: `CA${safeGetSymbolFromCurrency("CAD")}`,
+  HKD: `HK${safeGetSymbolFromCurrency("HKD")}`,
+  NZD: `NZ${safeGetSymbolFromCurrency("NZD")}`,
 });
 
 /**
  * Mapping from currency symbol to currency code.
  */
 export const CURRENCY_SYMBOL_TO_CODE_MAP = Object.freeze<Record<string, SupportedCurrencyCodes>>({
-  [CURRENCY_CODE_TO_SYMBOL_MAP["KRW"]]: "KRW",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["USD"]]: "USD",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["JPY"]]: "JPY",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["CNY"]]: "CNY",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["EUR"]]: "EUR",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["GBP"]]: "GBP",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["AUD"]]: "AUD",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["CAD"]]: "CAD",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["HKD"]]: "HKD",
-  [CURRENCY_CODE_TO_SYMBOL_MAP["NZD"]]: "NZD",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.KRW]: "KRW",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.USD]: "USD",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.JPY]: "JPY",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.CNY]: "CNY",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.EUR]: "EUR",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.GBP]: "GBP",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.AUD]: "AUD",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.CAD]: "CAD",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.HKD]: "HKD",
+  [CURRENCY_CODE_TO_SYMBOL_MAP.NZD]: "NZD",
 });
 
 /**
@@ -77,7 +87,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "韓国 ウォン",
     },
     code: "KRW",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["KRW"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.KRW,
     step: 1000,
     isMajorTarget: true,
   },
@@ -88,7 +98,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "アメリカ ドル",
     },
     code: "USD",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["USD"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.USD,
     step: 1,
     isMajorTarget: true,
   },
@@ -99,7 +109,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "日本 円",
     },
     code: "JPY",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["JPY"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.JPY,
     step: 100,
     isMajorTarget: true,
   },
@@ -112,7 +122,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "中国 人民元",
     },
     code: "CNY",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["CNY"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.CNY,
     step: 10,
     isMajorTarget: false,
   },
@@ -123,7 +133,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "ユーロ",
     },
     code: "EUR",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["EUR"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.EUR,
     step: 1,
     isMajorTarget: false,
   },
@@ -134,7 +144,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "イギリス ポンド",
     },
     code: "GBP",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["GBP"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.GBP,
     step: 1,
     isMajorTarget: false,
   },
@@ -145,7 +155,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "オーストラリア ドル",
     },
     code: "AUD",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["AUD"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.AUD,
     step: 1,
     isMajorTarget: false,
   },
@@ -156,7 +166,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "カナダ ドル",
     },
     code: "CAD",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["CAD"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.CAD,
     step: 1,
     isMajorTarget: false,
   },
@@ -167,7 +177,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "香港 ドル",
     },
     code: "HKD",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["HKD"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.HKD,
     step: 10,
     isMajorTarget: false,
   },
@@ -178,7 +188,7 @@ export const CURRENCY_INFO = Object.freeze<Record<SupportedCurrencyCodes, ICurre
       ja: "ニュージーランド ドル",
     },
     code: "NZD",
-    symbol: CURRENCY_CODE_TO_SYMBOL_MAP["NZD"],
+    symbol: CURRENCY_CODE_TO_SYMBOL_MAP.NZD,
     step: 1,
     isMajorTarget: false,
   },

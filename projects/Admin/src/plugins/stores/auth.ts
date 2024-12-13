@@ -30,9 +30,7 @@ const useAuthStore = defineStore("auth", () => {
   const id = ref<number | null>(null);
 
   /* Computed */
-  const isAuthTokenValid = computed<boolean>(() =>
-    !!id.value &&
-    !!$authLocalStore.accessToken);
+  const isAuthTokenValid = computed<boolean>(() => !!id.value && !!$authLocalStore.accessToken);
 
   /* Actions */
   function registerAuthData(data: IAccountLoginResponse): void {
@@ -43,7 +41,10 @@ const useAuthStore = defineStore("auth", () => {
       loginId: data.loginId,
       lastSelectedBoothId: data.lastSelectedBoothId,
     };
-    if(data.superAdmin) $adminStore.currentAccount.superAdmin = data.superAdmin;
+
+    if(data.superAdmin) {
+      $adminStore.currentAccount.superAdmin = data.superAdmin;
+    }
 
     $authLocalStore.accessToken = data.accessToken;
   }
@@ -61,7 +62,9 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   async function adminAuthRefresh(): Promise<boolean | ErrorCodes> {
-    if(!id.value) return false;
+    if(!id.value) {
+      return false;
+    }
 
     const response = await AdminAPI.refreshAuth({
       id: id.value,
@@ -85,7 +88,9 @@ const useAuthStore = defineStore("auth", () => {
   }
 
   async function adminAuthCheck(): Promise<boolean | ErrorCodes> {
-    if(!id.value) return true;
+    if(!id.value) {
+      return true;
+    }
 
     const response = await AdminAPI.checkAuth();
 

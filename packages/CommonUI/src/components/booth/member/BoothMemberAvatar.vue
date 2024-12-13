@@ -3,7 +3,7 @@
            :size="size">
     <VImg v-if="avatarImage"
           :src="imageUrl ?? undefined"
-          :lazy-src="avatarImage.thumbnailData ?? undefined" />
+          :lazySrc="avatarImage.thumbnailData ?? undefined" />
     <VIcon v-else
            icon="mdi-account"
            size="3em" />
@@ -12,7 +12,6 @@
 
 <script lang="ts">
 import type { IImageUploadInfo } from "@myboothmanager/common";
-import type { ComponentCustomProperties } from "vue";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
@@ -23,7 +22,7 @@ export class BoothMemberAvatar extends Vue {
   // FIXME: FUCK SHIT TYPE DECLARATION IN `index.ts` IS NOT WORKING IN THIS SCOPE
   // I DON'T KNOW WHAT'S THE PROBLEM. I TRIED EVERYTHING AT THIS MOMENT
   // If this somewhat fixed later, simply remove this declare statement
-  declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
+  // declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
 
   get imageUrl() {
     return this.$imageUrlResolver(this.avatarImage?.path);

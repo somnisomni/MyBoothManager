@@ -1,4 +1,4 @@
-import { ref, type Ref } from "vue";
+import { type Ref, ref } from "vue";
 
 /* Part of https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/anchor.ts#L8-L14 */
 type Tblock = ["top", "bottom"][number];
@@ -30,9 +30,9 @@ export interface ISnackbarContext {
 }
 
 export class SnackbarContextWrapper {
-  private _contexts: Array<ISnackbarContext> = [];
+  private _contexts: ISnackbarContext[] = [];
 
-  get contexts(): Ref<Array<ISnackbarContext>> {
+  get contexts(): Ref<ISnackbarContext[]> {
     return ref(this._contexts);
   }
 
@@ -61,7 +61,7 @@ export class SnackbarContextWrapper {
   }
 
   removeImmediate(id: string): void {
-    const context = this._contexts.find((context) => context.id === id);
+    const context = this._contexts.find(context => context.id === id);
 
     if(context) {
       context.timeout = 0;

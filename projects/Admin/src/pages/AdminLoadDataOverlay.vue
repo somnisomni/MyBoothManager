@@ -56,7 +56,7 @@ export default class AdminLoadDataOverlay extends Vue {
         this.$emit("completed");
         return;
       } else {
-        $adminStore.changeBooth($adminStore.currentAccount?.lastSelectedBoothId);
+        await $adminStore.changeBooth($adminStore.currentAccount?.lastSelectedBoothId);
       }
 
       $adminStore.isFirstLoad = false;

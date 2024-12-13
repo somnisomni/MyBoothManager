@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 /* === Common === */
 interface IGoodsCategoryCommon {
   id: number;

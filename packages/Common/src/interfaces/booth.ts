@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 import { SupportedCurrencyCodes } from "@/utils/currency";
 import { IFairInfo, IImageUploadInfo } from "./base";
 
@@ -15,8 +17,8 @@ interface IBoothCommon {
   location?: string | null; // For custom fair
   dateOpen?: Date | null;   // For custom fair
   dateClose?: Date | null;  // For custom fair
-  datesOpenInFair?: Array<Date> | null;  // Only with fair
-  relatedLinks?: Array<IBoothRelatedLink>;
+  datesOpenInFair?: Date[] | null;  // Only with fair
+  relatedLinks?: IBoothRelatedLink[];
 }
 
 export interface IBoothStatus {
@@ -51,27 +53,27 @@ export interface IBooth extends Omit<IBoothCommon, "fairId"> {
 }
 
 export interface IBoothAdmin extends IBooth {
-  expenses: Array<IBoothExpense>;
+  expenses: IBoothExpense[];
 }
 
 /* === Model for Backend (DB) === */
 export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "status"> {
-  datesOpenInFair?: Array<string> | null;   // JSON string array of "YYYY-MM-DD"
+  datesOpenInFair?: string[] | null;   // JSON string array of "YYYY-MM-DD"
   status: BoothStatus;
   statusReason?: string | null;
   statusContentPublished: boolean;
-  expenses: Array<IBoothExpense>;
+  expenses: IBoothExpense[];
   bannerImageId?: number | null;
   infoImageId?: number | null;
 }
 
 /* === Requests === */
-export type IBoothCreateRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "datesOpenInFair" | "relatedLinks">;
-export type IBoothCreateWithFairRequest = Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks">;
-export type IBoothUpdateRequest = Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencyCode">>;
-export type IBoothNoticeUpdateRequest = Pick<IBoothCommon, "noticeContent">;
-export type IBoothStatusUpdateRequest = Partial<IBoothStatus>;
+export interface IBoothCreateRequest extends Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "datesOpenInFair" | "relatedLinks"> { }
+export interface IBoothCreateWithFairRequest extends Omit<IBoothCommon, "id" | "ownerId" | "noticeContent" | "status" | "location" | "dateOpen" | "dateClose" | "relatedLinks"> { }
+export interface IBoothUpdateRequest extends Partial<Omit<IBoothCommon, "id" | "ownerId" | "fairId" | "status" | "currencyCode">> { }
+export interface IBoothNoticeUpdateRequest extends Pick<IBoothCommon, "noticeContent"> { }
+export interface IBoothStatusUpdateRequest extends Partial<IBoothStatus> { }
 
 /* === Responses === */
-export type IBoothResponse = Omit<IBooth, "fairId">;
-export type IBoothAdminResponse = IBoothAdmin;
+export interface IBoothResponse extends Omit<IBooth, "fairId"> { }
+export interface IBoothAdminResponse extends IBoothAdmin { }

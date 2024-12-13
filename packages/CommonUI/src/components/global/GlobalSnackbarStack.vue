@@ -1,9 +1,9 @@
 <template>
   <VSnackbar v-for="context in queue"
-             v-model="internalModel[context.id]"
              v-bind="getNormalizedProps(context)"
              ref="activeSnackbars"
              :key="context.id"
+             v-model="internalModel[context.id]"
              transition="slide-x-reverse-transition"
              contentClass="global-snackbar-content">
     <VLayout class="d-flex flex-row align-center">
@@ -27,18 +27,19 @@
 </template>
 
 <script lang="ts">
-import type { VSnackbar } from "vuetify/components";
 import type { ISnackbarContext } from "@/entities";
+import type { VSnackbar } from "vuetify/components";
 import { Component, Model, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
 
 @Component({})
 export class GlobalSnackbarStack extends Vue {
   readonly STACK_MARGIN = 8;
 
-  @Model({ type: Array, required: true }) declare queue: Array<ISnackbarContext>;
+  @Model({ type: Array, required: true }) declare queue: ISnackbarContext[];
   readonly internalModel: Record<string, boolean> = { };
 
-  @Ref("activeSnackbars") readonly activeSnackbars!: Array<VSnackbar>;
+  @Ref("activeSnackbars")
+  declare readonly activeSnackbars: VSnackbar[];
 
   @Watch("queue", { deep: true, immediate: true, flush: "post" })
   async onQueueChange() {
@@ -54,10 +55,12 @@ export class GlobalSnackbarStack extends Vue {
     for(const key in this.internalModel) {
       if(this.internalModel[key] === false) {
         setTimeout(() => {
-          const index = this.queue.findIndex((context) => context.id === key);
+          const index = this.queue.findIndex(context => context.id === key);
 
           if(index !== -1) {
             this.queue.splice(index, 1);
+
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete this.internalModel[key];
           }
         }, 1000);
@@ -71,18 +74,24 @@ export class GlobalSnackbarStack extends Vue {
   async mounted() { await this.onQueueChange(); }
 
   rearrangeSnackbarStack() {
-    if(!this.activeSnackbars) return;
+    if(!this.activeSnackbars) {
+      return;
+    }
 
     // First, sort by persistent prop
     this.activeSnackbars.sort((a, b) => {
-      const aContext = this.queue.find((item) => item.id === (a.$.vnode ?? a.$props ?? a.$attrs).key);
-      const bContext = this.queue.find((item) => item.id === (b.$.vnode ?? b.$props ?? b.$attrs).key);
+      const aContext = this.queue.find(item => item.id === (a.$.vnode ?? a.$props ?? a.$attrs).key);
+      const bContext = this.queue.find(item => item.id === (b.$.vnode ?? b.$props ?? b.$attrs).key);
 
-      if(!aContext || !bContext) return 0;
+      if(!aContext || !bContext) {
+        return 0;
+      }
 
-      if(aContext.persistent && !bContext.persistent) return -1;
-      if(!aContext.persistent && bContext.persistent) return 1;
-      else return 0;
+      if(aContext.persistent && !bContext.persistent) {
+        return -1;
+      } else if(!aContext.persistent && bContext.persistent) {
+        return 1;
+      } else { return 0; }
     });
 
     // Then proceed to rearrange(stack) the snackbars
@@ -161,8 +170,9 @@ export class GlobalSnackbarStack extends Vue {
   }
 
   getPrependIcon(context: ISnackbarContext) {
-    if(context.prependIcon)
+    if(context.prependIcon) {
       return context.prependIcon;
+    }
 
     switch(context.type) {
       case "success":

@@ -1,8 +1,8 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
+import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { defineStore } from "pinia";
 import { computed, ref, type ToRefs } from "vue";
-import { CURRENCY_INFO, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
-import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
+import { CURRENCY_INFO, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder, type SupportedCurrencyCodes } from "@myboothmanager/common";
 import { useAdminAPIStore } from "./api";
 
 interface CurrentBoothStates {
@@ -36,16 +36,21 @@ const useAdminStore = defineStore("admin", () => {
   const globalSnackbarContexts = new SnackbarContextWrapper();
 
   /* Computed States */
-  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[currentBooth.booth.value?.currencyCode ?? "KRW"]);
+  const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[currentBooth.booth.value?.currencyCode as SupportedCurrencyCodes ?? "KRW"]);
 
   /* Actions */
   function clear(exclude?: Partial<Record<"account" | keyof CurrentBoothStates, true>>): void {
-    if(exclude && !exclude.account) currentAccount.value = null;
+    if(exclude && !exclude.account) {
+      currentAccount.value = null;
+    }
 
     for(const key in currentBooth) {
       const typedKey = key as keyof CurrentBoothStates;
 
-      if(exclude && !exclude[typedKey]) continue;
+      if(exclude && !exclude[typedKey]) {
+        continue;
+      }
+
       currentBooth[typedKey].value = null;
     }
 
@@ -53,13 +58,16 @@ const useAdminStore = defineStore("admin", () => {
     isAllDataLoaded.value = false;
   }
 
-  function changeBooth(boothId: number): void {
+  async function changeBooth(boothId: number): Promise<void> {
     isBoothDataLoaded.value = false;
 
     clear({ account: true });
-    $apiStore.fetchSingleBoothOfCurrentAccount(boothId).finally(() => {
+
+    try {
+      await $apiStore.fetchSingleBoothOfCurrentAccount(boothId);
+    } finally {
       isBoothDataLoaded.value = true;
-    });
+    }
   }
 
   return {
