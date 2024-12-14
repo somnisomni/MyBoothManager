@@ -11,13 +11,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, toNative, Vue } from "vue-facing-decorator";
 import GoodsOrdersListPage from "./GoodsOrderListPage.vue";
 
 @Component({})
-export default class GoodsOrdersRootPage extends Vue {
+class GoodsOrdersRootPage extends Vue {
   get keepAliveIncludeNames() {
     return [ GoodsOrdersListPage.name ];
   }
 }
+
+export default toNative(GoodsOrdersRootPage);
 </script>
