@@ -42,5 +42,5 @@ COPY --from=build /build/projects/Admin/dist .
 EXPOSE 31112
 
 # Start server
-RUN npm install -g http-server
-ENTRYPOINT ["npx", "http-server", "--proxy", "http://localhost:31112?", "--port", "31112"]
+RUN npm install -g serve
+ENTRYPOINT ["npx", "--yes", "serve", ".", "--no-clipboard", "--no-port-switching", "--single", "--listen", "31112"]
