@@ -10,12 +10,12 @@
              class="pa-2" />
     </div>
 
-    <VDivider class="mb-2" />
+    <VDivider class="pb-2" />
 
     <VExpandTransition>
       <div v-show="_expanded"
            class="w-100">
-        <slot></slot>
+        <slot />
       </div>
     </VExpandTransition>
   </div>
@@ -30,7 +30,7 @@ export default class ExpandableContent extends Vue {
   get expanded(): boolean { return this._expanded; }
   set expanded(value: boolean) { this._expanded = value; }
 
-  @Prop({ type: String, required: true }) readonly heading!: string;
+  @Prop({ type: String, required: true }) declare readonly heading: string;
 
   _expanded: boolean = true;
 }
