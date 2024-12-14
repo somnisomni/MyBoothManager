@@ -6,7 +6,6 @@
   "license": "PolyForm-Strict-1.0.0",
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
-    "postinstall": "pnpm run common:build",
     "all": "pnpm -r run",
     "all:version": "pnpm -r exec npm version",
     "all:build": "pnpm all build",
