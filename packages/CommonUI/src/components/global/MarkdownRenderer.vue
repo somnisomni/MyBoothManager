@@ -95,6 +95,7 @@ export default toNative(MarkdownRenderer);
   }
 
   blockquote {
+    text-align: start;
     padding-inline-start: 0.5em;
     color: gray;
     border-left: 0.25em solid currentColor;
