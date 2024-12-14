@@ -1,6 +1,12 @@
 <template>
   <DashboardPanel title="공지 사항">
-    <p class="text-disabled text-right">최소한의 <a href="https://ko.wikipedia.org/wiki/%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4" target="_blank">Markdown 문법</a>을 지원합니다.</p>
+    <p class="d-flex align-center justify-end text-disabled text-right">
+      <span>최소한의 Markdown 문법을 지원합니다.</span>
+      <VBtn size="x-small"
+            icon="mdi-help-circle"
+            variant="flat"
+            @click="isMarkdownHelpDialogOpened = true" />
+    </p>
 
     <VLayout class="d-flex flex-column text-center w-100">
       <VTextarea v-model="noticeContent"
@@ -8,6 +14,12 @@
                  placeholder="공지 사항 내용 입력"
                  hide-details
                  no-resize />
+      <VLayout class="d-flex flex-row flex-wrap justify-end mt-2">
+        <VBtn variant="outlined"
+              prepend-icon="mdi-eraser"
+              :disabled="noticeContent.length <= 0"
+              @click="noticeContent = ''">내용 지우기</VBtn>
+      </VLayout>
 
       <VDivider class="my-4" />
 
@@ -35,6 +47,8 @@
             class="mx-2 my-1"
             @click="onUpdateButtonClick">업데이트</VBtn>
     </VLayout>
+
+    <MarkdownHelpDialog v-model="isMarkdownHelpDialogOpened" />
   </DashboardPanel>
 </template>
 
@@ -43,16 +57,19 @@ import type { IBooth } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
+import MarkdownHelpDialog from "@/components/dialogs/MarkdownHelpDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 
 @Component({
   components: {
     DashboardPanel,
+    MarkdownHelpDialog,
   },
 })
 export default class BoothInfoPanel extends Vue {
   noticeContent = "";
   isUpdating = false;
+  isMarkdownHelpDialogOpened = false;
 
   mounted() {
     this.resetNoticeContent();
