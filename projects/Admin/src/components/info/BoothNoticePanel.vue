@@ -15,10 +15,24 @@
                  hide-details
                  no-resize />
       <VLayout class="d-flex flex-row flex-wrap justify-end mt-2">
-        <VBtn variant="outlined"
+        <VBtn :disabled="noticeContent.length <= 0 || isUpdating"
+              :loading="isUpdating"
+              variant="outlined"
               prepend-icon="mdi-eraser"
-              :disabled="noticeContent.length <= 0"
+              class="mx-2 my-1"
               @click="noticeContent = ''">내용 지우기</VBtn>
+        <VBtn :disabled="!isEdited || isUpdating"
+              :loading="isUpdating"
+              variant="outlined"
+              prepend-icon="mdi-refresh"
+              class="mx-2 my-1"
+              @click="resetNoticeContent">변경 취소</VBtn>
+        <VBtn :disabled="!isEdited || isUpdating"
+              :loading="isUpdating"
+              color="primary"
+              prepend-icon="mdi-check"
+              class="mx-2 my-1"
+              @click="onUpdateButtonClick">업데이트</VBtn>
       </VLayout>
 
       <VDivider class="my-4" />
@@ -30,22 +44,6 @@
           <MarkdownRenderer :source="noticeContent" />
         </VSheet>
       </VLayout>
-    </VLayout>
-
-    <VLayout class="d-flex flex-row flex-wrap justify-end">
-      <VDivider class="my-4" />
-
-      <VBtn :disabled="!isEdited || isUpdating"
-            variant="outlined"
-            prepend-icon="mdi-refresh"
-            class="mx-2 my-1"
-            @click="resetNoticeContent">변경 취소</VBtn>
-      <VBtn :disabled="!isEdited || isUpdating"
-            :loading="isUpdating"
-            color="primary"
-            prepend-icon="mdi-check"
-            class="mx-2 my-1"
-            @click="onUpdateButtonClick">업데이트</VBtn>
     </VLayout>
 
     <MarkdownHelpDialog v-model="isMarkdownHelpDialogOpened" />
