@@ -1,5 +1,7 @@
-export function getUploadFileUrl(filePath: string | null | undefined) {
-  if(!filePath) return null;
+export function getUploadFileUrl(filePath: string | null | undefined): string | null {
+  if(!filePath) {
+    return null;
+  }
 
   return new URL(`${useRuntimeConfig().public.apiServerUrl}/${useRuntimeConfig().public.apiServerUploadsPath}/${filePath}`).toString();
 }
@@ -12,9 +14,9 @@ export class IntervalRunner {
 
   constructor(
     private readonly options: {
-      callback: () => void | Promise<void>,
-      onSecondTick?: (remainingSeconds: number) => void,
-      interval?: number,  // in seconds
+      callback(): void | Promise<void>;
+      onSecondTick?(remainingSeconds: number): void;
+      interval?: number;  // in seconds
     },
     immediate: boolean = true,
   ) {
@@ -25,16 +27,18 @@ export class IntervalRunner {
     this.run();
   }
 
-  private get normalizedOptions() {
+  private get normalizedOptions(): Required<typeof this.options> {
     return {
-      onSecondTick: () => {},
+      onSecondTick() { },
       interval: 1,
       ...this.options,
     } as Required<typeof this.options>;
   }
 
-  public run() {
-    if(this.disposed) return;
+  public run(): void {
+    if(this.disposed) {
+      return;
+    }
 
     this.requestId = window.requestAnimationFrame(async () => {
       const now = Date.now();
@@ -56,15 +60,15 @@ export class IntervalRunner {
     });
   }
 
-  public runImmediately() {
+  public runImmediately(): void {
     this.lastExecutedTimestamp = this.lastSecondTickTimestamp = 0;
   }
 
-  public updateLastExecutedTimestampToCurrent() {
+  public updateLastExecutedTimestampToCurrent(): void {
     this.lastExecutedTimestamp = this.lastSecondTickTimestamp = Date.now();
   }
 
-  public dispose() {
+  public dispose(): void {
     if(this.requestId) {
       window.cancelAnimationFrame(this.requestId);
       this.disposed = true;

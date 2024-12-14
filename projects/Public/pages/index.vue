@@ -1,5 +1,5 @@
 <template>
-  <VScrollYReverseTransition leave-absolute>
+  <VScrollYReverseTransition leaveAbsolute>
     <div v-if="!boothList || boothList.length <= 0"
          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-info">
@@ -11,8 +11,10 @@
             size="large"
             color="info"
             variant="outlined"
-            prepend-icon="mdi-refresh"
-            @click="reloadWindow">새로고침</VBtn>
+            prependIcon="mdi-refresh"
+            @click="reloadWindow">
+        <span>새로고침</span>
+      </VBtn>
     </div>
 
     <VContainer v-else
@@ -23,7 +25,8 @@
         <div class="my-1">
           <h5 class="text-h5 font-weight-bold">
             <span>{{ fair.name }}</span>
-            <small class="ml-2 font-weight-medium" style="font-size: 0.75em;">@ {{ fair.location }}</small>
+            <small class="ml-2 font-weight-medium"
+                   style="font-size: 0.75em;">@ {{ fair.location }}</small>
           </h5>
           <h6 class="text-subtitle-1 font-weight-light">
             <a v-if="fair.websiteUrl"
@@ -64,51 +67,52 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, toDateRangeString, type IBooth, type IBoothResponse, type IFair, type IFairResponse } from "@myboothmanager/common";
+import type { IBooth, IBoothResponse, IFair, IFairResponse } from "@myboothmanager/common";
+import { APP_NAME, BoothStatus, toDateRangeString } from "@myboothmanager/common";
 import { Vue } from "vue-facing-decorator";
 
-function filterBoothList(boothList: Array<IBooth>) {
+function filterBoothList(boothList: IBooth[]): IBooth[] {
   // Don't include closed booths in the booth list view
-  return boothList.filter((booth) => booth.status.status !== BoothStatus.CLOSE);
+  return boothList.filter(booth => booth.status.status !== BoothStatus.CLOSE);
 }
 
-function filterFairList(fairList: Array<IFair>, boothList: Array<IBooth>) {
+function filterFairList(fairList: IFair[], boothList: IBooth[]): IFair[] {
   // Don't include fairs that no booth is assigned to
-  return fairList.filter((fair) => boothList.findIndex((booth) => booth.fair && booth.fair.id === fair.id) >= 0);
+  return fairList.filter(fair => boothList.findIndex(booth => booth.fair && booth.fair.id === fair.id) >= 0);
 }
 
 @NuxtComponent({
   async asyncData(nuxt) {
-    const boothList: Array<IBooth> = filterBoothList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllBooths()) as Array<IBoothResponse>);
-    const fairList: Array<IFair> = filterFairList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAvailableFairs()) as Array<IFairResponse>, boothList);
+    const boothList: IBooth[] = filterBoothList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAllBooths()) as IBoothResponse[]);
+    const fairList: IFair[] = filterFairList(await nuxt.$publicAPI.wrap(() => nuxt.$publicAPI.apiCaller.fetchAvailableFairs()) as IFairResponse[], boothList);
 
     return { boothList, fairList };
   },
   setup() {
-    const boothList = filterBoothList(useNuxtData<Array<IBooth>>(useNuxtApp().$publicAPI.apiCaller.fetchAllBooths.name).data.value ?? []);
+    const boothList = filterBoothList(useNuxtData<IBooth[]>(useNuxtApp().$publicAPI.apiCaller.fetchAllBooths.name).data.value ?? []);
     return {
-      boothList: boothList,
-      fairList: filterFairList(useNuxtData<Array<IFair>>(useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs.name).data.value ?? [], boothList),
+      boothList,
+      fairList: filterFairList(useNuxtData<IFair[]>(useNuxtApp().$publicAPI.apiCaller.fetchAvailableFairs.name).data.value ?? [], boothList),
     };
   },
 })
 export default class LandingPage extends Vue {
   readonly toDateRangeString = toDateRangeString;
 
-  declare readonly boothList: Array<IBooth>;
-  declare readonly fairList: Array<IFair>;
+  declare readonly boothList: IBooth[];
+  declare readonly fairList: IFair[];
 
-  get boothListOpened() {
-    return this.boothList.filter((booth) => !booth.fair && booth.status.status === BoothStatus.OPEN);
+  get boothListOpened(): IBooth[] {
+    return this.boothList.filter(booth => !booth.fair && booth.status.status === BoothStatus.OPEN);
   }
 
-  get boothListOthers() {
-    return this.boothList.filter((booth) => !booth.fair && !this.boothListOpened.includes(booth));
+  get boothListOthers(): IBooth[] {
+    return this.boothList.filter(booth => !booth.fair && !this.boothListOpened.includes(booth));
   }
 
-  get boothFairMap() {
+  get boothFairMap(): Map<number, IBooth[]> {
     // Map<Fair ID, Array<Booth>>
-    const map = new Map<number, Array<IBooth>>();
+    const map = new Map<number, IBooth[]>();
 
     this.boothList.forEach((booth) => {
       if(booth.fair) {
@@ -123,7 +127,7 @@ export default class LandingPage extends Vue {
     return map;
   }
 
-  mounted() {
+  mounted(): void {
     /* *** Set document metadata *** */
     useHeadSafe({
       title: `${APP_NAME} - 부스 목록`,
@@ -131,9 +135,11 @@ export default class LandingPage extends Vue {
     useSeoMeta({ });
   }
 
-  reloadWindow() { window.location.reload(); }
+  reloadWindow(): void {
+    window.location.reload();
+  }
 
-  async onBoothItemClick(boothId: number) {
+  async onBoothItemClick(boothId: number): Promise<void> {
     await navigateTo({ path: `/booth/${boothId}` });
   }
 }
