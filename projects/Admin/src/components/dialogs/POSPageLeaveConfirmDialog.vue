@@ -12,13 +12,13 @@
 import { Component, Emit, Model, Vue } from "vue-facing-decorator";
 
 @Component({
-  emits: ["confirm"],
+  emits: [ "confirm" ],
 })
 export default class POSPageLeaveConfirmDialog extends Vue {
-  @Model({ type: Boolean }) open!: boolean;
+  @Model({ type: Boolean }) declare open: boolean;
 
   @Emit("confirm")
-  onDialogPrimary() {
+  onDialogPrimary(): void {
     this.open = false;
   }
 }

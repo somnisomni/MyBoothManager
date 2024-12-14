@@ -14,13 +14,14 @@
 
     <h4>결제 수단</h4>
     <VChipGroup v-model="filterSetting.paymentMethods"
-                selected-class="text-primary"
+                selectedClass="text-primary"
                 multiple
                 column>
       <VChip v-for="item in paymentMethods"
-              :key="item.value"
-              :value="item.value">
-        <VIcon class="mr-1" :icon="item.icon" /> {{ item.label }}
+             :key="item.value"
+             :value="item.value">
+        <VIcon class="mr-1"
+               :icon="item.icon" /> {{ item.label }}
       </VChip>
     </VChipGroup>
   </CommonDialog>
@@ -28,28 +29,29 @@
 
 <script lang="ts">
 import type { IGoodsOrderFilterSetting } from "../goods/GoodsOrderListView.vue";
-import { GoodsOrderPaymentMethod, type IGoods } from "@myboothmanager/common";
+import type { IGoods } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod } from "@myboothmanager/common";
 import { Component, Emit, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
-import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon, getPaymentMethodString } from "@/lib/enum-to-string";
+import { useAdminStore } from "@/plugins/stores/admin";
 import SelectableGoodsListView from "../goods/SelectableGoodsListView.vue";
 
 @Component({
   components: {
     SelectableGoodsListView,
   },
-  emits: ["primary"],
+  emits: [ "primary" ],
 })
 class OrderFilterSettingDialog extends Vue {
   readonly GoodsOrderPaymentMethod = GoodsOrderPaymentMethod;
 
-  @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Object, default: {} }) filterSetting!: IGoodsOrderFilterSetting;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
+  @Prop({ type: Object, default: {} }) declare readonly filterSetting: IGoodsOrderFilterSetting;
 
   @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
-  get paymentMethods() {
+  get paymentMethods(): Array<{ icon: string; label: string; value: GoodsOrderPaymentMethod }> {
     const data = [];
     for(const item of Object.values(GoodsOrderPaymentMethod)) {
       data.push({
@@ -61,12 +63,12 @@ class OrderFilterSettingDialog extends Vue {
     return data;
   }
 
-  get goodsList(): Array<IGoods> {
+  get goodsList(): IGoods[] {
     return Object.values(useAdminStore().currentBooth.goods ?? {});
   }
 
   @Emit("primary")
-  onDialogConfirm() {
+  onDialogConfirm(): typeof this.filterSetting {
     this.open = false;
     return this.filterSetting;
   }

@@ -1,7 +1,8 @@
 <template>
   <div class="mt-4">
     <RouterView v-slot="{ Component }">
-      <VSlideXReverseTransition leave-absolute duration="200">
+      <VSlideXReverseTransition leaveAbsolute
+                                duration="200">
         <KeepAlive :include="keepAliveIncludeNames">
           <component :is="Component" />
         </KeepAlive>
@@ -16,7 +17,7 @@ import GoodsOrdersListPage from "./GoodsOrderListPage.vue";
 
 @Component({})
 export default class GoodsOrdersRootPage extends Vue {
-  get keepAliveIncludeNames() {
+  get keepAliveIncludeNames(): string[] {
     return [ GoodsOrdersListPage.name ];
   }
 }

@@ -4,7 +4,7 @@ import { useAuthLocalStore } from "@/plugins/stores/auth";
 export class BaseAdminAPI {
   protected static readonly API: CT.APICaller = new CT.APICaller({
     host: import.meta.env.VITE_MBM_API_SERVER_URL,
-    getAuthorizationToken: () => useAuthLocalStore().accessToken!,
+    getAuthorizationToken() { return useAuthLocalStore().accessToken; },
   });
 
   /* Admin FE specific API call wrapper */
@@ -21,6 +21,8 @@ export class BaseAdminAPI {
 
 export default class AdminAPI extends BaseAdminAPI {
   /* == Endpoints == */
+  /* eslint-disable @typescript-eslint/explicit-function-return-type */
+
   /* Common */
   static async checkAPIServerAlive(): Promise<boolean> {
     // Try max 3 times
@@ -65,31 +67,31 @@ export default class AdminAPI extends BaseAdminAPI {
   }
 
   static async fetchAllBooths() {
-    return await this.apiCallWrapper<Array<CT.IBoothResponse>>(() => this.API.GET("booth"));
+    return await this.apiCallWrapper<CT.IBoothResponse[]>(() => this.API.GET("booth"));
   }
 
   static async fetchAllMembersOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IBoothMemberResponse>>(() => this.API.GET(`booth/${boothId}/member`));
+    return await this.apiCallWrapper<CT.IBoothMemberResponse[]>(() => this.API.GET(`booth/${boothId}/member`));
   }
 
   static async fetchAllOrdersOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsOrderResponse>>(() => this.API.GET(`booth/${boothId}/order`));
+    return await this.apiCallWrapper<CT.IGoodsOrderResponse[]>(() => this.API.GET(`booth/${boothId}/order`));
   }
 
   static async fetchAllGoodsOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsResponse>>(() => this.API.GET(`booth/${boothId}/goods`));
+    return await this.apiCallWrapper<CT.IGoodsResponse[]>(() => this.API.GET(`booth/${boothId}/goods`));
   }
 
   static async fetchAllGoodsCombinationOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsCombinationResponse>>(() => this.API.GET(`booth/${boothId}/goods/combination`));
+    return await this.apiCallWrapper<CT.IGoodsCombinationResponse[]>(() => this.API.GET(`booth/${boothId}/goods/combination`));
   }
 
   static async fetchAllGoodsCategoriesOfBooth(boothId: number) {
-    return await this.apiCallWrapper<Array<CT.IGoodsCategoryResponse>>(() => this.API.GET(`booth/${boothId}/goods/category`));
+    return await this.apiCallWrapper<CT.IGoodsCategoryResponse[]>(() => this.API.GET(`booth/${boothId}/goods/category`));
   }
 
   static async fetchAvailableFairs() {
-    return await this.apiCallWrapper<Array<CT.IFairResponse>>(() => this.API.fetchAvailableFairs());
+    return await this.apiCallWrapper<CT.IFairResponse[]>(() => this.API.fetchAvailableFairs());
   }
 
   /* Update */
@@ -213,4 +215,5 @@ export default class AdminAPI extends BaseAdminAPI {
   static async deleteGoodsCombinationImage(combinationId: number, boothId: number) {
     return await this.apiCallWrapper<CT.ISuccessResponse>(() => this.API.DELETE(`goods/combination/${combinationId}/image/primary?bId=${boothId}`));
   }
+  /* eslint-enable @typescript-eslint/explicit-function-return-type */
 }

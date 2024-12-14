@@ -1,7 +1,9 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
-import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
+import type { GoodsOrderPaymentMethod } from "@myboothmanager/common";
+import type { ComputedRef } from "vue";
+import { GoodsOrderStatus } from "@myboothmanager/common";
 import { defineStore } from "pinia";
-import { computed, type ComputedRef } from "vue";
+import { computed } from "vue";
 import { useAdminStore } from "./admin";
 import { useAdminMemberStore } from "./member-utils";
 

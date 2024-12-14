@@ -1,4 +1,5 @@
-import { ErrorCodes, type IAccountLoginRequest, type IAccountLoginResponse, type ISuccessResponse } from "@myboothmanager/common";
+import type { IAccountLoginRequest, IAccountLoginResponse, ISuccessResponse } from "@myboothmanager/common";
+import { ErrorCodes } from "@myboothmanager/common";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import AdminAPI from "@/lib/api-admin";

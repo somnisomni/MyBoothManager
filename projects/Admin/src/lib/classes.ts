@@ -25,7 +25,9 @@ export class Dateonly {
   public get day(): number { return this._day; }
 
   public static fromDate(date: Date): Dateonly {
-    if(typeof date === "string") date = new Date(date);
+    if(typeof date === "string") {
+      date = new Date(date);
+    }
 
     return new Dateonly(date.getFullYear(), date.getMonth() + 1, date.getDate());
   }
@@ -34,8 +36,14 @@ export class Dateonly {
     // return positive: this > other
     // return negative: this < other
 
-    if(this._year !== other._year) { return this._year - other._year; }
-    if(this._month !== other._month) { return this._month - other._month; }
+    if(this._year !== other._year) {
+      return this._year - other._year;
+    }
+
+    if(this._month !== other._month) {
+      return this._month - other._month;
+    }
+
     return this._day - other._day;
   }
 
@@ -44,7 +52,9 @@ export class Dateonly {
   }
 
   public equals(other: Dateonly): boolean {
-    if(!other) return false;
+    if(!other) {
+      return false;
+    }
 
     return this._year === other._year
       && this._month === other._month
@@ -57,18 +67,20 @@ export class Dateonly {
 }
 
 export class OrderedDateonlySet {
-  private _dateList: Array<Dateonly> = [];
+  private _dateList: Dateonly[] = [];
 
   constructor(private _descending: boolean = false) { }
 
   public add(date: Dateonly): void {
-    if(this._dateList.some((d) => d.equals(date))) { return; }
+    if(this._dateList.some(d => d.equals(date))) {
+      return;
+    }
 
     this._dateList.push(date);
     this._dateList.sort((a, b) => this._descending ? b.compareTo(a) : a.compareTo(b));
   }
 
-  public asArray(): Array<Dateonly> {
+  public asArray(): Dateonly[] {
     return this._dateList;
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-import { ErrorCodes } from "../enums/errors";
-import { IFair } from "./fair";
+import type { IFair } from "./fair";
+import type { ErrorCodes } from "../enums/errors";
 
 /* === Common Response Interfaces === */
 export interface IErrorResponse {

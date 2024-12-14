@@ -68,9 +68,10 @@
 </template>
 
 <script lang="ts">
+import type { GoodsBase } from "@/entities";
 import type { IGoodsCategory } from "@myboothmanager/common";
 import { Component, Emit, Prop, toNative, Vue } from "vue-facing-decorator";
-import { type GoodsBase, Goods, GoodsCombination } from "@/entities";
+import { Goods, GoodsCombination } from "@/entities";
 
 @Component({
   emits: [ "click:goods", "click:combination" ],
@@ -119,7 +120,7 @@ export class GoodsListView extends Vue {
       return [];
     }
 
-    const checkFn = (categoryId: number) => !this.omitEmptyGoodsCategory || this.findGoodsInCategory(categoryId).length > 0;
+    const checkFn = (categoryId: number): boolean => !this.omitEmptyGoodsCategory || this.findGoodsInCategory(categoryId).length > 0;
     const list = [];
 
     for(const category of this.goodsCategoryList) {
@@ -135,25 +136,25 @@ export class GoodsListView extends Vue {
     return list;
   }
 
-  findGoodsInCategory(categoryId: number, nonCombinatedOnly: boolean = false) {
+  findGoodsInCategory(categoryId: number, nonCombinatedOnly: boolean = false): Goods[] {
     return this.goodsListAdjusted.filter(goods => (goods.categoryId === categoryId) && !(nonCombinatedOnly && goods.combinationId));
   }
 
-  findGoodsInCombination(combinationId: number) {
+  findGoodsInCombination(combinationId: number): Goods[] {
     return this.goodsListAdjusted.filter(goods => goods.combinationId === combinationId);
   }
 
-  findCombinationInCategory(categoryId: number) {
+  findCombinationInCategory(categoryId: number): GoodsCombination[] {
     return this.goodsCombinationListAdjusted.filter(combination => combination.categoryId === categoryId);
   }
 
   @Emit("click:goods")
-  onGoodsClick(goodsId: number) {
+  onGoodsClick(goodsId: number): number {
     return goodsId;
   }
 
   @Emit("click:combination")
-  onCombinationClick(combinationId: number) {
+  onCombinationClick(combinationId: number): number {
     return combinationId;
   }
 }

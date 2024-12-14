@@ -16,9 +16,9 @@
 <script lang="ts">
 import type { Goods } from "@myboothmanager/common-ui";
 import { Component, Model, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
+import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
 import { getUploadFileUrl } from "@/lib/functions";
 import { useAdminStore } from "@/plugins/stores/admin";
-import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.vue";
 
 @Component({
   components: {
@@ -28,19 +28,19 @@ import SelectableGoodsListView from "@/components/goods/SelectableGoodsListView.
 class GoodsSelectionDialog extends Vue {
   readonly getUploadFileUrl = getUploadFileUrl;
 
-  @Model({ type: Boolean, default: false }) open!: boolean;
-  @Model({ name: "selectedGoodsIds", type: Array }) selectedGoodsIds!: Array<number>;
-  @Prop({ type: Array, default: [] }) disabledIdList!: Array<number>;
-  @Prop({ type: Number, default: null }) categoryId!: number | null | undefined;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
+  @Model({ name: "selectedGoodsIds", type: Array }) declare selectedGoodsIds: number[];
+  @Prop({ type: Array, default: [] }) declare readonly disabledIdList: number[];
+  @Prop({ type: Number, default: null }) declare readonly categoryId: number | null | undefined;
 
   @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
-  get goodsList(): Array<Goods> {
+  get goodsList(): Goods[] {
     if(this.categoryId) {
-      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === this.categoryId);
+      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter(goods => goods.categoryId === this.categoryId);
     } else {
-      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.categoryId === null);
+      return Object.values(useAdminStore().currentBooth.goods ?? {}).filter(goods => goods.categoryId === null);
     }
   }
 }

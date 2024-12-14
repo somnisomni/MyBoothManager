@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-import { SupportedCurrencyCodes } from "@/utils/currency";
-import { IFairInfo, IImageUploadInfo } from "./base";
+import type { IFairInfo, IImageUploadInfo } from "./base";
+import type { SupportedCurrencyCodes } from "@/utils/currency";
 
 /* === Common === */
 interface IBoothCommon {

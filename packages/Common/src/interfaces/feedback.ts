@@ -1,9 +1,9 @@
-export const enum FeedbackSenderType {
+export enum FeedbackSenderType {
   BOOTH_ADMIN = "Booth Admin",
   PUBLIC_USER = "Public User",
 }
 
-export const enum FeedbackType {
+export enum FeedbackType {
   FEATURE_REQUEST = "Feature Request",
   FAIR_REQUEST = "Fair Registration Request",
   BUG_ISSUES = "Bug & Issues",

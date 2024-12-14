@@ -53,7 +53,10 @@ export class CommonErrorDialog extends Vue {
     return `https://twitter.com/${DEVELOPER_TWITTER_HANDLE}`;
   }
 
-  @Emit("primary") reloadWindow() { window.location.reload(); }
+  @Emit("primary")
+  reloadWindow(): void {
+    window.location.reload();
+  }
 }
 
 export default toNative(CommonErrorDialog);

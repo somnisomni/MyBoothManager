@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-import { IImageUploadInfo } from "./base";
+import type { IImageUploadInfo } from "./base";
 
 /* === Common === */
 export interface IGoodsCommon {

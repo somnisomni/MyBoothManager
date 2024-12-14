@@ -5,22 +5,26 @@
            :accept="acceptsString"
            :multiple="multiple"
            class="w-0 h-0 d-none"
-           style="opacity: 0" @change="onFileInputChange" />
+           style="opacity: 0"
+           @change="onFileInputChange">
 
     <slot name="button">
       <VBtn :disabled="disabled"
-            @click="onFileInputButtonClick">{{ label }}</VBtn>
+            @click="onFileInputButtonClick">
+        <span>{{ label }}</span>
+      </VBtn>
     </slot>
-    <span v-if="!hideFileName" class="ml-2">{{ fileName }}</span>
+    <span v-if="!hideFileName"
+          class="ml-2">{{ fileName }}</span>
   </VLayout>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Ref, Vue } from "vue-facing-decorator";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
+import { Component, Emit, Model, Prop, Ref, Vue } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 
-// eslint-disable-next-line import/exports-last
+// eslint-disable-next-line import-x/exports-last
 export enum FileInputAccepts {
   IMAGE = 0b0001,
   VIDEO = 0b0010,
@@ -29,32 +33,32 @@ export enum FileInputAccepts {
   ALL = 0b0000,
 }
 
-const ACCEPTS_MIMES: Record<FileInputAccepts, Array<string>> = {
-  [FileInputAccepts.IMAGE]: ["image/webp", "image/heic", "image/heif", "image/png", "image/jpeg"],
-  [FileInputAccepts.VIDEO]: ["video/webm", "video/x-msvideo", "video/mp4", "video/mpeg"],
-  [FileInputAccepts.AUDIO]: ["audio/webm", "audio/mpeg", "audio/aac", "audio/ogg", "audio/opus"],
-  [FileInputAccepts.TEXT]: ["text/plain"],
-  [FileInputAccepts.ALL]: ["*/*"],
+const ACCEPTS_MIMES: Record<FileInputAccepts, string[]> = {
+  [FileInputAccepts.IMAGE]: [ "image/webp", "image/heic", "image/heif", "image/png", "image/jpeg" ],
+  [FileInputAccepts.VIDEO]: [ "video/webm", "video/x-msvideo", "video/mp4", "video/mpeg" ],
+  [FileInputAccepts.AUDIO]: [ "audio/webm", "audio/mpeg", "audio/aac", "audio/ogg", "audio/opus" ],
+  [FileInputAccepts.TEXT]: [ "text/plain" ],
+  [FileInputAccepts.ALL]: [ "*/*" ],
 };
 
 @Component({
-  emits: ["change"],
+  emits: [ "change" ],
 })
 export default class FileInputButton extends Vue {
-  @Model({ type: File, default: null }) value!: File | null;
-  @Prop({ type: String, default: "파일 선택" }) label!: string;
-  @Prop({ type: Boolean, default: false }) disabled!: boolean;
-  @Prop({ type: Boolean, default: false }) hideFileName!: boolean;
-  @Prop({ default: FileInputAccepts.ALL }) accepts!: FileInputAccepts;
-  @Prop({ type: String, default: null }) acceptsCustom!: string | null;
-  @Prop({ type: Boolean, default: false }) multiple!: boolean;
-  @Prop({ type: Number, default: MAX_UPLOAD_FILE_BYTES }) maxFileSize!: number;  // bytes
+  @Model({ type: File, default: null }) declare value: File | null;
+  @Prop({ type: String, default: "파일 선택" }) declare readonly label: string;
+  @Prop({ type: Boolean, default: false }) declare readonly disabled: boolean;
+  @Prop({ type: Boolean, default: false }) declare readonly hideFileName: boolean;
+  @Prop({ default: FileInputAccepts.ALL }) declare readonly accepts: FileInputAccepts;
+  @Prop({ type: String, default: null }) declare readonly acceptsCustom: string | null;
+  @Prop({ type: Boolean, default: false }) declare readonly multiple: boolean;
+  @Prop({ type: Number, default: MAX_UPLOAD_FILE_BYTES }) declare readonly maxFileSize: number;  // bytes
 
   @Ref("fileInput") fileInput!: HTMLInputElement;
 
   fileSizeExceededWarningShown: boolean = false;
 
-  async mounted() {
+  async mounted(): Promise<void> {
     if(!this.fileInput) {
       await this.$nextTick();
     }
@@ -69,10 +73,12 @@ export default class FileInputButton extends Vue {
   }
 
   get acceptsString(): string {
-    let acc: Array<string> = [];
+    let acc: string[] = [];
 
     if(this.accepts === FileInputAccepts.ALL) {
-      if(this.acceptsCustom) return this.acceptsCustom;
+      if(this.acceptsCustom) {
+        return this.acceptsCustom;
+      }
 
       acc = acc.concat(ACCEPTS_MIMES[FileInputAccepts.ALL]);
     } else {

@@ -10,14 +10,17 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
+                :disableSecondary="!isFormEdited"
+                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
+                :closeOnCancel="false"
                 @primary="onDialogConfirm"
                 @secondary="form?.reset"
                 @cancel="onDialogCancel"
-                @leftbutton="() => { deleteWarningDialogShown = true; }"
-                :disableSecondary="!isFormEdited"
-                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
-                :closeOnCancel="false">
-    <p v-if="!editMode" class="mb-2 text-warning">※ 굿즈 이미지는 먼저 굿즈를 추가한 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.</p>
+                @leftbutton="() => { deleteWarningDialogShown = true; }">
+    <p v-if="!editMode"
+       class="mb-2 text-warning">
+      ※ 굿즈 이미지는 먼저 굿즈를 추가한 후, 굿즈 정보 수정 대화창에서 업로드 가능합니다.
+    </p>
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
@@ -31,10 +34,10 @@
                        :uploadCallback="goodsImageUploadCallback"
                        :deleteCallback="goodsImageDeleteCallback" />
 
-      <CommonForm v-model="isFormValid"
+      <CommonForm ref="form"
+                  v-model="isFormValid"
                   v-model:edited="isFormEdited"
                   v-model:data="formModels"
-                  ref="form"
                   class="flex-1-1"
                   :fields="formFields"
                   :disabled="updateInProgress" />
@@ -44,23 +47,25 @@
                                @updated="onGoodsCategoryUpdated" />
     <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                                @primary="() => { open = false; }" />
-    <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                               @primary="onDeleteConfirm" />
+    <ItemDeleteWarningDialog v-model="deleteWarningDialogShown"
+                             @primary="onDeleteConfirm" />
   </CommonDialog>
 </template>
 
 <script lang="ts">
+import type { FormFieldOptions } from "../common/CommonForm.vue";
 import type { GoodsAdmin } from "@/lib/classes";
-import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
-import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
-import { reactive , readonly, type DeepReadonly } from "vue";
+import type { ErrorCodes, IGoodsCategory, IGoodsCreateRequest, IGoodsUpdateRequest } from "@myboothmanager/common";
+import type { DeepReadonly } from "vue";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import deepClone from "clone-deep";
-import { useAdminStore } from "@/plugins/stores/admin";
+import { reactive, readonly } from "vue";
+import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import { CommonForm } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
-import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
@@ -72,13 +77,13 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
-  emits: ["created", "updated", "deleted", "error"],
+  emits: [ "created", "updated", "deleted", "error" ],
 })
 export default class GoodsManageDialog extends Vue {
-  @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Number,  default: null  }) readonly goodsId?: number | null;
-  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
-  @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
+  @Prop({ type: Number, default: null }) declare readonly goodsId?: number | null;
+  @Prop({ type: Boolean, default: false }) declare readonly editMode: boolean;
+  @Prop({ type: Boolean, default: false }) declare readonly duplicate: boolean;
 
   @Ref("form") readonly form?: CommonForm;
 
@@ -112,7 +117,7 @@ export default class GoodsManageDialog extends Vue {
     categoryId: {
       type: FormFieldType.SELECT,
       label: "카테고리",
-      get items() { return [...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" }]; },
+      get items() { return [ ...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" } ]; },
       itemTitle: "name",
       itemValue: "id",
       additionalButtons: [
@@ -172,7 +177,7 @@ export default class GoodsManageDialog extends Vue {
       optional: true,
       get items() {
         return Object.values(useAdminStore().currentBooth.boothMembers ?? {}).map(
-          member => ({ title: member.name, id: member.id }),
+          (member) => { return { title: member.name, id: member.id }; },
         );
       },
       itemTitle: "title",
@@ -180,10 +185,16 @@ export default class GoodsManageDialog extends Vue {
       multiple: true,
     },
   } as Record<keyof IGoodsCreateRequest, FormFieldOptions> | Record<string, FormFieldOptions>;
-  resetValidationProxy() { this.form?.resetValidation(); }
+
+  resetValidationProxy(): void {
+    this.form?.resetValidation();
+  }
+
+  openAddCategoryDialog(): void {
+    this.goodsCategoryManageDialogShown = true;
+  }
 
   goodsCategoryManageDialogShown = false;
-  openAddCategoryDialog() { this.goodsCategoryManageDialogShown = true; }
   cancelWarningDialogShown = false;
   deleteWarningDialogShown = false;
 
@@ -201,29 +212,40 @@ export default class GoodsManageDialog extends Vue {
   }
 
   get currentGoods(): DeepReadonly<GoodsAdmin> | null {
-    return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods![this.goodsId]) : null;
+    return (this.goodsId && (this.goodsId in (useAdminStore().currentBooth.goods ?? {}))) ? readonly(useAdminStore().currentBooth.goods?.[this.goodsId] as GoodsAdmin) : null;
   }
 
   get goodsImagePath(): string | null {
     return this.editMode && this.currentGoods ? this.currentGoods.goodsImage?.path ?? null : null;
   }
 
-  get allCategoryData() {
+  get allCategoryData(): DeepReadonly<Record<number, IGoodsCategory>> {
     return readonly([
-      ...Object.values(useAdminStore().currentBooth.goodsCategories!),
+      ...Object.values(useAdminStore().currentBooth.goodsCategories as Record<number, IGoodsCategory>),
       { boothId: -1, id: -1, name: "미분류" },
     ]);
   }
 
   @Watch("open")
-  async onDialogOpen(open: boolean) {
-    if(!open) return;
+  async onDialogOpen(open: boolean): Promise<void> {
+    if(!open) {
+      return;
+    }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) {
+      await this.$nextTick();
+    }
+
+    const booth = useAdminStore().currentBooth.booth;
+
+    if(!booth) {
+      this.open = false;
+      return;
+    }
 
     if(this.currentGoods && (this.editMode || this.duplicate)) {
       this.form.setInitialModel({
-        boothId: useAdminStore().currentBooth.booth!.id,
+        boothId: booth.id,
         categoryId: this.currentGoods.categoryId,
         name: this.currentGoods.name,
         description: this.currentGoods.description,
@@ -236,7 +258,7 @@ export default class GoodsManageDialog extends Vue {
       } as IGoodsUpdateRequest);
     } else {
       this.form.setInitialModel({
-        boothId: useAdminStore().currentBooth.booth!.id,
+        boothId: booth.id,
         categoryId: -1,
         name: "",
         description: "",
@@ -250,11 +272,11 @@ export default class GoodsManageDialog extends Vue {
     }
   }
 
-  onGoodsCategoryUpdated(categoryId: number) {
+  onGoodsCategoryUpdated(categoryId: number): void {
     this.formModels.categoryId = categoryId;
   }
 
-  onDialogCancel() {
+  onDialogCancel(): void {
     if(this.isFormEdited) {
       this.cancelWarningDialogShown = true;
     } else {
@@ -262,16 +284,16 @@ export default class GoodsManageDialog extends Vue {
     }
   }
 
-  async onDialogConfirm() {
+  async onDialogConfirm(): Promise<void> {
     this.updateInProgress = true;
 
-    let result: boolean | ErrorCodes = false;
+    let result: boolean | ErrorCodes;
 
     if(this.editMode && this.goodsId) {
       // UPDATE
 
       const requestData: IGoodsUpdateRequest = {
-        ...this.form!.getDiffOfModel(),
+        ...this.form?.getDiffOfModel(),
         boothId: useAdminStore().currentBooth.booth!.id,
       };
 
@@ -297,7 +319,7 @@ export default class GoodsManageDialog extends Vue {
     this.updateInProgress = false;
   }
 
-  async onDeleteConfirm() {
+  async onDeleteConfirm(): Promise<void> {
     this.updateInProgress = true;
 
     if(this.goodsId) {

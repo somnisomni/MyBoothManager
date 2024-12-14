@@ -111,7 +111,7 @@ export interface CommonDialogButtonParams {
   title: string;
   icon: string;
   disabled?: boolean;
-  onClick: () => void;
+  onClick(): void;
 }
 
 @Component({
@@ -156,21 +156,21 @@ export class CommonDialog extends Vue {
   }
 
   @Emit("close")
-  onCloseButtonClick() {
+  onCloseButtonClick(): void {
     this.open = false;
   }
 
   @Emit("primary")
-  onDialogPrimaryButtonClick() { }
+  onDialogPrimaryButtonClick(): void { }
 
   @Emit("secondary")
-  onDialogSecondaryButtonClick() { }
+  onDialogSecondaryButtonClick(): void { }
 
   @Emit("leftbutton")
-  onDialogLeftButtonClick() { }
+  onDialogLeftButtonClick(): void { }
 
   @Emit("cancel")
-  onDialogCancelButtonClick() {
+  onDialogCancelButtonClick(): void {
     if(this.closeOnCancel) {
       this.open = false;
     }

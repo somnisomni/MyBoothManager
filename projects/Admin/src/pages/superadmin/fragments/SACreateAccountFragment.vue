@@ -2,26 +2,29 @@
   <div class="px-2 my-8">
     <h2>새 부스 관리 계정 생성</h2>
 
-    <CommonForm v-model="isFormValid"
+    <CommonForm ref="form"
+                v-model="isFormValid"
                 v-model:edited="isFormEdited"
                 v-model:data="formModels"
-                ref="form"
                 :fields="formFields"
                 :disabled="createInProgress" />
 
     <VBtn :loading="createInProgress"
           :disabled="!isFormValid || createInProgress"
           class="w-100"
-          @click="createAccount">생성</VBtn>
+          @click="createAccount">
+      <span>생성</span>
+    </VBtn>
   </div>
 </template>
 
 <script lang="ts">
+import type { FormFieldOptions } from "@/components/common/CommonForm.vue";
 import type { IAccountCreateRequest } from "@myboothmanager/common";
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
-import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
 import { reactive } from "vue";
-import { CommonForm, type FormFieldOptions, FormFieldType } from "@/components/common/CommonForm.vue";
+import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
+import { CommonForm, FormFieldType } from "@/components/common/CommonForm.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { SuperAdminAPI } from "../SuperAdminPage.lib";
 
@@ -62,7 +65,7 @@ export default class SACreateAccountFragment extends Vue {
     },
   } as Record<keyof IAccountCreateRequest, FormFieldOptions>;
 
-  async createAccount() {
+  async createAccount(): Promise<void> {
     this.createInProgress = true;
 
     if(!this.formModels.loginId || !this.formModels.loginPass || !this.formModels.name) {

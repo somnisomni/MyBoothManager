@@ -9,14 +9,17 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
+                :disableSecondary="!isFormEdited"
+                :disablePrimary="!isFormEdited || !isFormValid"
+                :closeOnCancel="false"
                 @primary="onDialogConfirm"
                 @secondary="form?.reset"
                 @cancel="onDialogCancel"
-                @leftbutton="() => { deleteWarningDialogShown = true; }"
-                :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !isFormValid"
-                :closeOnCancel="false">
-    <p v-if="!editMode" class="mb-2 text-warning">※ 멤버 이미지는 먼저 굿즈를 추가한 후, 멤버 정보 수정 대화창에서 업로드 가능합니다.</p>
+                @leftbutton="() => { deleteWarningDialogShown = true; }">
+    <p v-if="!editMode"
+       class="mb-2 text-warning">
+      ※ 멤버 이미지는 먼저 굿즈를 추가한 후, 멤버 정보 수정 대화창에서 업로드 가능합니다.
+    </p>
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
@@ -30,10 +33,10 @@
                        :uploadCallback="memberImageUploadCallback"
                        :deleteCallback="memberImageDeleteCallback" />
 
-      <CommonForm v-model="isFormValid"
+      <CommonForm ref="form"
+                  v-model="isFormValid"
                   v-model:edited="isFormEdited"
                   v-model:data="formModels"
-                  ref="form"
                   class="flex-1-1"
                   :fields="formFields"
                   :disabled="updateInProgress" />
@@ -42,17 +45,18 @@
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @primary="() => { open = false; }" />
-  <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                             @primary="onDeleteConfirm" />
+  <ItemDeleteWarningDialog v-model="deleteWarningDialogShown"
+                           @primary="onDeleteConfirm" />
 </template>
 
 <script lang="ts">
+import type { FormFieldOptions } from "../common/CommonForm.vue";
+import type { ErrorCodes, IBoothMember, IBoothMemberCreateRequest, IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { reactive, readonly } from "vue";
 import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
-import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
@@ -64,7 +68,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
-  emits: ["updated", "deleted", "error"],
+  emits: [ "updated", "deleted", "error" ],
 })
 export default class BoothMemberManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -142,9 +146,9 @@ export default class BoothMemberManageDialog extends Vue {
 
   @Watch("open")
   async onDialogOpen(open: boolean) {
-    if(!open) return;
+    if(!open) { return; }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) { await this.$nextTick(); }
 
     if(this.editMode && this.currentMember) {
       this.form.setInitialModel({

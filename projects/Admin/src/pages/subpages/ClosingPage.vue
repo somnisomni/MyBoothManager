@@ -8,21 +8,33 @@
         <li v-for="[ combinationId, data ] in combinationRevenueMap"
             :key="combinationId"
             class="d-flex justify-space-between">
-          <span><small class="d-inline-block text-right mr-1" style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> <VIcon icon="mdi-set-all" /> {{ data.name }}</span>
+          <span>
+            <small class="d-inline-block text-right mr-1"
+                   style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small>
+            <VIcon icon="mdi-set-all" />
+            <span>{{ data.name }}</span>
+          </span>
+
           <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }} </span>
         </li>
 
         <li v-for="[ goodsId, data ] in goodsRevenueMap"
             :key="goodsId"
             class="d-flex justify-space-between">
-          <span><small class="d-inline-block text-right mr-1" style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small> {{ data.name }}</span>
+          <span>
+            <small class="d-inline-block text-right mr-1"
+                   style="width: 3rem; white-space: nowrap; text-wrap: nowrap;">{{ data.quantity }} ×</small>
+            <span>{{ data.name }}</span>
+          </span>
+
           <span>{{ currencySymbol }}{{ data.totalRevenue.toLocaleString() }}</span>
         </li>
 
         <li class="d-flex flex-column mt-2">
           <div class="d-flex justify-space-between font-weight-bold"
                style="font-size: 1.25em;">
-            <span><small class="d-inline-block text-right mr-1" style="width: 3rem;"></small> 총 판매 수익</span>
+            <span><small class="d-inline-block text-right mr-1"
+                         style="width: 3rem;" /> 총 판매 수익</span>
             <span>{{ currencySymbol }}{{ totalMergedRevenue.toLocaleString() }}</span>
           </div>
 
@@ -47,7 +59,7 @@
       <h2>멤버 수익 분배</h2>
 
       <VTabs v-model="memberRevenueDistributionStrategy"
-             fixed-tabs>
+             fixedTabs>
         <VTab value="own">소유 굿즈별 분배</VTab>
         <VTab value="equal">동률 분배 (1/N)</VTab>
       </VTabs>
@@ -88,9 +100,9 @@
 
 <script lang="ts">
 import { Component, Setup, toNative, Vue } from "vue-facing-decorator";
+import { getPaymentMethodString } from "@/lib/enum-to-string";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
-import { getPaymentMethodString } from "@/lib/enum-to-string";
 
 @Component({})
 class ClosingPage extends Vue {
@@ -119,7 +131,7 @@ class ClosingPage extends Vue {
 
   memberRevenueDistributionStrategy: "equal" | "own" = "own";
 
-  beforeCreate() {
+  beforeCreate(): void {
     /* if(this.currentBooth.booth && this.currentBooth.booth!.status !== BoothStatus.CLOSE) {
       alert("부스가 운영 종료 상태일 때만 접근할 수 있습니다.");
 

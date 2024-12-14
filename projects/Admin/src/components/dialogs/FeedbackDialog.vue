@@ -7,15 +7,15 @@
                 dialogTitle="피드백 작성"
                 dialogCancelText="취소"
                 dialogPrimaryText="전송"
-                @primary="onDialogConfirm"
-                @cancel="onDialogCancel"
                 :disablePrimary="!isFormEdited || !isFormValid"
-                :closeOnCancel="false">
+                :closeOnCancel="false"
+                @primary="onDialogConfirm"
+                @cancel="onDialogCancel">
     <VLayout class="d-flex flex-column">
-      <CommonForm v-model="isFormValid"
+      <CommonForm ref="form"
+                  v-model="isFormValid"
                   v-model:edited="isFormEdited"
                   v-model:data="formModels"
-                  ref="form"
                   class="flex-1-1"
                   :fields="formFields"
                   :disabled="updateInProgress" />
@@ -29,11 +29,13 @@
 </template>
 
 <script lang="ts">
-import { FeedbackSenderType, FeedbackType, type IFeedbackRequest } from "@myboothmanager/common";
+import type { FormFieldOptions } from "../common/CommonForm.vue";
+import type { IFeedbackRequest } from "@myboothmanager/common";
+import { FeedbackSenderType, FeedbackType } from "@myboothmanager/common";
 import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 @Component({
@@ -76,7 +78,7 @@ export default class FeedbackDialog extends Vue {
           { value: FeedbackType.FAIR_REQUEST, text: "행사 정보 등록 요청" },
           { value: FeedbackType.BUG_ISSUES, text: "버그 및 문제 보고" },
           { value: FeedbackType.OTHER, text: "기타" },
-        ] as { value: FeedbackType; text: string }[];
+        ] as Array<{ value: FeedbackType; text: string }>;
       },
       itemTitle: "text",
       itemValue: "value",
@@ -90,9 +92,9 @@ export default class FeedbackDialog extends Vue {
 
   @Watch("open")
   async onDialogOpen(open: boolean) {
-    if(!open) return;
+    if(!open) { return; }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) { await this.$nextTick(); }
 
     this.form.setInitialModel(
       Object.assign(this.formModels, {

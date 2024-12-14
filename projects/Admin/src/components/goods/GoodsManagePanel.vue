@@ -1,18 +1,25 @@
 <template>
   <DashboardPanel>
     <VRow class="pa-2 flex-column">
-      <p v-if="isBoothClosed" class="mb-2 d-inline-flex align-center text-warning"><VIcon icon="mdi-information-outline" class="mr-1" /> 실수를 방지하기 위해 부스가 운영 종료된 상태에서는 굿즈 정보 수정 기능이 비활성화됩니다.</p>
+      <p v-if="isBoothClosed"
+         class="mb-2 d-inline-flex align-center text-warning">
+        <VIcon icon="mdi-information-outline"
+               class="mr-1" /> 실수를 방지하기 위해 부스가 운영 종료된 상태에서는 굿즈 정보 수정 기능이 비활성화됩니다.
+      </p>
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
     <VRow class="pa-2 justify-space-between">
       <VBtn class="mr-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
-            min-width="64px"
+            minWidth="64px"
             size="x-large"
             :disabled="goodsListRefreshing"
             :loading="goodsListRefreshing"
             @click.stop="onListRefreshClick">
-        <VTooltip activator="parent" location="bottom">목록 새로고침</VTooltip>
+        <VTooltip activator="parent"
+                  location="bottom">
+          목록 새로고침
+        </VTooltip>
         <VIcon>mdi-refresh</VIcon>
       </VBtn>
       <VLayout class="d-flex flex-column flex-grow-1 order-first flex-sm-row order-sm-0"
@@ -20,24 +27,31 @@
         <VBtn class="my-1 mx-sm-1 flex-grow-1"
               variant="outlined"
               size="x-large"
-              prepend-icon="mdi-plus"
+              prependIcon="mdi-plus"
               :disabled="isBoothClosed"
-              @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen">굿즈 추가</VBtn>
+              @click.stop="goodsAddDialogOpen = !goodsAddDialogOpen">
+          <span>굿즈 추가</span>
+        </VBtn>
         <VBtn class="my-1 mx-sm-1"
               variant="outlined"
               size="x-large"
-              prepend-icon="mdi-set-all"
+              prependIcon="mdi-set-all"
               :disabled="isBoothClosed"
-              @click.stop="combinationAddDialogOpen = !combinationAddDialogOpen">세트 구성 추가</VBtn>
+              @click.stop="combinationAddDialogOpen = !combinationAddDialogOpen">
+          <span>세트 구성 추가</span>
+        </VBtn>
       </VLayout>
       <VBtn class="ml-2 my-1 px-0 order-1 order-sm-0"
             variant="outlined"
-            min-width="64px"
+            minWidth="64px"
             size="x-large"
             :disabled="isBoothClosed"
             @click.stop="onLoadGoodsFromFileClick">
-        <VTooltip activator="parent" location="bottom">파일로부터 굿즈 목록 불러오기</VTooltip>
-        <VIcon>mdi-file-upload</VIcon>
+        <VTooltip activator="parent"
+                  location="bottom">
+          <span>파일로부터 굿즈 목록 불러오기</span>
+        </VTooltip>
+        <VIcon icon="mdi-file-upload" />
       </VBtn>
     </VRow>
   </DashboardPanel>
@@ -47,11 +61,11 @@
 </template>
 
 <script lang="ts">
+import { BoothStatus } from "@myboothmanager/common";
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { BoothStatus } from "@myboothmanager/common";
-import { useAdminStore } from "@/plugins/stores/admin";
 import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialog.vue";
@@ -73,14 +87,20 @@ export default class GoodsManagePanel extends Vue {
   declare readonly smAndUp: boolean;
 
   get isBoothClosed(): boolean {
-    return useAdminStore().currentBooth.booth!.status.status === BoothStatus.CLOSE;
+    const booth = useAdminStore().currentBooth.booth;
+
+    if(!booth) {
+      return false;
+    }
+
+    return booth.status.status === BoothStatus.CLOSE;
   }
 
   get goodsCount(): string {
     return Object.keys(useAdminStore().currentBooth.goods ?? {}).length.toLocaleString();
   }
 
-  async onListRefreshClick() {
+  async onListRefreshClick(): Promise<void> {
     this.goodsListRefreshing = true;
     await useAdminAPIStore().fetchGoodsOfCurrentBooth();
     await useAdminAPIStore().fetchGoodsCategoriesOfCurrentBooth();

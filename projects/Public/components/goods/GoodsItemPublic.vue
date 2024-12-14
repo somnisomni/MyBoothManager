@@ -3,7 +3,8 @@
              class="public">
     <template #extra-top-indicator>
       <!-- Out of stock indicator -->
-      <div v-if="isMounted && !shouldHideStock && isOutOfStock" class="top-indicator out-of-stock bg-error">
+      <div v-if="isMounted && !shouldHideStock && isOutOfStock"
+           class="top-indicator out-of-stock bg-error">
         <span>품 절</span>
       </div>
     </template>
@@ -20,17 +21,17 @@ export default class GoodsItemPublic extends Vue {
   isMounted: boolean = false;
 
   @Ref("base")
-  readonly baseComponent!: GoodsItem;
+  declare readonly baseComponent: GoodsItem;
 
   get isOutOfStock(): boolean {
-    return (this.baseComponent.normalizedData.stockRemaining ?? -1) <= 0;
+    return (this.baseComponent.normalizedData.stock.remaining ?? -1) <= 0;
   }
 
   get shouldHideStock(): boolean {
-    return this.baseComponent.normalizedData.stockVisibility === GoodsStockVisibility.HIDE_ALL;
+    return this.baseComponent.normalizedData.stock.visibility === GoodsStockVisibility.HIDE_ALL;
   }
 
-  mounted() {
+  mounted(): void {
     this.isMounted = true;
   }
 }

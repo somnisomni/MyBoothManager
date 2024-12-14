@@ -24,7 +24,7 @@ export class BoothMemberAvatar extends Vue {
   // If this somewhat fixed later, simply remove this declare statement
   // declare readonly $imageUrlResolver: ComponentCustomProperties["$imageUrlResolver"];
 
-  get imageUrl() {
+  get imageUrl(): string | null {
     return this.$imageUrlResolver(this.avatarImage?.path);
   }
 }

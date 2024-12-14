@@ -12,7 +12,7 @@
         <slot name="prepend"
               :context="context">
           <VIcon v-if="context.type !== 'loading' && getPrependIcon(context)"
-                 :icon="getPrependIcon(context)"
+                 :icon="getPrependIcon(context) ?? undefined"
                  class="mr-2" />
           <VProgressCircular v-else-if="context.type === 'loading'"
                              indeterminate
@@ -42,7 +42,7 @@ export class GlobalSnackbarStack extends Vue {
   declare readonly activeSnackbars: VSnackbar[];
 
   @Watch("queue", { deep: true, immediate: true, flush: "post" })
-  async onQueueChange() {
+  async onQueueChange(): Promise<void> {
     for(const context of this.queue) {
       if(this.internalModel[context.id] === undefined) {
         this.internalModel[context.id] = true;
@@ -51,7 +51,7 @@ export class GlobalSnackbarStack extends Vue {
   }
 
   @Watch("internalModel", { deep: true, immediate: true, flush: "post" })
-  async onInternalModelChange() {
+  async onInternalModelChange(): Promise<void> {
     for(const key in this.internalModel) {
       if(this.internalModel[key] === false) {
         setTimeout(() => {
@@ -71,9 +71,11 @@ export class GlobalSnackbarStack extends Vue {
     this.rearrangeSnackbarStack();
   }
 
-  async mounted() { await this.onQueueChange(); }
+  async mounted(): Promise<void> {
+    await this.onQueueChange();
+  }
 
-  rearrangeSnackbarStack() {
+  rearrangeSnackbarStack(): void {
     if(!this.activeSnackbars) {
       return;
     }
@@ -96,9 +98,7 @@ export class GlobalSnackbarStack extends Vue {
 
     // Then proceed to rearrange(stack) the snackbars
     let nextTopOffset = 0;
-    for(let i = 0; i < this.activeSnackbars.length; i++) {
-      const target = this.activeSnackbars[i];
-
+    for(const target of this.activeSnackbars) {
       if(target) {
         if(!(target.location.includes("top") && target.location.includes("right"))) {
           continue;
@@ -112,8 +112,10 @@ export class GlobalSnackbarStack extends Vue {
     }
   }
 
-  getNormalizedProps(context: ISnackbarContext) {
-    let props: ISnackbarContext | Record<string, any> = {  // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getNormalizedProps(context: ISnackbarContext): Record<string, any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let props: ISnackbarContext | Record<string, any> = {
       /* Defaults */
       location: "top right",
       timeout: 5000,
@@ -169,7 +171,7 @@ export class GlobalSnackbarStack extends Vue {
     return props;
   }
 
-  getPrependIcon(context: ISnackbarContext) {
+  getPrependIcon(context: ISnackbarContext): string | null {
     if(context.prependIcon) {
       return context.prependIcon;
     }
@@ -185,7 +187,7 @@ export class GlobalSnackbarStack extends Vue {
         return "mdi-information";
     }
 
-    return undefined;
+    return null;
   }
 }
 

@@ -9,7 +9,8 @@
 </template>
 
 <script lang="ts">
-import { APP_PRIMARY_COLOR, SnackbarContextWrapper } from "@myboothmanager/common-ui";
+import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
+import { APP_PRIMARY_COLOR } from "@myboothmanager/common-ui";
 import { Vue, Component, Setup } from "vue-facing-decorator";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./plugins/stores/admin";
@@ -22,7 +23,7 @@ export default class App extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
-  async mounted() {
+  async mounted(): Promise<void> {
     console.info("%cMade with %c❤️", `font-size: 1.5rem; color: ${APP_PRIMARY_COLOR}`, "font-size: 1.5rem; color: red");
 
     await this.globalSnackbarContexts.addLoading({

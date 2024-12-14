@@ -1,14 +1,17 @@
 <template>
   <VSheet class="panel"
-          :min-width="minWidth"
+          :minWidth="minWidth"
           :elevation="realElevation"
           rounded="lg"
           @pointerenter="hover = true"
           @pointerleave="hover = false">
-    <div v-if="title" class="title"><span>{{ title }}</span></div>
+    <div v-if="title"
+         class="title">
+      <span>{{ title }}</span>
+    </div>
 
     <div class="contents">
-      <slot></slot>
+      <slot />
     </div>
   </VSheet>
 </template>
@@ -18,15 +21,18 @@ import { Component, Prop, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class DashboardPanel extends Vue {
-  @Prop({ default: "auto", required: false }) minWidth!: string | number;
-  @Prop({ default: 4, required: false }) elevation!: number;
-  @Prop({ default: null }) title!: string | null;
+  @Prop({ default: "auto", required: false }) declare readonly minWidth: string | number;
+  @Prop({ default: 4, required: false }) declare readonly elevation: number;
+  @Prop({ default: null }) declare readonly title: string | null;
 
   hover: boolean = false;
 
-  get realElevation() {
-    if(this.hover) return this.elevation + 4;
-    else return this.elevation;
+  get realElevation(): number {
+    if(this.hover) {
+      return this.elevation + 4;
+    } else {
+      return this.elevation;
+    }
   }
 }
 </script>

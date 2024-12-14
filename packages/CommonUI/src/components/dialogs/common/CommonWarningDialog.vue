@@ -36,14 +36,14 @@ export class CommonWarningDialog extends Vue {
   @Prop({ type: Boolean, default: true }) declare readonly closeOnPrimary: boolean;
 
   @Emit("primary")
-  onDialogPrimary() {
+  onDialogPrimary(): void {
     if(this.closeOnPrimary) {
       this.open = false;
     }
   }
 
   @Emit("cancel")
-  onDialogCancel() { }
+  onDialogCancel(): void { }
 }
 
 export default toNative(CommonWarningDialog);

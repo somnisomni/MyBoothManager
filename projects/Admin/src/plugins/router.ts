@@ -1,8 +1,10 @@
-import { createRouter, createWebHistory, type RouteRecordName, type RouteRecordRaw } from "vue-router";
+import type { RouteRecordName, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAuthLocalStore, useAuthStore } from "@/plugins/stores/auth";
 
 /* Routes (lazy-loaded using Webpack code splitting) */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 const NotFoundErrorPage = () => import(/* webpackChunkName: "pages/fundamentals" */ "@/pages/NotFoundErrorPage.vue");
 const LogoutPage = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LogoutPage.vue");
 const LoginPage = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LoginPage.vue");
@@ -24,6 +26,7 @@ const GoodsOrdersListPage = () => import(/* webpackChunkName: "pages/admin-goods
 const GoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderDetailPage.vue");
 
 const HelpPage = () => import(/* webpackChunkName: "pages/support" */ "@/pages/support/help/HelpRootPage.vue");
+/* eslint-enable @typescript-eslint/explicit-function-return-type */
 /* === */
 
 const isProd: boolean = import.meta.env.PROD;

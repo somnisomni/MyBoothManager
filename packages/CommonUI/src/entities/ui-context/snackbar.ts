@@ -1,4 +1,5 @@
-import { type Ref, ref } from "vue";
+import type { Ref } from "vue";
+import { ref } from "vue";
 
 /* Part of https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/util/anchor.ts#L8-L14 */
 type Tblock = ["top", "bottom"][number];

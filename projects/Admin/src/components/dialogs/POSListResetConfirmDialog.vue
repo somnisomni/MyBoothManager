@@ -4,8 +4,8 @@
                 dialogTitle="경고"
                 dialogCancelText="취소"
                 dialogPrimaryText="초기화"
-                @primary="onDialogPrimary"
-                accentColor="red">
+                accentColor="red"
+                @primary="onDialogPrimary">
     <p><span class="text-red"><strong>주문 목록이 초기화됩니다.</strong></span></p>
     <p>진행하시겠습니까?</p>
   </CommonDialog>
@@ -16,10 +16,10 @@ import { Component, Emit, Model, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class POSListResetConfirmDialog extends Vue {
-  @Model({ type: Boolean, default: false }) open!: boolean;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
 
   @Emit("confirm")
-  onDialogPrimary() {
+  onDialogPrimary(): void {
     this.open = false;
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <VList class="overflow-visible bg-transparent">
-    <VSlideXReverseTransition leave-absolute group>
+    <VSlideXReverseTransition leaveAbsolute
+                              group>
       <VListItem v-for="item in filteredList"
                  ref="orderListDOMItems"
                  :key="item.id"
@@ -13,17 +14,18 @@
 </template>
 
 <script lang="ts">
+import type { GoodsOrderPaymentMethod, IGoodsOrder } from "@myboothmanager/common";
 import type { VListItem } from "vuetify/components";
-import { GoodsOrderStatus, type GoodsOrderPaymentMethod, type IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderStatus } from "@myboothmanager/common";
 import { Component, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
-import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
+import { useAdminStore } from "@/plugins/stores/admin";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
 
 export interface IGoodsOrderFilterSetting {
-  targetGoodsIds: Array<number>;
+  targetGoodsIds: number[];
   onlyShowOrdersWithFreeGoods: boolean;
-  paymentMethods?: Array<GoodsOrderPaymentMethod> | null;
+  paymentMethods?: GoodsOrderPaymentMethod[] | null;
 }
 
 export interface IGoodsOrderFilterResult {
@@ -34,7 +36,7 @@ export interface IGoodsOrderFilterResult {
 }
 
 @Component({
-  emits: ["update:filter-result"],
+  emits: [ "update:filter-result" ],
   components: {
     GoodsOrderListItem,
   },
@@ -44,20 +46,20 @@ export default class GoodsOrderListView extends Vue {
 
   @Ref("orderListDOMItems") declare readonly orderListItemsRefs: VListItem[];
 
-  get filteredList(): Array<IGoodsOrder> {
+  get filteredList(): IGoodsOrder[] {
     return Object.values(useAdminStore().currentBooth.orders ?? {})
-      .filter((order) => (
-        ((this.filter.targetGoodsIds.length > 0) ? order.order.map((item) => item.gId).some((id) => this.filter.targetGoodsIds.includes(id!)) : true)
-        && ((this.filter.onlyShowOrdersWithFreeGoods) ? order.order.some((item) => Number(item.price) <= 0 || item.price === null || item.price === undefined) : true)
-        && ((this.filter.paymentMethods && this.filter.paymentMethods.length > 0) ? this.filter.paymentMethods.includes(order.paymentMethod!) : true)
+      .filter(order => (
+        ((this.filter.targetGoodsIds.length > 0) ? order.order.map(item => item.gId).some(id => this.filter.targetGoodsIds.includes(id as number)) : true)
+        && ((this.filter.onlyShowOrdersWithFreeGoods) ? order.order.some(item => Number(item.price) <= 0 || item.price === null || item.price === undefined) : true)
+        && ((this.filter.paymentMethods && this.filter.paymentMethods.length > 0) ? this.filter.paymentMethods.includes(order.paymentMethod as GoodsOrderPaymentMethod) : true)
       ))
       .sort((a, b) => new Date(b.createdAt as Date).getTime() - new Date(a.createdAt as Date).getTime());
   }
 
   @Watch("filteredList", { deep: true, immediate: true })
-  onFilteredListChange() {
-    const validList = this.filteredList.filter((order) => order.status === GoodsOrderStatus.RECORDED);
-    const cancelledList = this.filteredList.filter((order) => order.status === GoodsOrderStatus.CANCELED);
+  onFilteredListChange(): void {
+    const validList = this.filteredList.filter(order => order.status === GoodsOrderStatus.RECORDED);
+    const cancelledList = this.filteredList.filter(order => order.status === GoodsOrderStatus.CANCELED);
 
     this.$emit("update:filter-result", {
       listCount: validList.length,
@@ -69,7 +71,7 @@ export default class GoodsOrderListView extends Vue {
     } as IGoodsOrderFilterResult);
   }
 
-  onGoodsOrderItemClick(data: IGoodsOrder) {
+  onGoodsOrderItemClick(data: IGoodsOrder): void {
     router.push({
       name: "admin-order-detail",
       params: {
@@ -78,11 +80,15 @@ export default class GoodsOrderListView extends Vue {
     });
   }
 
-  public scrollIntoOrderDOMById(orderId: number) {
-    if(!this.orderListItemsRefs || this.orderListItemsRefs.length === 0) return;
+  public scrollIntoOrderDOMById(orderId: number): void {
+    if(!this.orderListItemsRefs || this.orderListItemsRefs.length === 0) {
+      return;
+    }
 
-    const foundItem = this.orderListItemsRefs.find(((item) => Number(item.$.vnode.key) === orderId));
-    if(!foundItem) return;
+    const foundItem = this.orderListItemsRefs.find(item => Number(item.$.vnode.key) === orderId);
+    if(!foundItem) {
+      return;
+    }
 
     // setTimeout is NEEDED to wait for the DOM to be fully rendered
     setTimeout(() => {

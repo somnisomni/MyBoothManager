@@ -19,12 +19,12 @@ import { useRoute } from "vue-router";
 export default class HelpPage extends Vue {
   helpPageSource: string = "";
 
-  get helpPageName() {
+  get helpPageName(): string {
     return useRoute().params.name as string ?? "index";
   }
 
   @Watch("helpPageName", { immediate: true })
-  async onHelpPageNameChanged() {
+  async onHelpPageNameChanged(): Promise<void> {
     this.helpPageSource = (await import(`./markdown/${this.helpPageName}.md?raw`) as { default: string }).default;
   }
 }

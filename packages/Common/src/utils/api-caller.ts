@@ -8,7 +8,8 @@ import type {
   ISingleValueResponse,
   IFairResponse,
   IFeedbackRequest,
-  ISuccessResponse } from "@/interfaces";
+  ISuccessResponse,
+} from "@/interfaces";
 import { HTTP_HEALTH_CHECK_STATUS_CODE } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -20,7 +21,7 @@ export interface APICallerOptions {
   prefix: string;
   /** @deprecated */ group: string;
   healthCheckPath: string;
-  getAuthorizationToken: () => string | null | undefined;
+  getAuthorizationToken(): string | null | undefined;
 }
 
 export default class APICaller {
@@ -46,7 +47,9 @@ export default class APICaller {
   }
 
   /* Public APIs */
-  private readonly createPublicAPI = () => new APICaller({ host: this.normalizedOptions.host });
+  private createPublicAPI(): APICaller {
+    return new APICaller({ host: this.normalizedOptions.host });
+  }
 
   /* Basic fetch function */
   private async callAPIInternal<T>(method: HTTPMethodString, path: string, payload?: BodyInit, additionalInitOptions?: RequestInit, containAuthCookie: boolean = false, containAuthCredential: boolean = true): Promise<T | IErrorResponse> {
@@ -79,17 +82,33 @@ export default class APICaller {
   }
 
   /* Fetch function shortcuts */
-  public async GET<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("GET", path, payload, containAuthCookie, containAuthCredential); }
-  public async POST<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("POST", path, payload, containAuthCookie, containAuthCredential); }
-  public async PUT<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("PUT", path, payload, containAuthCookie, containAuthCredential); }
-  public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("PATCH", path, payload, containAuthCookie, containAuthCredential); }
-  public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true) { return await this.callAPI<T>("DELETE", path, payload, containAuthCookie, containAuthCredential); }
+  public async GET<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true): Promise<T | IErrorResponse> {
+    return await this.callAPI<T>("GET", path, payload, containAuthCookie, containAuthCredential);
+  }
+
+  public async POST<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true): Promise<T | IErrorResponse> {
+    return await this.callAPI<T>("POST", path, payload, containAuthCookie, containAuthCredential);
+  }
+
+  public async PUT<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true): Promise<T | IErrorResponse> {
+    return await this.callAPI<T>("PUT", path, payload, containAuthCookie, containAuthCredential);
+  }
+
+  public async PATCH<T>(path: string, payload: Record<never, never>, containAuthCookie = false, containAuthCredential = true): Promise<T | IErrorResponse> {
+    return await this.callAPI<T>("PATCH", path, payload, containAuthCookie, containAuthCredential);
+  }
+
+  public async DELETE<T>(path: string, payload?: Record<never, never>, containAuthCookie = false, containAuthCredential = true): Promise<T | IErrorResponse> {
+    return await this.callAPI<T>("DELETE", path, payload, containAuthCookie, containAuthCredential);
+  }
 
   public async POSTMultipart<T>(path: string, payload: FormData): Promise<T | IErrorResponse> {
     return this.callAPIInternal<T>("POST", path, payload, undefined, false, true);
   }
 
   /* API endpoints below is predefined public endpoints */
+  /* eslint-disable @typescript-eslint/explicit-function-return-type */
+
   // Server
   public async checkAPIServerAlive(): Promise<boolean> {
     try {
@@ -128,7 +147,7 @@ export default class APICaller {
     return await this.createPublicAPI().GET<IGoodsResponse[]>(`booth/${boothId}/goods`);
   }
 
-  public async fetchAllGoodsCategoryOfBooth(boothId: number): ReturnType<typeof this.GET<IGoodsCategoryResponse[]>> {
+  public async fetchAllGoodsCategoryOfBooth(boothId: number) {
     return await this.createPublicAPI().GET<IGoodsCategoryResponse[]>(`booth/${boothId}/goods/category`);
   }
 
@@ -136,11 +155,11 @@ export default class APICaller {
     return await this.createPublicAPI().GET<IGoodsCombinationResponse[]>(`booth/${boothId}/goods/combination`);
   }
 
-  public async fetchAvailableFairs(): ReturnType<typeof this.GET<IFairResponse[]>> {
+  public async fetchAvailableFairs() {
     return await this.createPublicAPI().GET<IFairResponse[]>("fair");
   }
 
-  public async fetchSingleFair(fairId: number): ReturnType<typeof this.GET<IFairResponse>> {
+  public async fetchSingleFair(fairId: number) {
     return await this.createPublicAPI().GET<IFairResponse>(`fair/${fairId}`);
   }
 
@@ -159,7 +178,7 @@ export default class APICaller {
   }
 
   // Goods category
-  public async fetchSingleGoodsCategory(goodsCategoryId: number): ReturnType<typeof this.GET<IGoodsCategoryResponse>> {
+  public async fetchSingleGoodsCategory(goodsCategoryId: number) {
     return await this.createPublicAPI().GET<IGoodsCategoryResponse>(`goods/category/${goodsCategoryId}`);
   }
 
@@ -167,4 +186,5 @@ export default class APICaller {
   public async fetchSingleGoodsCombination(goodsCombinationId: number) {
     return await this.createPublicAPI().GET<IGoodsCombinationResponse>(`goods/combination/${goodsCombinationId}`);
   }
+  /* eslint-enable @typescript-eslint/explicit-function-return-type */
 }

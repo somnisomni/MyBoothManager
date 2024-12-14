@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-import { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
+import type { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
 
 /* === Common === */
 interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId"> { }

@@ -1,5 +1,6 @@
+import type { ComputedRef } from "vue";
 import { defineStore } from "pinia";
-import { computed, type ComputedRef } from "vue";
+import { computed } from "vue";
 import { useAdminStore } from "./admin";
 
 const useAdminGoodsStore = defineStore("booth-goods", () => {

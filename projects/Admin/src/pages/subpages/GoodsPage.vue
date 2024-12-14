@@ -56,17 +56,18 @@
 </template>
 
 <script lang="ts">
+import type { ErrorCodes, IGoodsCategory } from "@myboothmanager/common";
 import type { Goods, GoodsCombination, GoodsItemProps } from "@myboothmanager/common-ui";  // eslint-disable-line @typescript-eslint/no-unused-vars
-import { BoothStatus, GoodsStockVisibility, type ErrorCodes, type IGoodsCategory } from "@myboothmanager/common";
+import { BoothStatus, GoodsStockVisibility } from "@myboothmanager/common";
 import { Vue, Component, toNative, Setup } from "vue-facing-decorator";
-import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
-import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import GoodsCategoryManageDialog from "@/components/dialogs/GoodsCategoryManageDialog.vue";
 import GoodsCombinationManageDialog from "@/components/dialogs/GoodsCombinationManageDialog.vue";
-import { useAdminStore } from "@/plugins/stores/admin";
-import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
+import GoodsManageDialog from "@/components/dialogs/GoodsManageDialog.vue";
 import ItemDeleteWarningDialog from "@/components/dialogs/common/ItemDeleteWarningDialog.vue";
 import GoodsCategoryTitleManageable from "@/components/goods/GoodsCategoryTitleManageable.vue";
+import GoodsItemManageable from "@/components/goods/GoodsItemManageable.vue";
+import GoodsManagePanel from "@/components/goods/GoodsManagePanel.vue";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({
@@ -97,10 +98,10 @@ class GoodsPage extends Vue {
   goodsCategoryEditDialogOpen = false;
   editDialogCategoryId: number | null = null;
   deleteDialogOpen = false;
-  deleteDialogTarget: { isCombination: boolean, id: number } | null = null;
+  deleteDialogTarget: { isCombination: boolean; id: number } | null = null;
 
   get isBoothClosed(): boolean {
-    return useAdminStore().currentBooth.booth!.status.status === BoothStatus.CLOSE;
+    return useAdminStore().currentBooth.booth?.status.status === BoothStatus.CLOSE;
   }
 
   get goodsList(): Array<Goods | GoodsCombination> {
@@ -110,57 +111,70 @@ class GoodsPage extends Vue {
     ];
   }
 
-  get goodsCategoryList(): Array<IGoodsCategory> {
+  get goodsCategoryList(): IGoodsCategory[] {
     return Object.values(useAdminStore().currentBooth.goodsCategories ?? {});
   }
 
-  openGoodsManageDialog(goodsId: number) {
-    if(this.isBoothClosed) return;
+  openGoodsManageDialog(goodsId: number): void {
+    if(this.isBoothClosed) {
+      return;
+    }
 
     this.manageDialogGoodsId = goodsId;
     this.goodsManageDialogDuplicateMode = false;
     this.goodsManageDialogOpen = true;
   }
 
-  openGoodsCombinationManageDialog(combinationId: number) {
-    if(this.isBoothClosed) return;
+  openGoodsCombinationManageDialog(combinationId: number): void {
+    if(this.isBoothClosed) {
+      return;
+    }
 
     this.manageDialogCombinationId = combinationId;
     this.goodsCombinationManageDialogDuplicateMode = false;
     this.goodsCombinationManageDialogOpen = true;
   }
 
-  openGoodsCategoryEditDialog(categoryId: number) {
-    if(this.isBoothClosed) return;
-    if(categoryId < 0) return;
+  openGoodsCategoryEditDialog(categoryId: number): void {
+    if(this.isBoothClosed || categoryId < 0) {
+      return;
+    }
 
     this.editDialogCategoryId = categoryId;
     this.goodsCategoryEditDialogOpen = true;
   }
 
-  openGoodsCreateDialogWithDuplication(targetGoodsId: number) {
-    if(this.isBoothClosed) return;
+  openGoodsCreateDialogWithDuplication(targetGoodsId: number): void {
+    if(this.isBoothClosed) {
+      return;
+    }
 
     this.openGoodsManageDialog(targetGoodsId);
     this.goodsManageDialogDuplicateMode = true;
   }
 
-  openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number) {
-    if(this.isBoothClosed) return;
+  openGoodsCombinationCreateDialogWithDuplication(targetCombinationId: number): void {
+    if(this.isBoothClosed) {
+      return;
+    }
 
     this.openGoodsCombinationManageDialog(targetCombinationId);
     this.goodsCombinationManageDialogDuplicateMode = true;
   }
 
-  openDeleteDialog(isCombination: boolean, id: number) {
-    if(this.isBoothClosed) return;
+  openDeleteDialog(isCombination: boolean, id: number): void {
+    if(this.isBoothClosed) {
+      return;
+    }
 
     this.deleteDialogTarget = { isCombination, id };
     this.deleteDialogOpen = true;
   }
 
-  async confirmDelete(target: typeof this.deleteDialogTarget) {
-    if(!target) return;
+  async confirmDelete(target: typeof this.deleteDialogTarget): Promise<void> {
+    if(!target) {
+      return;
+    }
 
     let response: true | ErrorCodes;
 

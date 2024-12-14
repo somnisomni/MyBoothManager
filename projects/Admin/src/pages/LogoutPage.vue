@@ -6,20 +6,20 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
+import AdminAPI from "@/lib/api-admin";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
-import AdminAPI from "@/lib/api-admin";
 
 @Component({})
 export default class LogoutPage extends Vue {
-  async mounted() {
+  async mounted(): Promise<void> {
     await AdminAPI.logout({ id: useAuthStore().id ?? -1 });
     useAuthStore().invalidateLoginData();
 
     await router.replace({ name: "login", state: {
       logout: true,
       authTokenInvalid: window.history.state.authTokenInvalid,
-    }});
+    } });
   }
 }
 </script>

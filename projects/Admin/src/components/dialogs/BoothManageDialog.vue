@@ -9,26 +9,26 @@
                 dialogCancelText="취소"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogPrimaryText="dynString.primaryText"
-                @primary="onDialogConfirm"
-                @secondary="form?.reset"
-                @cancel="onDialogCancel"
                 :disableSecondary="!isFormEdited"
                 :disablePrimary="!isFormEdited || !isFormValid"
-                :closeOnCancel="false">
+                :closeOnCancel="false"
+                @primary="onDialogConfirm"
+                @secondary="form?.reset"
+                @cancel="onDialogCancel">
     <VLayout class="d-flex flex-column flex-md-row">
       <div class="d-flex flex-column">
         <!-- Fair selection -->
         <VAutocomplete v-model.number="formModels.fairId"
-                 :items="normalizedFairList"
-                 item-title="name"
-                 item-value="id"
-                 label="행사"
-                 hint="부스 생성 시에만 지정 가능하며, 이후에는 변경할 수 없습니다."
-                 persistent-hint
-                 :loading="isFairListLoading"
-                 :disabled="isFairListLoading || editMode"
-                 @update:modelValue="formModels.datesOpenInFair.splice(0, formModels.datesOpenInFair.length)">
-          <template v-slot:item="{ props, item }">
+                       :items="normalizedFairList"
+                       itemTitle="name"
+                       itemValue="id"
+                       label="행사"
+                       hint="부스 생성 시에만 지정 가능하며, 이후에는 변경할 수 없습니다."
+                       persistentHint
+                       :loading="isFairListLoading"
+                       :disabled="isFairListLoading || editMode"
+                       @update:modelValue="formModels.datesOpenInFair.splice(0, formModels.datesOpenInFair.length)">
+          <template #item="{ props, item }">
             <VListItem v-bind="props">
               <VListItemSubtitle class="text-subtitle-2"
                                  style="font-size: 0.75em !important">
@@ -39,10 +39,10 @@
         </VAutocomplete>
 
         <!-- Form -->
-        <CommonForm v-model="isFormValid"
+        <CommonForm ref="form"
+                    v-model="isFormValid"
                     v-model:edited="isFormEdited"
                     v-model:data="formModels"
-                    ref="form"
                     class="flex-1-1"
                     :fields="formFields"
                     :disabled="updateInProgress" />
@@ -55,31 +55,35 @@
 </template>
 
 <script lang="ts">
-import { reactive, ref , computed } from "vue";
-import { Vue, Component, Model, Watch, Prop, Ref, Setup, toNative } from "vue-facing-decorator";
-import { CURRENCY_INFO, ErrorCodes, toDateRangeString, type IBoothCreateRequest, type IBoothCreateWithFairRequest, type IBoothUpdateRequest, type IFairResponse } from "@myboothmanager/common";
+import type { FormFieldOptions } from "../common/CommonForm.vue";
+import type { ErrorCodes, IBooth, IBoothCreateRequest, IBoothCreateWithFairRequest, IBoothUpdateRequest, IFairResponse } from "@myboothmanager/common";
+import { CURRENCY_INFO, toDateRangeString } from "@myboothmanager/common";
+import deepClone from "clone-deep";
 import moment from "moment";
 import { defineStore } from "pinia";
-import deepClone from "clone-deep";
+import { reactive, ref, computed } from "vue";
+import { Vue, Component, Model, Watch, Prop, Ref, Setup, toNative } from "vue-facing-decorator";
+import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { useLocalStore } from "@/plugins/stores/local";
-import AdminAPI from "@/lib/api-admin";
-import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 interface IBoothCreateRequestInternal extends Omit<IBoothCreateRequest, "dateOpen" | "dateClose">, Omit<IBoothCreateWithFairRequest, "datesOpenInFair"> {
-  dateOpen?: string,
-  dateClose?: string,
-  datesOpenInFair: Array<string>,
+  dateOpen?: string;
+  dateClose?: string;
+  datesOpenInFair: string[];
 }
 
-const momentFormat = (date: Date) => moment(date).format("YYYY-MM-DD");
+function momentFormat(date: Date): string {
+  return moment(date).format("YYYY-MM-DD");
+}
 
 const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
   const _fairId = ref<number | null>(null);
-  const availableFairList = ref<Array<IFairResponse>>([]);
-  const isCurrentBoothFairPassed = computed(() => useAdminStore().currentBooth.booth?.fair && (availableFairList.value.findIndex((fair) => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0));
+  const availableFairList = ref<IFairResponse[]>([]);
+  const isCurrentBoothFairPassed = computed(() => useAdminStore().currentBooth.booth?.fair && (availableFairList.value.findIndex(fair => fair.id === useAdminStore().currentBooth.booth?.fair?.id) < 0));
 
   const formModels: IBoothCreateRequestInternal = reactive({
     name: "",
@@ -95,7 +99,7 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
     get fairId() { return _fairId.value; },
     set fairId(value: number | null) {
       _fairId.value = value;
-      this.location = availableFairList.value.find((fair) => fair.id === value)?.location ?? "";
+      this.location = availableFairList.value.find(fair => fair.id === value)?.location ?? "";
     },
   });
   const editMode = ref(false);
@@ -114,7 +118,7 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
     CommonForm,
     FormDataLossWarningDialog,
   },
-  emits: ["updated", "error"],
+  emits: [ "updated", "error" ],
 })
 class BoothManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -152,10 +156,12 @@ class BoothManageDialog extends Vue {
       type: FormFieldType.SELECT,
       label: "통화 기호",
       get items() {
-        return Object.values(CURRENCY_INFO).map((info) => ({
-          name: `${info.nameLocalized[useLocalStore().settings.language ?? "ko"]} (${info.symbol})`,
-          code: info.code,
-        }));
+        return Object.values(CURRENCY_INFO).map((info) => {
+          return {
+            name: `${info.nameLocalized[useLocalStore().settings.language ?? "ko"]} (${info.symbol})`,
+            code: info.code,
+          };
+        });
       },
       itemTitle: "name",
       itemValue: "code",
@@ -182,7 +188,7 @@ class BoothManageDialog extends Vue {
       type: FormFieldType.DATE,
       label: "운영 종료 일자",
       get min() { return useProxyStore().formModels.dateOpen; },
-      rules: [ ((v: string) => new Date(v) >= new Date(useProxyStore().formModels.dateOpen!) ? true : "운영 종료 일자는 운영 시작 일자보다 빠를 수 없습니다.") ],
+      rules: [ (v: string) => new Date(v) >= new Date(useProxyStore().formModels.dateOpen as string) ? true : "운영 종료 일자는 운영 시작 일자보다 빠를 수 없습니다." ],
       onChange: this.resetValidationProxy,
       get hide() { return useProxyStore().formModels.fairId; },
     },
@@ -192,11 +198,13 @@ class BoothManageDialog extends Vue {
       type: FormFieldType.SELECT,
       label: "운영 일자",
       get items() {
-        const targetFair = useProxyStore().availableFairList.find((fair) => fair.id === useProxyStore().formModels.fairId);
-        return targetFair?.openingDates.map((date) => ({
-          title: new Date(date).toLocaleDateString(),
-          value: momentFormat(date),
-        }));
+        const targetFair = useProxyStore().availableFairList.find(fair => fair.id === useProxyStore().formModels.fairId);
+        return targetFair?.openingDates.map((date) => {
+          return {
+            title: new Date(date).toLocaleDateString(),
+            value: momentFormat(date),
+          };
+        });
       },
       itemTitle: "title",
       itemValue: "value",
@@ -205,7 +213,8 @@ class BoothManageDialog extends Vue {
       get disabled() { return useProxyStore().editMode && useProxyStore().isCurrentBoothFairPassed; },
     },
   } as Record<keyof IBoothCreateRequestInternal, FormFieldOptions> | Record<string, FormFieldOptions>;
-  resetValidationProxy() { this.form?.resetValidation(); }
+
+  resetValidationProxy(): void { this.form?.resetValidation(); }
 
   cancelWarningDialogShown = false;
 
@@ -224,15 +233,19 @@ class BoothManageDialog extends Vue {
   get normalizedFairList(): Array<Record<string, unknown>> {
     return [
       // Placeholder fair data while loading fair list
-      ...(this.editMode && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed) ? [{
-        ...useAdminStore().currentBooth.booth?.fair,
-      }] : []),
+      ...(this.editMode && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed)
+        ? [ {
+          ...useAdminStore().currentBooth.booth?.fair,
+        } ]
+        : []),
 
       // Actual fair data fetched from API
-      ...useProxyStore().availableFairList.map((fair) => ({
-        ...fair,
-        openingDates: toDateRangeString(fair.openingDates),
-      })),
+      ...useProxyStore().availableFairList.map((fair) => {
+        return {
+          ...fair,
+          openingDates: toDateRangeString(fair.openingDates),
+        };
+      }),
 
       // Custom fair
       {
@@ -243,15 +256,19 @@ class BoothManageDialog extends Vue {
   }
 
   @Watch("open")
-  async onDialogOpen(open: boolean) {
+  async onDialogOpen(open: boolean): Promise<void> {
     useProxyStore().editMode = this.editMode;
 
-    if(!open) return;
+    if(!open) {
+      return;
+    }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) {
+      await this.$nextTick();
+    }
 
     if(this.editMode) {
-      const boothData = useAdminStore().currentBooth.booth!;
+      const boothData = useAdminStore().currentBooth.booth as IBooth;
 
       this.form.setInitialModel({
         fairId: boothData.fair?.id,
@@ -280,7 +297,10 @@ class BoothManageDialog extends Vue {
 
     if(this.isFairListLoading) {
       // No `await` here
+
+      // eslint-disable-next-line promise/catch-or-return, promise/prefer-await-to-then
       AdminAPI.fetchAvailableFairs().then((response) => {
+        // eslint-disable-next-line promise/always-return
         if(typeof response === "object") {
           useProxyStore().availableFairList = response;
         }
@@ -290,7 +310,7 @@ class BoothManageDialog extends Vue {
     }
   }
 
-  onDialogCancel() {
+  onDialogCancel(): void {
     if(this.isFormEdited) {
       this.cancelWarningDialogShown = true;
     } else {
@@ -298,16 +318,16 @@ class BoothManageDialog extends Vue {
     }
   }
 
-  async onDialogConfirm() {
+  async onDialogConfirm(): Promise<void> {
     this.updateInProgress = true;
 
-    let result: boolean | ErrorCodes = false;
+    let result: boolean | ErrorCodes;
 
     if(this.editMode) {
       // UPDATE
 
       const requestData: IBoothUpdateRequest = {
-        ...this.form!.getDiffOfModel(),
+        ...this.form?.getDiffOfModel(),
       };
 
       result = await useAdminAPIStore().updateCurrentBoothInfo(requestData as IBoothUpdateRequest);
@@ -325,7 +345,7 @@ class BoothManageDialog extends Vue {
         requestData = {
           ...requestData,
           fairId: this.formModels.fairId,
-          datesOpenInFair: this.formModels.datesOpenInFair as unknown as Array<Date>,
+          datesOpenInFair: this.formModels.datesOpenInFair as unknown as Date[],
         } as IBoothCreateWithFairRequest;
       } else {
         requestData = {

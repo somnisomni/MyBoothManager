@@ -15,7 +15,7 @@
     <!-- *** Goods / Combination image *** -->
     <VImg class="goods-item-image no-interaction"
           :src="imageUrlComputed"
-          :lazySrc="normalizedData.imageThumbnailData ?? undefined"
+          :lazySrc="normalizedData.goodsImage?.thumbnailData ?? undefined"
           cover />
     <div class="goods-item-image-overlay" />
 
@@ -68,12 +68,13 @@
           <!-- Stock -->
           <div v-if="!shouldHideStock"
                class="stock flex-1-0">
-            <span class="remaining">{{ normalizedData.stockRemaining }}</span>
+            <span v-if="normalizedData.stock.remaining"
+                  class="remaining">{{ normalizedData.stock.remaining }}</span>
 
-            <span v-if="shouldHideInitialStock"
+            <span v-if="shouldHideInitialStock || !normalizedData.stock.initial"
                   class="remaining-text">{{ stockRemainingTextString }}</span>
             <span v-else
-                  class="initial"> / {{ normalizedData.stockInitial }}</span>
+                  class="initial"> / {{ normalizedData.stock.initial }}</span>
           </div>
         </VLayout>
       </VLayout>
@@ -82,10 +83,12 @@
 </template>
 
 <script lang="ts">
+import type { Goods } from "@/entities";
+import type { IGoods } from "@myboothmanager/common";
 import { GoodsStockVisibility } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { Goods, GoodsBase, GoodsCombination } from "@/entities";
+import { GoodsBase, GoodsCombination } from "@/entities";
 import { isDisplayXXS } from "@/plugins/vuetify";
 
 export interface GoodsItemProps {
@@ -168,24 +171,21 @@ export class GoodsItem extends Vue implements GoodsItemProps {
   /**
    * Returns the normalized data for the goods or combination data.
    */
-  get normalizedData() {
+  get normalizedData(): IGoods {
     return {
-      id: this.goodsData.id,
-      name: this.goodsData.name,
-      description: this.goodsData.description,
-      price: this.goodsData.price,
-      stockInitial: this.goodsData.stock.initial,
-      stockRemaining: this.goodsData.stock.remaining,
-      stockVisibility: this.forceStockVisibility ?? this.goodsData.stock.visibility,
-      imagePath: this.goodsData.goodsImage?.path,
-      imageThumbnailData: this.goodsData.goodsImage?.thumbnailData,
+      ...this.goodsData.toPlainObject(),
+      stock: {
+        initial: this.goodsData.stock.initial,
+        remaining: this.goodsData.stock.remaining,
+        visibility: this.forceStockVisibility ?? this.goodsData.stock.visibility,
+      },
     };
   }
 
   /**
    * Returns the price string of the goods.
    */
-  get priceString() {
+  get priceString(): string {
     if(this.normalizedData.price === 0) {
       if((this.goodsData as Goods).combinationId) {
         return "세트에 포함";
@@ -200,7 +200,7 @@ export class GoodsItem extends Vue implements GoodsItemProps {
   /**
    * Returns the stock remaining text string.
    */
-  get stockRemainingTextString() {
+  get stockRemainingTextString(): string {
     if(this.isCombination) {
       return "세트 가능";
     } else {
@@ -219,21 +219,21 @@ export class GoodsItem extends Vue implements GoodsItemProps {
    * Returns the resolved representative image URL of the goods or combination.
    */
   get imageUrlComputed(): string {
-    return this.$imageUrlResolver(this.normalizedData.imagePath) ?? ""; /* TODO: default image */
+    return this.$imageUrlResolver(this.normalizedData.goodsImage?.path) ?? ""; /* TODO: default image */
   }
 
   /**
    * Returns whether the stock details should be hidden or not.
    */
   get shouldHideStock(): boolean {
-    return this.normalizedData.stockVisibility === GoodsStockVisibility.HIDE_ALL;
+    return this.normalizedData.stock.visibility === GoodsStockVisibility.HIDE_ALL;
   }
 
   /**
    * Returns whether the initial stock information should be hidden or not.
    */
   get shouldHideInitialStock(): boolean {
-    return this.normalizedData.stockVisibility !== GoodsStockVisibility.SHOW_ALL;
+    return this.normalizedData.stock.visibility !== GoodsStockVisibility.SHOW_ALL;
   }
 
   /**

@@ -2,7 +2,7 @@
 
 // NOTE: Admin-only interfaces (goods order is admin-only feature)
 
-import { MutualExclusive } from "..";
+import type { MutualExclusive } from "..";
 
 /* === Common === */
 interface IGoodsOrderCommon {

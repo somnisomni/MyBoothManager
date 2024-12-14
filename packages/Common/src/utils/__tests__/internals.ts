@@ -1,5 +1,7 @@
-import { BoothStatus, IBoothAdmin } from "../../interfaces/booth";
-import { deleteSequelizeInternalKeys, WithSequelizeInternals } from "../internals";
+import type { IBoothAdmin } from "../../interfaces/booth";
+import type { WithSequelizeInternals } from "../internals";
+import { BoothStatus } from "../../interfaces/booth";
+import { deleteSequelizeInternalKeys } from "../internals";
 
 const testBooth: IBoothAdmin = {
   id: 1234,

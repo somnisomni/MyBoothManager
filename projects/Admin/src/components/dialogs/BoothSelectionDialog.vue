@@ -10,15 +10,18 @@
                 dialogTitle="관리할 부스 선택">
     <VSheet v-for="booth in boothList.value"
             :key="booth.id"
-            class="booth-item no-selection-all"
-            :class="{ 'current no-interaction-all': booth.id === currentBoothId}"
-            min-height="120px"
             ref="boothItems"
             v-ripple
+            class="booth-item no-selection-all"
+            :class="{ 'current no-interaction-all': booth.id === currentBoothId}"
+            minHeight="120px"
             @click.stop="async () => await onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
-        <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
-        <div class="booth-item-image-overlay"></div>
+        <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path, booth.id)"
+              cover
+              aspectRatio="4/1"
+              class="booth-item-image" />
+        <div class="booth-item-image-overlay" />
       </div>
 
       <VLayout class="booth-item-info w-100 h-100 pa-3 d-flex flex-row align-end justify-start">
@@ -29,7 +32,10 @@
         <div class="flex-shrink-0">{{ getBoothStatusString(booth.status.status) }}</div>
       </VLayout>
 
-      <div v-if="booth.id === currentBoothId" class="booth-item-current-indicator bg-primary text-body-2">현재 관리 중인 부스</div>
+      <div v-if="booth.id === currentBoothId"
+           class="booth-item-current-indicator bg-primary text-body-2">
+        <span>현재 관리 중인 부스</span>
+      </div>
     </VSheet>
 
     <BoothManageDialog v-model="boothAddDialogShown"
@@ -38,14 +44,15 @@
 </template>
 
 <script lang="ts">
+import type { IBooth } from "@myboothmanager/common";
+import type { Ref as VueRef } from "vue";
+import { ref } from "vue";
 import { Vue, Component, Model, Watch } from "vue-facing-decorator";
-import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
-import { ref, type Ref as VueRef } from "vue";
-import { useAdminStore } from "@/plugins/stores/admin";
-import { getUploadFileUrl } from "@/lib/functions";
-import { useAdminAPIStore } from "@/plugins/stores/api";
 import { getBoothStatusString } from "@/lib/enum-to-string";
+import { getUploadFileUrl } from "@/lib/functions";
+import { useAdminStore } from "@/plugins/stores/admin";
+import { useAdminAPIStore } from "@/plugins/stores/api";
 import BoothManageDialog from "./BoothManageDialog.vue";
 
 @Component({
@@ -58,7 +65,7 @@ export default class BoothSelectionDialog extends Vue {
 
   @Model({ type: Boolean, default: false }) open!: boolean;
 
-  boothList: VueRef<Array<IBooth>> = ref([]);
+  boothList: VueRef<IBooth[]> = ref([]);
   boothListFetching = false;
   boothAddDialogShown = false;
   titleButtons/* : CommonDialogButtonParams[] */ = [
@@ -81,7 +88,7 @@ export default class BoothSelectionDialog extends Vue {
   @Watch("open", { immediate: true })
   @Watch("boothItems", { immediate: true })
   onDialogOpen(value: boolean) {
-    if(value) this.refreshBoothList();
+    if(value) { this.refreshBoothList(); }
   }
 
   getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
@@ -96,7 +103,7 @@ export default class BoothSelectionDialog extends Vue {
     this.boothListFetching = true;
 
     const response = await useAdminAPIStore().fetchAllBoothsOfCurrentAccount();
-    if(response instanceof Array) this.boothList.value = response;
+    if(response instanceof Array) { this.boothList.value = response; }
 
     this.boothListFetching = false;
   }
