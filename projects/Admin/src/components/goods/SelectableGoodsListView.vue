@@ -2,8 +2,8 @@
   <div>
     <VRow class="ma-0 justify-start">
       <GoodsItemSelectable v-for="goods in goodsList"
-                           v-model="selectedGoods[goods.id]"
                            :key="goods.id"
+                           v-model="selectedGoods[goods.id]"
                            :goodsData="goods"
                            :disabled="goodsDisabledIdList.includes(goods.id)"
                            disabledReason="이미 다른 세트에 포함됨" />
@@ -24,22 +24,24 @@ import GoodsItemSelectable from "./GoodsItemSelectable.vue";
 export default class SelectableGoodsListView extends Vue {
   @Model({ type: Array, default: [] }) declare selectedGoodsIds: number[];
   @Prop({ type: Array, required: true }) declare readonly goodsList: Goods[];
-  @Prop({ type: Array,  default: [] }) declare readonly goodsDisabledIdList: number[];
+  @Prop({ type: Array, default: [] }) declare readonly goodsDisabledIdList: number[];
 
   selectedGoods: Record<number, boolean> = {};
 
-  mounted() {
+  mounted(): void {
     this.selectedGoodsIds.forEach((id) => {
       this.selectedGoods[id] = true;
     });
   }
 
   @Watch("selectedGoods", { deep: true })
-  onSelectedGoodsChange() {
+  onSelectedGoodsChange(): void {
     const temp: number[] = [];
 
-    Object.entries(this.selectedGoods).forEach(([id, hasSelected]) => {
-      if(hasSelected) temp.push(Number(id));
+    Object.entries(this.selectedGoods).forEach(([ id, hasSelected ]) => {
+      if(hasSelected) {
+        temp.push(Number(id));
+      }
     });
 
     this.selectedGoodsIds.splice(0, this.selectedGoodsIds.length, ...temp);

@@ -9,24 +9,25 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
+                :disableSecondary="!isFormEdited"
+                :disablePrimary="!isFormEdited || !isFormValid"
+                :closeOnCancel="false"
                 @primary="onDialogConfirm"
                 @secondary="form?.reset"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
-                @cancel="onDialogCancel"
-                :disableSecondary="!isFormEdited"
-                :disablePrimary="!isFormEdited || !isFormValid"
-                :closeOnCancel="false">
+                @cancel="onDialogCancel">
     <VLayout class="d-flex flex-column flex-md-row">
-      <CommonForm v-model="isFormValid"
+      <CommonForm ref="form"
+                  v-model="isFormValid"
                   v-model:edited="isFormEdited"
                   v-model:data="formModels"
-                  ref="form"
                   class="flex-1-1"
                   :fields="formFields"
                   :disabled="updateInProgress" />
     </VLayout>
 
-    <VAlert v-if="typeof updateErrorCode === 'number'" type="error">
+    <VAlert v-if="typeof updateErrorCode === 'number'"
+            type="error">
       <span v-if="updateErrorCode === ErrorCodes.ENTITY_DUPLICATED">같은 이름의 카테고리가 이미 존재합니다.</span>
       <span v-else>오류가 발생했습니다. ({{ updateErrorCode }})</span>
     </VAlert>
@@ -34,17 +35,19 @@
 
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @primary="() => { open = false; }" />
-  <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                             @primary="onDeleteConfirm" />
+  <ItemDeleteWarningDialog v-model="deleteWarningDialogShown"
+                           @primary="onDeleteConfirm" />
 </template>
 
 <script lang="ts">
-import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
+import type { FormFieldOptions } from "../common/CommonForm.vue";
+import type { IGoodsCategoryCreateRequest, IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
+import { ErrorCodes } from "@myboothmanager/common";
 import { reactive } from "vue";
 import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
@@ -54,7 +57,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
-  emits: ["error", "updated", "deleted"],
+  emits: [ "error", "updated", "deleted" ],
 })
 export default class GoodsCategoryManageDialog extends Vue {
   readonly ErrorCodes = ErrorCodes;
@@ -97,9 +100,9 @@ export default class GoodsCategoryManageDialog extends Vue {
 
   @Watch("open")
   async onDialogOpen(open: boolean) {
-    if(!open) return;
+    if(!open) { return; }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) { await this.$nextTick(); }
 
     this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
 

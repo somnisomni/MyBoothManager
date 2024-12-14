@@ -1,20 +1,22 @@
 <template>
-  <VForm v-model="isValid" ref="form" @submit="onFormSubmit">
+  <VForm ref="form"
+         v-model="isValid"
+         @submit="onFormSubmit">
     <!-- Manual slot (prepend) -->
-    <slot name="prepend"></slot>
+    <slot name="prepend" />
 
     <div v-for="(field, fieldName, index) in fields"
          :key="field.label"
          class="d-flex flex-row flex-nowrap justify-center align-center">
-      <component v-if="isFormField(field.type)"
+      <component :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+                 v-if="isFormField(field.type)"
                  v-show="!field.hide"
                  v-model.trim.lazy="models[fieldName]"
-                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
-                 :tabindex="index + 1    /* tabindex should be started with 1 */"
+                 :tabindex="index + 1 /* tabindex should be started with 1 */"
                  :type="isNumericField(field.type) ? 'number' : field.type"
                  :label="`${field.label}` + (field.optional ? '' : ' *')"
                  :hint="field.hint"
-                 :persistent-hint="field.persistentHint"
+                 :persistentHint="field.persistentHint"
                  :placeholder="field.placeholder"
                  :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
                  :style="field.style"
@@ -23,40 +25,40 @@
                  :suffix="field.suffix"
                  :min="
                    ((isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)?.toString())
-                   || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
+                     || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
                  :max="
                    ((isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)?.toString())
-                   || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
+                     || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
-                 :control-variant="isNumericField(field.type) ? 'stacked' : undefined"
+                 :controlVariant="isNumericField(field.type) ? 'stacked' : undefined"
                  :rows="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).rows : undefined"
-                 :auto-grow="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).autoGrow : undefined"
+                 :autoGrow="field.type === FormFieldType.TEXTAREA ? (field as IFormFieldTextareaOptions).autoGrow : undefined"
                  :clearable="field.optional"
                  :disabled="field.hide || field.disabled"
                  :multiple="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).multiple : undefined"
                  :items="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).items : undefined"
-                 :item-title="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemTitle : undefined"
-                 :item-value="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemValue : undefined"
+                 :itemTitle="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemTitle : undefined"
+                 :itemValue="field.type === FormFieldType.SELECT ? (field as IFormFieldSelectOptions).itemValue : undefined"
                  :rules="field.hide ? [] : [
-                          ...(field.rules ?? []),
-                          ...(field.optional ? [] : RULE_MANDATORY),
-                          ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
+                   ...(field.rules ?? []),
+                   ...(field.optional ? [] : RULE_MANDATORY),
+                   ...((!isNumericField(field.type) || (field as IFormFieldNumericOptions).allowNegative) ? [] : RULE_NUMBER_PROHIBIT_NEGATIVE)]"
                  @change="() => {
-                            if(field.onChange) field.onChange(String(models[fieldName]));
-                            if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldName, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldName));
-                          }"
+                   if(field.onChange) field.onChange(String(models[fieldName]));
+                   if(isNumericField(field.type)) ((field as IFormFieldNumericOptions).allowDecimal ? normalizeDecimalNumberField(fieldName, (field as IFormFieldNumericOptions).decimalDigits) : normalizeIntegerNumberField(fieldName));
+                 }"
                  @update:modelValue="() => {
-                                       if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
-                                     }" />
-      <component v-else
-                 :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+                   if(field.type === FormFieldType.SELECT && (field as IFormFieldSelectOptions).onSelectionChange) (field as IFormFieldSelectOptions).onSelectionChange!();
+                 }" />
+      <component :is="FORM_FIELD_TYPE_COMPONENT_MAP[field.type]"
+                 v-else
                  :class="[ 'my-1', 'flex-1-1', ...(field.class ? [field.class].flat() : [])]"
                  :style="field.style"
                  :size="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).size : undefined"
                  :color="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).color : undefined"
                  :variant="field.type === FormFieldType.BUTTON ? ((field as IFormButtonFieldOptions).variant ?? 'flat') : undefined"
-                 :prepend-icon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).prependIcon : undefined"
-                 :append-icon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).appendIcon : undefined"
+                 :prependIcon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).prependIcon : undefined"
+                 :appendIcon="field.type === FormFieldType.BUTTON ? (field as IFormButtonFieldOptions).appendIcon : undefined"
                  @click="(field as IFormOtherFieldOptions).onClick">
         {{ (field as IFormOtherFieldOptions).content }}
       </component>
@@ -68,27 +70,31 @@
             :title="button.title"
             :variant="button.variant ?? 'flat'"
             @click="button.onClick">
-        <VTooltip activator="parent" location="bottom">{{ button.title }}</VTooltip>
+        <VTooltip activator="parent"
+                  location="bottom">
+          {{ button.title }}
+        </VTooltip>
         <VIcon>{{ button.icon }}</VIcon>
       </VBtn>
     </div>
 
     <!-- Manual slot -->
-    <slot></slot>
+    <slot />
   </VForm>
 </template>
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
-import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
-import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField } from "vuetify/components";
-import { VNumberInput } from "vuetify/labs/VNumberInput";
-import deepEqual from "fast-deep-equal";
+import type { Component as VueComponent } from "vue";
+import type { VForm } from "vuetify/components";
 import deepClone from "clone-deep";
 import { diff } from "deep-object-diff";
-import { toValue } from "vue";
+import deepEqual from "fast-deep-equal";
+import { markRaw, toRaw, readonly, toValue } from "vue";
+import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
+import { VBtn, VCheckbox, VSelect, VTextarea, VTextField } from "vuetify/components";
+import { VNumberInput } from "vuetify/labs/VNumberInput";
 import { useAdminStore } from "@/plugins/stores/admin";
 
 export enum FormFieldType {
@@ -151,10 +157,10 @@ export interface IFormFieldOptions {
 
   // Validation
   optional?: boolean;
-  rules?: (true | string | ((value: any) => true | string))[];
+  rules?: Array<true | string | ((value: any) => true | string)>;
 
   // Additional buttons
-  additionalButtons?: Array<IFormFieldAdditionalButtonOptions>;
+  additionalButtons?: IFormFieldAdditionalButtonOptions[];
 
   // Event
   onChange?(newValue: string): void;
@@ -214,36 +220,36 @@ export interface IFormButtonFieldOptions extends IFormOtherFieldOptions {
 }
 
 export type FormFieldOptions = IFormFieldOptions
-                               | ({ type: FormFieldType.NUMBER } & IFormFieldNumericOptions)
-                               | ({ type: FormFieldType.CURRENCY } & IFormFieldCurrencyOptions)
-                               | ({ type: FormFieldType.TEXTAREA } & IFormFieldTextareaOptions)
-                               | ({ type: FormFieldType.SELECT } & IFormFieldSelectOptions)
-                               | ({ type: FormFieldType.DATE } & IFormFieldDateOptions)
-                               | ({ type: FormFieldType.HEADING } & IFormOtherFieldOptions)
-                               | ({ type: FormFieldType.PARAGRAPH } & IFormOtherFieldOptions)
-                               | ({ type: FormFieldType.BUTTON } & IFormButtonFieldOptions);
+  | ({ type: FormFieldType.NUMBER } & IFormFieldNumericOptions)
+  | ({ type: FormFieldType.CURRENCY } & IFormFieldCurrencyOptions)
+  | ({ type: FormFieldType.TEXTAREA } & IFormFieldTextareaOptions)
+  | ({ type: FormFieldType.SELECT } & IFormFieldSelectOptions)
+  | ({ type: FormFieldType.DATE } & IFormFieldDateOptions)
+  | ({ type: FormFieldType.HEADING } & IFormOtherFieldOptions)
+  | ({ type: FormFieldType.PARAGRAPH } & IFormOtherFieldOptions)
+  | ({ type: FormFieldType.BUTTON } & IFormButtonFieldOptions);
 
 @Component({
-  emits: ["submit"],
+  emits: [ "submit" ],
 })
 export class CommonForm extends Vue {
   readonly FormFieldType = FormFieldType;
   readonly FORM_FIELD_TYPE_COMPONENT_MAP = FORM_FIELD_TYPE_COMPONENT_MAP;
 
-  @Model({ type: Boolean, default: false }) isValid!: boolean;
-  @Model({ name: "edited", type: Boolean, default: false }) isEdited!: boolean;
-  @Model({ name: "data", type: Object, default: {}, required: true }) models!: Record<string, any>;
-  @Prop({ type: Object, default: {}, required: true }) readonly fields!: Readonly<Record<string, FormFieldOptions>>;
+  @Model({ type: Boolean, default: false }) declare isValid: boolean;
+  @Model({ name: "edited", type: Boolean, default: false }) declare isEdited: boolean;
+  @Model({ name: "data", type: Object, default: {}, required: true }) declare models: Record<string, any>;
+  @Prop({ type: Object, default: {}, required: true }) declare readonly fields: Readonly<Record<string, FormFieldOptions>>;
 
   @Ref("form") readonly form!: VForm;
 
   private _initialModels: Readonly<Record<string, any>> = readonly({ } as const);
-  public  get initialModels() { return toRaw(this._initialModels); }
+  public get initialModels(): Record<string, any> { return toRaw(this._initialModels); }
   private set initialModels(value: Record<string, any>) { this._initialModels = readonly(deepClone(toValue(value))); }
 
   /* Model value update */
   @Watch("models", { deep: true, immediate: true })
-  onModelDataUpdate() {
+  onModelDataUpdate(): void {
     this.isEdited = !deepEqual(toRaw(this.models), toRaw(this.initialModels));
   }
 
@@ -267,14 +273,15 @@ export class CommonForm extends Vue {
   }
 
   /* Common rules */
-  readonly RULE_MANDATORY = [(v: any) => (
+  readonly RULE_MANDATORY = [ (v: any) => (
     ((typeof v === "string" && v.trim().length > 0)
       || (typeof v === "number" && Number.isFinite(v))
       || (v instanceof Array && v.length > 0))
-      && v !== undefined
-      && v !== null)
-    || "필수로 입력해야 하는 항목입니다."];
-  readonly RULE_NUMBER_PROHIBIT_NEGATIVE = [(v: number) => v >= 0 || "음수는 입력할 수 없습니다."];
+    && v !== undefined
+    && v !== null)
+  || "필수로 입력해야 하는 항목입니다." ];
+
+  readonly RULE_NUMBER_PROHIBIT_NEGATIVE = [ (v: number) => v >= 0 || "음수는 입력할 수 없습니다." ];
 
   /* Common getters */
   get currentBoothCurrencySymbol(): string {
@@ -287,7 +294,7 @@ export class CommonForm extends Vue {
 
   /* Form utility functions */
   // FORM
-  public reset() {
+  public reset(): void {
     for(const key in this.initialModels) {
       this.models[key] = deepClone(this.initialModels[key]);
     }
@@ -296,7 +303,7 @@ export class CommonForm extends Vue {
     this.onModelDataUpdate();
   }
 
-  public resetValidation() {
+  public resetValidation(): void {
     if(this.form) {
       this.form.resetValidation();
       this.form.validate();
@@ -319,12 +326,12 @@ export class CommonForm extends Vue {
     return fieldType === FormFieldType.NUMBER || fieldType === FormFieldType.CURRENCY;
   }
 
-  normalizeIntegerNumberField(fieldName: string) {
+  normalizeIntegerNumberField(fieldName: string): void {
     const value = Math.floor(new Number(this.models[fieldName]).valueOf());
     this.models[fieldName] = value ? value : 0;
   }
 
-  normalizeDecimalNumberField(fieldName: string, decimalDigits: number = 3) {
+  normalizeDecimalNumberField(fieldName: string, decimalDigits: number = 3): void {
     const value = new Number(new Number(this.models[fieldName]).toFixed(decimalDigits ?? 3)).valueOf();
     this.models[fieldName] = value ? value : 0;
   }

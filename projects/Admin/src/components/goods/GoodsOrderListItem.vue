@@ -3,7 +3,8 @@
           class="order-item d-flex flex-row align-center border-md w-100"
           :class="{ 'border-s-0': !smAndUp, 'border-e-0': !smAndUp, 'canceled': orderData.status === GoodsOrderStatus.CANCELED }"
           @click.stop="onItemClick">
-    <div v-if="smAndUp" class="status-area position-relative overflow-hidden">
+    <div v-if="smAndUp"
+         class="status-area position-relative overflow-hidden">
       <VIcon class="icon position-absolute"
              :class="statusIcon.class"
              :icon="statusIcon.icon"
@@ -11,14 +12,19 @@
     </div>
 
     <div class="flex-grow-1 pa-2 border-s-sm">
-      <div class="mb-2 text-h6 text-sm-h5" style="line-height: 1em;">
+      <div class="mb-2 text-h6 text-sm-h5"
+           style="line-height: 1em;">
         <VIcon v-if="!smAndUp"
                :icon="statusIcon.icon"
                :color="statusIcon.color"
                class="mr-2" />
         <span v-if="orderData.createdAt"><strong>{{ createdTimeHourMinuteString }}<small>{{ createdTimeSecondsString }}</small></strong> <small class="d-inline-block ml-2">{{ createdDateString }}</small></span>
       </div>
-      <div class="d-flex flex-row align-center text-sm-h6" :class="[`text-${statusIcon.textColor}`]"><VIcon class="mr-2" :icon="paymentMethodIcon" /> <strong>{{ totalRevenueFormatted }}</strong></div>
+      <div class="d-flex flex-row align-center text-sm-h6"
+           :class="[`text-${statusIcon.textColor}`]">
+        <VIcon class="mr-2"
+               :icon="paymentMethodIcon" /> <strong>{{ totalRevenueFormatted }}</strong>
+      </div>
       <div class="text-subtitle-2 text-sm-body-1">
         <span v-if="totalCombinationItemCount > 0">세트 <strong>{{ totalCombinationItemCount.toLocaleString() }}종</strong> / </span>
         <span>굿즈 <strong>{{ totalGoodsItemCount.toLocaleString() }}종</strong> / </span>
@@ -28,20 +34,21 @@
 
     <div class="d-flex align-center px-2">
       <span class="mr-1 text-disabled text-subtitle-2">#{{ orderData.id }}</span>
-      <VIcon>mdi-chevron-right</VIcon>
+      <VIcon icon="mdi-chevron-right" />
     </div>
   </VSheet>
 </template>
 
 <script lang="ts">
-import { GoodsOrderPaymentMethod, GoodsOrderStatus, type IGoodsOrder } from "@myboothmanager/common";
+import type { IGoodsOrder } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { useAdminStore } from "@/plugins/stores/admin";
 import { getPaymentMethodIcon } from "@/lib/enum-to-string";
+import { useAdminStore } from "@/plugins/stores/admin";
 
 @Component({
-  emits: ["click"],
+  emits: [ "click" ],
 })
 class GoodsOrderListItem extends Vue {
   readonly GoodsOrderStatus = GoodsOrderStatus;
@@ -54,7 +61,7 @@ class GoodsOrderListItem extends Vue {
   @Setup(() => useAdminStore().currentBoothCurrencyInfo.symbol)
   declare readonly currencySymbol: string;
 
-  get statusIcon(): { icon: string; color: string; textColor: string, class: string } {
+  get statusIcon(): { icon: string; color: string; textColor: string; class: string } {
     switch(this.orderData.status) {
       case GoodsOrderStatus.RECORDED:
         return {
@@ -84,8 +91,12 @@ class GoodsOrderListItem extends Vue {
     return getPaymentMethodIcon(this.orderData.paymentMethod ?? GoodsOrderPaymentMethod.CASH);
   }
 
-  get createdTime(): Date | undefined {
-    return new Date(this.orderData.createdAt!);
+  get createdTime(): Date | null {
+    if(!this.orderData.createdAt) {
+      return null;
+    }
+
+    return new Date(this.orderData.createdAt);
   }
 
   get createdTimeHourMinuteString(): string | undefined {
@@ -93,11 +104,15 @@ class GoodsOrderListItem extends Vue {
   }
 
   get createdTimeSecondsString(): string | undefined {
-    return ":" + this.createdTime?.toLocaleTimeString([], { second: "2-digit" }).padStart(2, "0");
+    return `:${this.createdTime?.toLocaleTimeString([], { second: "2-digit" }).padStart(2, "0")}`;
   }
 
-  get createdDateString(): string | undefined {
-    return new Date(this.orderData.createdAt!).toLocaleDateString();
+  get createdDateString(): string | null {
+    if(!this.orderData.createdAt) {
+      return null;
+    }
+
+    return new Date(this.orderData.createdAt).toLocaleDateString();
   }
 
   get totalRevenueFormatted(): string {
@@ -116,15 +131,15 @@ class GoodsOrderListItem extends Vue {
   }
 
   get totalGoodsItemCount(): number {
-    return this.orderData.order.filter((order) => order.gId).length;
+    return this.orderData.order.filter(order => order.gId).length;
   }
 
   get totalCombinationItemCount(): number {
-    return this.orderData.order.filter((order) => order.cId).length;
+    return this.orderData.order.filter(order => order.cId).length;
   }
 
   @Emit("click")
-  onItemClick() {
+  onItemClick(): IGoodsOrder {
     return this.orderData;
   }
 }

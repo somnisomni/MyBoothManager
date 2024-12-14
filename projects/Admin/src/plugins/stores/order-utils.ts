@@ -1,8 +1,10 @@
-import { defineStore } from "pinia";
-import { computed, type ComputedRef } from "vue";
-import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
-import { useAdminStore } from "./admin";
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
+import type { GoodsOrderPaymentMethod } from "@myboothmanager/common";
+import type { ComputedRef } from "vue";
+import { GoodsOrderStatus } from "@myboothmanager/common";
+import { defineStore } from "pinia";
+import { computed } from "vue";
+import { useAdminStore } from "./admin";
 import { useAdminMemberStore } from "./member-utils";
 
 type GoodsOrdersRecord = ReturnType<typeof useAdminStore>["currentBooth"]["orders"];
@@ -27,7 +29,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
   const validOrders: ComputedRef<NonNullable<GoodsOrdersRecord>>
     = computed(() => Object.fromEntries(
       Object.entries($adminStore.currentBooth.orders ?? { })
-        .filter(([, value]) => value.order.length > 0),
+        .filter(([ , value ]) => value.order.length > 0),
     ));
 
   /**
@@ -42,7 +44,7 @@ const useAdminOrderStore = defineStore("booth-order", () => {
   const validRecordedOrders: ComputedRef<NonNullable<GoodsOrdersRecord>>
     = computed(() => Object.fromEntries(
       Object.entries(validOrders.value)
-        .filter(([, value]) => value.status === GoodsOrderStatus.RECORDED),
+        .filter(([ , value ]) => value.status === GoodsOrderStatus.RECORDED),
     ));
 
   /**
@@ -79,7 +81,9 @@ const useAdminOrderStore = defineStore("booth-order", () => {
       const map = new Map<number, GoodsRevenueMapItem>();
 
       for(const goods of Object.values(validRecordedOrders.value).flatMap(order => order.order)) {
-        if(typeof goods.gId !== "number") continue;
+        if(typeof goods.gId !== "number") {
+          continue;
+        }
 
         const originalGoods: GoodsAdmin | null = ($adminStore.currentBooth.goods ?? { })[goods.gId] ?? null;
         const originalPrice = originalGoods?.price ?? 0;
@@ -89,11 +93,14 @@ const useAdminOrderStore = defineStore("booth-order", () => {
         // const calculatedPrice = (goods.price ?? originalPrice) * goods.quantity;
 
         if(map.has(goods.gId)) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const item = map.get(goods.gId)!;
+
           // Merge(Update) the existing revenue information
           map.set(goods.gId, {
-            ...map.get(goods.gId)!,
-            quantity: map.get(goods.gId)!.quantity + goods.quantity,
-            totalRevenue: map.get(goods.gId)!.totalRevenue + calculatedPrice,
+            ...item,
+            quantity: item.quantity + goods.quantity,
+            totalRevenue: item.totalRevenue + calculatedPrice,
           });
         } else {
           // Create a new revenue information
@@ -124,18 +131,23 @@ const useAdminOrderStore = defineStore("booth-order", () => {
       const map = new Map<number, GoodsRevenueMapItem>();
 
       for(const combination of Object.values(validRecordedOrders.value).flatMap(order => order.order)) {
-        if(typeof combination.cId !== "number") continue;
+        if(typeof combination.cId !== "number") {
+          continue;
+        }
 
         const originalCombination: GoodsCombinationAdmin = ($adminStore.currentBooth.goodsCombinations ?? { })[combination.cId] ?? null;
         const originalPrice = originalCombination?.price ?? 0;
         const calculatedPrice = (combination.price ?? originalPrice) * combination.quantity;
 
         if(map.has(combination.cId)) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const item = map.get(combination.cId)!;
+
           // Merge(Update) the existing revenue information
           map.set(combination.cId, {
-            ...map.get(combination.cId)!,
-            quantity: map.get(combination.cId)!.quantity + combination.quantity,
-            totalRevenue: map.get(combination.cId)!.totalRevenue + calculatedPrice,
+            ...item,
+            quantity: item.quantity + combination.quantity,
+            totalRevenue: item.totalRevenue + calculatedPrice,
           });
         } else {
           // Create a new revenue information
@@ -169,14 +181,16 @@ const useAdminOrderStore = defineStore("booth-order", () => {
         const goodsList = $memberStore.goodsMemberMap.get(member.id);
         const combinationList = $memberStore.goodsCombinationMemberMap.get(member.id);
 
-        if(!goodsList || !combinationList) continue;
+        if(!goodsList || !combinationList) {
+          continue;
+        }
 
-        const goodsRevenue = goodsList.map(id => {
+        const goodsRevenue = goodsList.map((id) => {
           const rev = goodsRevenueMap.value.get(id);
           return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
         }).reduce((prev, cur) => prev + cur, 0);
 
-        const combinationRevenue = combinationList.map(id => {
+        const combinationRevenue = combinationList.map((id) => {
           const rev = combinationRevenueMap.value.get(id);
           return rev ? rev.totalRevenue / (rev.memberLength ?? 1) : 0;
         }).reduce((prev, cur) => prev + cur, 0);
@@ -201,10 +215,15 @@ const useAdminOrderStore = defineStore("booth-order", () => {
       const map = new Map<GoodsOrderPaymentMethod, number>();
 
       for(const order of Object.values(validRecordedOrders.value)) {
-        if(!order.paymentMethod) continue;
+        if(!order.paymentMethod) {
+          continue;
+        }
 
         if(map.has(order.paymentMethod)) {
-          map.set(order.paymentMethod, map.get(order.paymentMethod)! + order.totalRevenue);
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const previous = map.get(order.paymentMethod)!;
+
+          map.set(order.paymentMethod, previous + order.totalRevenue);
         } else {
           map.set(order.paymentMethod, order.totalRevenue);
         }
@@ -218,11 +237,8 @@ const useAdminOrderStore = defineStore("booth-order", () => {
    */
   const totalMergedRevenue: ComputedRef<number>
     = computed(() =>
-      Array.from(goodsRevenueMap.value.values())
-        .reduce((prev, cur) => prev + cur.totalRevenue, 0)
-      + Array.from(combinationRevenueMap.value.values())
-        .reduce((prev, cur) => prev + cur.totalRevenue, 0));
-
+      Array.from(goodsRevenueMap.value.values()).reduce((prev, cur) => prev + cur.totalRevenue, 0)
+      + Array.from(combinationRevenueMap.value.values()).reduce((prev, cur) => prev + cur.totalRevenue, 0));
 
   return {
     validOrders,

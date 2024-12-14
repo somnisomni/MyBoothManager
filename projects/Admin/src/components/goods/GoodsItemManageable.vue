@@ -12,17 +12,23 @@
     </template>
 
     <!-- Menu options -->
-    <div v-if="menuOptions.length > 0" class="menu">
-      <VBtn class="menu-activator" color="white" variant="text" icon>
+    <div v-if="menuOptions.length > 0"
+         class="menu">
+      <VBtn class="menu-activator"
+            color="white"
+            variant="text"
+            icon>
         <VIcon icon="mdi-dots-vertical" />
 
         <VMenu activator="parent">
           <VList>
             <VListItem v-for="(option, index) in menuOptions"
-                      :key="index"
-                      :prepend-icon="option.icon"
-                      :class="option.color ? `text-${option.color}` : ''"
-                      @click="option.onClick">{{ option.text }}</VListItem>
+                       :key="index"
+                       :prependIcon="option.icon"
+                       :class="option.color ? `text-${option.color}` : ''"
+                       @click="option.onClick">
+              <span>{{ option.text }}</span>
+            </VListItem>
           </VList>
         </VMenu>
       </VBtn>
@@ -33,18 +39,18 @@
 <script lang="ts">
 import type { GoodsItem, GoodsItemProps } from "@myboothmanager/common-ui";
 import { GoodsStockVisibility } from "@myboothmanager/common";
-import { Component, Emit, Ref, Vue } from "vue-facing-decorator";
 import { markRaw } from "vue";
+import { Component, Emit, Ref, Vue } from "vue-facing-decorator";
 
 export interface IGoodsItemMenuOption {
   icon: string;
   text: string;
   color?: string;
-  onClick: () => void;
+  onClick(): void;
 }
 
 @Component({
-  emits: ["menu:edit", "menu:duplicate", "menu:delete"],
+  emits: [ "menu:edit", "menu:duplicate", "menu:delete" ],
 })
 export default class GoodsItemManageable extends Vue {
   readonly forceStockVisibility = GoodsStockVisibility.SHOW_ALL;
@@ -69,7 +75,7 @@ export default class GoodsItemManageable extends Vue {
   ]);
 
   @Ref("base")
-  readonly baseComponent!: GoodsItem;
+  declare readonly baseComponent: GoodsItem;
 
   get baseProps(): GoodsItemProps {
     return this.baseComponent.$props as GoodsItemProps;
@@ -93,7 +99,6 @@ export default class GoodsItemManageable extends Vue {
   onMenuDelete(): number {
     return this.normalizedId;
   }
-
 }
 </script>
 

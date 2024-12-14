@@ -1,19 +1,22 @@
 <template>
-  <div id="error-page" class="d-flex flex-column align-center justify-center text-center pa-4"
+  <div id="error-page"
+       class="d-flex flex-column align-center justify-center text-center pa-4"
        style="max-width: 100%;"
        @contextmenu.prevent="prevent">
     <p id="error-status-code-text">{{ error.statusCode }}</p>
     <p class="mt-2 text-subtitle-1 text-warning">
       <span v-if="error.statusCode === 404">존재하지 않는 페이지입니다.</span>
-      <span v-else>처리할 수 없는 오류가 발생했습니다. <br /> 개발자 또는 서비스 운영자에게 문의해주세요.</span>
+      <span v-else>처리할 수 없는 오류가 발생했습니다. <br> 개발자 또는 서비스 운영자에게 문의해주세요.</span>
     </p>
 
     <VBtn class="allow-pointer-events mt-4"
           size="large"
           color="primary"
           variant="outlined"
-          prepend-icon="mdi-home"
-          :to="{ path: '/' }">메인 페이지로 이동</VBtn>
+          prependIcon="mdi-home"
+          :to="{ path: '/' }">
+      메인 페이지로 이동
+    </VBtn>
   </div>
 </template>
 
@@ -26,7 +29,7 @@ export default class NotFoundErrorPage extends Vue {
   @Setup(() => useError())
   declare readonly error: NuxtError;
 
-  public mounted() {
+  mounted(): void {
     document.addEventListener("contextmenu", this.prevent);
     document.addEventListener("copy", this.prevent);
     document.addEventListener("cut", this.prevent);
@@ -40,7 +43,7 @@ export default class NotFoundErrorPage extends Vue {
     return useRuntimeConfig().app.baseURL ?? "/";
   }
 
-  prevent(event: Event) {
+  prevent(event: Event): boolean {
     event.preventDefault();
     event.stopPropagation();
     return false;

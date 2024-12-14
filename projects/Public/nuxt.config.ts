@@ -9,6 +9,7 @@ if(!commitHash) {
     commitHash = execSync("git rev-parse --short HEAD").toString().trim();
   } catch(e) {
     commitHash = "unknown";
+    console.error("Failed to get commit hash:", e);
   }
 }
 /* === */
@@ -37,7 +38,7 @@ export default defineNuxtConfig({
     },
   },
   pinia: {
-    storesDirs: ["./stores/**"],
+    storesDirs: [ "./stores/**" ],
   },
   vite: {
     vue: {
@@ -84,7 +85,7 @@ export default defineNuxtConfig({
     },
   },
   build: {
-    transpile: ["vuetify"],
+    transpile: [ "vuetify" ],
   },
   devServer: {
     port: 20002,

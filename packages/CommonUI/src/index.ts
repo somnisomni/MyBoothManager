@@ -7,7 +7,7 @@ import "@/styles/styles.scss";
 // Refer `src/components/goods/GoodsItem.vue` for workaround for this typing
 declare module "vue" {
   interface ComponentCustomProperties {
-    $imageUrlResolver: (rawPath?: string | null) => string | null;
+    $imageUrlResolver(rawPath?: string | null): string | null;
   }
 }
 
@@ -16,8 +16,8 @@ export interface ICommonUIOptions {
 }
 
 export default {
-  install(app: App, options: ICommonUIOptions) {
-    app.config.globalProperties.$imageUrlResolver = options?.imageUrlResolver ?? ((rawPath?: string | null) => rawPath);
+  install(app: App, options: ICommonUIOptions): void {
+    app.config.globalProperties.$imageUrlResolver = options?.imageUrlResolver ?? ((v?: string | null): string | null | undefined => v);
 
     app.component("BoothMemberItem", IC.BoothMemberItemComponent);
     app.component("BoothMemberAvatar", IC.BoothMemberAvatarComponent);

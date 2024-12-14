@@ -18,13 +18,15 @@ export class SuperAdminAPI extends BaseAdminAPI {
   }
 
   /* == Endpoints == */
+  /* eslint-disable @typescript-eslint/explicit-function-return-type */
+
   /* Fetch */
   static async fetchAllAccounts() {
-    return await this.apiCallWrapper<Array<CT.ISuperAdminAccountResponse>>(() => this.API.GET("account/all"));
+    return await this.apiCallWrapper<CT.ISuperAdminAccountResponse[]>(() => this.API.GET("account/all"));
   }
 
   static async fetchAllFairs() {
-    return await this.apiCallWrapper<Array<CT.ISuperAdminFairResponse>>(() => this.API.GET("fair/all"));
+    return await this.apiCallWrapper<CT.ISuperAdminFairResponse[]>(() => this.API.GET("fair/all"));
   }
 
   /* Create */
@@ -35,10 +37,11 @@ export class SuperAdminAPI extends BaseAdminAPI {
   static async createFair(payload: CT.IFairCreateRequest) {
     return await this.apiCallWrapper<CT.IFairResponse>(() => this.API.POST("fair", payload));
   }
+  /* eslint-enable @typescript-eslint/explicit-function-return-type */
 }
 
 /* *** Functions *** */
-export function momentFormat(date?: Date | string | null) {
+export function momentFormat(date?: Date | string | null): string {
   const m = moment(date);
   return m.isValid() ? m.format("YYYY-MM-DD HH:mm:ss") : "기록 없음";
 }

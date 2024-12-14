@@ -1,7 +1,8 @@
 <template>
   <div class="mt-4">
     <RouterView v-slot="{ Component }">
-      <VSlideXReverseTransition leave-absolute duration="200">
+      <VSlideXReverseTransition leaveAbsolute
+                                duration="200">
         <KeepAlive :include="keepAliveIncludeNames">
           <component :is="Component" />
         </KeepAlive>

@@ -1,4 +1,6 @@
-import { IImageUploadInfo } from "./base";
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
+import type { IImageUploadInfo } from "./base";
 
 /* === Common === */
 export interface IGoodsCommon {
@@ -9,10 +11,10 @@ export interface IGoodsCommon {
   description?: string | null;
   price: number;
   stock: IGoodsStock;
-  ownerMemberIds?: Array<number> | null;
+  ownerMemberIds?: number[] | null;
 }
 
-interface IGoodsBase extends IGoodsCommon {
+export interface IGoodsBase extends IGoodsCommon {
   combinationId?: number | null;
   type?: string | null;
 }

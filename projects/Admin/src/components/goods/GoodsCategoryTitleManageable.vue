@@ -11,7 +11,9 @@
         <h2 class="d-inline-block">{{ (categoryData as IGoodsCategory).name }}</h2>
 
         <VSlideXTransition>
-          <VIcon v-show="isHovering" class="ml-2" icon="mdi-pencil" />
+          <VIcon v-show="isHovering"
+                 class="ml-2"
+                 icon="mdi-pencil" />
         </VSlideXTransition>
       </VBtn>
     </template>
@@ -23,17 +25,17 @@ import type { IGoodsCategory } from "@myboothmanager/common";  // eslint-disable
 import { Component, Emit, Vue } from "vue-facing-decorator";
 
 @Component({
-  emits: ["click"],
+  emits: [ "click" ],
 })
 export default class GoodsCategoryTitleManageable extends Vue {
   isHovering: boolean = false;
 
-  isNonEditable(categoryId: number) {
+  isNonEditable(categoryId: number): boolean {
     return categoryId < 0;
   }
 
   @Emit("click")
-  onClick(categoryId: number) {
+  onClick(categoryId: number): number {
     return categoryId;
   }
 }

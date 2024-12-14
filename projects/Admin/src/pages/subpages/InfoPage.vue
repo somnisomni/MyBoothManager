@@ -26,10 +26,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-facing-decorator";
+import ImageWithUpload from "@/components/common/ImageWithUpload.vue";
 import BoothInfoPanel from "@/components/info/BoothInfoPanel.vue";
 import BoothMembersPanel from "@/components/info/BoothMembersPanel.vue";
 import BoothNoticePanel from "@/components/info/BoothNoticePanel.vue";
-import ImageWithUpload from "@/components/common/ImageWithUpload.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
@@ -43,27 +43,71 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
 })
 export default class InfoPage extends Vue {
   get boothBannerImagePath(): string | null {
-    return useAdminStore().currentBooth.booth!.bannerImage?.path ?? null;
+    const booth = useAdminStore().currentBooth.booth;
+
+    if(!booth) {
+      return null;
+    }
+
+    return booth.bannerImage?.path ?? null;
   }
 
   get boothInfoImagePath(): string | null {
-    return useAdminStore().currentBooth.booth!.infoImage?.path ?? null;
+    const booth = useAdminStore().currentBooth.booth;
+
+    if(!booth) {
+      return null;
+    }
+
+    return booth.infoImage?.path ?? null;
   }
 
-  async boothBannerImageUploadCallback(file: File | Blob | null) {
-    return await useAdminAPIStore().uploadBoothBannerImage(file!);
+  async boothBannerImageUploadCallback(file: File | Blob | null): Promise<boolean> {
+    if(!file) {
+      return false;
+    }
+
+    const response = await useAdminAPIStore().uploadBoothBannerImage(file);
+
+    if(typeof response === "number") {
+      return false;
+    }
+
+    return true;
   }
 
-  async boothBannerImageDeleteCallback() {
-    return await useAdminAPIStore().deleteBoothBannerImage();
+  async boothBannerImageDeleteCallback(): Promise<boolean> {
+    const response = await useAdminAPIStore().deleteBoothBannerImage();
+
+    if(typeof response === "number") {
+      return false;
+    }
+
+    return true;
   }
 
-  async boothInfoImageUploadCallback(file: File | Blob | null) {
-    return await useAdminAPIStore().uploadBoothInfoImage(file!);
+  async boothInfoImageUploadCallback(file: File | Blob | null): Promise<boolean> {
+    if(!file) {
+      return false;
+    }
+
+    const response = await useAdminAPIStore().uploadBoothInfoImage(file);
+
+    if(typeof response === "number") {
+      return false;
+    }
+
+    return true;
   }
 
-  async boothInfoImageDeleteCallback() {
-    return await useAdminAPIStore().deleteBoothInfoImage();
+  async boothInfoImageDeleteCallback(): Promise<boolean> {
+    const response = await useAdminAPIStore().deleteBoothInfoImage();
+
+    if(typeof response === "number") {
+      return false;
+    }
+
+    return true;
   }
 }
 </script>

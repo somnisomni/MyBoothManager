@@ -1,26 +1,34 @@
 <template>
-  <div class="order-drawer bg-background"
+  <div ref="orderDrawer"
+       class="order-drawer bg-background"
        :class="{ 'sm rounded-t-lg elevation-10': sm }"
-       :style="{ 'max-height': sm && !smDrawerExpanded ? '60%' : '' }"
-       ref="orderDrawer">
-    <div v-if="sm" class="sm-handle">
-      <VBtn @click.stop="smDrawerExpanded = !smDrawerExpanded"
-            variant="text"
+       :style="{ 'max-height': sm && !smDrawerExpanded ? '60%' : '' }">
+    <div v-if="sm"
+         class="sm-handle">
+      <VBtn variant="text"
             rounded="0"
             size="large"
-            class="w-100">
+            class="w-100"
+            @click.stop="smDrawerExpanded = !smDrawerExpanded">
         <VIcon v-if="smDrawerExpanded">mdi-chevron-down</VIcon>
         <VIcon v-else>mdi-chevron-up</VIcon>
       </VBtn>
     </div>
 
-    <VList v-show="!sm" nav class="flex-shrink-0">
-      <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }"
+    <VList v-show="!sm"
+           nav
+           class="flex-shrink-0">
+      <VListItem prependIcon="mdi-arrow-left"
+                 title="관리 페이지로 이동"
+                 :to="{ name: 'admin' }"
                  :density="sm ? 'compact' : 'default'" />
     </VList>
 
-    <div class="inner overflow-hidden d-flex flex-column h-100" style="min-height: 200px">
-      <VList v-show="!sm" nav class="flex-shrink-0">
+    <div class="inner overflow-hidden d-flex flex-column h-100"
+         style="min-height: 200px">
+      <VList v-show="!sm"
+             nav
+             class="flex-shrink-0">
         <VListItem class="text-center">
           <div class="appname text-grey">{{ APP_NAME }}</div>
           <div class="boothname text-darken-2">{{ currentBooth.name }}</div>
@@ -35,23 +43,29 @@
                              @click:item="onGoodsOrderItemClick"
                              @request:itemQuantityUpdate="onGoodsOrderQuantityUpdateRequest" />
 
-      <VList nav class="flex-shrink-0 pa-0 pb-2">
-        <VListItem v-show="!sm || smDrawerExpanded" class="px-2 py-1">
-          <VBtn prepend-icon="mdi-playlist-remove"
+      <VList nav
+             class="flex-shrink-0 pa-0 pb-2">
+        <VListItem v-show="!sm || smDrawerExpanded"
+                   class="px-2 py-1">
+          <VBtn prependIcon="mdi-playlist-remove"
                 class="w-100"
                 variant="text"
                 :disabled="isOrderListEmpty || orderCreationInProgress"
-                @click="showListResetConfirmDialog = true">목록 초기화</VBtn>
+                @click="showListResetConfirmDialog = true">
+            <span>목록 초기화</span>
+          </VBtn>
         </VListItem>
         <VListItem class="px-2 py-1">
           <div class="text-body-2 text-center mb-2">총 가격: <strong>{{ totalOrderWorthString }}</strong></div>
-          <VBtn prepend-icon="mdi-cart-heart"
+          <VBtn prependIcon="mdi-cart-heart"
                 color="primary"
                 size="x-large"
                 class="w-100"
                 :loading="orderCreationInProgress"
                 :disabled="isOrderListEmpty || orderCreationInProgress"
-                @click="showOrderConfirmDialog = true">판매 등록</VBtn>
+                @click="showOrderConfirmDialog = true">
+            <span>판매 등록</span>
+          </VBtn>
         </VListItem>
       </VList>
     </div>
@@ -71,9 +85,11 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, type GoodsOrderPaymentMethod, type IGoods, type IGoodsCombination, type IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import type { IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
+import type { GoodsOrderPaymentMethod, IGoods, IGoodsCombination, IGoodsOrderCreateRequest } from "@myboothmanager/common";
+import { APP_NAME } from "@myboothmanager/common";
 import { Component, Emit, Prop, Setup, toNative, Vue } from "vue-facing-decorator";
-import { type IGoodsOrderInternal, POSOrderSimulationLayer } from "@/pages/subpages/POSPage.lib";
+import { POSOrderSimulationLayer } from "@/pages/subpages/POSPage.lib";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import POSGoodsAdvancedDialog from "../dialogs/POSGoodsAdvancedDialog.vue";
@@ -136,19 +152,19 @@ class POSOrderDrawer extends Vue {
     return `${this.currencySymbol}${this.totalOrderWorth.toLocaleString()}`;
   }
 
-  mounted() {
+  mounted(): void {
     new ResizeObserver((entries) => {
       this.$emit("smDrawerHeightChanged", entries[0].contentRect.height);
     }).observe(this.$refs.orderDrawer as HTMLElement);
   }
 
-  onGoodsOrderItemClick(item: IGoodsOrderInternal & { isCombination?: true }) {
+  onGoodsOrderItemClick(item: IGoodsOrderInternal & { isCombination?: true }): void {
     this.showOrderAdvancedDialog = true;
     this.orderAdvancedDialogOrderData = item;
     this.orderAdvancedDialogOrderIsCombination = item.isCombination;
   }
 
-  onOrderItemAdvancedConfirm(eventData: { id: number, isCombination?: true, newOrderData: IGoodsOrderInternal }) {
+  onOrderItemAdvancedConfirm(eventData: { id: number; isCombination?: true; newOrderData: IGoodsOrderInternal }): void {
     const targetOrder = this.orderSimulationLayer.orderList.get(eventData.isCombination ? "combination" : "goods", eventData.id);
     Object.assign(targetOrder, {
       ...eventData.newOrderData,
@@ -162,7 +178,7 @@ class POSOrderDrawer extends Vue {
     });
   }
 
-  onOrderItemAdvancedDeleteRequest(eventData: { id: number, isCombination?: true }) {
+  onOrderItemAdvancedDeleteRequest(eventData: { id: number; isCombination?: true }): void {
     this.orderSimulationLayer.deleteSingleTarget(eventData.isCombination ? "combination" : "goods", eventData.id);
   }
 
@@ -171,11 +187,11 @@ class POSOrderDrawer extends Vue {
 
   getTargetOriginalInfo(id: number, isCombination: boolean): IGoods | IGoodsCombination {
     return isCombination
-      ? useAdminStore().currentBooth.goodsCombinations![id]
-      : useAdminStore().currentBooth.goods![id];
+      ? (useAdminStore().currentBooth.goodsCombinations ?? { })[id]
+      : (useAdminStore().currentBooth.goods ?? { })[id];
   }
 
-  async onOrderConfirm(paymentMethod: GoodsOrderPaymentMethod) {
+  async onOrderConfirm(paymentMethod: GoodsOrderPaymentMethod): Promise<void> {
     this.orderCreationInProgress = true;
     this.$emit("orderCreationStarted");
 
@@ -186,7 +202,7 @@ class POSOrderDrawer extends Vue {
       paymentMethod,
     };
 
-    for(const [, order] of this.orderSimulationLayer.orderList.entries()) {
+    for(const [ , order ] of this.orderSimulationLayer.orderList.entries()) {
       const id = order.what === "combination" ? { cId: order.id } : { gId: order.id };
 
       data.order.push({
@@ -203,7 +219,7 @@ class POSOrderDrawer extends Vue {
       await useAdminAPIStore().fetchGoodsOfCurrentBooth(),
       await useAdminAPIStore().fetchGoodsCombinationsOfCurrentBooth(),
     ];
-    if(results.every((res) => !!res)) {
+    if(results.every(res => !!res)) {
       this.$emit("orderCreationSuccess", results[0]);
 
       // If API call success, request reset the order list
@@ -217,7 +233,7 @@ class POSOrderDrawer extends Vue {
   }
 
   @Emit("goodsOrderQuantityUpdateRequest")
-  onGoodsOrderQuantityUpdateRequest(eventData: { id: number, delta: number, isCombination?: true }) {
+  onGoodsOrderQuantityUpdateRequest(eventData: { id: number; delta: number; isCombination?: true }): { id: number; delta: number; isCombination?: true } {
     return eventData;
   }
 }

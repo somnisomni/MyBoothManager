@@ -1,7 +1,7 @@
 <template>
   <VMain style="min-height: 100%">
     <div v-if="!booth || boothFetchError"
-          class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
+         class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-error">
         <VIcon class="mr-2"
                icon="mdi-alert" />
@@ -16,9 +16,11 @@
             size="large"
             color="primary"
             variant="outlined"
-            prepend-icon="mdi-home"
+            prependIcon="mdi-home"
             :to="{ path: '/' }"
-            replace>메인 페이지로 이동</VBtn>
+            replace>
+        메인 페이지로 이동
+      </VBtn>
     </div>
 
     <div v-else>
@@ -80,10 +82,11 @@
           <VSpacer class="my-8" />
         </div>
 
-        <div v-if="infoImage.url" class="w-100">
+        <div v-if="infoImage.url"
+             class="w-100">
           <ExpandableContent heading="부스 인포">
             <VImg :src="infoImage.url"
-                  :lazy-src="infoImage.thumbnail ?? undefined"
+                  :lazySrc="infoImage.thumbnail ?? undefined"
                   class="booth-info-image w-100 no-interaction rounded-lg"
                   position="top"
                   cover />
@@ -108,7 +111,10 @@
                 <GoodsItemPublic v-bind="props" />
               </template>
             </GoodsListView>
-            <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
+            <h5 v-else
+                class="text-h5 text-grey-darken-1">
+              등록된 굿즈가 없습니다.
+            </h5>
           </ExpandableContent>
         </div>
       </VContainer>
@@ -121,8 +127,10 @@
 </template>
 
 <script lang="ts">
-import { APP_NAME, BoothStatus, CURRENCY_CODE_TO_SYMBOL_MAP, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
-import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
+import type { IBooth, IBoothMember, IBoothResponse, IErrorResponse, IGoods, IGoodsCategory, IGoodsCombination } from "@myboothmanager/common";
+import type { GoodsBase } from "@myboothmanager/common-ui";
+import { APP_NAME, BoothStatus, CURRENCY_CODE_TO_SYMBOL_MAP, DEVELOPER_TWITTER_HANDLE, ErrorCodes } from "@myboothmanager/common";
+import { Goods, GoodsCombination } from "@myboothmanager/common-ui";
 import { Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "#imports";
 
@@ -130,7 +138,7 @@ import { getUploadFileUrl } from "#imports";
   async asyncData(context) {
     const { $publicAPI } = context;
 
-    const boothId = Number(context.$router.currentRoute.value.params["id"] as string);
+    const boothId = Number(context.$router.currentRoute.value.params.id as string);
     const boothFetchError = useState<ErrorCodes | null>("boothFetchError", () => null);
 
     if(!boothId || boothId <= 0) {
@@ -148,10 +156,10 @@ import { getUploadFileUrl } from "#imports";
     }
 
     let booth: IBoothResponse | IErrorResponse | null = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchSingleBooth(boothId));
-    let members: Array<IBoothMember> = [];
-    let categories: Array<IGoodsCategory> = [];
-    let goods: Array<IGoods> = [];
-    let combinations: Array<IGoodsCombination> = [];
+    let members: IBoothMember[] = [];
+    let categories: IGoodsCategory[] = [];
+    let goods: IGoods[] = [];
+    let combinations: IGoodsCombination[] = [];
 
     if("errorCode" in booth) {
       boothFetchError.value = booth.errorCode;
@@ -161,16 +169,24 @@ import { getUploadFileUrl } from "#imports";
 
     if(booth && !("errorCode" in booth)) {
       const goodsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsOfBooth(boothId));
-      if(goodsResp instanceof Array) goods = goodsResp;
+      if(goodsResp instanceof Array) {
+        goods = goodsResp;
+      }
 
       const combinationsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(boothId));
-      if(combinationsResp instanceof Array) combinations = combinationsResp;
+      if(combinationsResp instanceof Array) {
+        combinations = combinationsResp;
+      }
 
       const membersResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllMembersOfBooth(boothId));
-      if(membersResp instanceof Array) members = membersResp;
+      if(membersResp instanceof Array) {
+        members = membersResp;
+      }
 
       const categoriesResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(boothId));
-      if(categoriesResp instanceof Array) categories = categoriesResp;
+      if(categoriesResp instanceof Array) {
+        categories = categoriesResp;
+      }
     }
 
     return { boothFetchError, booth, members, goods, combinations, categories };
@@ -192,7 +208,7 @@ import { getUploadFileUrl } from "#imports";
 
     return {
       FETCH_KEYS,
-      boothId: Number(useRoute().params["id"] as string),
+      boothId: Number(useRoute().params.id as string),
       boothFetchError: useState("boothFetchError", () => null) ?? null,
       booth,
       members: useNuxtData(FETCH_KEYS.members).data ?? [],
@@ -214,39 +230,39 @@ export default class IndividualBoothPage extends Vue {
   declare boothFetchError: ErrorCodes | null;
   declare readonly boothId: number;
   declare readonly booth: IBooth | null;
-  declare readonly members: Array<IBoothMember>;
-  declare readonly categories: Array<IGoodsCategory>;
-  declare readonly goods: Array<IGoods>;
-  declare readonly combinations: Array<IGoodsCombination>;
+  declare readonly members: IBoothMember[];
+  declare readonly categories: IGoodsCategory[];
+  declare readonly goods: IGoods[];
+  declare readonly combinations: IGoodsCombination[];
 
-  get goodsNormalized(): Array<Goods> {
-    return this.goods.map((goods) => new Goods(goods));
+  get goodsNormalized(): Goods[] {
+    return this.goods.map(goods => new Goods(goods));
   }
 
-  get combinationsNormalized(): Array<GoodsCombination> {
-    return this.combinations.map((combination) => new GoodsCombination(combination));
+  get combinationsNormalized(): GoodsCombination[] {
+    return this.combinations.map(combination => new GoodsCombination(combination));
   }
 
   get currencySymbol(): string {
     return CURRENCY_CODE_TO_SYMBOL_MAP[this.booth?.currencyCode ?? "KRW"];
   }
 
-  get infoImage() {
+  get infoImage(): { url: string | null; thumbnail: string | null } {
     return {
       url: getUploadFileUrl(this.booth?.infoImage?.path),
-      thumbnail: this.booth?.infoImage?.thumbnailData,
+      thumbnail: this.booth?.infoImage?.thumbnailData ?? null,
     };
   }
 
   get autoRefreshEnabled(): boolean { return useLocalStore().boothPageSettings.enableAutoRefresh; }
   set autoRefreshEnabled(value: boolean) { useLocalStore().boothPageSettings.enableAutoRefresh = value; }
 
-  mounted() {
+  mounted(): void {
     /* *** Set last visited booth id *** */
     useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
   }
 
-  created() {
+  created(): void {
     if(!this.booth || this.boothFetchError) {
       useHeadSafe({
         title: "오류",
@@ -286,19 +302,19 @@ export default class IndividualBoothPage extends Vue {
     });
   }
 
-  async fetchData() {
+  async fetchData(): Promise<void> {
     /* *** Refresh data *** */
     await refreshNuxtData(Object.values(this.FETCH_KEYS ?? {}));
   }
 
-  openGoodsItemDetailsDialog(id: number, isCombination: boolean = false) {
+  openGoodsItemDetailsDialog(id: number, isCombination: boolean = false): void {
     const targetData = isCombination
-      ? this.combinationsNormalized.find((combination) => combination.id === id)
-      : this.goodsNormalized.find((goods) => goods.id === id);
+      ? this.combinationsNormalized.find(combination => combination.id === id)
+      : this.goodsNormalized.find(goods => goods.id === id);
 
     if(targetData) {
       this.goodsItemDetailsDialogTargetData = targetData;
-      this.goodsItemDetailsDialogOwnerMembers = this.members.filter((member) => targetData.ownerMemberIds?.includes(member.id));
+      this.goodsItemDetailsDialogOwnerMembers = this.members.filter(member => targetData.ownerMemberIds?.includes(member.id));
       this.goodsItemDetailsDialogOpen = true;
     }
   }

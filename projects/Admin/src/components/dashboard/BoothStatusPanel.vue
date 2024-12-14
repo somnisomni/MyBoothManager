@@ -1,11 +1,13 @@
 <template>
-  <DashboardPanel title="부스 운영 상태">
+  <DashboardPanel v-if="currentBoothStatus"
+                  title="부스 운영 상태">
     <!-- Booth status text -->
     <div class="status-text">{{ getBoothStatusString(currentBoothStatus.status) }}</div>
 
     <!-- When status is PAUSE: Reason text if available-->
     <VExpandTransition>
-      <div v-if="currentBoothStatus.status === BoothStatus.PAUSE && currentBoothStatus.reason" class="status-reason">
+      <div v-if="currentBoothStatus.status === BoothStatus.PAUSE && currentBoothStatus.reason"
+           class="status-reason">
         <div class="text-grey-darken-2 reason-title">사유</div>
         <div class="reason-text">{{ currentBoothStatus.reason }}</div>
       </div>
@@ -24,13 +26,17 @@
                 :loading="contentPublishStatusUpdateProgress"
                 :color="currentBoothStatus.status === BoothStatus.CLOSE ? 'red' : 'green'"
                 class="mr-1 flex-grow-1"
-                @click.stop="updateContentPublishStatus(true)">공개</VBtn>
+                @click.stop="updateContentPublishStatus(true)">
+            <span>공개</span>
+          </VBtn>
           <VBtn :variant="!currentBoothStatus.contentPublished ? 'flat' : 'outlined'"
                 :disabled="!currentBoothStatus.contentPublished || contentPublishStatusUpdateProgress"
                 :loading="contentPublishStatusUpdateProgress"
                 color="grey"
                 class="ml-1 flex-grow-1"
-                @click.stop="updateContentPublishStatus(false)">비공개</VBtn>
+                @click.stop="updateContentPublishStatus(false)">
+            <span>비공개</span>
+          </VBtn>
         </VLayout>
       </VLayout>
     </VExpandTransition>
@@ -57,11 +63,12 @@
 </template>
 
 <script lang="ts">
+import type { IBoothStatus } from "@myboothmanager/common";
+import { BoothStatus } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
-import { BoothStatus, type IBoothStatus } from "@myboothmanager/common";
-import { useAdminStore } from "@/plugins/stores/admin";
-import { getBoothStatusString } from "@/lib/enum-to-string";
 import BoothStatusUpdateDialog from "@/components/dialogs/BoothStatusUpdateDialog.vue";
+import { getBoothStatusString } from "@/lib/enum-to-string";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import DashboardPanel from "./DashboardPanel.vue";
 
@@ -103,8 +110,8 @@ export default class BoothStatusPanel extends Vue {
   statusUpdateDialogOpen = false;
   statusUpdateDialogTargetStatus: BoothStatus = BoothStatus.OPEN;
 
-  get currentBoothStatus(): IBoothStatus {
-    return useAdminStore().currentBooth.booth!.status;
+  get currentBoothStatus(): IBoothStatus | null {
+    return useAdminStore().currentBooth.booth?.status ?? null;
   }
 
   onBoothStatusUpdateButtonClick(newStatus: BoothStatus): void {
@@ -112,7 +119,7 @@ export default class BoothStatusPanel extends Vue {
     this.statusUpdateDialogOpen = true;
   }
 
-  async updateContentPublishStatus(publish: boolean) {
+  async updateContentPublishStatus(publish: boolean): Promise<void> {
     this.contentPublishStatusUpdateProgress = true;
 
     await useAdminAPIStore().updateCurrentBoothStatus({

@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 // NOTE: Admin-only interfaces (goods order is admin-only feature)
 
-import { MutualExclusive } from "..";
+import type { MutualExclusive } from "..";
 
 /* === Common === */
 interface IGoodsOrderCommon {
   id: number;
   boothId: number;
-  order: Array<IGoodsOrderItem>;
+  order: IGoodsOrderItem[];
   status: GoodsOrderStatus;
   totalRevenue: number;
   paymentMethod?: GoodsOrderPaymentMethod;

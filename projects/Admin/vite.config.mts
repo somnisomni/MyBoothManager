@@ -1,42 +1,47 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-
-import { fileURLToPath, URL } from "node:url";
 import { execSync } from "node:child_process";
-
-import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
+import { APP_NAME } from "@myboothmanager/common";
 import vue from "@vitejs/plugin-vue";
+import { defineConfig } from "vite";
 import vuetify from "vite-plugin-vuetify";
 import { manualChunksPlugin } from "vite-plugin-webpackchunkname";
 
-import { APP_NAME } from "@myboothmanager/common";
-
 /* === Defines === */
-const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim(); } catch(e) { return null; } })();
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const packageJson = require("./package.json");
+
+const commitHash = process.env.GIT_HASH ?? (() => {
+  try {
+    return execSync("git rev-parse --short HEAD").toString().trim();
+  } catch(e) {
+    console.error("Failed to get Git commit hash", e);
+    return null;
+  }
+})();
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({
   VITE__APP_VERSION: `"${packageJson.version}"`,
   VITE__GIT_HASH: `"${commitHash ?? "unknown"}"`,
-}).map(([key, value]) => [`import.meta.env.${key}`, value]));
+}).map(([ key, value ]) => [ `import.meta.env.${key}`, value ]));
 /* === */
 
 /* === Code Splitting Chunk Maps === */
 const chunkFileNameIncludeMap = {
-  "pages/fundamentals": ["App.vue"],
+  "pages/fundamentals": [ "App.vue" ],
 };
 
 const chunkModuleNameIncludeMap = {
-  "ui-lib": ["vuetify", "vue", "@vue", "pinia"],
-  "ui-fundamentals": ["@mdi/font", "chart.js", "chartjs"],
-  "common": ["@myboothmanager"],
+  "ui-lib": [ "vuetify", "vue", "@vue", "pinia" ],
+  "ui-fundamentals": [ "@mdi/font", "chart.js", "chartjs" ],
+  "common": [ "@myboothmanager" ],
 };
 /* === */
 
 /* === Startup Debug Logging === */
 console.debug();
 console.debug(" *** ADMIN *** ");
-console.debug("Starting Vite for " + process.env.NODE_ENV + " environment");
-Object.entries(defines).forEach(([key, value]) => console.debug(key + ": " + value));
+console.debug(`Starting Vite for ${process.env.NODE_ENV} environment`);
+Object.entries(defines).forEach(([ key, value ]) => console.debug(`${key}: ${value}`));
 console.debug();
 /* === */
 
@@ -64,16 +69,20 @@ export default defineConfig({
         sourcemap: process.env.NODE_ENV !== "production",
         generatedCode: "es2015",
         banner: "/*! Admin */\n"
-              + "/*! Copyright (c) 2023- somni */\n\n",
+              + "/*! Copyright (c) 2023- somni */\n\n",  // eslint-disable-line @stylistic/indent-binary-ops
         footer: `/*! ${APP_NAME} (initially MyBoothManager) v${packageJson.version} */`,
 
-        manualChunks: (id) => {
-          for(const [chunkName, includes] of Object.entries(chunkFileNameIncludeMap)) {
-            if(includes.some((include) => id.includes(include))) return chunkName;
+        manualChunks(id) {
+          for(const [ chunkName, includes ] of Object.entries(chunkFileNameIncludeMap)) {
+            if(includes.some(include => id.includes(include))) {
+              return chunkName;
+            }
           }
 
-          for(const [chunkName, includes] of Object.entries(chunkModuleNameIncludeMap)) {
-            if(includes.some((include) => id.includes("node_modules/" + include))) return chunkName;
+          for(const [ chunkName, includes ] of Object.entries(chunkModuleNameIncludeMap)) {
+            if(includes.some(include => id.includes(`node_modules/${include}`))) {
+              return chunkName;
+            }
           }
         },
       },

@@ -3,8 +3,17 @@
     <div class="text-h4">계정에 등록된 부스가 없습니다.</div>
     <div class="text-h5 mt-2">아래 버튼을 클릭해 새로운 부스를 추가하세요!</div>
 
-    <VBtn class="mt-4" size="x-large" @click="boothAddDialogOpened = true" color="primary">부스 추가</VBtn>
-    <VBtn class="mt-2" size="large" :to="{ name: 'logout' }">로그아웃</VBtn>
+    <VBtn class="mt-4"
+          size="x-large"
+          color="primary"
+          @click="boothAddDialogOpened = true">
+      <span>부스 추가</span>
+    </VBtn>
+    <VBtn class="mt-2"
+          size="large"
+          :to="{ name: 'logout' }">
+      <span>로그아웃</span>
+    </VBtn>
   </VContainer>
 
   <BoothManageDialog v-model="boothAddDialogOpened"

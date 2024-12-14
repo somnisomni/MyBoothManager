@@ -1,3 +1,5 @@
+/* eslint-disable @stylistic/no-multi-spaces */
+
 export enum ErrorCodes {
   SUCCESS = 0,
   UNKNOWN_ERROR = 1,

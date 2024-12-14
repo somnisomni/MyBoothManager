@@ -1,11 +1,20 @@
 <template>
-  <div id="error-page" class="d-flex align-center justify-center text-center pa-4"
+  <div id="error-page"
+       class="d-flex align-center justify-center text-center pa-4"
        style="max-width: 100%;"
        @contextmenu.prevent="prevent">
     <div>
-      <video id="error-image" autoplay loop muted playsinline poster="@/res/images/error_jeomo.png" style="max-width: 100%; min-width: 300px;">
-        <source src="@/res/images/error_jeomo_anim.webm" type="video/webm" />
-        <source src="@/res/images/error_jeomo.png" type="image/png" />
+      <video id="error-image"
+             autoplay
+             loop
+             muted
+             playsinline
+             poster="@/res/images/error_jeomo.png"
+             style="max-width: 100%; min-width: 300px;">
+        <source src="@/res/images/error_jeomo_anim.webm"
+                type="video/webm">
+        <source src="@/res/images/error_jeomo.png"
+                type="image/png">
       </video>
 
       <div id="error-text">
@@ -28,14 +37,14 @@ export default class NotFoundErrorPage extends Vue {
     return router.resolve({ name: "admin" }).href ?? (import.meta.env.BASE_URL ?? "/");
   }
 
-  mounted() {
+  mounted(): void {
     document.addEventListener("contextmenu", this.prevent);
     document.addEventListener("copy", this.prevent);
     document.addEventListener("cut", this.prevent);
     document.addEventListener("drag", this.prevent);
   }
 
-  prevent(event: Event) {
+  prevent(event: Event): boolean {
     event.preventDefault();
     event.stopPropagation();
     return false;

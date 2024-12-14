@@ -1,13 +1,15 @@
-import { createApp } from "vue";
+/* eslint-disable import-x/order */
+
+import CommonUI from "@myboothmanager/common-ui";
 import { createPinia } from "pinia";
 import piniaPersistedState from "pinia-plugin-persistedstate";
-import CommonUI from "@myboothmanager/common-ui";
+import { createApp } from "vue";
 
 import "@myboothmanager/common-ui/dist/common-ui.css";
 import "@/styles/styles.scss";
 
-import { getUploadFileUrl } from "./lib/functions";
 import App from "./App.vue";
+import { getUploadFileUrl } from "./lib/functions";
 import router from "./plugins/router";
 import vuetify from "./plugins/vuetify";
 

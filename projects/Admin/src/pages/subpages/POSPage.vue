@@ -1,7 +1,11 @@
 <template>
   <VMain class="pos-page bg-background">
-    <VList v-show="!mdAndUp" nav class="sm-back-link bg-background">
-      <VListItem prepend-icon="mdi-arrow-left" title="관리 페이지로 이동" :to="{ name: 'admin' }"
+    <VList v-show="!mdAndUp"
+           nav
+           class="sm-back-link bg-background">
+      <VListItem prependIcon="mdi-arrow-left"
+                 title="관리 페이지로 이동"
+                 :to="{ name: 'admin' }"
                  density="compact" />
     </VList>
 
@@ -40,15 +44,16 @@
 </template>
 
 <script lang="ts">
-import type { RouteLocationRaw } from "vue-router";
+import type { IGoodsCategory } from "@myboothmanager/common";
 import type { Goods, GoodsCombination, SnackbarContextWrapper } from "@myboothmanager/common-ui";
-import { APP_NAME, BoothStatus, GoodsStockVisibility, type IGoodsCategory } from "@myboothmanager/common";
+import type { RouteLocationRaw } from "vue-router";
+import { APP_NAME, BoothStatus, GoodsStockVisibility } from "@myboothmanager/common";
 import { Component, Hook, Setup, toNative, Vue } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
-import { useAdminStore } from "@/plugins/stores/admin";
-import router from "@/plugins/router";
-import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
 import POSPageLeaveConfirmDialog from "@/components/dialogs/POSPageLeaveConfirmDialog.vue";
+import POSOrderDrawer from "@/components/pos/POSOrderDrawer.vue";
+import router from "@/plugins/router";
+import { useAdminStore } from "@/plugins/stores/admin";
 import { POSOrderSimulationLayer } from "./POSPage.lib";
 
 @Component({
@@ -84,7 +89,7 @@ class POSPage extends Vue {
   private orderCreateSuccessSnackbarId = "";
   private orderCreateFailedSnackbarId = "";
 
-  get boothGoodsCategoryList(): Array<IGoodsCategory> { return Object.values(useAdminStore().currentBooth.goodsCategories ?? {}); }
+  get boothGoodsCategoryList(): IGoodsCategory[] { return Object.values(useAdminStore().currentBooth.goodsCategories ?? {}); }
   get boothGoodsCombinedList(): Array<Goods | GoodsCombination> {
     return [
       ...Object.values(useAdminStore().currentBooth.goods ?? {}),
@@ -102,7 +107,7 @@ class POSPage extends Vue {
   }
 
   @Hook()
-  beforeRouteLeave(to: RouteLocationRaw, from: never, next: (to?: RouteLocationRaw | false | void) => void): void {
+  beforeRouteLeave(to: RouteLocationRaw, from: never, next: (to?: RouteLocationRaw | false) => void): void {
     if(!this.pageLeaveConfirmed) {
       next(false);
       this.showPageLeaveConfirmDialog = true;
@@ -125,11 +130,11 @@ class POSPage extends Vue {
     router.replace(this.pageLeaveTarget ?? { name: "admin" });
   }
 
-  onSMDrawerHeightChanged(height: number) {
+  onSMDrawerHeightChanged(height: number): void {
     this.smDrawerHeight = height;
   }
 
-  updateOrderListQuantity(eventData: { id: number, delta: number, isCombination?: true }) {
+  updateOrderListQuantity(eventData: { id: number; delta: number; isCombination?: true }): void {
     const { id, delta, isCombination } = eventData;
 
     try {

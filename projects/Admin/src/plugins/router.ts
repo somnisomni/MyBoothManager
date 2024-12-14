@@ -1,14 +1,16 @@
-import { createRouter, createWebHistory, type RouteRecordName, type RouteRecordRaw } from "vue-router";
+import type { RouteRecordName, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAuthLocalStore, useAuthStore } from "@/plugins/stores/auth";
 
 /* Routes (lazy-loaded using Webpack code splitting) */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 const NotFoundErrorPage = () => import(/* webpackChunkName: "pages/fundamentals" */ "@/pages/NotFoundErrorPage.vue");
-const LogoutPage        = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LogoutPage.vue");
-const LoginPage         = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LoginPage.vue");
+const LogoutPage = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LogoutPage.vue");
+const LoginPage = () => import(/* webpackChunkName: "pages/fundamentals", webpackPrefetch: true */ "@/pages/LoginPage.vue");
 
 const PlaceholderPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/dev/PlaceholderPage.vue");
-const SuperAdminPage  = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/superadmin/SuperAdminPage.vue");
+const SuperAdminPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/superadmin/SuperAdminPage.vue");
 
 const AdminRoot     = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminRoot.vue");
 const AdminLayout   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminLayout.vue");
@@ -16,10 +18,10 @@ const GoodsPage     = () => import(/* webpackChunkName: "pages/admin-booth" */ "
 const POSPage       = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/POSPage.vue");
 const DashboardPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/DashboardPage.vue");
 const AnalyticsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/AnalyticsPage.vue");
-const ClosingPage   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/ClosingPage.vue");
+const ClosingPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/ClosingPage.vue");
 
-const GoodsOrdersRootPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderRootPage.vue");
-const GoodsOrdersListPage  = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderListPage.vue");
+const GoodsOrdersRootPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderRootPage.vue");
+const GoodsOrdersListPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderListPage.vue");
 const GoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderDetailPage.vue");
 
 const LegacyInfoPage      = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/InfoPage.vue");
@@ -30,6 +32,7 @@ const InfoMemberPage      = () => import(/* webpackChunkName: "pages/admin-info"
 const InfoNoticePage      = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoNoticePage.vue");
 
 const HelpPage = () => import(/* webpackChunkName: "pages/support" */ "@/pages/support/help/HelpRootPage.vue");
+/* eslint-enable @typescript-eslint/explicit-function-return-type */
 /* === */
 
 const isProd: boolean = import.meta.env.PROD;
@@ -43,7 +46,7 @@ const placeholderRoute: RouteRecordRaw = {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    ...(isProd ? [] : [placeholderRoute]),
+    ...(isProd ? [] : [ placeholderRoute ]),
     {
       path: isProd ? "/:pathMatch(.*)*" : "/404",
       name: "404",
@@ -195,13 +198,13 @@ router.beforeEach(async (to, from, next) => {
 
   // SuperAdmin
   if(authTokenAvailable
-     && useAdminStore().currentAccount?.superAdmin
-     && !((["superadmin", "logout"] as RouteRecordName[]).includes(to.name!))) {
+    && useAdminStore().currentAccount?.superAdmin
+    && !(([ "superadmin", "logout" ] as RouteRecordName[]).includes(to.name))) {
     next({ name: "superadmin" });
     return;
   } else if(authTokenAvailable
-            && !useAdminStore().currentAccount?.superAdmin
-            && to.name === "superadmin") {
+    && !useAdminStore().currentAccount?.superAdmin
+    && to.name === "superadmin") {
     next({ name: "admin" });
     return;
   }

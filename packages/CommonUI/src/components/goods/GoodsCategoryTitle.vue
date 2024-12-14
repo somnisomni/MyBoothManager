@@ -15,7 +15,7 @@ import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 
 @Component({})
 export class GoodsCategoryTitle extends Vue {
-  @Prop({ type: Object, required: true }) readonly categoryData!: IGoodsCategory;
+  @Prop({ type: Object, required: true }) declare readonly categoryData: IGoodsCategory;
 }
 
 export default toNative(GoodsCategoryTitle);

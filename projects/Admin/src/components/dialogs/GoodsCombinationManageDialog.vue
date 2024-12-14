@@ -10,13 +10,13 @@
                 :dialogPrimaryText="dynString.primaryText"
                 :dialogSecondaryText="dynString.secondaryText"
                 :dialogLeftButtonText="dynString.leftButtonText"
+                :disableSecondary="!isFormEdited"
+                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
+                :closeOnCancel="false"
                 @primary="onDialogConfirm"
                 @secondary="form?.reset"
                 @leftbutton="() => { deleteWarningDialogShown = true; }"
-                @cancel="onDialogCancel"
-                :disableSecondary="!isFormEdited"
-                :disablePrimary="(!duplicate && !isFormEdited) || !isFormValid"
-                :closeOnCancel="false">
+                @cancel="onDialogCancel">
     <VLayout class="d-flex flex-column flex-md-row">
       <ImageWithUpload v-if="editMode"
                        class="flex-0-1 mr-4 align-self-center"
@@ -30,17 +30,18 @@
                        :uploadCallback="combinationImageUploadCallback"
                        :deleteCallback="combinationImageDeleteCallback" />
       <div class="flex-1-1">
-        <CommonForm v-model="isFormValid"
+        <CommonForm ref="form"
+                    v-model="isFormValid"
                     v-model:edited="isFormEdited"
                     v-model:data="formModels"
-                    ref="form"
                     class="flex-1-1"
                     :fields="formFields"
                     :disabled="updateInProgress" />
 
         <!-- Selected goods status -->
         <VExpandTransition>
-          <div v-if="formModels.goodsIds.length > 0" class="text-subtitle-2 mx-2">
+          <div v-if="formModels.goodsIds.length > 0"
+               class="text-subtitle-2 mx-2">
             <div class="d-flex flex-row flex-wrap justify-end">
               <span class="mr-2">굿즈 <b>{{ formModels.goodsIds.length }}종</b> 선택됨</span>
               <VSpacer />
@@ -69,21 +70,23 @@
                         :categoryId="formModels.categoryId" />
   <FormDataLossWarningDialog v-model="cancelWarningDialogShown"
                              @primary="() => { open = false; }" />
-  <ItemDeleteWarningDialog   v-model="deleteWarningDialogShown"
-                             @primary="onDeleteConfirm" />
+  <ItemDeleteWarningDialog v-model="deleteWarningDialogShown"
+                           @primary="onDeleteConfirm" />
 </template>
 
 <script lang="ts">
-import { GoodsStockVisibility, type IGoodsCombinationCreateRequest, type IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
-import { Component, Model, Prop, Ref, Setup, toNative, Vue, Watch } from "vue-facing-decorator";
+import type { FormFieldOptions } from "../common/CommonForm.vue";
+import type { IGoodsCombinationCreateRequest, IGoodsCombinationUpdateRequest } from "@myboothmanager/common";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import { reactive, readonly } from "vue";
+import { Component, Model, Prop, Ref, Setup, toNative, Vue, Watch } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
-import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
+import { CommonForm, FormFieldType } from "../common/CommonForm.vue";
 import ImageWithUpload from "../common/ImageWithUpload.vue";
+import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
-import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
 
 @Component({
   components: {
@@ -97,7 +100,7 @@ import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
 })
 class GoodsCombinationManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Number,  default: null  }) readonly combinationId?: number | string | null;
+  @Prop({ type: Number, default: null }) readonly combinationId?: number | string | null;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
   @Prop({ type: Boolean, default: false }) readonly duplicate!: boolean;
 
@@ -133,7 +136,7 @@ class GoodsCombinationManageDialog extends Vue {
     categoryId: {
       type: FormFieldType.SELECT,
       label: "카테고리",
-      get items() { return [...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" }]; },
+      get items() { return [ ...Object.values(useAdminStore().currentBooth.goodsCategories ?? {}), { boothId: -1, id: -1, name: "미분류" } ]; },
       itemTitle: "name",
       itemValue: "id",
       onSelectionChange: this.clearSelectedGoods,
@@ -206,7 +209,7 @@ class GoodsCombinationManageDialog extends Vue {
   }
 
   get minimumStockOfSelectedGoods() {
-    return Math.min(...this.formModels.goodsIds.map((goodsId) => useAdminStore().currentBooth.goods![goodsId].stock.remaining));
+    return Math.min(...this.formModels.goodsIds.map(goodsId => useAdminStore().currentBooth.goods![goodsId].stock.remaining));
   }
 
   get sumPriceOfSelectedGoods() {
@@ -219,8 +222,8 @@ class GoodsCombinationManageDialog extends Vue {
 
   get alreadyCombinatedGoodsIdList() {
     return Object.values(useAdminStore().currentBooth.goods ?? {})
-      .filter((goods) => (this.duplicate && goods.combinationId === Number(this.combinationId)) || (goods.combinationId !== null && goods.combinationId !== Number(this.combinationId)))
-      .map((goods) => goods.id);
+      .filter(goods => (this.duplicate && goods.combinationId === Number(this.combinationId)) || (goods.combinationId !== null && goods.combinationId !== Number(this.combinationId)))
+      .map(goods => goods.id);
   }
 
   get combinationImagePath(): string | null {
@@ -229,9 +232,9 @@ class GoodsCombinationManageDialog extends Vue {
 
   @Watch("open")
   async onDialogOpen(open: boolean) {
-    if(!open) return;
+    if(!open) { return; }
 
-    while(!this.form) await this.$nextTick();
+    while(!this.form) { await this.$nextTick(); }
 
     if(this.combinationId && (this.editMode || this.duplicate)) {
       const combination = useAdminStore().currentBooth.goodsCombinations![Number(this.combinationId)];
@@ -244,7 +247,7 @@ class GoodsCombinationManageDialog extends Vue {
         price: combination.price,
         stockVisibility: combination.stock.visibility,
         goodsIds: !this.duplicate
-          ? Object.values(useAdminStore().currentBooth.goods ?? {}).filter((goods) => goods.combinationId === combination.id).map((goods) => goods.id)
+          ? Object.values(useAdminStore().currentBooth.goods ?? {}).filter(goods => goods.combinationId === combination.id).map(goods => goods.id)
           : [],
       } as IGoodsCombinationUpdateRequest);
     } else {

@@ -5,9 +5,9 @@ export enum FeedbackSenderType {
 
 export enum FeedbackType {
   FEATURE_REQUEST = "Feature Request",
-  FAIR_REQUEST    = "Fair Registration Request",
-  BUG_ISSUES      = "Bug & Issues",
-  OTHER           = "Other",
+  FAIR_REQUEST = "Fair Registration Request",
+  BUG_ISSUES = "Bug & Issues",
+  OTHER = "Other",
 }
 
 export interface IFeedbackRequest {

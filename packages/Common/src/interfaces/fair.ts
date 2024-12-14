@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 /* === Common === */
 interface IFairCommon {
   id: number;
   name: string;
   description?: string | null;
   location: string;
-  openingDates: Array<Date>;
+  openingDates: Date[];
   websiteUrl?: string | null;
 }
 
@@ -13,7 +15,7 @@ export interface IFair extends IFairCommon { }
 
 /* === Model for Backend (DB) === */
 export interface IFairModel extends Omit<IFairCommon, "openingDates"> {
-  openingDates: Array<string>;    // JSON string array of "YYYY-MM-DD"
+  openingDates: string[];    // JSON string array of "YYYY-MM-DD"
 }
 
 /* === Requests === */

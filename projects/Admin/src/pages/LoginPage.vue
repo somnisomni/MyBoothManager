@@ -1,37 +1,40 @@
 <template>
   <VContainer class="w-100 h-100 d-flex align-center justify-center text-center flex-column pa-0"
               style="word-break: keep-all">
-    <VCard elevation="8" class="overflow-hidden" style="max-width: 100%; z-index: 1000;">
+    <VCard elevation="8"
+           class="overflow-hidden"
+           style="max-width: 100%; z-index: 1000;">
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
 
-        <VForm v-model="formValid" style="width: 400px; max-width: 100%;">
+        <VForm v-model="formValid"
+               style="width: 400px; max-width: 100%;">
           <VTextField v-model="loginData.loginId"
                       class="my-2"
                       label="로그인 ID"
                       type="text"
                       required
                       :autofocus="!shouldRememberLoginId"
-                      :rules="[ () => loginData.loginId.length <= 0 ? 'ID를 입력하세요.' : true ]"/>
+                      :rules="[ () => loginData.loginId.length <= 0 ? 'ID를 입력하세요.' : true ]" />
           <VTextField v-model="loginData.loginPass"
                       class="my-2"
                       label="패스워드"
                       type="password"
                       required
                       :autofocus="shouldRememberLoginId"
-                      :rules="[ () => loginData.loginPass.length <= 0 ? '패스워드를 입력하세요.' : true ]"/>
+                      :rules="[ () => loginData.loginPass.length <= 0 ? '패스워드를 입력하세요.' : true ]" />
 
           <div>
-            <VCheckbox  v-model="shouldRememberLoginId"
-                        class="mb-2"
-                        label="&nbsp;로그인 ID 기억하기"
-                        color="primary"
-                        density="compact"
-                        hide-details />
+            <VCheckbox v-model="shouldRememberLoginId"
+                       class="mb-2"
+                       label="&nbsp;로그인 ID 기억하기"
+                       color="primary"
+                       density="compact"
+                       hideDetails />
             <VExpandTransition>
               <VSheet v-if="shouldRememberLoginId">
                 <p class="ml-6 text-left text-subtitle-2 text-warning"
-                  style="font-size: 0.9em !important;">
+                   style="font-size: 0.9em !important;">
                   <VIcon icon="mdi-alert" /> 공용 기기나 브라우저에서는 타인에게 ID가 노출될 수 있습니다. 사용에 유의해주세요.
                 </p>
               </VSheet>
@@ -41,7 +44,9 @@
           <VExpandTransition>
             <VSheet v-if="errorMessage"
                     class="mt-4">
-              <VAlert type="error">{{ errorMessage }}</VAlert>
+              <VAlert type="error">
+                {{ errorMessage }}
+              </VAlert>
             </VSheet>
           </VExpandTransition>
 
@@ -52,15 +57,20 @@
                   size="large"
                   :loading="loginProgress"
                   :disabled="loginProgress || !formValid"
-                  @click.prevent="doLogin(false)">로그인</VBtn>
+                  @click.prevent="doLogin(false)">
+              로그인
+            </VBtn>
           </VLayout>
         </VForm>
       </VCardText>
     </VCard>
 
-    <div class="position-fixed d-block text-center text-subtitle-2 text-grey mb-2" style="bottom: 0; left: 0; right: 0;">
-      <span><strong>{{ APP_NAME }}</strong> {{ APP_VERSION }} <small>({{ APP_GIT_HASH }})</small></span><br />
-      <span>Copyright © 2023- <a href="https://somni.one/" target="_blank" style="color: currentColor;">somni</a>, All rights reserved.</span>
+    <div class="position-fixed d-block text-center text-subtitle-2 text-grey mb-2"
+         style="bottom: 0; left: 0; right: 0;">
+      <span><strong>{{ APP_NAME }}</strong> {{ APP_VERSION }} <small>({{ APP_GIT_HASH }})</small></span><br>
+      <span>Copyright © 2023- <a href="https://somni.one/"
+                                 target="_blank"
+                                 style="color: currentColor;">somni</a>, All rights reserved.</span>
     </div>
 
     <CommonWarningDialog v-model="confirmLoginDialogShown"
@@ -76,13 +86,14 @@
 </template>
 
 <script lang="ts">
+import type { IAccountLoginRequest } from "@myboothmanager/common";
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
-import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
+import { APP_NAME, ErrorCodes } from "@myboothmanager/common";
 import { Component, Hook, Setup, Vue, Watch } from "vue-facing-decorator";
 import { Const } from "@/lib/const";
 import router from "@/plugins/router";
-import { useAuthStore } from "@/plugins/stores/auth";
 import { useAdminStore } from "@/plugins/stores/admin";
+import { useAuthStore } from "@/plugins/stores/auth";
 import { useLocalStore } from "@/plugins/stores/local";
 
 @Component({})
@@ -100,13 +111,13 @@ export default class LoginPage extends Vue {
     loginId: "",
     loginPass: "",
   };
-  shouldRememberLoginId = false;
 
   errorMessage = "";
   logoutStateSnackbarId = "";
+  shouldRememberLoginId = false;
   confirmLoginDialogShown = false;
 
-  mounted() {
+  mounted(): void {
     /* History state handling */
     if(window.history.state?.logout) {
       this.logoutStateSnackbarId = this.globalSnackbarContexts.add({
@@ -134,7 +145,7 @@ export default class LoginPage extends Vue {
     this.shouldRememberLoginId = !!useLocalStore().settings.lastLoginId;
   }
 
-  async doLogin(confirm?: boolean) {
+  async doLogin(confirm?: boolean): Promise<void> {
     this.loginProgress = true;
 
     let result;
@@ -145,6 +156,7 @@ export default class LoginPage extends Vue {
       });
     } catch(err) {
       result = ErrorCodes.UNKNOWN_ERROR;
+      console.error(err);
     }
 
     if(result === true) {
@@ -186,14 +198,14 @@ export default class LoginPage extends Vue {
   }
 
   @Watch("loginData", { deep: true })
-  onLoginFormDataChange() {
+  onLoginFormDataChange(): void {
     if(this.errorMessage.length > 0) {
       this.errorMessage = "";
     }
   }
 
   @Hook
-  beforeRouteLeave() {
+  beforeRouteLeave(): void {
     this.globalSnackbarContexts.removeImmediate(this.logoutStateSnackbarId);
   }
 }

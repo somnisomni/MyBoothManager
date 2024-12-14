@@ -1,4 +1,6 @@
-import { IImageUploadInfo } from "./base";
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
+import type { IImageUploadInfo } from "./base";
 
 /* === Common === */
 interface IBoothMemberCommon {
@@ -23,7 +25,7 @@ export interface IBoothMemberModel extends IBoothMemberCommon {
 
 /* === Requests === */
 export interface IBoothMemberCreateRequest extends Omit<IBoothMemberCommon, "id"> { }
-export interface IBoothMemberUpdateRequest extends Partial<Omit<IBoothMemberCommon, "id" | "boothId">>, Pick<IBoothMemberCommon, "boothId">  { }
+export interface IBoothMemberUpdateRequest extends Partial<Omit<IBoothMemberCommon, "id" | "boothId">>, Pick<IBoothMemberCommon, "boothId"> { }
 
 /* === Responses === */
 export interface IBoothMemberResponse extends IBoothMember { }

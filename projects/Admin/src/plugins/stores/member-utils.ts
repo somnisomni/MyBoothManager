@@ -1,6 +1,7 @@
+import type { ComputedRef } from "vue";
 import { defineStore } from "pinia";
+import { computed } from "vue";
 import { useAdminStore } from "./admin";
-import { computed, type ComputedRef } from "vue";
 
 const useAdminMemberStore = defineStore("booth-member", () => {
   /* *** Dependencies (NOT TO BE EXPORTED) *** */

@@ -1,15 +1,15 @@
 import * as C from "@myboothmanager/common";
 import { defineStore } from "pinia";
-import $router from "@/plugins/router";
 import AdminAPI from "@/lib/api-admin";
 import { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
+import $router from "@/plugins/router";
 import { useAdminStore } from "./admin";
 import { useAuthStore } from "./auth";
 
 const useAdminAPIStore = defineStore("admin-api", () => {
   /* *** Dependencies (NOT TO BE EXPORTED) *** */
   const $adminStore = useAdminStore();
-  const $authStore  = useAuthStore();
+  const $authStore = useAuthStore();
 
   /* *** Private states (NOT TO BE EXPORTED) *** */
   let apiFetchErrorSnackbarId = crypto.randomUUID();
@@ -125,7 +125,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function fetchCurrentAccountInfo(): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.fetchCurrentAccountInfo(),
-      (response) => $adminStore.currentAccount = response,
+      response => $adminStore.currentAccount = response,
     );
   }
 
@@ -133,25 +133,25 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function fetchSingleBoothOfCurrentAccount(boothId: number): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.fetchSingleBooth(boothId),
-      (response) => $adminStore.currentBooth.booth = response,
+      response => $adminStore.currentBooth.booth = response,
     );
   }
 
-  async function fetchAllBoothsOfCurrentAccount(): Promise<Array<C.IBooth> | C.ErrorCodes> {
-    let apiResponse: Array<C.IBooth> = [];
+  async function fetchAllBoothsOfCurrentAccount(): Promise<C.IBooth[] | C.ErrorCodes> {
+    let apiResponse: C.IBooth[] = [];
     const errorCode = await simplifyAPICall(
       () => AdminAPI.fetchAllBooths(),
-      (response) => apiResponse = response,
+      response => apiResponse = response,
     );
 
-    if(typeof errorCode === "number") return errorCode;
+    if(typeof errorCode === "number") { return errorCode; }
     return apiResponse;
   }
 
   async function createBooth(payload: C.IBoothCreateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.createBooth(payload),
-      (response) => $adminStore.changeBooth(response.id),
+      response => $adminStore.changeBooth(response.id),
       "부스 생성 성공",
       "부스 생성 실패",
     );
@@ -160,7 +160,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function updateCurrentBoothInfo(payload: C.IBoothUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothInfo($adminStore.currentBooth.booth!.id, payload),
-      (response) => $adminStore.currentBooth.booth = response,
+      response => $adminStore.currentBooth.booth = response,
       "부스 정보 업데이트 성공",
       "부스 정보 업데이트 실패",
     );
@@ -227,9 +227,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllMembersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.boothMembers) $adminStore.currentBooth.boothMembers = {};
+        if(!$adminStore.currentBooth.boothMembers) { $adminStore.currentBooth.boothMembers = {}; }
         C.emptyNumberKeyObject($adminStore.currentBooth.boothMembers);
-        for(const member of response) $adminStore.currentBooth.boothMembers[member.id] = member;
+        for(const member of response) { $adminStore.currentBooth.boothMembers[member.id] = member; }
       },
     );
   }
@@ -238,7 +238,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.createBoothMember($adminStore.currentBooth.booth!.id, payload),
       (response) => {
-        if(!$adminStore.currentBooth.boothMembers) $adminStore.currentBooth.boothMembers = {};
+        if(!$adminStore.currentBooth.boothMembers) { $adminStore.currentBooth.boothMembers = {}; }
         $adminStore.currentBooth.boothMembers[response.id] = response;
       },
       "부스 멤버 추가 성공",
@@ -249,7 +249,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
   async function updateBoothMemberInfo(memberId: number, payload: C.IBoothMemberUpdateRequest): Promise<true | C.ErrorCodes> {
     return await simplifyAPICall(
       () => AdminAPI.updateBoothMemberInfo($adminStore.currentBooth.booth!.id, memberId, payload),
-      (response) => $adminStore.currentBooth.boothMembers![memberId] = response,
+      response => $adminStore.currentBooth.boothMembers![memberId] = response,
       "부스 멤버 정보 업데이트 성공",
       "부스 멤버 정보 업데이트 실패",
     );
@@ -290,9 +290,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllGoodsOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
+        if(!$adminStore.currentBooth.goods) { $adminStore.currentBooth.goods = {}; }
         C.emptyNumberKeyObject($adminStore.currentBooth.goods);
-        for(const goods of response) $adminStore.currentBooth.goods[goods.id] = new GoodsAdmin(goods);
+        for(const goods of response) { $adminStore.currentBooth.goods[goods.id] = new GoodsAdmin(goods); }
       },
     );
   }
@@ -301,7 +301,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.createGoods(payload),
       (response) => {
-        if(!$adminStore.currentBooth.goods) $adminStore.currentBooth.goods = {};
+        if(!$adminStore.currentBooth.goods) { $adminStore.currentBooth.goods = {}; }
         $adminStore.currentBooth.goods[response.id] = new GoodsAdmin(response);
       },
       "굿즈 생성 성공",
@@ -314,7 +314,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       () => AdminAPI.updateGoodsInfo(goodsId, payload),
       async (response) => {
         $adminStore.currentBooth.goods![goodsId].update(response);
-        if(response.combinationId) await fetchGoodsCombinationsOfCurrentBooth();
+        if(response.combinationId) { await fetchGoodsCombinationsOfCurrentBooth(); }
       },
       "굿즈 정보 업데이트 성공",
       "굿즈 정보 업데이트 실패",
@@ -356,9 +356,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllGoodsCombinationOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
+        if(!$adminStore.currentBooth.goodsCombinations) { $adminStore.currentBooth.goodsCombinations = {}; }
         C.emptyNumberKeyObject($adminStore.currentBooth.goodsCombinations);
-        for(const combination of response) $adminStore.currentBooth.goodsCombinations[combination.id] = new GoodsCombinationAdmin(combination);
+        for(const combination of response) { $adminStore.currentBooth.goodsCombinations[combination.id] = new GoodsCombinationAdmin(combination); }
       },
     );
   }
@@ -367,7 +367,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.createGoodsCombination(payload),
       async (response) => {
-        if(!$adminStore.currentBooth.goodsCombinations) $adminStore.currentBooth.goodsCombinations = {};
+        if(!$adminStore.currentBooth.goodsCombinations) { $adminStore.currentBooth.goodsCombinations = {}; }
         $adminStore.currentBooth.goodsCombinations[response.id] = new GoodsCombinationAdmin(response);
         await fetchGoodsOfCurrentBooth();
       },
@@ -423,9 +423,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllGoodsCategoriesOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.goodsCategories) $adminStore.currentBooth.goodsCategories = {};
+        if(!$adminStore.currentBooth.goodsCategories) { $adminStore.currentBooth.goodsCategories = {}; }
         C.emptyNumberKeyObject($adminStore.currentBooth.goodsCategories);
-        for(const category of response) $adminStore.currentBooth.goodsCategories[category.id] = category;
+        for(const category of response) { $adminStore.currentBooth.goodsCategories[category.id] = category; }
       },
     );
   }
@@ -436,7 +436,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     await simplifyAPICall(
       () => AdminAPI.createGoodsCategory(payload),
       (response) => {
-        if(!$adminStore.currentBooth.goodsCategories) $adminStore.currentBooth.goodsCategories = {};
+        if(!$adminStore.currentBooth.goodsCategories) { $adminStore.currentBooth.goodsCategories = {}; }
         $adminStore.currentBooth.goodsCategories[response.id] = response;
         apiResponse = response;
       },
@@ -481,9 +481,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     return await simplifyAPICall(
       () => AdminAPI.fetchAllOrdersOfBooth($adminStore.currentBooth.booth!.id),
       (response) => {
-        if(!$adminStore.currentBooth.orders) $adminStore.currentBooth.orders = {};
+        if(!$adminStore.currentBooth.orders) { $adminStore.currentBooth.orders = {}; }
         C.emptyNumberKeyObject($adminStore.currentBooth.orders);
-        for(const order of response) $adminStore.currentBooth.orders[order.id] = { ...order };
+        for(const order of response) { $adminStore.currentBooth.orders[order.id] = { ...order }; }
       },
     );
   }
@@ -494,7 +494,7 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     await simplifyAPICall(
       () => AdminAPI.createBoothOrder($adminStore.currentBooth.booth!.id, payload),
       (response) => {
-        if(!$adminStore.currentBooth.orders) $adminStore.currentBooth.orders = {};
+        if(!$adminStore.currentBooth.orders) { $adminStore.currentBooth.orders = {}; }
         $adminStore.currentBooth.orders[response.id] = response;
         createdOrderId = response.id;
       },
@@ -516,7 +516,6 @@ const useAdminAPIStore = defineStore("admin-api", () => {
       "굿즈 판매 기록 상태 변경 실패",
     );
   }
-
 
   return {
     sendFeedback,

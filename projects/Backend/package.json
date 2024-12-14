@@ -16,7 +16,7 @@
     "migrate": "cross-env NODE_ENV=development ts-node -P tsconfig.scripts.json -r tsconfig-paths/register scripts/db-migrator/migrate",
     "migrate:prod": "pnpm __run:prod node dist/scripts/db-migrator/migrate",
     "seed": "cross-env NODE_ENV=development ts-node -P tsconfig.scripts.json -r tsconfig-paths/register scripts/db-migrator/seed",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "test": "jest",
     "test:watch": "pnpm test --watch",
@@ -56,7 +56,7 @@
     "umzug": "^3.8.2"
   },
   "devDependencies": {
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.15",
@@ -64,7 +64,7 @@
     "@types/clone-deep": "^4.0.4",
     "@types/jest": "^29.5.14",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@types/sequelize": "^4.28.20",
     "@types/validator": "^13.12.2",
     "eslint": "^9.16.0",
@@ -74,6 +74,6 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.2"
+    "typescript": "=5.6.3"
   }
 }

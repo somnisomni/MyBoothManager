@@ -17,7 +17,7 @@ import CommonErrorDialog from "../common/CommonErrorDialog.vue";
   },
 })
 export class ServerNotRespondErrorDialog extends Vue {
-  @Model({ type: Boolean, default: false }) open!: boolean;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
 }
 
 export default toNative(ServerNotRespondErrorDialog);

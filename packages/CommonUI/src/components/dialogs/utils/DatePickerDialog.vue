@@ -12,7 +12,7 @@
                  :title="undefined"
                  :min="min"
                  :max="max"
-                 :hide-header="hideHeader" />
+                 :hideHeader="hideHeader" />
   </CommonDialog>
 </template>
 
@@ -21,11 +21,11 @@ import { Component, Emit, Model, Prop, toNative, Vue } from "vue-facing-decorato
 
 @Component({})
 export class DatePickerDialog extends Vue {
-  @Model({ type: Boolean }) open!: boolean;
-  @Prop({ type: String, default: "날짜 선택" }) title!: string;
-  @Prop({ type: Date }) min!: Date;
-  @Prop({ type: Date }) max!: Date;
-  @Prop({ type: Boolean, default: false }) hideHeader!: boolean;
+  @Model({ type: Boolean }) declare open: boolean;
+  @Prop({ type: String, default: "날짜 선택" }) declare readonly title: string;
+  @Prop({ type: Date }) declare readonly min: Date;
+  @Prop({ type: Date }) declare readonly max: Date;
+  @Prop({ type: Boolean, default: false }) declare readonly hideHeader: boolean;
 
   date: Date = new Date();
 

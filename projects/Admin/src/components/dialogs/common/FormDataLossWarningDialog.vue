@@ -13,6 +13,6 @@ import { Component, Model, Vue } from "vue-facing-decorator";
 
 @Component({})
 export default class FormDataLossWarningDialog extends Vue {
-  @Model({ type: Boolean, default: false }) open!: boolean;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
 }
 </script>

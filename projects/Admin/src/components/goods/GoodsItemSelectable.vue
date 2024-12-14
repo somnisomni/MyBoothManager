@@ -6,7 +6,8 @@
              forceSize="small"
              @click="selected = !selected">
     <template #extra-top-indicator>
-      <div v-if="selected" class="top-indicator selected bg-success">
+      <div v-if="selected"
+           class="top-indicator selected bg-success">
         <VIcon class="mr-1"
                icon="mdi-check" />
         <span>선택됨</span>

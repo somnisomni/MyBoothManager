@@ -15,8 +15,8 @@ import CommonErrorDialog from "../common/CommonErrorDialog.vue";
   },
 })
 export class ServerDataLoadErrorDialog extends Vue {
-  @Model({ type: Boolean, default: false }) open!: boolean;
-  @Prop({ type: Number, default: null }) errorCode!: number | null;
+  @Model({ type: Boolean, default: false }) declare open: boolean;
+  @Prop({ type: Number, default: null }) declare readonly errorCode: number | null;
 
   get headlineText(): string {
     return `서버로부터 데이터를 불러오는 중 오류가 발생했습니다. ${this.errorCode ? `(${this.errorCode})` : ""}`;
