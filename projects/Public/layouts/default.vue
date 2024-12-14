@@ -13,8 +13,6 @@
 
         <p class="mt-4">© 2023- somni</p>
         <p>사용 문의 · 피드백 · 부스 관리 계정 생성 요청: <a :href="`https://twitter.com/${DEVELOPER_TWITTER_HANDLE}`" target="_blank" style="color: currentColor"><VIcon icon="mdi-twitter" size="small" /></a></p>
-
-        <p class="mt-4">본 웹 서비스 이름은 아직 미정입니다. <a href="https://twitter.com/messages/compose?recipient_id=1374659419271614464" target="_blank" style="color: currentColor">새로운 서비스 이름을 제안해주세요!</a></p>
       </VContainer>
     </VFooter>
 
