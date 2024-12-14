@@ -29,16 +29,17 @@
                         prepend-icon="mdi-store-cog"
                         title="부스 정보" />
           </template>
+
+          <VListItem title="부스 등록 정보" value="info"
+                     :to="{ name: 'admin-info-info' }" exact />
+          <VListItem title="공지 사항" value="notice"
+                     :to="{ name: 'admin-info-notice' }" exact />
+          <VListItem title="멤버" value="member"
+                     :to="{ name: 'admin-info-member' }" exact />
           <VListItem title="배너 이미지" value="banner-image"
                      :to="{ name: 'admin-info-banner-image' }" exact />
           <VListItem title="인포 이미지" value="info-image"
                      :to="{ name: 'admin-info-info-image' }" exact />
-          <VListItem title="부스 등록 정보" value="info"
-                     :to="{ name: 'admin-info-info' }" exact />
-          <VListItem title="멤버" value="member"
-                     :to="{ name: 'admin-info-member' }" exact />
-          <VListItem title="공지 사항" value="notice"
-                     :to="{ name: 'admin-info-notice' }" exact />
         </VListGroup>
         <VListItem prepend-icon="mdi-gift-open" title="굿즈" value="goods"
                    :to="{ name: 'admin-goods' }" exact />
