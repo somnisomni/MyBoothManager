@@ -14,3 +14,4 @@ export { default as GoodsCategoryTitleComponent } from "./goods/GoodsCategoryTit
 export { default as GoodsListViewComponent } from "./goods/GoodsListView.vue";
 
 export { default as GlobalSnackbarStackComponent } from "./global/GlobalSnackbarStack.vue";
+export { default as MarkdownRendererComponent } from "./global/MarkdownRenderer.vue";

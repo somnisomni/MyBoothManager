@@ -59,6 +59,15 @@
 
         <VSpacer class="my-8" />
 
+        <div v-if="booth.noticeContent">
+          <ExpandableContent heading="공지 사항">
+            <MarkdownRenderer :source="booth.noticeContent"
+                              class="text-center" />
+          </ExpandableContent>
+
+          <VSpacer class="my-8" />
+        </div>
+
         <div v-if="members.length > 0">
           <ExpandableContent heading="멤버 목록">
             <div class="d-flex flex-row flex-wrap justify-center">
@@ -67,10 +76,9 @@
                                :memberData="member" />
             </div>
           </ExpandableContent>
-        </div>
 
-        <VSpacer v-if="infoImage.url"
-                 class="my-8" />
+          <VSpacer class="my-8" />
+        </div>
 
         <div v-if="infoImage.url" class="w-100">
           <ExpandableContent heading="부스 인포">
@@ -80,9 +88,9 @@
                   position="top"
                   cover />
           </ExpandableContent>
-        </div>
 
-        <VSpacer class="my-8" />
+          <VSpacer class="my-8" />
+        </div>
 
         <div>
           <ExpandableContent heading="굿즈 목록">
