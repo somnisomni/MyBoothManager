@@ -12,11 +12,10 @@ const LoginPage = () => import(/* webpackChunkName: "pages/fundamentals", webpac
 const PlaceholderPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/dev/PlaceholderPage.vue");
 const SuperAdminPage = () => import(/* webpackChunkName: "pages/extras" */ "@/pages/superadmin/SuperAdminPage.vue");
 
-const AdminRoot = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminRoot.vue");
-const AdminLayout = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminLayout.vue");
-const GoodsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/GoodsPage.vue");
-const POSPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/POSPage.vue");
-const InfoPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/InfoPage.vue");
+const AdminRoot     = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminRoot.vue");
+const AdminLayout   = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/AdminLayout.vue");
+const GoodsPage     = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/GoodsPage.vue");
+const POSPage       = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/POSPage.vue");
 const DashboardPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/DashboardPage.vue");
 const AnalyticsPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/AnalyticsPage.vue");
 const ClosingPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/pages/subpages/ClosingPage.vue");
@@ -24,6 +23,13 @@ const ClosingPage = () => import(/* webpackChunkName: "pages/admin-booth" */ "@/
 const GoodsOrdersRootPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderRootPage.vue");
 const GoodsOrdersListPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderListPage.vue");
 const GoodsOrderDetailPage = () => import(/* webpackChunkName: "pages/admin-goods-order" */ "@/pages/subpages/orders/GoodsOrderDetailPage.vue");
+
+const LegacyInfoPage      = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/InfoPage.vue");
+const InfoBannerImagePage = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoBannerImagePage.vue");
+const InfoInfoImagePage   = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoInfoImagePage.vue");
+const InfoInfoPage        = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoInfoPage.vue");
+const InfoMemberPage      = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoMemberPage.vue");
+const InfoNoticePage      = () => import(/* webpackChunkName: "pages/admin-info" */ "@/pages/subpages/info/InfoNoticePage.vue");
 
 const HelpPage = () => import(/* webpackChunkName: "pages/support" */ "@/pages/support/help/HelpRootPage.vue");
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
@@ -85,7 +91,38 @@ const router = createRouter({
             {
               path: "info",
               name: "admin-info",
-              component: InfoPage,
+              component: LegacyInfoPage,
+            },
+            {
+              path: "info",
+              name: "admin-info-root",
+              children: [
+                {
+                  path: "bannerimage",
+                  name: "admin-info-banner-image",
+                  component: InfoBannerImagePage,
+                },
+                {
+                  path: "infoimage",
+                  name: "admin-info-info-image",
+                  component: InfoInfoImagePage,
+                },
+                {
+                  path: "info",
+                  name: "admin-info-info",
+                  component: InfoInfoPage,
+                },
+                {
+                  path: "member",
+                  name: "admin-info-member",
+                  component: InfoMemberPage,
+                },
+                {
+                  path: "notice",
+                  name: "admin-info-notice",
+                  component: InfoNoticePage,
+                },
+              ],
             },
             {
               path: "goods",
