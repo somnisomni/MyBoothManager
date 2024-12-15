@@ -1,3 +1,10 @@
+name: myboothmanager
+
+networks:
+  default:
+    name: myboothmanager
+    external: true
+
 services:
   admin:
     build:
@@ -13,8 +20,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-    network_mode: host    # Should ditch host network mode and use bridge mode instead
-                          # But I have to find a way to get rid of errors of CNI network automatically created by podman-compose
 
   public:
     build:
@@ -33,7 +38,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-    network_mode: host
 
   backend:
     build:
@@ -60,7 +64,6 @@ services:
       FRONTEND_ADMIN_URL: "http://localhost:31112"
       FRONTEND_PUBLIC_URL: "http://localhost:31113"
     restart: unless-stopped
-    network_mode: host
 
 volumes:
   mbm-uploads:
