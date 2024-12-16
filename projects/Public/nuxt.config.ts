@@ -8,6 +8,7 @@ if(!commitHash) {
   try {
     commitHash = execSync("git rev-parse --short HEAD").toString().trim();
   } catch(e) {
+    console.error(`Failed to get commit hash from git: ${e}`);
     commitHash = "unknown";
   }
 }
@@ -16,6 +17,7 @@ if(!commitHash) {
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
+  compatibilityDate: "2024-12-16",
   nitro: {
     preset: "node-cluster",
   },
@@ -24,7 +26,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     // Pinia
     "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
+    "pinia-plugin-persistedstate/nuxt",
     // Vuetify
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
@@ -76,7 +78,10 @@ export default defineNuxtConfig({
     },
   },
   components: [
-    { path: "~/components", pathPrefix: false },
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
   ],
   runtimeConfig: {
     public: {
