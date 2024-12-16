@@ -59,14 +59,16 @@
 
         <VSpacer class="my-8" />
 
-        <div v-if="booth.noticeContent">
-          <ExpandableContent heading="공지 사항">
-            <MarkdownRenderer :source="booth.noticeContent"
-                              class="text-center" />
-          </ExpandableContent>
+        <ClientOnly>
+          <div v-if="booth.noticeContent">
+            <ExpandableContent heading="공지 사항">
+              <MarkdownRenderer :source="booth.noticeContent"
+                                class="text-center" />
+            </ExpandableContent>
 
-          <VSpacer class="my-8" />
-        </div>
+            <VSpacer class="my-8" />
+          </div>
+        </ClientOnly>
 
         <div v-if="members.length > 0">
           <ExpandableContent heading="멤버 목록">
