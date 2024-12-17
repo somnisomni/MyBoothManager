@@ -2,11 +2,10 @@
 // Rewritten in ESM because of `require()` statements, which causes several errors
 
 import DOMPurify, { type WindowLike } from "dompurify";
-import { JSDOM } from "jsdom";
 
-export function resolveDOMPurify(): { dompurify: typeof DOMPurify, window: WindowLike } {
+export async function resolveDOMPurify(): Promise<{ dompurify: typeof DOMPurify, window: WindowLike }> {
   const isClientSide = typeof window !== "undefined" && !!window;
-  const windowLike: WindowLike = isClientSide ? window : new JSDOM("<!DOCTYPE html>").window;
+  const windowLike: WindowLike = isClientSide ? window : new (await import("jsdom")).JSDOM("<!DOCTYPE html>").window;
 
   return {
     dompurify: DOMPurify(windowLike),
