@@ -5,7 +5,7 @@
 <script lang="ts">
 import { marked, Renderer } from "marked";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
-import DOMPurify from "isomorphic-dompurify";
+import { resolveDOMPurify } from "@/plugins/isomorphic-dompurify";
 
 function createMarkedCustomRenderer(): Renderer {
   const renderer = new Renderer();
@@ -25,9 +25,10 @@ export class MarkdownRenderer extends Vue {
   @Prop({ type: String, required: true }) declare readonly source: string;
 
   markedRenderer = createMarkedCustomRenderer();
+  dompurify = resolveDOMPurify().dompurify;
 
   get compiled() {
-    return DOMPurify.sanitize(
+    return this.dompurify.sanitize(
       marked.parse(this.source, {
         gfm: true,
         async: false,
