@@ -1,8 +1,5 @@
-### BASE ###
-FROM node:lts-alpine as base
-
 ### BUILD STAGE ###
-FROM base as build
+FROM node:lts-alpine as build
 RUN corepack enable pnpm
 
 # Build arguments
@@ -32,15 +29,21 @@ RUN pnpm common:build && pnpm admin build
 
 
 ### PRODUCTION STAGE ###
-FROM base as production
+FROM ghcr.io/static-web-server/static-web-server:latest as production
 
 # Copy files
 WORKDIR /app
 COPY --from=build /build/projects/Admin/dist .
 
+# static-web-server environment
+ENV SERVER_PORT=31112
+ENV SERVER_ROOT=/app
+ENV SERVER_LOG_REMOTE_ADDRESS=true
+ENV SERVER_LOG_FORWARDED_FOR=true
+ENV SERVER_FALLBACK_PAGE=index.html
+ENV SERVER_DIRECTORY_LISTING=false
+
 # Expose port
 EXPOSE 31112
 
-# Start server
-RUN npm install -g serve
-ENTRYPOINT ["npx", "--yes", "serve", ".", "--no-clipboard", "--no-port-switching", "--single", "--listen", "31112"]
+# static-seb-server is automatically started
