@@ -14,6 +14,6 @@ export const useLocalStore = defineStore("local", () => {
   };
 }, {
   persist: {
-    storage: persistedState.localStorage,
+    storage: piniaPluginPersistedstate.localStorage(),
   },
 });
