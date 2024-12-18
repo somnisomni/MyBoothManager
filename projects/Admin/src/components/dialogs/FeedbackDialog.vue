@@ -38,7 +38,6 @@ import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 
 @Component({
   components: {
-    CommonForm,
     FormDataLossWarningDialog,
   },
 })

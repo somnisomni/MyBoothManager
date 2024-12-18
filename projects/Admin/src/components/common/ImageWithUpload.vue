@@ -36,17 +36,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
 import { getUploadFileUrl } from "@/lib/functions";
-import FileInputButton, { FileInputAccepts } from "./FileInputButton.vue";
+import { FileInputAccepts } from "./FileInputButton.vue";
 
 @Component({
   emits: ["updated", "error"],
-  components: {
-    FileInputButton,
-  },
 })
-export default class ImageWithUpload extends Vue {
+export class ImageWithUpload extends Vue {
   readonly FileInputAccepts = FileInputAccepts;
 
   @Prop({ type: String, required: true, default: null }) existingSrc!: string | null;
@@ -127,4 +124,6 @@ export default class ImageWithUpload extends Vue {
     return this.imageFilePickedObjectURL ?? getUploadFileUrl(this.existingSrc);
   }
 }
+
+export default toNative(ImageWithUpload);
 </script>

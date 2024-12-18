@@ -25,11 +25,7 @@ import { CommonForm, type FormFieldOptions, FormFieldType } from "@/components/c
 import { useAdminStore } from "@/plugins/stores/admin";
 import { SuperAdminAPI } from "../SuperAdminPage.lib";
 
-@Component({
-  components: {
-    CommonForm,
-  },
-})
+@Component({})
 export default class SACreateAccountFragment extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;

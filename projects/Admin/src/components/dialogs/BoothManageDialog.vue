@@ -111,7 +111,6 @@ const useProxyStore = defineStore("BoothManageDialog__proxy", () => {
 
 @Component({
   components: {
-    CommonForm,
     FormDataLossWarningDialog,
   },
   emits: ["updated", "error"],

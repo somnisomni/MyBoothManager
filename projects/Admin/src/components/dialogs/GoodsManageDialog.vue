@@ -59,15 +59,12 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import FormDataLossWarningDialog from "@/components/dialogs/common/FormDataLossWarningDialog.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { CommonForm } from "../common/CommonForm.vue";
-import ImageWithUpload from "../common/ImageWithUpload.vue";
 import { FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
 import GoodsCategoryManageDialog from "./GoodsCategoryManageDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
-    ImageWithUpload,
-    CommonForm,
     GoodsCategoryManageDialog,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,

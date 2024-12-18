@@ -10,6 +10,7 @@ import { getUploadFileUrl } from "./lib/functions";
 import App from "./App.vue";
 import router from "./plugins/router";
 import vuetify from "./plugins/vuetify";
+import commonComponents from "@/plugins/common-components";
 
 /* *====* */
 
@@ -21,5 +22,6 @@ app.use(pinia);
 app.use(router);
 app.use(vuetify);
 app.use(CommonUI, { imageUrlResolver: getUploadFileUrl });
+app.use(commonComponents);
 
 app.mount("#app");

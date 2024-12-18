@@ -15,15 +15,10 @@
 
 <script lang="ts">
 import { Component, toNative, Vue } from "vue-facing-decorator";
-import ImageWithUpload from "@/components/common/ImageWithUpload.vue";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { useAdminStore } from "@/plugins/stores/admin";
 
-@Component({
-  components: {
-    ImageWithUpload,
-  },
-})
+@Component({})
 class InfoBannerImagePage extends Vue {
   get imagePath(): string | null {
     return useAdminStore().currentBooth.booth!.bannerImage?.path ?? null;

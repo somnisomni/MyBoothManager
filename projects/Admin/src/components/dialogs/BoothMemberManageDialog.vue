@@ -53,14 +53,11 @@ import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBo
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
-import ImageWithUpload from "../common/ImageWithUpload.vue";
 import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
 import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
-    ImageWithUpload,
-    CommonForm,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },

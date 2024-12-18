@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Ref, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Ref, toNative, Vue } from "vue-facing-decorator";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 
@@ -40,7 +40,7 @@ const ACCEPTS_MIMES: Record<FileInputAccepts, Array<string>> = {
 @Component({
   emits: ["change"],
 })
-export default class FileInputButton extends Vue {
+export class FileInputButton extends Vue {
   @Model({ type: File, default: null }) value!: File | null;
   @Prop({ type: String, default: "파일 선택" }) label!: string;
   @Prop({ type: Boolean, default: false }) disabled!: boolean;
@@ -118,4 +118,6 @@ export default class FileInputButton extends Vue {
     this.$forceUpdate();
   }
 }
+
+export default toNative(FileInputButton);
 </script>

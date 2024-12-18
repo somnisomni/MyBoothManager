@@ -29,13 +29,11 @@ import { Component, Vue } from "vue-facing-decorator";
 import BoothInfoPanel from "@/components/info/BoothInfoPanel.vue";
 import BoothMembersPanel from "@/components/info/BoothMembersPanel.vue";
 import BoothNoticePanel from "@/components/info/BoothNoticePanel.vue";
-import ImageWithUpload from "@/components/common/ImageWithUpload.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({
   components: {
-    ImageWithUpload,
     BoothInfoPanel,
     BoothMembersPanel,
     BoothNoticePanel,

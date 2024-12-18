@@ -50,7 +50,6 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
 
 @Component({
   components: {
-    CommonForm,
     FormDataLossWarningDialog,
     ItemDeleteWarningDialog,
   },
