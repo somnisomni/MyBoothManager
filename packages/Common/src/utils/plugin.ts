@@ -65,9 +65,13 @@ export function resolveDOMPurify(root?: WindowLike): typeof DOMPurify | null {
   return DOMPurify(rootWindow);
 }
 
-export function renderAndSanitizeMarkdown(markdown: string, domRoot?: WindowLike): string {
-  const renderer = createMarkedRenderer();
-  const dompurify = resolveDOMPurify(domRoot);
+export function renderAndSanitizeMarkdown(markdown: string, options: {
+  domRoot?: WindowLike,
+  dompurify?: typeof DOMPurify,
+  markedRenderer?: Renderer,
+}): string {
+  const renderer = options.markedRenderer ?? createMarkedRenderer();
+  const dompurify = options.dompurify ?? resolveDOMPurify(options.domRoot);
 
   if(!dompurify) return markdown;
 

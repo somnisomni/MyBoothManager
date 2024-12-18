@@ -12,9 +12,8 @@
 </template>
 
 <script lang="ts">
-import { marked } from "marked";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
-import { createMarkedRenderer, DOMPURIFY_OPTIONS, resolveDOMPurify } from "@myboothmanager/common";
+import { createMarkedRenderer, renderAndSanitizeMarkdown, resolveDOMPurify } from "@myboothmanager/common";
 
 /**
  * Markdown renderer component using `marked` and `DOMPurify`.
@@ -45,13 +44,10 @@ export class MarkdownRenderer extends Vue {
     }
 
     this.renderAvailable = true;
-    return this.dompurify.sanitize(
-      marked.parse(this.source, {
-        gfm: true,
-        async: false,
-        breaks: true,
-        renderer: this.markedRenderer,
-      }), DOMPURIFY_OPTIONS);
+    return renderAndSanitizeMarkdown(this.source, {
+      dompurify: this.dompurify,
+      markedRenderer: this.markedRenderer,
+    });
   }
 }
 
