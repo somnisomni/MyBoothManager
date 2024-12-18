@@ -53,9 +53,7 @@
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "sharp": "^0.33.5",
-    "umzug": "^3.8.2",
-    "dompurify": "^3.2.3",
-    "marked": "^15.0.4"
+    "umzug": "^3.8.2"
   },
   "devDependencies": {
     "@myboothmanager/dev-shared": "workspace:^",

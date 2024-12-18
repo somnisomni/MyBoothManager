@@ -49,8 +49,6 @@
     "vuetify": ">=3"
   },
   "dependencies": {
-    "clone-deep": "^4.0.1",
-    "dompurify": "^3.2.3",
-    "marked": "^15.0.4"
+    "clone-deep": "^4.0.1"
   }
 }
