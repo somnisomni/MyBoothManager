@@ -82,6 +82,8 @@
       <VList nav class="flex-shrink-0">
         <VListItem density="compact" min-height="30px">
           <div v-if="isDevEnv" class="text-subtitle-2 text-disabled text-center">개발 환경에서 실행 중</div>
+          <div v-else-if="isStagingEnv" class="text-subtitle-2 text-disabled text-center">테스트를 위해 배포 중인 사이트입니다. 수시로 기능이 변경되거나 각종 버그 발생, 또는 작동이 멈출 수 있습니다.</div>
+          
           <div class="text-subtitle-2 text-disabled text-center">{{ APP_VERSION }} <small>({{ GIT_HASH }})</small></div>
         </VListItem>
         <VListItem prepend-icon="mdi-open-in-new" title="부스 공개 페이지 열기" :href="boothPublicPageHref" target="_blank"
@@ -162,7 +164,11 @@ export default class AdminLayout extends Vue {
   }
 
   get isDevEnv(): boolean {
-    return import.meta.env.DEV || window.location.hostname.includes("staging");
+    return import.meta.env.DEV;
+  }
+
+  get isStagingEnv(): boolean {
+    return window.location.hostname.includes("staging");
   }
 }
 </script>
