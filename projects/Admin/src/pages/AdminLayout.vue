@@ -12,7 +12,7 @@
     <VNavigationDrawer v-model="navOpen"
                        :permanent="navPersistent"
                        class="navdrawer-flex">
-      <VList nav class="overflow-y-auto">
+      <VList v-model:opened="navOpenedMenuGroups" nav class="overflow-y-auto">
         <VListItem prepend-icon="mdi-cash-register" title="현장 판매 모드 (POS)" value="pos"
                    :to="{ name: 'admin-pos' }" exact
                    :disabled="!currentBoothIsOpened"
@@ -23,7 +23,7 @@
                    :to="{ name: 'admin' }" exact />
         <!-- <VListItem prepend-icon="mdi-store-cog" title="부스 정보 / 인포" value="info"
                    :to="{ name: 'admin-info' }" exact /> -->
-        <VListGroup>
+        <VListGroup value="info-group">
           <template #activator="{ props }">
             <VListItem v-bind="props"
                         prepend-icon="mdi-store-cog"
@@ -133,6 +133,7 @@ export default class AdminLayout extends Vue {
   logoutPageHref = router.resolve({ name: "logout" }).href || "/logout";
 
   isFeedbackDialogOpen = false;
+  navOpenedMenuGroups: string[] = [ "info-group" ];
 
   set navOpen(value: boolean) { this._navOpen = value; }
   get navOpen() {
@@ -161,7 +162,7 @@ export default class AdminLayout extends Vue {
   }
 
   get isDevEnv(): boolean {
-    return import.meta.env.DEV;
+    return import.meta.env.DEV || window.location.hostname.includes("staging");
   }
 }
 </script>
