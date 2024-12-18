@@ -1,5 +1,5 @@
-import { Module } from "@nestjs/common";
-import { APP_GUARD, RouterModule } from "@nestjs/core";
+import { Module, type Type } from "@nestjs/common";
+import { APP_GUARD, RouterModule, type RouteTree } from "@nestjs/core";
 import { UtilModule } from "../common/util/util.module";
 import { AuthGuard } from "./auth/auth.guard";
 import AccountModule from "./account/account.module";
@@ -13,32 +13,35 @@ import GoodsCombinationModule from "./goods-combination/goods-combination.module
 import BoothMemberModule from "./booth-member/booth-member.module";
 import { V2_ROUTE_PREFIX } from "@/lib/const";
 
+const API_MODULES: Type<unknown>[] = [
+  AccountModule,
+  AuthModule,
+  BoothModule,
+  BoothMemberModule,
+  BoothOrderModule,
+  FairModule,
+  GoodsModule,
+  GoodsCategoryModule,
+  GoodsCombinationModule,
+  UtilModule,
+];
+
+function generateRouterModuleChildrens(rootPath = "/"): RouteTree[] {
+  return (API_MODULES ?? []).map((module) => ({
+    path: rootPath,
+    module,
+  }));
+}
+
 @Module({
   imports: [
-    AccountModule,
-    AuthModule,
-    BoothModule,
-    BoothMemberModule,
-    BoothOrderModule,
-    FairModule,
-    GoodsModule,
-    GoodsCategoryModule,
-    GoodsCombinationModule,
-    UtilModule,
+    ...API_MODULES,
 
     RouterModule.register([
       {
         path: V2_ROUTE_PREFIX,
         children: [
-          { path: "/", module: AccountModule },
-          { path: "/", module: AuthModule },
-          { path: "/", module: BoothModule },
-          { path: "/", module: BoothMemberModule },
-          { path: "/", module: BoothOrderModule },
-          { path: "/", module: FairModule },
-          { path: "/", module: GoodsModule },
-          { path: "/", module: GoodsCategoryModule },
-          { path: "/", module: GoodsCombinationModule },
+          ...generateRouterModuleChildrens(),
         ],
       },
     ]),
