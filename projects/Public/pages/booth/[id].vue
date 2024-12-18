@@ -144,7 +144,7 @@ import { getUploadFileUrl } from "#imports";
     if("errorCode" in boothAccessCheck) {
       boothFetchError.value = boothAccessCheck.errorCode;
       return { boothFetchError, booth: null };
-    } else if(!boothAccessCheck.value) {
+    } else if(boothAccessCheck.value === false) {
       boothFetchError.value = ErrorCodes.BOOTH_NOT_PUBLISHED;
       return { boothFetchError, booth: null };
     }
@@ -175,6 +175,7 @@ import { getUploadFileUrl } from "#imports";
       if(categoriesResp instanceof Array) categories = categoriesResp;
     }
 
+    boothFetchError.value = null;
     return { boothFetchError, booth, members, goods, combinations, categories };
   },
   setup() {
