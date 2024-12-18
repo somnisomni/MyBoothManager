@@ -3,7 +3,7 @@
        v-html="compiled"
        class="markdown" />
   <div v-else>
-    <VProgressCircular v-if="!exposeSourceBeforeRender"
+    <VProgressCircular v-if="!exposeSourceBeforeRender && source.length > 0"
                       indeterminate />
     <pre v-else
          v-text="source"
