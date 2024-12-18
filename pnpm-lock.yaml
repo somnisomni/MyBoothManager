@@ -352,6 +352,9 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
+      dompurify:
+        specifier: ^3.2.3
+        version: 3.2.3
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -361,6 +364,9 @@ importers:
       luxon:
         specifier: ^3.5.0
         version: 3.5.0
+      marked:
+        specifier: ^15.0.4
+        version: 15.0.4
       mysql2:
         specifier: ^3.11.5
         version: 3.11.5
