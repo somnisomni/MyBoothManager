@@ -2,6 +2,8 @@ import type { Config, WindowLike } from "dompurify";
 import DOMPurify from "dompurify";
 import { marked, Renderer, type MarkedOptions } from "marked";
 
+/* `marked` and `dompurify` package needs to be declared in `dependencies` in `package.json` of dependents */
+
 export const DOMPURIFY_OPTIONS: Config = {
   FORBID_TAGS: [
     "script",
