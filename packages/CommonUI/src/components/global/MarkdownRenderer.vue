@@ -1,53 +1,57 @@
 <template>
-  <div v-html="compiled" class="markdown"></div>
+  <div v-if="renderAvailable && compiled"
+       v-html="compiled"
+       class="markdown" />
+  <div v-else>
+    <VProgressCircular v-if="!exposeSourceBeforeRender"
+                      indeterminate />
+    <pre v-else
+         v-text="source"
+         class="markdown" />
+  </div>
 </template>
 
 <script lang="ts">
-import { marked, Renderer } from "marked";
+import { marked } from "marked";
 import { Component, Prop, toNative, Vue } from "vue-facing-decorator";
-import { default as DOMPurify } from "dompurify";
-import { resolveDOMPurify } from "@/plugins/isomorphic-dompurify";
+import { createMarkedRenderer, DOMPURIFY_OPTIONS, resolveDOMPurify } from "@myboothmanager/common";
 
-function createMarkedCustomRenderer(): Renderer {
-  const renderer = new Renderer();
-
-  // Add target="_blank" to anchors(links)
-  const rendererLink = renderer.link;
-  renderer.link = (link) => {
-    const html = rendererLink.call(renderer, link);
-    return html.replace(/^<a /, "<a target=\"_blank\" rel=\"noopener noreferrer nofollow\" ");
-  };
-
-  return renderer;
-}
-
+/**
+ * Markdown renderer component using `marked` and `DOMPurify`.
+ *
+ * This component is client-side only. If this component is used on server-side, the content of `source` prop will be rendered as-is (Markdown will not be rendered into HTML too).
+ */
 @Component({})
 export class MarkdownRenderer extends Vue {
   @Prop({ type: String, required: true }) declare readonly source: string;
+  @Prop({ type: Boolean, default: false }) declare readonly exposeSourceBeforeRender: boolean;
 
-  markedRenderer = createMarkedCustomRenderer();
-  dompurify: typeof DOMPurify | null = null;
+  renderAvailable = false;
+  private dompurify = resolveDOMPurify();
+  private readonly markedRenderer = createMarkedRenderer();
 
-  async mounted() {
-    await this.$nextTick();
+  mounted() {
+    // onMounted hook is only called on client-side according to https://nuxt.com/docs/api/advanced/hooks
 
-    this.dompurify = (await resolveDOMPurify()).dompurify;
+    // Try to re-resolve DOMPurify after window object is changed
+    this.dompurify = resolveDOMPurify();
+    this.renderAvailable = !!this.dompurify;
   }
 
-  get compiled() {
-    if(!this.dompurify) return this.source;
+  get compiled(): string | null {
+    if(!this.dompurify) {
+      this.renderAvailable = false;
+      return null;
+    }
 
+    this.renderAvailable = true;
     return this.dompurify.sanitize(
       marked.parse(this.source, {
         gfm: true,
         async: false,
         breaks: true,
         renderer: this.markedRenderer,
-      }), {
-        FORBID_TAGS: ["script", "noscript", "style", "img", "picture", "video", "audio", "iframe", "button", "input", "form", "embed", "applet", "canvas", "svg", "html", "head", "body", "meta", "link", "frame", "frameset", "title", "source", "template"],
-        ADD_ATTR: ["target"],
-        SANITIZE_DOM: true,
-      });
+      }), DOMPURIFY_OPTIONS);
   }
 }
 

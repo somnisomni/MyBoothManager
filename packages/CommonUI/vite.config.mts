@@ -33,7 +33,7 @@ export default defineConfig({
     },
     rollupOptions: {
       treeshake: "recommended",
-      external: ["vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", /^@?myboothmanager(\/.*)?$/, "dompurify", "jsdom", "marked"],
+      external: ["@mdi/font", "vue", /^vuetify(\/.*)?$/, "vue-facing-decorator", /^@?myboothmanager(\/.*)?$/, "dompurify", "marked"],
       output: {
         globals: {
           "vue": "Vue",

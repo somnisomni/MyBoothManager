@@ -11,3 +11,4 @@ export * from "./currency";
 export * from "./internals";
 export * from "./functions";
 export * from "./image-size-constraints";
+export * from "./plugin";
