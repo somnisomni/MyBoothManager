@@ -57,8 +57,9 @@ export function createMarkedRenderer(): Renderer {
 export function resolveDOMPurify(root?: WindowLike): typeof DOMPurify | null {
   const rootWindow = root ?? (typeof window !== "undefined" ? window : null);
   if(!rootWindow) {
-    console.warn("Either `root` parameter or global `window` is not valid. Seems like this is a server-side environment. "
-      + "To use DOMPurify on server-side, you need to provide a valid `root` parameter (this can be done by using virtual DOM providers like `jsdom`).");
+    // console.warn("Either `root` parameter or global `window` is not valid. Seems like this is a server-side environment. "
+    //   + "To use DOMPurify on server-side, you need to provide a valid `root` parameter (this can be done by using virtual DOM providers like `jsdom`).");
+
     return null;
   }
 
