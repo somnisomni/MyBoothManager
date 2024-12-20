@@ -29,7 +29,12 @@ export default defineNuxtPlugin((nuxt) => {
       $internalStore.isAPIFetchFailed = false;
       return data.value;
     } catch(error) {
-      console.error(`API Fetch Failed! (running on ${import.meta.env.SSR ? "server" : "client"}):`, error);
+      console.error(`[API] Fetch failed! (running on ${import.meta.env.SSR ? "server" : "client"}):`);
+      if(import.meta.env.SSR) {
+        console.error("  - API fetch wrapper callee function: ", callee.toString());
+        console.error("  - Error: ", error);
+      }
+
       $internalStore.isAPIFetchFailed = true;
       return { errorCode: ErrorCodes.UNKNOWN_ERROR } as IErrorResponse;
     }
