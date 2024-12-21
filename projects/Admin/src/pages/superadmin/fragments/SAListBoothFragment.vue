@@ -3,9 +3,46 @@
     <h2>전체 부스 목록 <VBtn class="ml-2" @click="refreshList">새로고침</VBtn></h2>
 
     <VDataTable :headers="tableHeaders"
-                :items="booths"
+                :items="computedBooths"
                 :loading="isLoading"
                 showExpand>
+      <template #top>
+        <VLayout class="d-flex flex-row align-center justify-center w-100 my-2">
+          <strong>부스 운영 상태: </strong>
+          <VChipGroup v-model="statusFilter"
+                      direction="horizontal">
+            <VChip value="all" class="ma-1">전체</VChip>
+            <VChip :value="BoothStatus.PREPARE" color="green-darken-4" class="ma-1 text-green">운영 준비 중</VChip>
+            <VChip :value="BoothStatus.OPEN" color="blue-darken-4" class="ma-1 text-blue">운영 중</VChip>
+            <VChip :value="BoothStatus.PAUSE" color="orange-darken-4" class="ma-1 text-orange-darken-1">운영 일시 중지</VChip>
+            <VChip :value="BoothStatus.CLOSE" color="red-darken-4" class="ma-1 text-red-darken-1">운영 종료</VChip>
+          </VChipGroup>
+        </VLayout>
+      </template>
+
+      <template #item="{ columns, item, internalItem, toggleExpand, isExpanded }">
+        <tr :class="{
+            'text-green': item.status.status === BoothStatus.PREPARE,
+            'text-blue': item.status.status === BoothStatus.OPEN,
+            'text-orange-darken-1': item.status.status === BoothStatus.PAUSE,
+            'text-red-darken-1': item.status.status === BoothStatus.CLOSE,
+          }">
+          <td v-for="column in columns"
+              :key="column.key!">
+            <!-- Expand icon -->
+            <div v-if="column.key === 'data-table-expand'">
+              <VBtn variant="flat"
+                    size="small"
+                    :icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                    @click="toggleExpand(internalItem)" />
+            </div>
+
+            <!-- Otherwise just show raw text -->
+            <span v-else>{{ item[column.key! as keyof ISuperAdminBoothResponseInternal] }}</span>
+          </td>
+        </tr>
+      </template>
+
       <template #expanded-row="{ columns, item }">
         <tr>
           <td :colspan="columns.length">
@@ -39,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import type { IBoothSuperAdminResponse } from "@myboothmanager/common";
+import { BoothStatus, type IBoothSuperAdminResponse } from "@myboothmanager/common";
 import { Component, Vue } from "vue-facing-decorator";
 import { SuperAdminAPI, momentFormat } from "../SuperAdminPage.lib";
 
@@ -50,7 +87,10 @@ type ISuperAdminBoothResponseInternal = IBoothSuperAdminResponse & {
 
 @Component({})
 export default class SAListBoothFragment extends Vue {
+  readonly BoothStatus = BoothStatus;
+
   isLoading = true;
+  statusFilter: BoothStatus | "all" = "all";
   booths: ISuperAdminBoothResponseInternal[] = [];
 
   readonly tableHeaders = [
@@ -60,6 +100,14 @@ export default class SAListBoothFragment extends Vue {
     { title: "행사명", key: "fair.name", sortable: true },
     { title: "부스 번호", key: "boothNumber", sortable: true },
   ] as Array<{ title: string, key: keyof IBoothSuperAdminResponse, sortable?: boolean }>;
+
+  get computedBooths(): ISuperAdminBoothResponseInternal[] {
+    if(this.statusFilter === "all") {
+      return this.booths;
+    }
+
+    return this.booths.filter((booth) => booth.status.status === this.statusFilter);
+  }
 
   async mounted() {
     await this.refreshList();
