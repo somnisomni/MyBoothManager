@@ -1,6 +1,6 @@
 <template>
   <DashboardPanel title="굿즈 재고 및 판매 현황">
-    <VContainer class="flex-column">
+    <VContainer class="flex-column text-center">
       <VRow>
         <VCol>
           <VSheet class="mx-1"
