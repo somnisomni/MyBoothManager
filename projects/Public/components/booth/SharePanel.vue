@@ -42,10 +42,19 @@ export default class SharePanel extends Vue {
   declare readonly boothId: number;
 
   shareTwitter(): void {
-    const contentString = `『 ${this.boothData.name}』\n` +
-                          `📍 ${this.boothData.boothNumber ? `${this.boothData.boothNumber}  @ ` : ""}${this.boothData.location}\n` +
-                          ((this.boothData.dateOpen || this.boothData.dateClose) ? `🗓️ ${this.boothData.dateOpen !== this.boothData.dateClose ? `${this.boothData.dateOpen} ~ ` : ""}${this.boothData.dateClose}\n` : "") +
-                          "\n";
+    const nameLine = `『${this.boothData.name}』\n`;
+
+    const boothNumber = this.boothData.boothNumber ? `${this.boothData.boothNumber}  @` : "";
+    const location = this.boothData.fair ? `${this.boothData.fair.name} (${this.boothData.location})` : this.boothData.location;
+    const locationLine = ((boothNumber + location).length > 0) ? `📍 ${boothNumber} ${location}\n` : "";
+
+    const dateOpen = this.boothData.datesOpenInFair ? this.boothData.datesOpenInFair.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0] : this.boothData.dateOpen;
+    const dateClose = this.boothData.datesOpenInFair ? this.boothData.datesOpenInFair.sort((a, b) => new Date(a).getTime() - new Date(b).getTime()).reverse()[0] : this.boothData.dateClose;
+    const dateLine = (dateOpen || dateClose) ? `🗓️ ${dateOpen !== dateClose ? `${dateOpen} ~ ` : ""}${dateClose}\n` : "";
+
+    const contentString = `${nameLine}` +
+                          `${locationLine}` +
+                          `${dateLine}\n`;
     const content = encodeURIComponent(contentString);
     const href = encodeURIComponent(window.location.href);
     const url = `https://twitter.com/intent/tweet?text=${content}&url=${href}`;

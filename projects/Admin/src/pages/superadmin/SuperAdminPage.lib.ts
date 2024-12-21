@@ -20,11 +20,15 @@ export class SuperAdminAPI extends BaseAdminAPI {
   /* == Endpoints == */
   /* Fetch */
   static async fetchAllAccounts() {
-    return await this.apiCallWrapper<Array<CT.ISuperAdminAccountResponse>>(() => this.API.GET("account/all"));
+    return await this.apiCallWrapper<CT.ISuperAdminAccountResponse[]>(() => this.API.GET("account/all"));
   }
 
   static async fetchAllFairs() {
-    return await this.apiCallWrapper<Array<CT.ISuperAdminFairResponse>>(() => this.API.GET("fair"));
+    return await this.apiCallWrapper<CT.ISuperAdminFairResponse[]>(() => this.API.GET("fair"));
+  }
+
+  static async fetchAllBooths() {
+    return await this.apiCallWrapper<CT.IBoothSuperAdminResponse[]>(() => this.API.GET("booth"));
   }
 
   /* Create */

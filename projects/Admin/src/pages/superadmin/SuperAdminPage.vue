@@ -7,17 +7,22 @@
       <VTabs v-model="currentTab">
         <VTab value="fair">행사 정보</VTab>
         <VTab value="account">부스 관리 계정</VTab>
+        <VTab value="booth">부스</VTab>
       </VTabs>
 
       <VTabsWindow v-model="currentTab">
         <VTabsWindowItem value="fair">
-          <SACreateFairFragment />
-          <SAListFairFragment />
+          <SACreateFairFragment @created="fairListFragment?.refreshList" />
+          <SAListFairFragment ref="fairListFragment" />
         </VTabsWindowItem>
 
         <VTabsWindowItem value="account">
-          <SACreateAccountFragment />
-          <SAListAccountFragment />
+          <SACreateAccountFragment @created="accountListFragment?.refreshList" />
+          <SAListAccountFragment ref="accountListFragment" />
+        </VTabsWindowItem>
+
+        <VTabsWindowItem value="booth">
+          <SAListBoothFragment />
         </VTabsWindowItem>
       </VTabsWindow>
     </div>
@@ -25,11 +30,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Ref, Vue } from "vue-facing-decorator";
 import SACreateAccountFragment from "./fragments/SACreateAccountFragment.vue";
 import SAListAccountFragment from "./fragments/SAListAccountFragment.vue";
 import SACreateFairFragment from "./fragments/SACreateFairFragment.vue";
 import SAListFairFragment from "./fragments/SAListFairFragment.vue";
+import SAListBoothFragment from "./fragments/SAListBoothFragment.vue";
 
 @Component({
   components: {
@@ -37,9 +43,16 @@ import SAListFairFragment from "./fragments/SAListFairFragment.vue";
     SAListAccountFragment,
     SACreateFairFragment,
     SAListFairFragment,
+    SAListBoothFragment,
   },
 })
 export default class SuperAdminPage extends Vue {
   currentTab: "fair" | "account" = "fair";
+
+  @Ref("fairListFragment")
+  declare readonly fairListFragment: SAListFairFragment;
+
+  @Ref("accountListFragment")
+  declare readonly accountListFragment: SAListAccountFragment;
 }
 </script>

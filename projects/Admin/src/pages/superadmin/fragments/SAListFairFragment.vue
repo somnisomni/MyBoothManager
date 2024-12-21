@@ -4,17 +4,54 @@
 
     <VDataTable :headers="tableHeaders"
                 :items="fairs"
-                :loading="isLoading">
-      <template v-slot:item="{ item }">
-        <tr :class="{ 'text-decoration-line-through text-disabled': item.isPassed }">
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.location }}</td>
-          <td>{{ item.openingDates }}</td>
-          <td>{{ item.websiteUrl }}</td>
-          <td>{{ item.createdAt }}</td>
-          <td>{{ item.updatedAt }}</td>
+                :loading="isLoading"
+                showExpand>
+      <template #top>
+        <VCheckbox v-model="showPassed"
+                   label="종료된 행사 표시"
+                   hideDetails />
+      </template>
+
+      <template #item="{ columns, item, internalItem, toggleExpand, isExpanded }">
+        <tr v-if="!item.isPassed || showPassed"
+            :class="{ 'text-decoration-line-through text-disabled': item.isPassed }">
+          <td v-for="column in columns"
+              :key="column.key!">
+            <!-- Expand icon -->
+            <div v-if="column.key === 'data-table-expand'">
+              <VBtn variant="flat"
+                    size="small"
+                    :icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                    @click="toggleExpand(internalItem)" />
+            </div>
+
+            <!-- Turn `item.openingDates` values into VChips -->
+            <div v-if="column.key === 'openingDates'">
+              <VChip v-for="date in item[column.key! as keyof ISuperAdminFairResponseInternal]?.toString().split(',')"
+                    :key="date"
+                    :color="isToday(date) ? 'primary' : undefined"
+                    class="ma-1"
+                    :class="[ isDatePassed(date) ? 'text-disabled' : undefined ]">
+                {{ date }}
+              </VChip>
+            </div>
+
+            <!-- Otherwise just show raw text -->
+            <span v-else>{{ item[column.key! as keyof ISuperAdminFairResponseInternal] }}</span>
+          </td>
+        </tr>
+      </template>
+
+      <template #expanded-row="{ columns, item }">
+        <tr>
+          <td :colspan="columns.length">
+            <ul style="list-style-position: inside;">
+              <li><strong>설명</strong>: {{ item.description }}</li>
+              <li><strong>대표 웹사이트 URL</strong>: {{ item.websiteUrl }}</li>
+              <li><strong>생성 일자</strong>: {{ item.createdAt }}</li>
+              <li><strong>마지막 정보 변경 일자</strong>: {{ item.updatedAt }}</li>
+            </ul>
+          </td>
         </tr>
       </template>
     </VDataTable>
@@ -34,24 +71,21 @@ type ISuperAdminFairResponseInternal = ISuperAdminFairResponse & {
 @Component({})
 export default class SAListFairFragment extends Vue {
   isLoading = true;
+  showPassed = false;
   fairs: Array<ISuperAdminFairResponseInternal> = [];
 
   readonly tableHeaders = [
     { title: "#ID", key: "id", sortable: true },
     { title: "행사명", key: "name", sortable: true },
-    { title: "설명", key: "description", sortable: false },
     { title: "장소", key: "location", sortable: true },
     { title: "개최 일자", key: "openingDates", sortable: true },
-    { title: "대표 웹사이트 URL", key: "websiteUrl", sortable: false },
-    { title: "생성 일자", key: "createdAt", sortable: true },
-    { title: "마지막 정보 변경 일자", key: "updatedAt", sortable: true },
   ] as Array<{ title: string, key: keyof ISuperAdminFairResponseInternal, sortable?: boolean }>;
 
   async mounted() {
     await this.refreshList();
   }
 
-  async refreshList() {
+  public async refreshList(): Promise<void> {
     this.isLoading = true;
 
     const response = await SuperAdminAPI.fetchAllFairs();
@@ -67,6 +101,14 @@ export default class SAListFairFragment extends Vue {
     }
 
     this.isLoading = false;
+  }
+
+  isDatePassed(date: string): boolean {
+    return new Date(date) < new Date();
+  }
+
+  isToday(date: string): boolean {
+    return new Date(date).toLocaleDateString() === new Date().toLocaleDateString();
   }
 }
 </script>

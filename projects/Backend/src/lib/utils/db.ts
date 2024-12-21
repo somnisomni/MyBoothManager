@@ -53,7 +53,7 @@ async function actionWrapper<TResult extends (Model | Model[])>(action: () => Pr
       throw new InternalServerErrorException(`DB error: ${error.name}`);
     } else {
       // Unknown error
-      throw new BadRequestException(`Unknown error: ${error instanceof Error ? error.name : "Unknwon"}`);
+      throw new BadRequestException(`Unknown error: ${error instanceof Error ? error.name : "Unknown"}`);
     }
   }
 

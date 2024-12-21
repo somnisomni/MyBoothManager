@@ -25,7 +25,9 @@ import { CommonForm, type FormFieldOptions, FormFieldType } from "@/components/c
 import { useAdminStore } from "@/plugins/stores/admin";
 import { SuperAdminAPI } from "../SuperAdminPage.lib";
 
-@Component({})
+@Component({
+  emits: ["created"],
+})
 export default class SACreateAccountFragment extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
@@ -58,6 +60,16 @@ export default class SACreateAccountFragment extends Vue {
     },
   } as Record<keyof IAccountCreateRequest, FormFieldOptions>;
 
+  async mounted() {
+    await this.$nextTick();
+
+    this.form.setInitialModel({
+      loginId: "",
+      loginPass: "",
+      name: "",
+    } as IAccountCreateRequest);
+  }
+
   async createAccount() {
     this.createInProgress = true;
 
@@ -75,6 +87,7 @@ export default class SACreateAccountFragment extends Vue {
           text: `계정 생성 성공 (ID: ${res.id})`,
         });
         this.form.reset();
+        this.$emit("created");
       } else {
         this.globalSnackbarContexts.add({
           type: "error",

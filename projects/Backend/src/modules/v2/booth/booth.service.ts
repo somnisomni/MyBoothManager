@@ -2,7 +2,7 @@ import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
 import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
-import { forwardRef, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { Op } from "sequelize";
 import { CreateBoothRequestDto } from "./dto/create.dto";
 import { BoothImageService } from "./booth.image.service";
@@ -124,6 +124,20 @@ export class BoothService {
     return booths.filter(
       booth => !onlyAvailable
                 || (onlyAvailable && (typeof booth.fairId !== "number" || !booth.associatedFair?.isPassed)));
+  }
+
+  /**
+   * Finds all booths without any condition, only for super admin. Includes owner account information (`Booth.ownerAccount`) and sequelize internal dates.
+   * @returns Array of found `Booth` entities
+   */
+  async findAllSuperAdmin(): Promise<Booth[]> {
+    const booths = await dbFindAll(Booth, {
+      include: [ { model: Account, as: "ownerAccount" } ],
+      includeSequelizeInternalKeys: true,
+    });
+    console.log("booths: ", booths);
+
+    return booths;
   }
 
   /**

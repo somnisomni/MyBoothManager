@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 import { BoothService } from "./booth.service";
-import { AdminBoothResponseDto, BoothResponseDto } from "./dto/booth.dto";
+import { AdminBoothResponseDto, BoothResponseDto, SuperAdminBoothResponseDto } from "./dto/booth.dto";
 import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
 import { IAuthData } from "../auth/jwt-util.service";
 import { CreateBoothRequestDto } from "./dto/create.dto";
@@ -19,15 +19,21 @@ export class BoothController {
   /**
    * Finds all booths
    *
+   *  - for **super admin**: returns all booths with owner information
    *  - for **booth admin**: returns all booths owned by the user
    *  - for **public user**: returns all published booths, with limited information for each
    */
   @Get()
   async findAll(@UserType() userType: UserTypes,
                 @AuthData() authData?: IAuthData): Promise<BoothResponseDto[]> {
-    if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN) && authData) {
-      return (await this.booth.findAll(false, authData.id))
-        .map(booth => new AdminBoothResponseDto(booth));
+    if(authData) {
+      if(UserTypeUtil.havePermission(userType, UserTypes.SUPER_ADMIN)) {
+        return (await this.booth.findAllSuperAdmin())
+          .map(booth => new SuperAdminBoothResponseDto(booth));
+      } else if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN) && authData.id >= 0) {
+        return (await this.booth.findAll(false, authData.id))
+          .map(booth => new AdminBoothResponseDto(booth));
+      }
     }
 
     return (await this.booth.findAll(true))

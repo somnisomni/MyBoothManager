@@ -25,7 +25,9 @@ import { CommonForm, FormFieldType, type FormFieldOptions } from "@/components/c
 import { useAdminStore } from "@/plugins/stores/admin";
 import { SuperAdminAPI } from "../SuperAdminPage.lib";
 
-@Component({})
+@Component({
+  emits: ["created"],
+})
 export default class SACreateFairFragment extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
@@ -73,6 +75,18 @@ export default class SACreateFairFragment extends Vue {
     },
   } as Record<keyof IFairCreateRequest, FormFieldOptions>;
 
+  async mounted() {
+    await this.$nextTick();
+
+    this.form.setInitialModel({
+      name: "",
+      description: "",
+      location: "",
+      openingDates: [],
+      websiteUrl: "",
+    } as IFairCreateRequest);
+  }
+
   async createFair() {
     this.createInProgress = true;
 
@@ -97,6 +111,7 @@ export default class SACreateFairFragment extends Vue {
           text: `행사 정보 생성 성공 (ID: ${res.id})`,
         });
         this.form.reset();
+        this.$emit("created");
       } else {
         this.globalSnackbarContexts.add({
           type: "error",

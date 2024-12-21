@@ -1,5 +1,6 @@
+import type Account from "@/db/models/account";
 import type Booth from "@/db/models/booth";
-import { BoothStatus, IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes } from "@myboothmanager/common";
+import { BoothStatus, IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes, type IAccountResponse, type IBoothSuperAdminResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
@@ -62,5 +63,28 @@ export class AdminBoothResponseDto extends BoothResponseDto implements IBoothAdm
     super(model);
 
     this.expenses = model.get("expenses");
+  }
+}
+
+@Exclude()
+export class SuperAdminBoothResponseDto extends AdminBoothResponseDto implements IBoothSuperAdminResponse {
+  @Expose() declare owner: IAccountResponse;
+  @Expose() declare createdAt?: Date | null;
+  @Expose() declare updatedAt?: Date | null;
+
+  constructor(model: Booth) {
+    super(model);
+
+    this.createdAt = model.createdAt;
+    this.updatedAt = model.updatedAt;
+
+    const owner = model.ownerAccount;
+    if(owner) {
+      this.owner = {
+        id: owner.id,
+        name: owner.name,
+        loginId: owner.loginId,
+      };
+    }
   }
 }

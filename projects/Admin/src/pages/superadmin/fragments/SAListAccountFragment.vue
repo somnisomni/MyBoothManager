@@ -4,7 +4,19 @@
 
     <VDataTable :headers="tableHeaders"
                 :items="accounts"
-                :loading="isLoading" />
+                :loading="isLoading"
+                showExpand>
+      <template #expanded-row="{ columns, item }">
+        <tr>
+          <td :colspan="columns.length">
+            <ul style="list-style-position: inside;">
+              <li><strong>생성 일자</strong>: {{ item.createdAt }}</li>
+              <li><strong>마지막 정보 변경 일자</strong>: {{ item.updatedAt }}</li>
+            </ul>
+          </td>
+        </tr>
+      </template>
+    </VDataTable>
   </div>
 </template>
 
@@ -30,15 +42,13 @@ export default class SAListAccountFragment extends Vue {
     { title: "로그인 ID", key: "loginId", sortable: false },
     { title: "로그인 횟수", key: "loginCount", sortable: false },
     { title: "마지막 로그인 일자", key: "lastLoginAt", sortable: true },
-    { title: "계정 생성 일자", key: "createdAt", sortable: true },
-    { title: "마지막 계정 정보 변경 일자", key: "updatedAt", sortable: true },
   ] as Array<{ title: string, key: keyof ISuperAdminAccountResponseInternal, sortable?: boolean }>;
 
   async mounted() {
     await this.refreshList();
   }
 
-  async refreshList() {
+  public async refreshList(): Promise<void> {
     this.isLoading = true;
 
     const response = await SuperAdminAPI.fetchAllAccounts();
