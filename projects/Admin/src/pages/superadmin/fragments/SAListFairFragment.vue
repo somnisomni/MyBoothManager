@@ -3,7 +3,7 @@
     <h2>행사 목록 <VBtn class="ml-2" @click="refreshList">새로고침</VBtn></h2>
 
     <VDataTable :headers="tableHeaders"
-                :items="fairs"
+                :items="computedFairs"
                 :loading="isLoading"
                 showExpand>
       <template #top>
@@ -72,7 +72,7 @@ type ISuperAdminFairResponseInternal = ISuperAdminFairResponse & {
 export default class SAListFairFragment extends Vue {
   isLoading = true;
   showPassed = false;
-  fairs: Array<ISuperAdminFairResponseInternal> = [];
+  private fairs: ISuperAdminFairResponseInternal[] = [];
 
   readonly tableHeaders = [
     { title: "#ID", key: "id", sortable: true },
@@ -80,6 +80,18 @@ export default class SAListFairFragment extends Vue {
     { title: "장소", key: "location", sortable: true },
     { title: "개최 일자", key: "openingDates", sortable: true },
   ] as Array<{ title: string, key: keyof ISuperAdminFairResponseInternal, sortable?: boolean }>;
+
+  get computedFairs(): ISuperAdminFairResponseInternal[] {
+    const fairs: ISuperAdminFairResponseInternal[] = [];
+
+    for(const fair of this.fairs) {
+      if(!fair.isPassed || this.showPassed) {
+        fairs.push(fair);
+      }
+    }
+
+    return fairs;
+  }
 
   async mounted() {
     await this.refreshList();
