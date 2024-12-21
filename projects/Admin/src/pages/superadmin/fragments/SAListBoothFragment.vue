@@ -10,7 +10,8 @@
         <VLayout class="d-flex flex-row align-center justify-center w-100 my-2">
           <strong>부스 운영 상태: </strong>
           <VChipGroup v-model="statusFilter"
-                      direction="horizontal">
+                      direction="horizontal"
+                      mandatory>
             <VChip value="all" class="ma-1">전체</VChip>
             <VChip :value="BoothStatus.PREPARE" color="green-darken-4" class="ma-1 text-green">운영 준비 중</VChip>
             <VChip :value="BoothStatus.OPEN" color="blue-darken-4" class="ma-1 text-blue">운영 중</VChip>
@@ -38,7 +39,7 @@
             </div>
 
             <!-- Otherwise just show raw text -->
-            <span v-else>{{ item[column.key! as keyof ISuperAdminBoothResponseInternal] }}</span>
+            <span v-else>{{ typeof column.value === "function" ? column.value(item) : column.value }}</span>
           </td>
         </tr>
       </template>
@@ -94,12 +95,42 @@ export default class SAListBoothFragment extends Vue {
   booths: ISuperAdminBoothResponseInternal[] = [];
 
   readonly tableHeaders = [
-    { title: "#ID", key: "id", sortable: true },
-    { title: "이름", key: "name", sortable: true },
-    { title: "소유자 계정 이름", key: "owner.name", sortable: true },
-    { title: "행사명", key: "fair.name", sortable: true },
-    { title: "부스 번호", key: "boothNumber", sortable: true },
-  ] as Array<{ title: string, key: keyof IBoothSuperAdminResponse, sortable?: boolean }>;
+    {
+      title: "#ID",
+      key: "id",
+      sortable: true,
+      value: (item: ISuperAdminBoothResponseInternal) => item.id,
+    },
+    {
+      title: "이름",
+      key: "name",
+      sortable: true,
+      value: (item: ISuperAdminBoothResponseInternal) => item.name,
+    },
+    {
+      title: "소유자 계정 이름",
+      key: "owner.name",
+      sortable: true,
+      value: (item: ISuperAdminBoothResponseInternal) => item.owner.name,
+    },
+    {
+      title: "행사명",
+      key: "fair.name",
+      sortable: true,
+      value: (item: ISuperAdminBoothResponseInternal) => item.fair?.name,
+    },
+    {
+      title: "부스 번호",
+      key: "boothNumber",
+      sortable: true,
+      value: (item: ISuperAdminBoothResponseInternal) => item.boothNumber,
+    },
+  ] as Array<{
+    title: string,
+    key: keyof IBoothSuperAdminResponse,
+    sortable?: boolean,
+    value?: (item: ISuperAdminBoothResponseInternal) => unknown,
+  }>;
 
   get computedBooths(): ISuperAdminBoothResponseInternal[] {
     if(this.statusFilter === "all") {
