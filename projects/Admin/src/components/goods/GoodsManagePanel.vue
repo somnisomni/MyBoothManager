@@ -1,7 +1,7 @@
 <template>
   <DashboardPanel>
     <VRow class="pa-2 flex-column">
-      <p v-if="isBoothClosed" class="mb-2 d-inline-flex align-center text-warning"><VIcon icon="mdi-information-outline" class="mr-1" /> 실수를 방지하기 위해 부스가 운영 종료된 상태에서는 굿즈 정보 수정 기능이 비활성화됩니다.</p>
+      <p v-if="isBoothClosed" class="mb-2 d-inline-flex align-center text-warning"><VIcon icon="mdi-information-outline" class="mr-1" /> 의도치 않은 데이터 변경을 방지하기 위해 부스가 운영 종료된 상태에서는 굿즈 정보 수정 기능이 비활성화됩니다.</p>
       <p>등록된 굿즈 아이템 개수: {{ goodsCount }}종</p>
     </VRow>
     <VRow class="pa-2 justify-space-between">
