@@ -2,7 +2,7 @@
   <section>
     <!-- Booth image & info area -->
     <VSheet class="booth-info-section">
-      <VParallax class="booth-image d-flex align-end bg-white"
+      <VParallax class="booth-image d-flex align-end bg-black"
                  :src="bannerImageUrl"
                  scale="0.8">
         <div class="booth-image-overlay"></div>

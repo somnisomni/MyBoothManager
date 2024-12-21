@@ -8,8 +8,8 @@
           @pointerleave="isPointerHovering = false"
           @click.stop="$emit('click', boothData.id)">
     <!-- *** Banner image *** -->
-    <VImg class="booth-item-image flex-0-0 no-interaction-all"
-          :src="bannerImageUrl"
+    <VImg class="booth-item-image flex-0-0 bg-black no-interaction-all"
+          :src="bannerImageUrl ?? undefined"
           :lazy-src="bannerImageThumbnail"
           cover />
     <div class="booth-item-image-overlay"></div>
@@ -77,8 +77,7 @@ export default class BoothListItem extends Vue {
   }
 
   get bannerImageUrl() {
-    return getUploadFileUrl(this.boothData.bannerImage?.path)
-      ?? `https://picsum.photos/seed/${this.boothData.id}/800/400`;
+    return getUploadFileUrl(this.boothData.bannerImage?.path);
   }
 
   get bannerImageThumbnail() {

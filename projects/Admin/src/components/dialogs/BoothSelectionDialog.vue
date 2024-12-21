@@ -17,7 +17,10 @@
             v-ripple
             @click.stop="onBoothSelect(booth.id)">
       <div class="booth-item-image-container">
-        <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path, booth.id)" cover aspect-ratio="4/1" class="booth-item-image" />
+        <VImg :src="getBoothBannerImageURL(booth.bannerImage?.path)"
+              cover
+              aspect-ratio="4/1"
+              class="booth-item-image bg-black" />
         <div class="booth-item-image-overlay"></div>
       </div>
 
@@ -84,8 +87,8 @@ export default class BoothSelectionDialog extends Vue {
     if(value) this.refreshBoothList();
   }
 
-  getBoothBannerImageURL(path?: string, fallbackId: string | number = 1): string {
-    return getUploadFileUrl(path) ?? `https://picsum.photos/seed/${fallbackId}/1500/300`;
+  getBoothBannerImageURL(path?: string): string | undefined {
+    return getUploadFileUrl(path) ?? undefined;
   }
 
   showBoothAddDialog(): void {
