@@ -4,13 +4,13 @@ import { JwtService, TokenExpiredError } from "@nestjs/jwt";
 import { FastifyRequest } from "fastify";
 import { IAuthData, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt-util.service";
 import { AuthTokenNeedRefreshException, InvalidAuthTokenException } from "./auth.exception";
-import { AuthStorage } from "./auth.service";
+import { AuthStorage, SUPER_ADMIN_AUTH_DATA } from "./auth.service";
 import { NoAccessException } from "@/lib/exceptions";
 
 /**
  * Request user type
  */
-export enum UserTypes {
+export const enum UserTypes {
   /** Public(unauthenticated, guest) user */
   PUBLIC = 0b0000,
 
@@ -20,6 +20,11 @@ export enum UserTypes {
   /** Super(system) admin user */
   SUPER_ADMIN = 0b1111,
 }
+export const USER_TYPES_NAME_MAP: Record<UserTypes, string> = {
+  [UserTypes.PUBLIC]: "PUBLIC",
+  [UserTypes.BOOTH_ADMIN]: "BOOTH_ADMIN",
+  [UserTypes.SUPER_ADMIN]: "SUPER_ADMIN",
+};
 
 /**
  * User type utility class
@@ -33,6 +38,10 @@ export class UserTypeUtil {
    */
   public static havePermission(userType: UserTypes, permission: UserTypes): boolean {
     return (userType & permission) === permission;
+  }
+
+  public static getName(userType: UserTypes): string {
+    return USER_TYPES_NAME_MAP[userType];
   }
 }
 
@@ -136,7 +145,7 @@ export class AuthGuard implements CanActivate {
         });
 
         // If token is valid, set user type
-        if(payload.id === -1) {
+        if(payload.id === SUPER_ADMIN_AUTH_DATA.id && payload.name === SUPER_ADMIN_AUTH_DATA.name) {
           params.userType = UserTypes.SUPER_ADMIN;
         } else {
           params.userType = UserTypes.BOOTH_ADMIN;
@@ -180,6 +189,7 @@ export class AuthGuard implements CanActivate {
 
       if(!isAllowed) {
         // If user has no permission to access the route, throw an error
+        console.error(`Client with user type ${UserTypeUtil.getName(params.userType)} tried to access the unprivileged route (handler: ${context.getClass().name}.${context.getHandler().name}, allowed: [${allowedFor.map(x => UserTypeUtil.getName(x)).join(", ")}])`);
         throw new NoAccessException();
       }
     }

@@ -24,7 +24,7 @@ export class SuperAdminAPI extends BaseAdminAPI {
   }
 
   static async fetchAllFairs() {
-    return await this.apiCallWrapper<Array<CT.ISuperAdminFairResponse>>(() => this.API.GET("fair/all"));
+    return await this.apiCallWrapper<Array<CT.ISuperAdminFairResponse>>(() => this.API.GET("fair"));
   }
 
   /* Create */

@@ -18,7 +18,6 @@ export const SUPER_ADMIN_AUTH_DATA = Object.freeze<IAuthData>({
   name: randomBytes(32).toString("base64"),
 });
 
-
 /** Static storage class for auth tokens */
 export class AuthStorage {
   private constructor() { }
