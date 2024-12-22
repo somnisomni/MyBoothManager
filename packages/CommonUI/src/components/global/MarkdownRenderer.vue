@@ -60,36 +60,50 @@ export default toNative(MarkdownRenderer);
 
   a {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline;
     text-decoration: none;
-    padding-bottom: 0.66em;
+    padding-bottom: 0;
     margin-block: 0.25em;
+    margin-bottom: 0;
+    border-bottom: solid 1px currentColor;
     color: currentColor;
-    transition: color 0.25s;
+    transition: color 0.33s, margin-bottom 0.33s cubic-bezier(0, 0, 0, 1);
 
-    &:hover {
-      color: rgb(var(--v-theme-primary));  // vuetify primary color
-    }
-
-    &:before {
+    &::before {
       content: "\F0339";  // mdi-link-variant
       font-family: "Material Design Icons";
       margin-right: 0.25em;
     }
 
-    &:after {
+    &::after {
       content: attr(href);
       position: absolute;
-      bottom: 0;
+      top: 100%;
+      left: 0;
+      right: 0;
       font-size: 0.66em;
-      opacity: 0.5;
+      text-align: center;
 
       max-width: 200px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-50%);
+      transition: opacity 0.33s cubic-bezier(0, 0, 0, 1), transform 0.33s cubic-bezier(0, 0, 0, 1);
+    }
+
+    &:hover {
+      color: rgb(var(--v-theme-primary));  // vuetify primary color
+      margin-bottom: 0.66em;
+
+      &::after {
+        pointer-events: initial;
+        opacity: 0.5;
+        transform: translateY(0);
+      }
     }
   }
 
