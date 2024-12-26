@@ -136,7 +136,7 @@ export class GoodsService {
    */
   async update(id: number, updateDto: UpdateGoodsRequestDto, accountId: number): Promise<Goods> {
     let { goods } = await this.getGoodsAndParentBooth(id, updateDto.boothId, accountId);
-    const categoryId = (updateDto.categoryId && updateDto.categoryId < 0) ? undefined : (updateDto.categoryId ?? goods.categoryId);
+    const categoryId = (updateDto.categoryId && updateDto.categoryId < 0) ? null : (updateDto.categoryId ?? goods.categoryId);
 
     try {
       // Handling category change if the goods is combined
