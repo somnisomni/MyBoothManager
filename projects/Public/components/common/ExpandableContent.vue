@@ -1,10 +1,11 @@
 <template>
   <div>
     <div v-ripple
-        class="d-flex align-center pa-2"
-        style="cursor: pointer"
-        @click="_expanded = !_expanded">
+         class="d-flex align-center pa-2"
+         style="cursor: pointer"
+         @click="_expanded = !_expanded">
       <h4 class="flex-grow-1 text-h4 text-left font-weight-medium">{{ heading }}</h4>
+
       <VIcon :icon="_expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"
              size="large"
              class="pa-2" />

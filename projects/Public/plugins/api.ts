@@ -14,13 +14,13 @@ export default defineNuxtPlugin((nuxt) => {
 
   const calleeNameMatcher = /.+\.apiCaller\.(.+)\((.+)?\)$/;
 
-  async function wrap<T>(callee: () => Promise<T | IErrorResponse>, lazy = false): Promise<T | IErrorResponse> {
+  async function wrap<T>(callee: () => Promise<T | IErrorResponse>, lazy = false, server = true, deep = true): Promise<T | IErrorResponse> {
     // `useAsyncData()` key autogeneration is not reliable in this case like wrapping an API call function.
     // So the key should be generated manually, and uniquely by the callee function name.
     const calleeName = callee.toString().match(calleeNameMatcher)?.[1] ?? uuidV4();
 
     try {
-      const { error, data } = await nuxt.runWithContext(async () => await useAsyncData(calleeName, callee, { lazy, deep: false }));
+      const { error, data } = await nuxt.runWithContext(async () => await useAsyncData(calleeName, callee, { lazy, server, deep }));
 
       if(error.value) throw error.value;
       if(!data.value) throw "Data is nullish";
@@ -29,11 +29,11 @@ export default defineNuxtPlugin((nuxt) => {
       $internalStore.isAPIFetchFailed = false;
       return data.value;
     } catch(error) {
-      console.error(`[API] Fetch failed! (running on ${import.meta.env.SSR ? "server" : "client"}):`);
-      if(import.meta.env.SSR) {
-        console.error("  - API fetch wrapper callee function: ", callee.toString());
-        console.error("  - Error: ", error);
-      }
+      console.error(
+        `[API] Fetch failed! (running on ${import.meta.env.SSR ? "server" : "client"}):\n`
+        + `  - Error: ${error}`
+        + (import.meta.env.SSR ? `  - API fetch wraper callee function: ${callee.toString()}` : ""),
+      );
 
       $internalStore.isAPIFetchFailed = true;
       return { errorCode: ErrorCodes.UNKNOWN_ERROR } as IErrorResponse;

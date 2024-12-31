@@ -1,5 +1,6 @@
 <template>
   <VMain style="min-height: 100%">
+    <!-- Booth data fetch error page will be shown if there's no booth data fetched or has error -->
     <div v-if="!booth || boothFetchError"
           class="d-flex flex-column align-center justify-center w-100 h-100 pa-2 text-center">
       <h4 class="text-h4 text-center text-error">
@@ -21,44 +22,25 @@
             replace>메인 페이지로 이동</VBtn>
     </div>
 
+    <!-- If the booth data exists and there's no error during fetch, then show the contents -->
     <div v-else>
+      <!-- Floating share panel -->
       <SharePanel :boothData="booth"
                   showHomeButton />
 
+      <!-- Floating button for automatic data update -->
       <DataUpdateFloatingButton v-if="booth.status.status !== BoothStatus.CLOSE"
                                 :interval="60"
                                 :fetchCallback="async () => await fetchData()" />
 
+      <!-- Booth information section placed in top of the page -->
       <BoothInfoSection :boothData="booth" />
 
+      <!-- Booth contents (Notice, Goods, Info Image, etc...) -->
       <VContainer class="adjusted-vcontainer">
-        <div>
-          <!-- <div v-if="booth.status.status !== BoothStatus.CLOSE"
-               class="d-flex flex-wrap align-center justify-end text-right ml-auto mb-2">
-            <VCheckbox v-model="autoRefreshEnabled"
-                       hide-details
-                       class="flex-grow-0"
-                       label="정보 자동 업데이트" />
-
-            <ThrottledButton variant="outlined"
-                             size="large"
-                             prepend-icon="mdi-refresh"
-                             class="ml-4"
-                             :throttle="5"
-                             :callback="async () => { await fetchData(); dataPollingRunner?.updateLastExecutedTimestampToCurrent(); }">
-              <span>새로고침</span>
-            </ThrottledButton>
-          </div>
-
-          <VExpandTransition>
-            <p v-if="dataPollingRunner"
-               class="text-right text-primary"
-               style="opacity: 0.5">※ 부스 정보가 {{ dataPollingInterval / 1000 }}초마다 자동 업데이트됩니다.</p>
-          </VExpandTransition> -->
-        </div>
-
         <VSpacer class="my-8" />
 
+        <!-- Booth notice -->
         <div v-if="booth.noticeContent">
           <ExpandableContent heading="공지 사항">
             <MarkdownRenderer :source="booth.noticeContent"
@@ -68,49 +50,66 @@
           <VSpacer class="my-8" />
         </div>
 
-        <div v-if="members.length > 0">
-          <ExpandableContent heading="멤버 목록">
-            <div class="d-flex flex-row flex-wrap justify-center">
-              <BoothMemberItem v-for="member in members"
-                               :key="member.id"
-                               :memberData="member" />
-            </div>
-          </ExpandableContent>
+        <!-- Below needs extra data fetch, and the extra fetch should be happen on client-side only. -->
+        <VSlideYReverseTransition leave-absolute>
+          <!-- If extra data is not loaded yet, show the indeterminate circular progress -->
+          <div v-if="!isExtraDataLoaded"
+               class="d-flex flex-column align-center justify-center w-100">
+            <VProgressCircular indeterminate
+                               size="large"
+                               class="my-2" />
 
-          <VSpacer class="my-8" />
-        </div>
+            <p class="text-subtitle-2">부스 내 굿즈 데이터를 불러오는 중...</p>
+          </div>
 
-        <div v-if="infoImage.url" class="w-100">
-          <ExpandableContent heading="부스 인포">
-            <VImg :src="infoImage.url"
-                  :lazy-src="infoImage.thumbnail ?? undefined"
-                  class="booth-info-image w-100 no-interaction rounded-lg"
-                  position="top"
-                  cover />
-          </ExpandableContent>
+          <div v-else>
+            <ClientOnly>
+              <div v-if="members.length > 0">
+                <ExpandableContent heading="멤버 목록">
+                  <div class="d-flex flex-row flex-wrap justify-center">
+                    <BoothMemberItem v-for="member in members"
+                                    :key="member.id"
+                                    :memberData="member" />
+                  </div>
+                </ExpandableContent>
 
-          <VSpacer class="my-8" />
-        </div>
+                <VSpacer class="my-8" />
+              </div>
 
-        <div>
-          <ExpandableContent heading="굿즈 목록">
-            <GoodsListView v-if="goodsNormalized.length > 0"
-                           :currencySymbol="currencySymbol"
-                           :goodsList="[...goodsNormalized, ...combinationsNormalized]"
-                           :goodsCategoryList="categories"
-                           omitEmptyGoodsCategory
-                           @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
-                           @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
-              <template #goods="props">
-                <GoodsItemPublic v-bind="props" />
-              </template>
-              <template #goods-combination="props">
-                <GoodsItemPublic v-bind="props" />
-              </template>
-            </GoodsListView>
-            <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
-          </ExpandableContent>
-        </div>
+              <div v-if="infoImage.url" class="w-100">
+                <ExpandableContent heading="부스 인포">
+                  <VImg :src="infoImage.url"
+                        :lazy-src="infoImage.thumbnail ?? undefined"
+                        class="booth-info-image w-100 no-interaction rounded-lg"
+                        position="top"
+                        cover />
+                </ExpandableContent>
+
+                <VSpacer class="my-8" />
+              </div>
+
+              <div>
+                <ExpandableContent heading="굿즈 목록">
+                  <GoodsListView v-if="goodsNormalized.length > 0"
+                                :currencySymbol="currencySymbol"
+                                :goodsList="[...goodsNormalized, ...combinationsNormalized]"
+                                :goodsCategoryList="categories"
+                                omitEmptyGoodsCategory
+                                @click:goods="(goodsId: number) => openGoodsItemDetailsDialog(goodsId, false)"
+                                @click:combination="(combinationId: number) => openGoodsItemDetailsDialog(combinationId, true)">
+                    <template #goods="props">
+                      <GoodsItemPublic v-bind="props" />
+                    </template>
+                    <template #goods-combination="props">
+                      <GoodsItemPublic v-bind="props" />
+                    </template>
+                  </GoodsListView>
+                  <h5 v-else class="text-h5 text-grey-darken-1">등록된 굿즈가 없습니다.</h5>
+                </ExpandableContent>
+              </div>
+            </ClientOnly>
+          </div>
+        </VSlideYReverseTransition>
       </VContainer>
     </div>
 
@@ -123,83 +122,69 @@
 <script lang="ts">
 import { APP_NAME, BoothStatus, CURRENCY_CODE_TO_SYMBOL_MAP, DEVELOPER_TWITTER_HANDLE, ErrorCodes, type IBooth, type IBoothMember, type IBoothResponse, type IErrorResponse, type IGoods, type IGoodsCategory, type IGoodsCombination } from "@myboothmanager/common";
 import { Goods, GoodsBase, GoodsCombination } from "@myboothmanager/common-ui";
-import { Vue } from "vue-facing-decorator";
-import { getUploadFileUrl } from "#imports";
+import { Setup, Vue } from "vue-facing-decorator";
 
 @NuxtComponent({
   async asyncData(context) {
     const { $publicAPI } = context;
 
-    const boothId = Number(context.$router.currentRoute.value.params["id"] as string);
+    /* === Important data === */
+    // Important data states setup
+    const boothId = useState<number>("boothId", () => -1);
     const boothFetchError = useState<ErrorCodes | null>("boothFetchError", () => null);
+    const booth = useState<IBooth | null>("booth", () => null);
 
-    if(!boothId || boothId <= 0) {
+    // Get booth ID from current route URL param
+    boothId.value = Number(context.$router.currentRoute.value.params["id"] as string);
+
+    // If booth ID is invalid, return error
+    if(!boothId || boothId.value <= 0) {
       boothFetchError.value = ErrorCodes.INVALID_REQUEST_BODY;
-      return { boothFetchError };
+
+      return { boothId, boothFetchError, booth };
     }
 
-    const boothAccessCheck = await $publicAPI.apiCaller.checkBoothPublicAccess(boothId);
-    if("errorCode" in boothAccessCheck) {
-      boothFetchError.value = boothAccessCheck.errorCode;
-      return { boothFetchError, booth: null };
-    } else if(boothAccessCheck.value === false) {
-      boothFetchError.value = ErrorCodes.BOOTH_NOT_PUBLISHED;
-      return { boothFetchError, booth: null };
+    // Check booth public accessibility
+    const boothAccessCheck = await $publicAPI.apiCaller.checkBoothPublicAccess(boothId.value);
+
+    // If the booth is not publicily accessible or has error during fetch, return error
+    if("errorCode" in boothAccessCheck || boothAccessCheck.value === false) {
+      boothFetchError.value = (boothAccessCheck as IErrorResponse).errorCode ?? ErrorCodes.BOOTH_NOT_PUBLISHED;
+
+      return { boothId, boothFetchError, booth };
     }
 
-    let booth: IBoothResponse | IErrorResponse | null = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchSingleBooth(boothId));
-    let members: Array<IBoothMember> = [];
-    let categories: Array<IGoodsCategory> = [];
-    let goods: Array<IGoods> = [];
-    let combinations: Array<IGoodsCombination> = [];
+    // Get the booth data from API
+    let boothFetched: IBoothResponse | IErrorResponse | null = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchSingleBooth(boothId.value));
 
-    if("errorCode" in booth) {
-      boothFetchError.value = booth.errorCode;
-      booth = null;
-      return { boothFetchError, booth };
+    // If the booth data is invalid or has error during fetch, return error
+    if("errorCode" in boothFetched || !boothFetched) {
+      boothFetchError.value = (boothFetched as IErrorResponse).errorCode ?? ErrorCodes.UNKNOWN_BOOTH_ERROR;
+
+      return { boothId, boothFetchError, booth };
     }
 
-    if(booth && !("errorCode" in booth)) {
-      const goodsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsOfBooth(boothId));
-      if(goodsResp instanceof Array) goods = goodsResp;
-
-      const combinationsResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(boothId));
-      if(combinationsResp instanceof Array) combinations = combinationsResp;
-
-      const membersResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllMembersOfBooth(boothId));
-      if(membersResp instanceof Array) members = membersResp;
-
-      const categoriesResp = await $publicAPI.wrap(() => $publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(boothId));
-      if(categoriesResp instanceof Array) categories = categoriesResp;
-    }
-
+    // If all done, normalize important states
+    booth.value = boothFetched;
     boothFetchError.value = null;
-    return { boothFetchError, booth, members, goods, combinations, categories };
+
+    // Return all states
+    return {
+      boothId,
+      boothFetchError,
+      booth,
+    };
   },
   setup() {
-    const FETCH_KEYS = {
+    const IMPORTANT_DATA_FETCH_KEYS = {
       booth: useNuxtApp().$publicAPI.apiCaller.fetchSingleBooth.name,
-      members: useNuxtApp().$publicAPI.apiCaller.fetchAllMembersOfBooth.name,
-      goods: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsOfBooth.name,
-      combinations: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth.name,
-      categories: useNuxtApp().$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth.name,
-    } as const;
-
-    // Explicit check for booth data availability
-    let booth: Ref<IBooth | IErrorResponse | null> = useNuxtData<IBooth>(FETCH_KEYS.booth).data ?? null;
-    if(!booth.value || "errorCode" in booth.value) {
-      booth = ref(null);
-    }
+    };
 
     return {
-      FETCH_KEYS,
-      boothId: Number(useRoute().params["id"] as string),
-      boothFetchError: useState("boothFetchError", () => null) ?? null,
-      booth,
-      members: useNuxtData(FETCH_KEYS.members).data ?? [],
-      goods: useNuxtData(FETCH_KEYS.goods).data ?? [],
-      combinations: useNuxtData(FETCH_KEYS.combinations).data ?? [],
-      categories: useNuxtData(FETCH_KEYS.categories).data ?? [],
+      IMPORTANT_DATA_FETCH_KEYS,
+      boothId: useState<number>("boothId", () => -1),
+      boothFetchError: useState<ErrorCodes | null>("boothFetchError", () => null),
+      booth: useState<IBooth | null>("booth", () => null),
     };
   },
 })
@@ -207,18 +192,25 @@ export default class IndividualBoothPage extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly ErrorCodes = ErrorCodes;
 
+  @Setup(() => useNuxtApp().$publicAPI)
+  declare readonly $publicAPI: ReturnType<typeof useNuxtApp>["$publicAPI"];
+
   goodsItemDetailsDialogOpen: boolean = false;
   goodsItemDetailsDialogTargetData: GoodsBase | null = null;
   goodsItemDetailsDialogOwnerMembers: IBoothMember[] = [];
 
-  declare readonly FETCH_KEYS: Record<string, string>;
-  declare boothFetchError: ErrorCodes | null;
+  /* Important data will be fetched before navigation (done in asyncData()) */
+  declare readonly IMPORTANT_DATA_FETCH_KEYS: Record<string, string>;
+  declare readonly boothFetchError: ErrorCodes | null;
   declare readonly boothId: number;
   declare readonly booth: IBooth | null;
-  declare readonly members: Array<IBoothMember>;
-  declare readonly categories: Array<IGoodsCategory>;
-  declare readonly goods: Array<IGoods>;
-  declare readonly combinations: Array<IGoodsCombination>;
+
+  /* Extra data will be fetched after navigation (done in fetchExtraData()) */
+  isExtraDataLoaded: boolean = false;
+  members: IBoothMember[] = [];
+  categories: IGoodsCategory[] = [];
+  goods: IGoods[] = [];
+  combinations: IGoodsCombination[] = [];
 
   get goodsNormalized(): Array<Goods> {
     return this.goods.map((goods) => new Goods(goods));
@@ -242,9 +234,18 @@ export default class IndividualBoothPage extends Vue {
   get autoRefreshEnabled(): boolean { return useLocalStore().boothPageSettings.enableAutoRefresh; }
   set autoRefreshEnabled(value: boolean) { useLocalStore().boothPageSettings.enableAutoRefresh = value; }
 
-  mounted() {
+  async mounted() {
+    // This generally do the trick for setup() data
+    // Ensures setup() data to be available
+    await this.$nextTick();
+
     /* *** Set last visited booth id *** */
     useLocalStore().boothPageSettings.lastVisitedBoothId = this.boothId;
+
+    /* *** Fetch extra data *** */
+    if(!this.isExtraDataLoaded) {
+      await this.fetchExtraData();
+    }
   }
 
   created() {
@@ -288,8 +289,30 @@ export default class IndividualBoothPage extends Vue {
   }
 
   async fetchData() {
-    /* *** Refresh data *** */
-    await refreshNuxtData(Object.values(this.FETCH_KEYS ?? {}));
+    // Refresh important data using refreshNuxtData()
+    await refreshNuxtData(Object.values(this.IMPORTANT_DATA_FETCH_KEYS));
+
+    // Refresh extra data by calling fetchExtraData()
+    await this.fetchExtraData();
+  }
+
+  async fetchExtraData() {
+    /* *** Client-only lazy fetch extra data *** */
+
+    const goodsResp = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsOfBooth(this.boothId), true, false);
+    if(goodsResp instanceof Array) this.goods = goodsResp;
+
+    const combinationsResp = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCombinationOfBooth(this.boothId), true, false);
+    if(combinationsResp instanceof Array) this.combinations = combinationsResp;
+
+    const membersResp = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllMembersOfBooth(this.boothId), true, false);
+    if(membersResp instanceof Array) this.members = membersResp;
+
+    const categoriesResp = await this.$publicAPI.wrap(() => this.$publicAPI.apiCaller.fetchAllGoodsCategoryOfBooth(this.boothId), true, false);
+    if(categoriesResp instanceof Array) this.categories = categoriesResp;
+    // TODO: error handling for each API calls
+
+    this.isExtraDataLoaded = true;
   }
 
   openGoodsItemDetailsDialog(id: number, isCombination: boolean = false) {
