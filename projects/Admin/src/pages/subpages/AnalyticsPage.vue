@@ -154,7 +154,7 @@ class AnalyticsPage extends Vue {
   currentSelectedDay: Dateonly | "all" = "all";
 
   async mounted() {
-    await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
+    await useAdminAPIStore().fetchBoothOrdersOfCurrentBooth();
 
     this.dataLoading = false;
   }

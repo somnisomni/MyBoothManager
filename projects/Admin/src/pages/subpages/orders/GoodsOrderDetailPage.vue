@@ -171,7 +171,7 @@ class GoodsOrderDetailPage extends Vue {
   async mounted() {
     if(!this.orderData) {
       // If order data is not fetched yet, try to fetch it
-      await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
+      await useAdminAPIStore().fetchBoothOrdersOfCurrentBooth();
     }
   }
 
@@ -209,7 +209,7 @@ class GoodsOrderDetailPage extends Vue {
   }
 
   async cancelOrder() {
-    const response = await useAdminAPIStore().updateGoodsOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
+    const response = await useAdminAPIStore().updateBoothOrderStatus(this.orderId, { status: GoodsOrderStatus.CANCELED });
 
     if(response === true) {
       // TODO: further process

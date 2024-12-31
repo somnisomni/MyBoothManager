@@ -159,7 +159,7 @@ class GoodsOrdersListPage extends Vue {
 
   async onRefreshClick() {
     this.dataLoading = true;
-    await useAdminAPIStore().fetchGoodsOrdersOfCurrentBooth();
+    await useAdminAPIStore().fetchBoothOrdersOfCurrentBooth();
     this.dataLoading = false;
   }
 

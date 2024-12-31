@@ -560,9 +560,9 @@ const useAdminAPIStore = defineStore("admin-api", () => {
     updateGoodsCategoryInfo,
     deleteGoodsCategory,
 
-    fetchGoodsOrdersOfCurrentBooth: fetchBoothOrdersOfCurrentBooth,
-    createGoodsOrder: createBoothOrder,
-    updateGoodsOrderStatus: updateBoothOrderStatus,
+    fetchBoothOrdersOfCurrentBooth,
+    createBoothOrder,
+    updateBoothOrderStatus,
   };
 });
 
