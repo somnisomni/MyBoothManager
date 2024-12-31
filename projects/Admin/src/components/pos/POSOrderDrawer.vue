@@ -199,7 +199,7 @@ class POSOrderDrawer extends Vue {
 
     // API call
     const results = [
-      await useAdminAPIStore().createGoodsOrder(data),
+      await useAdminAPIStore().createBoothOrder(data),
       await useAdminAPIStore().fetchGoodsOfCurrentBooth(),
       await useAdminAPIStore().fetchGoodsCombinationsOfCurrentBooth(),
     ];
