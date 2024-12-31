@@ -4,9 +4,26 @@
     <VProgressCircular :indeterminate="loadingTargetLength < 0"
                        :model-value="(100 / loadingTargetLength) * loadingTargetCurrentProgress"
                        size="96"
-                       class="mb-4" />
-    <div class="text-h6">{{ loadingTargetName }} 불러오는 중...</div>
-    <div v-if="loadingTargetLength >= 0" class="text-caption">{{ loadingTargetCurrentProgress + 1}} / {{ loadingTargetLength }}</div>
+                       class="mb-4"
+                       :color="(apiErrorCode || apiErrorMessage) ? 'error' : undefined" />
+
+    <div v-if="!apiErrorCode && !apiErrorMessage"
+         class="text-h6 text-center">{{ loadingTargetName }} 불러오는 중...</div>
+    <div v-else
+         class="text-center text-error">
+      <div class="text-h6">{{ loadingTargetName }} 데이터를 불러오는 중 오류 발생</div>
+
+      <div v-if="apiErrorMessage"
+           v-text="apiErrorMessage"
+           class="text-caption my-2" />
+
+      <div>잠시 후 다시 시도해보거나 개발자에게 문의해주세요.</div>
+    </div>
+
+    <div v-if="loadingTargetLength >= 0"
+         class="text-caption">
+      <span>{{ loadingTargetCurrentProgress + 1}} / {{ loadingTargetLength }}</span>
+    </div>
   </VContainer>
 
   <ServerDataLoadErrorDialog v-model="apiErrorCode"
@@ -28,6 +45,7 @@ export default class AdminLoadDataOverlay extends Vue {
   loadingTargetCurrentProgress = -1;
 
   apiErrorCode: ErrorCodes | null = null;
+  apiErrorMessage: string | null = null;
 
   get isBoothDataStillLoading() {
     return !useAdminStore().isBoothDataLoaded;
@@ -69,22 +87,26 @@ export default class AdminLoadDataOverlay extends Vue {
     }
 
     // Fetch other data
-    const fetchTargets: Array<[string, () => Promise<true | ErrorCodes>]> = [
-      ["부스 멤버 목록", $apiStore.fetchBoothMembersOfCurrentBooth],
-      ["굿즈 목록", $apiStore.fetchGoodsOfCurrentBooth],
-      ["굿즈 세트 목록", $apiStore.fetchGoodsCombinationsOfCurrentBooth],
-      ["굿즈 카테고리 목록", $apiStore.fetchGoodsCategoriesOfCurrentBooth],
-      ["판매 기록", $apiStore.fetchGoodsOrdersOfCurrentBooth],
-    ];
+    const fetchTargets = useAdminStore().boothAllDataFetchTargets;
 
     this.loadingTargetLength = fetchTargets.length;
     this.loadingTargetCurrentProgress = 0;
     for(const [targetName, fetchFunc] of fetchTargets) {
       this.loadingTargetName = targetName;
 
-      const response = await fetchFunc();
-      if(typeof response === "number") {
-        this.apiErrorCode = response;
+      try {
+        const response = await fetchFunc();
+        if(typeof response === "number") {
+          this.apiErrorCode = response;
+          return;
+        }
+      } catch(e) {
+        console.error(e);
+
+        if(e instanceof Error) {
+          this.apiErrorMessage = e.message;
+        }
+
         return;
       }
 

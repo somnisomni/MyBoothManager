@@ -1,16 +1,21 @@
 <template>
   <VFadeTransition leave-absolute>
-    <div v-if="!loaded" class="position-absolute w-100 h-100" style="z-index: 1000">
+    <div v-if="!loaded"
+         class="position-absolute w-100 h-100"
+         style="z-index: 1000">
       <AdminLoadDataOverlay @completed="loaded = true" />
     </div>
-    <div v-else-if="needCreateBooth" class="position-absolute w-100 h-100" style="z-index: 1000">
+    <div v-else-if="needCreateBooth"
+         class="position-absolute w-100 h-100"
+         style="z-index: 1000">
       <NoBoothAvailableOverlay />
     </div>
   </VFadeTransition>
 
   <RouterView v-slot="{ Component }">
     <VFadeTransition leave-absolute>
-      <component v-if="loaded && boothAvailable" :is="Component" />
+      <component v-if="loaded && boothAvailable"
+                 :is="Component" />
     </VFadeTransition>
   </RouterView>
 </template>

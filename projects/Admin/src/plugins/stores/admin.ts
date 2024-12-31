@@ -1,7 +1,7 @@
 import type { GoodsAdmin, GoodsCombinationAdmin } from "@/lib/classes";
 import { defineStore } from "pinia";
-import { computed, ref, type ToRefs } from "vue";
-import { CURRENCY_INFO, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
+import { computed, readonly, ref, type DeepReadonly, type ToRefs } from "vue";
+import { CURRENCY_INFO, type ErrorCodes, type IAccount, type IBooth, type IBoothMember, type ICurrencyInfo, type IGoodsCategory, type IGoodsOrder } from "@myboothmanager/common";
 import { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { useAdminAPIStore } from "./api";
 
@@ -34,6 +34,14 @@ const useAdminStore = defineStore("admin", () => {
   const isFirstLoad = ref<boolean>(true);
 
   const globalSnackbarContexts = new SnackbarContextWrapper();
+
+  const boothAllDataFetchTargets: DeepReadonly<Array<[string, () => Promise<true | ErrorCodes>]>> = readonly([
+    [ "부스 멤버 목록", $apiStore.fetchBoothMembersOfCurrentBooth ],
+    [ "굿즈 목록", $apiStore.fetchGoodsOfCurrentBooth ],
+    [ "굿즈 세트 목록", $apiStore.fetchGoodsCombinationsOfCurrentBooth ],
+    [ "굿즈 카테고리 목록", $apiStore.fetchGoodsCategoriesOfCurrentBooth ],
+    [ "판매 기록", $apiStore.fetchBoothOrdersOfCurrentBooth ],
+  ]);
 
   /* Computed States */
   const currentBoothCurrencyInfo = computed<ICurrencyInfo>(() => CURRENCY_INFO[currentBooth.booth.value?.currencyCode ?? "KRW"]);
@@ -70,6 +78,7 @@ const useAdminStore = defineStore("admin", () => {
     isAllDataLoaded,
     isFirstLoad,
     globalSnackbarContexts,
+    boothAllDataFetchTargets,
 
     clear,
     changeBooth,
