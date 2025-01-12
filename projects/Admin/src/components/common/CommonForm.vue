@@ -21,6 +21,8 @@
                  :density="field.density"
                  :prefix="field.type === FormFieldType.CURRENCY ? ((field as IFormFieldCurrencyOptions).currencySymbol ?? currentBoothCurrencySymbol) : field.prefix"
                  :suffix="field.suffix"
+                 :prependIcon="fields.prependIcon"
+                 :appendIcon="fields.appendIcon"
                  :min="
                    ((isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)?.toString())
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
@@ -148,6 +150,8 @@ export interface IFormFieldOptions {
   suffix?: string;
   hide?: boolean;
   disabled?: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
 
   // Validation
   optional?: boolean;
