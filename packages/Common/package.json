@@ -1,6 +1,6 @@
 {
   "name": "@myboothmanager/common",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.15.3",
   "license": "PolyForm-Strict-1.0.0",
