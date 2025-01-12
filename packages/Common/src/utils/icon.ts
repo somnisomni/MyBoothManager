@@ -1,4 +1,4 @@
-import { siArtstation, siBehance, siBluesky, siDeviantart, siFacebook, siFlickr, siGithub, siInstagram, siMastodon, siMedium, siMisskey, siPinterest, siPixiv, siReddit, siSinaweibo, siThreads, siTumblr, siX, type SimpleIcon } from "simple-icons";
+import { siArtstation, siBehance, siBluesky, siDeviantart, siDiscord, siFacebook, siFlickr, siGithub, siInstagram, siKakaotalk, siKickstarter, siKofi, siLine, siMastodon, siMedium, siMisskey, siNiconico, siPatreon, siPinterest, siPixiv, siReddit, siSinaweibo, siSteam, siTelegram, siThreads, siTiktok, siTistory, siTumblr, siTwitch, siVimeo, siX, siYoutube, type SimpleIcon } from "simple-icons";
 
 const hostIconMap: { [key: string]: SimpleIcon } = {
   // Twitter / X
@@ -6,6 +6,15 @@ const hostIconMap: { [key: string]: SimpleIcon } = {
   "x.com": siX,
   // GitHub
   "github.com": siGithub,
+  // YouTube
+  "youtube.com": siYoutube,
+  "youtu.be": siYoutube,
+  // Vimeo
+  "vimeo.com": siVimeo,
+  // Twitch
+  "twitch.tv": siTwitch,
+  // TikTok
+  "tiktok.com": siTiktok,
   // Instagram
   "instagram.com": siInstagram,
   // Facebook
@@ -14,6 +23,11 @@ const hostIconMap: { [key: string]: SimpleIcon } = {
   "threads.net": siThreads,
   // Pixiv
   "pixiv.net": siPixiv,
+  // niconico
+  "nicovideo.jp": siNiconico,
+  "seiga.nicovideo.jp": siNiconico,
+  "sp.nicovideo.jp": siNiconico,
+  "sp.seiga.nicovideo.jp": siNiconico,
   // Reddit
   "reddit.com": siReddit,
   // Bluesky
@@ -40,12 +54,36 @@ const hostIconMap: { [key: string]: SimpleIcon } = {
   "tumblr.com": siTumblr,
   // Medium
   "medium.com": siMedium,
+  // Tistory
+  "tistory.com": siTistory,
   // ArtStation
   "artstation.com": siArtstation,
   // DeviantArt
   "deviantart.com": siDeviantart,
   // Flickr
   "flickr.com": siFlickr,
+  // Discord
+  "discord.com": siDiscord,
+  "discord.gg": siDiscord,
+  // KakaoTalk
+  "kakao.com": siKakaotalk,
+  "qr.kakao.com": siKakaotalk,
+  "qr.kakaopay.com": siKakaotalk,
+  // Telegram
+  "telegram.org": siTelegram,
+  "t.me": siTelegram,
+  // LINE
+  "line.me": siLine,
+  "lin.ee": siLine,
+  // Steam
+  "steampowered.com": siSteam,
+  "steamcommunity.com": siSteam,
+  // Kickstarter
+  "kickstarter.com": siKickstarter,
+  // Ko-fi
+  "ko-fi.com": siKofi,
+  // Patreon
+  "patreon.com": siPatreon,
 };
 
 export function getSimpleIconByUrl(href: string | URL): "mail" | SimpleIcon | null {
