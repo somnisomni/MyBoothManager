@@ -1,6 +1,6 @@
 {
   "name": "@myboothmanager/dev-shared",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": "somni <me@somni.one>",
   "packageManager": "pnpm@9.15.3",
   "license": "PolyForm-Strict-1.0.0",
