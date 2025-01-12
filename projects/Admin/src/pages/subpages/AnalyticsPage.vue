@@ -143,7 +143,7 @@ class AnalyticsPage extends Vue {
         ticks: {
           autoSkip: true,
           autoSkipPadding: 10,
-          callback: (value) => `${this.currencySymbol}${value.toLocaleString()}`,
+          callback: this.chartPriceTicksCallback,
           stepSize: useAdminStore().currentBoothCurrencyInfo.step,
         },
       },
@@ -274,6 +274,10 @@ class AnalyticsPage extends Vue {
     return this.orderHistoryOfCurrentSelectedDay.reduce(
       (acc, cur) => acc + cur.order.reduce(
         (acc2, cur2) => acc2 + (cur2.cId ? cur2.quantity * (cur2.combinedGoods ?? []).length : cur2.quantity), 0), 0);
+  }
+
+  chartPriceTicksCallback(value: string | number): string {
+    return `${this.currencySymbol}${value.toLocaleString()}`;
   }
 }
 
