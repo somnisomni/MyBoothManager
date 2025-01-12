@@ -98,7 +98,7 @@ export default class BoothMemberManageDialog extends Vue {
       placeholder: "https://twitter.com/nasa",
       rules: [
         (input: string) =>
-          input.length <= 0 || input.match(/^(https?:\/\/)(.+\..+)/) ? true : "URL 형식이 올바르지 않습니다.",
+          input.length <= 0 || input.match(/^(https?:\/\/)(.+\..+)/) || input.match(/^mailto:(.+@.+\..+)/) ? true : "URL 형식이 올바르지 않습니다.",
       ],
     },
     // primaryColor: {
