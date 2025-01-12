@@ -26,7 +26,8 @@
                   :disabled="updateInProgress" />
     </VLayout>
 
-    <VAlert v-if="typeof updateErrorCode === 'number'" type="error">
+    <VAlert v-if="typeof updateErrorCode === 'number'"
+            type="error">
       <span v-if="updateErrorCode === ErrorCodes.ENTITY_DUPLICATED">같은 이름의 카테고리가 이미 존재합니다.</span>
       <span v-else>오류가 발생했습니다. ({{ updateErrorCode }})</span>
     </VAlert>
@@ -100,6 +101,7 @@ export default class GoodsCategoryManageDialog extends Vue {
 
     while(!this.form) await this.$nextTick();
 
+    this.updateErrorCode = null;
     this.formModels.boothId = useAdminStore().currentBooth.booth!.id;
 
     if(this.categoryId && this.editMode) {
@@ -117,7 +119,7 @@ export default class GoodsCategoryManageDialog extends Vue {
     }
   }
 
-  @Watch("formData", { deep: true })
+  @Watch("formModels", { deep: true })
   onFormDataUpdated() {
     this.updateErrorCode = null;
   }
