@@ -21,8 +21,8 @@
   "module": "./dist/common-ui.js",
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@myboothmanager/dev-shared": "workspace:^",
     "@myboothmanager/common": "workspace:^",
+    "@myboothmanager/dev-shared": "workspace:^",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/node": "^22.10.5",
