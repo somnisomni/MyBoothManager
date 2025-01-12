@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 import { fileURLToPath, URL } from "node:url";
