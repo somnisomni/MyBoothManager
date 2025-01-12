@@ -81,6 +81,7 @@ export default toNative(MarkdownRenderer);
       top: 120%;
       left: 0;
       right: 0;
+      padding: 0.33em 0.66em;
       font-size: 0.66em;
       text-align: center;
       background-color: rgba(var(--v-theme-background), 1.0);
