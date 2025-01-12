@@ -78,11 +78,15 @@ export default toNative(MarkdownRenderer);
     &::after {
       content: attr(href);
       position: absolute;
-      top: 100%;
+      top: 120%;
       left: 0;
       right: 0;
       font-size: 0.66em;
       text-align: center;
+      background-color: rgba(var(--v-theme-background), 1.0);
+      box-shadow: 0 0 0.5em currentColor;
+      border-radius: 99999px;
+      z-index: 1;
 
       max-width: 200px;
       overflow: hidden;
@@ -101,7 +105,7 @@ export default toNative(MarkdownRenderer);
 
       &::after {
         pointer-events: initial;
-        opacity: 0.5;
+        opacity: 1;
         transform: translateY(0);
       }
     }
