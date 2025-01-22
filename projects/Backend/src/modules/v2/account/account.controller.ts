@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
 import AccountService from "./account.service";
 import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
 import { IAuthData } from "../auth/jwt-util.service";
 import { AccountResponseDto, SuperAdminAccountResponseDto } from "./dto/account.dto";
-import { UpdateAccountRequestDto } from "./dto/update.dto";
-import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
+import type { UpdateAccountRequestDto } from "./dto/update.dto";
+import type { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
+import type { CreateAccountRequestDto } from "@/modules/v2/account/dto/create.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
 
 @Controller("/account")
 export default class AccountController {
@@ -64,6 +65,15 @@ export default class AccountController {
   @AllowedFor(UserTypes.SUPER_ADMIN)
   async findOne(@Param("id", ParseIntPipe) id: number): Promise<SuperAdminAccountResponseDto> {
     return new SuperAdminAccountResponseDto(await this.account.findOne(id));
+  }
+
+  /**
+   * Create a new account
+   */
+  @Post()
+  @AllowedFor(UserTypes.SUPER_ADMIN)
+  async create(@Body() createDto: CreateAccountRequestDto): Promise<SuperAdminAccountResponseDto> {
+    return new SuperAdminAccountResponseDto(await this.account.create(createDto));
   }
 
   /**
