@@ -44,6 +44,8 @@ describe("CacheMap", () => {
     expect(initializedMap.has("값 가져오기")).toBe(true);
 
     expect(await initializedMap.get("get")).toBe("get_fetched");
+    expect(await initializedMap.get("this map is already initialized")).toBe("this map is already initialized_fetched");
+    expect(await initializedMap.get("값 가져오기")).toBe("값 가져오기_fetched");
   });
 
   it("should be able to test value of cached value", async () => {
@@ -58,11 +60,11 @@ describe("CacheMap", () => {
   it("should be able to test value even if it is not in cache yet", async () => {
     const map = new TestCacheMap();
 
-    expect(map.has("test")).toBeFalsy();
+    expect(map.has("test")).toBe(false);
     expect(await map.testValue("test", "test_fetched")).toBe(true);
     expect(await map.testValue("test", "test_INVALIDVALUE")).toBe(false);
 
-    expect(map.has("invalid")).toBeFalsy();
+    expect(map.has("invalid")).toBe(false);
     expect(await map.testValue("invalid", "INVALID_VALUE")).toBe(false);
   });
 
@@ -72,16 +74,16 @@ describe("CacheMap", () => {
     await map.get("test2");
     await map.get("test3");
 
-    expect(map.has("test1")).toBeTruthy();
-    expect(map.has("test2")).toBeTruthy();
-    expect(map.has("test3")).toBeTruthy();
+    expect(map.has("test1")).toBe(true);
+    expect(map.has("test2")).toBe(true);
+    expect(map.has("test3")).toBe(true);
     expect(map.count()).toBe(3);
 
     map.invalidate("test1");
 
-    expect(map.has("test1")).toBeFalsy();
-    expect(map.has("test2")).toBeTruthy();
-    expect(map.has("test3")).toBeTruthy();
+    expect(map.has("test1")).toBe(false);
+    expect(map.has("test2")).toBe(true);
+    expect(map.has("test3")).toBe(true);
     expect(map.count()).toBe(2);
   });
 });

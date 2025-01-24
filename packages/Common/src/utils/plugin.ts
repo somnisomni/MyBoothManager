@@ -32,7 +32,7 @@ export const DOMPURIFY_OPTIONS: Config = {
     "source",
     "template",
   ],
-  ADD_ATTR: ["target"],
+  ADD_ATTR: [ "target" ],
   SANITIZE_DOM: true,
 };
 

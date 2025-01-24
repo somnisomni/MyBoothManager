@@ -2,7 +2,7 @@
 
 import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
-import { type Model, fn, col, where, type ModelDefined, BaseError, type FindOptions, type CreateOptions, type InstanceDestroyOptions, type ModelAttributes } from "sequelize";
+import { type Model, fn, col, where, type ModelDefined, BaseError, type FindOptions, type CreateOptions, type InstanceDestroyOptions } from "sequelize";
 import type { Fn, Where } from "sequelize/types/utils";
 import { EntityNotFoundException } from "../exceptions";
 

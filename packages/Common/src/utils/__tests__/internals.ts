@@ -20,7 +20,7 @@ const testBoothWithInternals: WithSequelizeInternals<IBoothAdmin> = {
   updatedAt: new Date(),
 };
 
-describe("src/utils/internals.ts", () => {
+describe("Common Internals", () => {
   it("should delete sequelize internal keys", () => {
     expect(testBoothWithInternals).toHaveProperty("createdAt");
     expect(testBoothWithInternals).toHaveProperty("updatedAt");

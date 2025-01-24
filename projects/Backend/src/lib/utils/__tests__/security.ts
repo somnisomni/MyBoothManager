@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { generateRandomDigestFileName } from "@/lib/utils/security";
 
 describe("Security Utilities", () => {

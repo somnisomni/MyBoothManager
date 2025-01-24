@@ -1,4 +1,5 @@
-import { Sequelize } from "sequelize-typescript";
+import { Sequelize, SequelizeOptions } from "sequelize-typescript";
+import { expectTypeOf } from "expect-type";
 import generateConfig from "../config";
 
 const testEnvVars = {
@@ -33,6 +34,7 @@ describe("DB Config", () => {
     expect(config).toHaveProperty("username", testEnvVars.MYSQL_USER);
     expect(config).toHaveProperty("password", testEnvVars.MYSQL_PASSWORD);
     expect(config).toHaveProperty("database", testEnvVars.MYSQL_DATABASE);
+    expectTypeOf(config).toMatchTypeOf<SequelizeOptions>();
   });
 
   it("should be able to use as configuration while initializing Sequelize", () => {
