@@ -221,17 +221,21 @@ class BoothManageDialog extends Vue {
   }
 
   get normalizedFairList(): Array<Record<string, unknown>> {
+    const currentBoothFair = useAdminStore().currentBooth.booth?.fair;
+
     return [
       // Placeholder fair data while loading fair list
-      ...(this.editMode && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed) ? [{
-        ...useAdminStore().currentBooth.booth?.fair,
-      }] : []),
+      ...(this.editMode && currentBoothFair && (this.isFairListLoading || useProxyStore().isCurrentBoothFairPassed) ? [
+        currentBoothFair,
+      ] : []),
 
       // Actual fair data fetched from API
-      ...useProxyStore().availableFairList.map((fair) => ({
-        ...fair,
-        openingDates: toDateRangeString(fair.openingDates),
-      })),
+      ...useProxyStore().availableFairList
+        .sort((a, b) => a.openingDates[0].getTime() - b.openingDates[0].getTime())
+        .map((fair) => ({
+          ...fair,
+          openingDates: toDateRangeString(fair.openingDates),
+        })),
 
       // Custom fair
       {
@@ -281,7 +285,10 @@ class BoothManageDialog extends Vue {
       // No `await` here
       AdminAPI.fetchAvailableFairs().then((response) => {
         if(typeof response === "object") {
-          useProxyStore().availableFairList = response;
+          useProxyStore().availableFairList = response.map((fair) => ({
+            ...fair,
+            openingDates: fair.openingDates.map((date) => new Date(date)),
+          }));
         }
 
         this.isFairListLoading = false;
