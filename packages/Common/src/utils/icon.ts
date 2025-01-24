@@ -94,8 +94,8 @@ export function getSimpleIconByUrl(href: string | URL): "mail" | SimpleIcon | nu
   }
 
   const host = url.hostname.replace(/^www(\d+)?\./, "");
-  if(host in hostIconMap) {
-    return hostIconMap[host];
+  if(host in hostIconMap || Object.keys(hostIconMap).some((key) => host.endsWith(key))) {
+    return hostIconMap[host] ?? hostIconMap[Object.keys(hostIconMap).find((key) => host.endsWith(key))!];
   }
 
   return null;
