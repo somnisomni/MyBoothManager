@@ -1,20 +1,23 @@
-import { GoodsStockVisibility, IGoodsCreateRequest, IGoodsModel } from "@myboothmanager/common";
+import type { IGoodsCreateRequest, IGoodsModel } from "@myboothmanager/common";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
-import UploadStorage from "./uploadstorage";
 import GoodsCombination from "./goods-combination";
+import UploadStorage from "./uploadstorage";
 
 @Table
-@DefaultScope(() => ({
-  include: [
-    {
-      as: "goodsImage",
-      model: UploadStorage,
-    },
-  ],
-}))
+@DefaultScope(() => {
+  return ({
+    include: [
+      {
+        as: "goodsImage",
+        model: UploadStorage,
+      },
+    ],
+  });
+})
 export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> implements IGoodsModel {
   @PrimaryKey
   @Unique
@@ -57,16 +60,19 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
   get price(): number { return parseFloat(this.getDataValue("price").toFixed(3)); }
+
   set price(value: number) { this.setDataValue("price", parseFloat(Number(value).toFixed(3))); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
   get stockInitial(): number { return Math.floor(this.getDataValue("stockInitial")); }
+
   set stockInitial(value: number) { this.setDataValue("stockInitial", Math.floor(Number(value))); }
 
   @AllowNull(false)
   @Column(DataTypes.INTEGER.UNSIGNED)
   get stockRemaining(): number { return Math.floor(this.getDataValue("stockRemaining")); }
+
   set stockRemaining(value: number) { this.setDataValue("stockRemaining", Math.floor(Number(value))); }
 
   @AllowNull(false)
@@ -84,7 +90,6 @@ export default class Goods extends Model<IGoodsModel, IGoodsCreateRequest> imple
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare goodsImageId?: number | null;
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)

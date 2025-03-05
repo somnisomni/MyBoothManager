@@ -1,11 +1,11 @@
-import { SequelizeOptions } from "sequelize-typescript";
+import type { SequelizeOptions } from "sequelize-typescript";
 
 export default function generateConfig(): SequelizeOptions {
-  if(!process.env.MYSQL_HOST ||
-     !process.env.MYSQL_PORT ||
-     !process.env.MYSQL_USER ||
-     !process.env.MYSQL_PASSWORD ||
-     !process.env.MYSQL_DATABASE) {
+  if(!process.env.MYSQL_HOST
+    || !process.env.MYSQL_PORT
+    || !process.env.MYSQL_USER
+    || !process.env.MYSQL_PASSWORD
+    || !process.env.MYSQL_DATABASE) {
     throw new Error("Missing crucial parameters for MySQL connection!");
   }
 

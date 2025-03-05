@@ -1,32 +1,34 @@
-import { BoothStatus, type IBoothModel, IBoothExpense, IBoothCreateRequest, SupportedCurrencyCodes, IBoothRelatedLink } from "@myboothmanager/common";
+import type { IBoothExpense, IBoothCreateRequest, SupportedCurrencyCodes, IBoothRelatedLink, BoothStatus, type IBoothModel } from "@myboothmanager/common";
+import { DateTime } from "luxon";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
-import { DateTime } from "luxon";
 import Account from "./account";
-import GoodsCategory from "./goods-category";
-import GoodsOrder from "./goods-order";
-import UploadStorage from "./uploadstorage";
-import Goods from "./goods";
-import GoodsCombination from "./goods-combination";
 import BoothMember from "./booth-member";
 import Fair from "./fair";
+import Goods from "./goods";
+import GoodsCategory from "./goods-category";
+import GoodsCombination from "./goods-combination";
+import GoodsOrder from "./goods-order";
+import UploadStorage from "./uploadstorage";
 
 @Table
-@DefaultScope(() => ({
-  include: [{
-    as: "associatedFair",
-    model: Fair,
-    nested: false,
-  }, {
-    as: "bannerImage",
-    model: UploadStorage,
-    nested: false,
-  }, {
-    as: "infoImage",
-    model: UploadStorage,
-    nested: false,
-  }],
-}))
+@DefaultScope(() => {
+  return ({
+    include: [ {
+      as: "associatedFair",
+      model: Fair,
+      nested: false,
+    }, {
+      as: "bannerImage",
+      model: UploadStorage,
+      nested: false,
+    }, {
+      as: "infoImage",
+      model: UploadStorage,
+      nested: false,
+    } ],
+  });
+})
 export default class Booth extends Model<IBoothModel, IBoothCreateRequest> implements IBoothModel {
   @PrimaryKey
   @Unique
@@ -87,11 +89,12 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @AllowNull
   @Default(null)
   @Column(DataTypes.JSON)
-  get datesOpenInFair(): Array<string> | null {
+  get datesOpenInFair(): string[] | null {
     return this.getDataValue("datesOpenInFair") ?? null;
   }
-  set datesOpenInFair(value: Array<string> | Array<Date>) {
-    const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
+
+  set datesOpenInFair(value: string[] | Date[]) {
+    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
     this.setDataValue("datesOpenInFair", Array.from(new Set(dateonlyArray)));
   }
 
@@ -131,7 +134,6 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare infoImageId?: number | null;
-
 
   /* === Relations === */
   @BelongsTo(() => Account, "ownerId")

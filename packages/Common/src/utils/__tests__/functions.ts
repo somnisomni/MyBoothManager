@@ -4,7 +4,7 @@ describe("Common Functions", () => {
   describe("deleteKeys()", () => {
     it("should delete keys from object in-place", () => {
       const obj = { a: 1, b: 2, c: 3, d: 4 };
-      const keys = ["a", "c"] as const;
+      const keys = [ "a", "c" ] as const;
 
       expect(obj).toBeInstanceOf(Object);
       expect(Object.keys(obj)).toHaveLength(4);

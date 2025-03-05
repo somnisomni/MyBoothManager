@@ -1,6 +1,6 @@
-import { SupportedCurrencyCodes } from "@/utils/currency";
-import { IFairInfo, IImageUploadInfo } from "./base";
+import type { IFairInfo, IImageUploadInfo } from "./base";
 import type { IAccountResponse } from "@/interfaces/account";
+import type { SupportedCurrencyCodes } from "@/utils/currency";
 
 /* === Common === */
 interface IBoothCommon {
@@ -16,8 +16,8 @@ interface IBoothCommon {
   location?: string | null; // For custom fair
   dateOpen?: Date | null;   // For custom fair
   dateClose?: Date | null;  // For custom fair
-  datesOpenInFair?: Array<Date> | null;  // Only with fair
-  relatedLinks?: Array<IBoothRelatedLink>;
+  datesOpenInFair?: Date[] | null;  // Only with fair
+  relatedLinks?: IBoothRelatedLink[];
 }
 
 export interface IBoothStatus {
@@ -52,16 +52,16 @@ export interface IBooth extends Omit<IBoothCommon, "fairId"> {
 }
 
 export interface IBoothAdmin extends IBooth {
-  expenses: Array<IBoothExpense>;
+  expenses: IBoothExpense[];
 }
 
 /* === Model for Backend (DB) === */
 export interface IBoothModel extends Omit<IBoothCommon, "datesOpenInFair" | "status"> {
-  datesOpenInFair?: Array<string> | null;   // JSON string array of "YYYY-MM-DD"
+  datesOpenInFair?: string[] | null;   // JSON string array of "YYYY-MM-DD"
   status: BoothStatus;
   statusReason?: string | null;
   statusContentPublished: boolean;
-  expenses: Array<IBoothExpense>;
+  expenses: IBoothExpense[];
   bannerImageId?: number | null;
   infoImageId?: number | null;
 }

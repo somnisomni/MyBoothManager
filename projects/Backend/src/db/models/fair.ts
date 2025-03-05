@@ -1,4 +1,4 @@
-import { IFairCreateRequest, IFairInfo, IFairModel } from "@myboothmanager/common";
+import type { IFairCreateRequest, IFairInfo, IFairModel } from "@myboothmanager/common";
 import { DateTime } from "luxon";
 import { DataTypes } from "sequelize";
 import { AllowNull, AutoIncrement, Column, Default, HasMany, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
@@ -29,11 +29,12 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
   @AllowNull(false)
   @Default([])
   @Column(DataTypes.JSON)
-  get openingDates(): Array<string> {
+  get openingDates(): string[] {
     return this.getDataValue("openingDates");
   }
-  set openingDates(value: Array<string> | Array<Date>) {
-    const dateonlyArray = value.map((date) => DateTime.fromISO(new Date(date).toISOString()).toISODate()!).sort();
+
+  set openingDates(value: string[] | Date[]) {
+    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate()!).sort();
     this.setDataValue("openingDates", dateonlyArray);
   }
 
@@ -44,7 +45,7 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
 
   @Column(DataTypes.VIRTUAL)
   get isPassed(): boolean {
-    const parsedDates: Array<Date> = this.openingDates.map((date) => new Date(date));
+    const parsedDates: Date[] = this.openingDates.map(date => new Date(date));
     parsedDates.sort((a, b) => a.getTime() - b.getTime());
 
     const toDateonly = (date: string | Date) => DateTime.fromFormat(DateTime.fromJSDate(new Date(date)).toISODate()!, "yyyy-MM-dd");
@@ -53,7 +54,6 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
 
     return now > lastDate;
   }
-
 
   /* === Functions === */
   toFairInfo(): IFairInfo {

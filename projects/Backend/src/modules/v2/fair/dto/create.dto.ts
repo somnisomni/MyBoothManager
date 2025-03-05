@@ -1,4 +1,4 @@
-import { IFairCreateRequest } from "@myboothmanager/common";
+import type { IFairCreateRequest } from "@myboothmanager/common";
 
 export class CreateFairRequestDto implements IFairCreateRequest {
   declare name: string;

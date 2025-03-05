@@ -1,4 +1,4 @@
-import { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
+import type { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
 
 /* === Common === */
 interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId"> { }
@@ -21,11 +21,11 @@ export interface IGoodsCombinationModel extends Omit<IGoodsCombinationCommon, "s
 /* === Requests === */
 export interface IGoodsCombinationCreateRequest extends Omit<IGoodsCombinationCommon, "id" | "stock" | "ownerMemberIds"> {
   stockVisibility: GoodsStockVisibility;
-  goodsIds: Array<number>;
+  goodsIds: number[];
 }
 
 export interface IGoodsCombinationUpdateRequest extends Partial<Omit<IGoodsCombinationCommon, "id" | "boothId" | "ownerMemberIds">>, Pick<IGoodsCombinationCommon, "boothId"> {
-  goodsIds?: Array<number> | null;
+  goodsIds?: number[] | null;
 }
 
 /* === Responses === */

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { BoothOrderController } from "./booth-order.controller";
-import { BoothOrderService } from "./booth-order.service";
+import BoothModule from "../booth/booth.module";
 import GoodsModule from "../goods/goods.module";
 import GoodsCombinationModule from "../goods-combination/goods-combination.module";
-import BoothModule from "../booth/booth.module";
+import { BoothOrderController } from "./booth-order.controller";
+import { BoothOrderService } from "./booth-order.service";
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import BoothModule from "../booth/booth.module";
     GoodsModule,
     GoodsCombinationModule,
   ],
-  providers: [BoothOrderService],
-  controllers: [BoothOrderController],
+  providers: [ BoothOrderService ],
+  controllers: [ BoothOrderController ],
 })
 export default class BoothOrderModule { }

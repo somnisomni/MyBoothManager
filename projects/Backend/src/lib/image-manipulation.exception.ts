@@ -1,5 +1,5 @@
-import { HttpStatus } from "@nestjs/common";
 import { ErrorCodes } from "@myboothmanager/common";
+import { HttpStatus } from "@nestjs/common";
 import BaseHttpException from "./exceptions";
 
 export class InvalidImageException extends BaseHttpException {

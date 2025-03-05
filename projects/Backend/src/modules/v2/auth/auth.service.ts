@@ -1,14 +1,15 @@
+import type { LoginRequestDto } from "./dto/login.dto";
+import type { LogoutRequestDto } from "./dto/logout.dto";
+import type { RefreshRequestDto } from "./dto/refresh.dto";
+import type { IAuthData, JwtUtilService } from "./jwt-util.service";
+import type AccountService from "../account/account.service";
+import type { IAccount, IAccountLoginResponse, ISuccessResponse } from "@myboothmanager/common";
 import { randomBytes, randomInt } from "crypto";
-import * as argon2 from "argon2";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { Injectable } from "@nestjs/common";
-import { IAccount, IAccountLoginResponse, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import * as argon2 from "argon2";
 import { InvalidRequestBodyException } from "@/lib/exceptions";
-import { IAuthData, JwtUtilService } from "./jwt-util.service";
-import { LoginRequestDto } from "./dto/login.dto";
 import { InvalidRefreshTokenException, LoginAccountNotFoundException, LoginSessionAlreadyExistsException, NeedReloginException, RefreshTokenExpiredException } from "./auth.exception";
-import { RefreshRequestDto } from "./dto/refresh.dto";
-import { LogoutRequestDto } from "./dto/logout.dto";
-import AccountService from "../account/account.service";
 
 export type IAccountLoginResponseWithRefreshToken = IAccountLoginResponse & { refreshToken: string };
 
@@ -126,7 +127,7 @@ export class AuthService {
    */
   async refresh(refreshDto: RefreshRequestDto, refreshToken?: string | null): Promise<IAccountLoginResponseWithRefreshToken> {
     // Invalid refresh token is not acceptable
-    if(!refreshToken) throw new InvalidRequestBodyException();
+    if(!refreshToken) { throw new InvalidRequestBodyException(); }
 
     // Verify
     const verifyResult = await this.jwtUtil.verifyRefreshToken(refreshToken);

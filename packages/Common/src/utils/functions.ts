@@ -3,7 +3,7 @@
  * @param obj Target object
  * @param keys Keys to delete
  */
-export function deleteKeys<T>(obj: T, keys: readonly (keyof T)[]): void {
+export function deleteKeys<T>(obj: T, keys: ReadonlyArray<keyof T>): void {
   for(const key of keys) {
     delete obj[key];
   }
@@ -14,7 +14,7 @@ export function deleteKeys<T>(obj: T, keys: readonly (keyof T)[]): void {
  * @param obj Target object
  */
 export function emptyObject<TKey extends string | number>(obj: Record<TKey, unknown>): void {
-  Object.keys(obj).forEach((key) => delete obj[key as TKey]);
+  Object.keys(obj).forEach(key => delete obj[key as TKey]);
 }
 
 /**
@@ -23,14 +23,16 @@ export function emptyObject<TKey extends string | number>(obj: Record<TKey, unkn
  * @returns Date range string with this format: `[minDateLocaleString] ~ [maxDateLocaleString]`. If the array has only one date, return the date's locale string
  * @throws {TypeError} If some of elements in the array is not a valid date
  */
-export function toDateRangeString(dates: Array<Date | string>): string  {
-  if(dates.some((date) => isNaN(new Date(date).getTime()))) {
+export function toDateRangeString(dates: Array<Date | string>): string {
+  if(dates.some(date => isNaN(new Date(date).getTime()))) {
     throw new TypeError("Some of elements in the array is not a valid date");
   }
 
-  if(dates.length === 1) return new Date(dates[0]).toLocaleDateString();
+  if(dates.length === 1) {
+    return new Date(dates[0]).toLocaleDateString();
+  }
 
-  const dateTimes = dates.map((date) => new Date(date).getTime());
+  const dateTimes = dates.map(date => new Date(date).getTime());
 
   const minTime = Math.min(...dateTimes);
   const maxTime = Math.max(...dateTimes);

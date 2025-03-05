@@ -1,17 +1,18 @@
-import type { Model } from "sequelize-typescript";
 import type { MultipartFile } from "@fastify/multipart";
+import type { ISuccessResponse, ImageSizeConstraintKey, IImageUploadInfo } from "@myboothmanager/common";
 import type { FastifyRequest } from "fastify";
-import path from "path";
+import type { Model } from "sequelize-typescript";
 import { createWriteStream } from "fs";
 import * as fs from "fs/promises";
+import path from "path";
+import { MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import AppRootPath from "app-root-path";
-import { ISuccessResponse, ImageSizeConstraintKey, MAX_UPLOAD_FILE_BYTES, SUCCESS_RESPONSE, IImageUploadInfo } from "@myboothmanager/common";
-import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import UploadStorage from "@/db/models/uploadstorage";
+import { InvalidRequestBodyException, RequestMaxSizeExceededException } from "@/lib/exceptions";
 import ImageManipulator from "@/lib/image-manipulation";
-import { generateRandomDigestFileName } from "@/lib/utils/security";
 import { create } from "@/lib/utils/db";
+import { generateRandomDigestFileName } from "@/lib/utils/security";
 
 @Injectable()
 export class UtilService {
@@ -24,7 +25,7 @@ export class UtilService {
   public static RESOLVED_UPLOAD_PATH: string = path.resolve(AppRootPath.path, process.env.FILE_UPLOAD_FOLDER || "uploads");
 
   private validateFileSize(file: MultipartFile, maxSize: number = MAX_UPLOAD_FILE_BYTES): boolean {
-    if(file.file.readableLength > maxSize) throw new RequestMaxSizeExceededException();
+    if(file.file.readableLength > maxSize) { throw new RequestMaxSizeExceededException(); }
 
     return true;
   }
@@ -59,21 +60,21 @@ export class UtilService {
       throw new InvalidRequestBodyException();
     }
 
-    if(!file) throw new InvalidRequestBodyException();
+    if(!file) { throw new InvalidRequestBodyException(); }
 
     if(validate) {
       const validations = [
         this.validateFileSize(file),
       ];
 
-      if(validations.some((validation) => !validation)) throw new InvalidRequestBodyException();
+      if(validations.some(validation => !validation)) { throw new InvalidRequestBodyException(); }
     }
 
     return file;
   }
 
   async getFilesFromRequest(req: FastifyRequest, validate: boolean = true) {
-    const files: Array<MultipartFile> = [];
+    const files: MultipartFile[] = [];
 
     try {
       for await (const file of req.files()) {
@@ -83,7 +84,7 @@ export class UtilService {
       throw new InvalidRequestBodyException();
     }
 
-    if(files.length <= 0) throw new InvalidRequestBodyException();
+    if(files.length <= 0) { throw new InvalidRequestBodyException(); }
 
     if(validate) {
       for(const file of files) {
@@ -91,7 +92,7 @@ export class UtilService {
           this.validateFileSize(file),
         ];
 
-        if(validations.some((validation) => !validation)) throw new InvalidRequestBodyException();
+        if(validations.some(validation => !validation)) { throw new InvalidRequestBodyException(); }
       }
     }
 
@@ -159,7 +160,7 @@ export class UtilService {
     await manipulator.resizeAndCrop(imageSizeConstraint);
 
     const imageWebpBuffer = Buffer.from(await (await manipulator.toWebP()).arrayBuffer());
-    const imageJpgBuffer  = Buffer.from(await (await manipulator.toJPG()).arrayBuffer());
+    const imageJpgBuffer = Buffer.from(await (await manipulator.toJPG()).arrayBuffer());
     const imageThumbnailBase64 = await manipulator.toThumbnailBase64();
 
     manipulator.close();
@@ -180,7 +181,7 @@ export class UtilService {
         ownerId: callerAccountId,
         savePath: fileSaveSubpath,
         fileName: digest.withExt("webp"),
-        extensions: ["webp", "jpg"],
+        extensions: [ "webp", "jpg" ],
         imageThumbnailBase64,
       })).save();
 
@@ -203,7 +204,7 @@ export class UtilService {
       if(existingUpload) {
         const targetFileNames = [];
         if(existingUpload.extensions) {
-          targetFileNames.push(...existingUpload.extensions.map((ext) => existingUpload.fileName.replace(/\.[^.]+$/, `.${ext}`)));
+          targetFileNames.push(...existingUpload.extensions.map(ext => existingUpload.fileName.replace(/\.[^.]+$/, `.${ext}`)));
         }
 
         for(const fileName of targetFileNames) {

@@ -49,14 +49,12 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   @Column(DataTypes.DATE)
   declare updatedAt?: Date | null;
 
-
   /* === Relations === */
   @HasMany(() => Booth)
   declare booths: Booth[];
 
   @HasMany(() => UploadStorage)
   declare uploads: UploadStorage[];
-
 
   /* === Hooks === */
   @AfterFind

@@ -12,6 +12,6 @@ export interface IUploadStorage {
   // (3) extensions: file extensions, in order of preference
   savePath?: string;
   fileName: string;
-  extensions?: Array<string>;
+  extensions?: string[];
   imageThumbnailBase64?: string;
 }

@@ -1,13 +1,13 @@
+import type { CreateGoodsRequestDto } from "./dto/create.dto";
+import type { UpdateGoodsRequestDto } from "./dto/update.dto";
+import type { GoodsService } from "./goods.service";
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
-import { GoodsService } from "./goods.service";
+import { BOOTH_ID_QUERY } from "@/lib/const";
+import { NoAccessException } from "../../../lib/exceptions";
 import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
 import { AdminGoodsResponseDto, GoodsResponseDto } from "./dto/goods.dto";
-import { IAuthData } from "../auth/jwt-util.service";
-import { BOOTH_ID_QUERY } from "@/lib/const";
-import { CreateGoodsRequestDto } from "./dto/create.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
-import { UpdateGoodsRequestDto } from "./dto/update.dto";
-import { NoAccessException } from "../../../lib/exceptions";
 
 @Controller("/goods")
 export class GoodsController {
@@ -33,7 +33,6 @@ export class GoodsController {
 
     return new GoodsResponseDto(await this.goods.findOne(id, boothId));
   }
-
 
   /* === Admin routes === */
   @Post()
@@ -69,7 +68,7 @@ export class GoodsController {
   @Get()
   async findAll(@Query(BOOTH_ID_QUERY, new ParseIntPipe({ optional: true })) boothId: number | null | undefined,
                 @UserType() userType: UserTypes,
-                @AuthData() authData?: IAuthData) : Promise<GoodsResponseDto[]> {
+                @AuthData() authData?: IAuthData): Promise<GoodsResponseDto[]> {
     // Super admin
     if(UserTypeUtil.havePermission(userType, UserTypes.SUPER_ADMIN) && authData) {
       if(boothId) {

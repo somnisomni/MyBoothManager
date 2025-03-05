@@ -1,18 +1,21 @@
-import { GoodsStockVisibility, IGoodsCombinationCreateRequest, IGoodsCombinationModel } from "@myboothmanager/common";
+import type { IGoodsCombinationCreateRequest, IGoodsCombinationModel } from "@myboothmanager/common";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, HasMany, DefaultScope } from "sequelize-typescript";
 import Booth from "./booth";
+import Goods from "./goods";
 import GoodsCategory from "./goods-category";
 import UploadStorage from "./uploadstorage";
-import Goods from "./goods";
 
 @Table
-@DefaultScope(() => ({
-  include: [
-    { model: Goods, as: "combinedGoods" },
-    { model: UploadStorage, as: "goodsImage" },
-  ],
-}))
+@DefaultScope(() => {
+  return ({
+    include: [
+      { model: Goods, as: "combinedGoods" },
+      { model: UploadStorage, as: "goodsImage" },
+    ],
+  });
+})
 export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoodsCombinationCreateRequest> implements IGoodsCombinationModel {
   @PrimaryKey
   @Unique
@@ -44,6 +47,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
   get price(): number { return parseFloat(this.getDataValue("price").toFixed(3)); }
+
   set price(value: number) { this.setDataValue("price", parseFloat(new Number(value).toFixed(3))); }
 
   @AllowNull(false)
@@ -70,7 +74,7 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   }
 
   @Column(DataTypes.VIRTUAL)
-  get ownerMemberIds(): Array<number> {
+  get ownerMemberIds(): number[] {
     if(this.combinedGoods && this.combinedGoods.length > 0) {
       return Array.from(new Set(this.combinedGoods.flatMap(g => (g.ownerMemberIds ?? []).flat())));
     } else {
@@ -83,7 +87,6 @@ export default class GoodsCombination extends Model<IGoodsCombinationModel, IGoo
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare goodsImageId?: number | null;
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)

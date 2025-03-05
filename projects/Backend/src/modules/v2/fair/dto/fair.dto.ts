@@ -1,6 +1,6 @@
-import { IFairResponse, ISuperAdminFairResponse } from "@myboothmanager/common";
+import type Fair from "@/db/models/fair";
+import type { IFairResponse, ISuperAdminFairResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
-import Fair from "@/db/models/fair";
 
 @Exclude()
 export class FairResponseDto implements IFairResponse {
@@ -8,7 +8,7 @@ export class FairResponseDto implements IFairResponse {
   @Expose() declare name: string;
   @Expose() declare location: string;
   @Expose() declare description?: string | null;
-  @Expose() declare openingDates: Array<Date>;
+  @Expose() declare openingDates: Date[];
   @Expose() declare websiteUrl?: string | null;
 
   constructor(model: Fair) {
@@ -18,7 +18,7 @@ export class FairResponseDto implements IFairResponse {
     this.name = values.name;
     this.location = values.location;
     this.description = values.description;
-    this.openingDates = values.openingDates as unknown as Array<Date>;
+    this.openingDates = values.openingDates as unknown as Date[];
     this.websiteUrl = values.websiteUrl;
   }
 }

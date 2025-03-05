@@ -1,5 +1,6 @@
+import type { ImageSizeConstraintKey } from "@myboothmanager/common";
+import { IMAGE_SIZE_CONSTRAINTS } from "@myboothmanager/common";
 import { default as Sharp } from "sharp";
-import { IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { ImageManipulationException, InvalidImageException } from "./image-manipulation.exception";
 
 export default class ImageManipulator {
@@ -28,12 +29,15 @@ export default class ImageManipulator {
    * @returns {{ width: number, height: number }} Resized width and height
    * @throws {ImageManipulationException} When the image manipulation failed
    */
-  private async _resizeAndCrop(constraint: NonNullable<ReturnType<(typeof IMAGE_SIZE_CONSTRAINTS)["get"]>>): Promise<{ width: number, height: number }> {
+  private async _resizeAndCrop(constraint: NonNullable<ReturnType<(typeof IMAGE_SIZE_CONSTRAINTS)["get"]>>): Promise<{ width: number; height: number }> {
     let width: number, height: number;
 
     try {
       const metadata = await this.imageInstance.metadata();
-      if(!metadata || !metadata.width || !metadata.height) throw new InvalidImageException();
+
+      if(!metadata || !metadata.width || !metadata.height) {
+        throw new InvalidImageException();
+      }
 
       width = metadata.width!;
       height = metadata.height!;
@@ -65,20 +69,23 @@ export default class ImageManipulator {
     }
   }
 
-  async resizeAndCrop(constraintKey: ImageSizeConstraintKey): Promise<{ width: number, height: number }> {
+  async resizeAndCrop(constraintKey: ImageSizeConstraintKey): Promise<{ width: number; height: number }> {
     const constraint = IMAGE_SIZE_CONSTRAINTS.get(constraintKey);
-    if(!constraint) throw new ImageManipulationException();
+
+    if(!constraint) {
+      throw new ImageManipulationException();
+    }
 
     return await this._resizeAndCrop(constraint);
   }
 
   async toWebP(): Promise<Blob> {
     try {
-      return new Blob([await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 }}).webp({
+      return new Blob([ await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 } }).webp({
         quality: 95,
         nearLossless: true,
         smartSubsample: true,
-      }).withExif({}).toBuffer()]);
+      }).withExif({}).toBuffer() ]);
     } catch(e) {
       throw new ImageManipulationException();
     }
@@ -86,13 +93,13 @@ export default class ImageManipulator {
 
   async toJPG(): Promise<Blob> {
     try {
-      return new Blob([await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 }}).jpeg({
+      return new Blob([ await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 } }).jpeg({
         quality: 95,
         progressive: true,
         optimizeCoding: true,
         optimizeScans: true,
         mozjpeg: true,
-      }).withExif({}).toBuffer()]);
+      }).withExif({}).toBuffer() ]);
     } catch(e) {
       throw new ImageManipulationException();
     }
@@ -108,8 +115,8 @@ export default class ImageManipulator {
           fit: "inside",
           position: "center",
           kernel: "lanczos3",
-        }).flatten({ background: { r: 255, g: 255, b: 255 }}).png().toBuffer().then((buffer) => {
-          resolve("data:image/png;base64," + buffer.toString("base64"));
+        }).flatten({ background: { r: 255, g: 255, b: 255 } }).png().toBuffer().then((buffer) => {
+          resolve(`data:image/png;base64,${buffer.toString("base64")}`);
         });
       });
     } catch(e) {
@@ -117,7 +124,7 @@ export default class ImageManipulator {
     }
   }
 
-  close() {
+  close(): void {
     this.imageInstance.destroy();
   }
 }

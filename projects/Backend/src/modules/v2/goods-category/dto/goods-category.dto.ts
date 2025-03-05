@@ -1,6 +1,6 @@
-import { IGoodsCategoryResponse } from "@myboothmanager/common";
+import type GoodsCategory from "@/db/models/goods-category";
+import type { IGoodsCategoryResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
-import GoodsCategory from "@/db/models/goods-category";
 
 @Exclude()
 export class GoodsCategoryResponseDto implements IGoodsCategoryResponse {

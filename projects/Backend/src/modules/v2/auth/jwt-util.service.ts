@@ -1,7 +1,7 @@
+import type { IAccount } from "@myboothmanager/common";
+import type { JwtService } from "@nestjs/jwt";
 import { randomUUID } from "crypto";
-import { JwtService } from "@nestjs/jwt";
 import { Injectable } from "@nestjs/common";
-import { IAccount } from "@myboothmanager/common";
 
 export const JWT_SECRET: string = `${(process.env.JWT_SECRET || "myboothmanager")}${new Date().getTime()}`;
 export const JWT_SECRET_REFRESH: string = `${JWT_SECRET}-refresh`;
@@ -43,7 +43,7 @@ export class JwtUtilService {
     return await this.jwt.signAsync(payload);
   }
 
-  async generateRefreshToken(account: IAuthData): Promise<{ refreshUUID: string, refreshToken: string }> {
+  async generateRefreshToken(account: IAuthData): Promise<{ refreshUUID: string; refreshToken: string }> {
     const payload: IRefreshData = {
       id: account.id,
       refreshUUID: randomUUID(),
@@ -69,7 +69,7 @@ export class JwtUtilService {
         issuer: JWT_ISSUER,
         subject: JWT_SUBJECT_REFRESH,
         complete: true,
-      }) as { header: object, payload: object, signature: string }).payload;
+      }) as { header: object; payload: object; signature: string }).payload;
       return result as IRefreshData;
     } catch(error) {
       // error instanceof jwt.JsonWebTokenError

@@ -1,6 +1,6 @@
+import type Account from "@/db/models/account";
 import type { IAccountResponse, ISuperAdminAccountResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
-import Account from "@/db/models/account";
 
 @Exclude()
 export class AccountResponseDto implements IAccountResponse {

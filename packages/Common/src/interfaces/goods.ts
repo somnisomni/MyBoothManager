@@ -1,6 +1,7 @@
-import { IImageUploadInfo } from "./base";
+import type { IImageUploadInfo } from "./base";
 
 /* === Common === */
+// eslint-disable-next-line import-x/exports-last
 export interface IGoodsCommon {
   id: number;
   boothId: number;
@@ -9,7 +10,7 @@ export interface IGoodsCommon {
   description?: string | null;
   price: number;
   stock: IGoodsStock;
-  ownerMemberIds?: Array<number> | null;
+  ownerMemberIds?: number[] | null;
 }
 
 interface IGoodsBase extends IGoodsCommon {

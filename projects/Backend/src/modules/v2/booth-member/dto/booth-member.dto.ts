@@ -1,6 +1,6 @@
-import { IBoothMemberResponse, IImageUploadInfo } from "@myboothmanager/common";
+import type BoothMember from "@/db/models/booth-member";
+import type { IBoothMemberResponse, IImageUploadInfo } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
-import BoothMember from "@/db/models/booth-member";
 
 @Exclude()
 export class BoothMemberResponseDto implements IBoothMemberResponse {

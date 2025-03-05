@@ -9,7 +9,7 @@ import GoodsCombination from "./goods-combination";
   indexes: [
     {
       unique: true,
-      fields: ["boothId", "name"],
+      fields: [ "boothId", "name" ],
     },
   ],
 })
@@ -29,7 +29,6 @@ export default class GoodsCategory extends Model<IGoodsCategoryModel, IGoodsCate
   @AllowNull(false)
   @Column(DataTypes.STRING(256))
   declare name: string;
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)

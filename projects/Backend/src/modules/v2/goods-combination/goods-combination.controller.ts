@@ -1,12 +1,12 @@
+import type { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
+import type { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
+import type { GoodsCombinationService } from "./goods-combination.service";
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
-import { GoodsCombinationService } from "./goods-combination.service";
-import { AdminGoodsCombinationResponseDto, GoodsCombinationResponseDto } from "./dto/goods-combination.dto";
-import { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
-import { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
 import { BOOTH_ID_QUERY } from "@/lib/const";
-import { ISuccessResponse } from "@myboothmanager/common";
 import { UserType, UserTypes, AuthData, UserTypeUtil, AllowedFor } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
+import { AdminGoodsCombinationResponseDto, GoodsCombinationResponseDto } from "./dto/goods-combination.dto";
 
 @Controller("/goods/combination")
 export class GoodsCombinationController {
@@ -32,7 +32,6 @@ export class GoodsCombinationController {
 
     return new GoodsCombinationResponseDto(await this.combination.findOne(id, boothId));
   }
-
 
   /* === Admin routes === */
   @Post()

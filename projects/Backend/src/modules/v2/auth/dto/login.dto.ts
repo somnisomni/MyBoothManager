@@ -1,4 +1,4 @@
-import { IAccountLoginRequest, IAccountLoginResponse } from "@myboothmanager/common";
+import type { IAccountLoginRequest, IAccountLoginResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()

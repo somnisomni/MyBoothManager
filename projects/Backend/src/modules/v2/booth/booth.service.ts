@@ -1,18 +1,19 @@
+import type { CreateBoothRequestDto } from "./dto/create.dto";
+import type { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
+import type { UpdateBoothRequestDto } from "./dto/update.dto";
+import type { UpdateBoothNoticeRequestDto } from "@/modules/v2/booth/dto/update-notice.dto";
+import type { ISuccessResponse, IBoothStatus, ISingleValueResponse } from "@myboothmanager/common";
+import { BoothStatus, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { Op } from "sequelize";
 import Account from "@/db/models/account";
 import Booth from "@/db/models/booth";
 import { NoAccessException } from "@/lib/exceptions";
-import { BoothStatus, ISuccessResponse, SUCCESS_RESPONSE, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { Op } from "sequelize";
-import { CreateBoothRequestDto } from "./dto/create.dto";
-import { BoothImageService } from "./booth.image.service";
-import { UpdateBoothRequestDto } from "./dto/update.dto";
-import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
-import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
-import { BoothInfoUpdateFailedException, BoothNoticeUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { create as dbCreate, findAll as dbFindAll, findOneByPk, removeInstance } from "@/lib/utils/db";
-import type { UpdateBoothNoticeRequestDto } from "@/modules/v2/booth/dto/update-notice.dto";
+import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
+import { BoothInfoUpdateFailedException, BoothNoticeUpdateFailedException, BoothNotPublishedException, BoothStatusUpdateFailedException } from "./booth.exception";
+import { BoothImageService } from "./booth.image.service";
 
 @Injectable()
 export class BoothService {
@@ -44,13 +45,13 @@ export class BoothService {
   }
 
   isBoothPublished(booth?: Booth): boolean {
-    if(!booth) return false;
+    if(!booth) { return false; }
 
     return booth.status === BoothStatus.OPEN || booth.statusContentPublished;
   }
 
   async isBoothAvailable(booth?: Booth | number): Promise<boolean> {
-    if(!booth) return false;
+    if(!booth) { return false; }
 
     let boothInstance: Booth;
     if(typeof booth === "number") {
@@ -60,8 +61,8 @@ export class BoothService {
     }
 
     return this.isBoothPublished(boothInstance)
-            && (boothInstance.status !== BoothStatus.CLOSE || (boothInstance.status === BoothStatus.CLOSE && boothInstance.statusContentPublished))
-            && (!boothInstance.fairId || !boothInstance.associatedFair?.isPassed);
+      && (boothInstance.status !== BoothStatus.CLOSE || (boothInstance.status === BoothStatus.CLOSE && boothInstance.statusContentPublished))
+      && (!boothInstance.fairId || !boothInstance.associatedFair?.isPassed);
   }
 
   /**
@@ -123,7 +124,7 @@ export class BoothService {
     // associatedFair.isPassed === false
     return booths.filter(
       booth => !onlyAvailable
-                || (onlyAvailable && (typeof booth.fairId !== "number" || !booth.associatedFair?.isPassed)));
+        || (onlyAvailable && (typeof booth.fairId !== "number" || !booth.associatedFair?.isPassed)));
   }
 
   /**
@@ -252,7 +253,7 @@ class BoothOwnerCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const booth = await findOneByPk(Booth, key);
 
-    if(typeof booth.ownerId !== "number") throw new NoAccessException();
+    if(typeof booth.ownerId !== "number") { throw new NoAccessException(); }
 
     return booth.ownerId;
   }

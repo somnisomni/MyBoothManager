@@ -1,11 +1,11 @@
+import type { GoodsCombinationImageService } from "./goods-combination.image.service";
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { UtilService } from "@/modules/common/util/util.service";
+import type { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
+import type { FastifyRequest } from "fastify";
 import { Controller, Delete, Param, ParseIntPipe, Post, Query, Req } from "@nestjs/common";
-import { GoodsCombinationImageService } from "./goods-combination.image.service";
-import { UtilService } from "@/modules/common/util/util.service";
-import { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
-import { FastifyRequest } from "fastify";
-import { AllowedFor, UserTypes, AuthData } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
 import { BOOTH_ID_QUERY } from "@/lib/const";
+import { AllowedFor, UserTypes, AuthData } from "../auth/auth.guard";
 
 @Controller("/goods/combination/:id/image")
 export class GoodsCombinationImageController {

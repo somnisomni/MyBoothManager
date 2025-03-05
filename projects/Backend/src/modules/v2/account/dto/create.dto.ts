@@ -1,4 +1,4 @@
-import { IAccountCreateRequest } from "@myboothmanager/common";
+import type { IAccountCreateRequest } from "@myboothmanager/common";
 
 export class CreateAccountRequestDto implements IAccountCreateRequest {
   declare name: string;

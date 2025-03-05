@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT, JwtUtilService } from "./jwt-util.service";
-import { AuthService } from "./auth.service";
-import { AuthController } from "./auth.controller";
 import AccountModule from "../account/account.module";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
+import { JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT, JwtUtilService } from "./jwt-util.service";
 
 @Module({
   imports: [
@@ -23,6 +23,6 @@ import AccountModule from "../account/account.module";
     AuthService,
     JwtUtilService,
   ],
-  controllers: [AuthController],
+  controllers: [ AuthController ],
 })
 export default class AuthModule {}

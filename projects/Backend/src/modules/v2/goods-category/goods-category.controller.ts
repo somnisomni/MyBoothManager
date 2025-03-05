@@ -1,11 +1,11 @@
+import type { CreateGoodsCategoryRequestDto } from "./dto/create.dto";
+import type { GoodsCategoryService } from "./goods-category.service";
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
-import { GoodsCategoryService } from "./goods-category.service";
-import { AdminGoodsCategoryResponseDto, GoodsCategoryResponseDto } from "./dto/goods-category.dto";
 import { BOOTH_ID_QUERY } from "@/lib/const";
 import { UserType, UserTypes, AuthData, UserTypeUtil, AllowedFor } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
-import { CreateGoodsCategoryRequestDto } from "./dto/create.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
+import { AdminGoodsCategoryResponseDto, GoodsCategoryResponseDto } from "./dto/goods-category.dto";
 
 @Controller("/goods/category")
 export class GoodsCategoryController {
@@ -31,7 +31,6 @@ export class GoodsCategoryController {
 
     return new GoodsCategoryResponseDto(await this.category.findOne(id, boothId));
   }
-
 
   /* === Admin routes === */
   @Post()

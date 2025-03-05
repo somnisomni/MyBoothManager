@@ -1,7 +1,8 @@
-import { MultipartFile } from "@fastify/multipart";
+import type { UtilService } from "@/modules/common/util/util.service";
+import type { MultipartFile } from "@fastify/multipart";
+import type { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
+import { ImageSizeConstraintKey, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { IImageUploadInfo, ImageSizeConstraintKey, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { UtilService } from "@/modules/common/util/util.service";
 import { BoothService } from "./booth.service";
 
 @Injectable()
@@ -13,7 +14,7 @@ export class BoothImageService {
   ) { }
 
   private readonly BANNER_IMAGE_PATH = "booth/banner";
-  private readonly INFO_IMAGE_PATH   = "booth/info";
+  private readonly INFO_IMAGE_PATH = "booth/info";
 
   async uploadBannerImage(id: number, file: MultipartFile, accountId: number): Promise<IImageUploadInfo> {
     return await this.util.processImageUpload(
@@ -57,7 +58,7 @@ export class BoothImageService {
       await this.deleteInfoImage(id, accountId),
     ];
 
-    if(results.every((result) => result.success)) {
+    if(results.every(result => result.success)) {
       return SUCCESS_RESPONSE;
     } else {
       throw new InternalServerErrorException("Failed to delete all images");

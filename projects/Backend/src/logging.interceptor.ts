@@ -1,7 +1,9 @@
+import type { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
 import type { FastifyRequest } from "fastify";
-import { Observable, tap } from "rxjs";
+import type { Observable } from "rxjs";
+import { Injectable } from "@nestjs/common";
 import chalk from "chalk";
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { tap } from "rxjs";
 import { RootController } from "./modules/root.controller";
 
 @Injectable()
@@ -23,9 +25,9 @@ export class LoggingInterceptor implements NestInterceptor {
       const elapsed = handleEndTimestamp - handleStartTimestamp;
 
       return chalk`${symbol} `
-          + chalk`{gray [${handleStartDate.toISOString()}]} `
-          + chalk`${message} `
-          + chalk`{dim.italic (took ${elapsed.toFixed(2)}ms)}`;
+        + chalk`{gray [${handleStartDate.toISOString()}]} `
+        + chalk`${message} `
+        + chalk`{dim.italic (took ${elapsed.toFixed(2)}ms)}`;
     }
 
     // Special logging for health check requests

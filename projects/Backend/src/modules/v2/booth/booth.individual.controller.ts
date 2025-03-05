@@ -1,13 +1,13 @@
+import type { IAuthData } from "../auth/jwt-util.service";
 import { Controller, forwardRef, Get, Inject, Param, ParseIntPipe } from "@nestjs/common";
 import { BOOTH_ID_QUERY } from "@/lib/const";
-import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
-import { GoodsCategoryService } from "../goods-category/goods-category.service";
-import { GoodsService } from "../goods/goods.service";
 import { UserType, UserTypes, AuthData, UserTypeUtil } from "../auth/auth.guard";
-import type { IAuthData } from "../auth/jwt-util.service";
 import { GoodsResponseDto, AdminGoodsResponseDto } from "../goods/dto/goods.dto";
+import { GoodsService } from "../goods/goods.service";
 import { GoodsCategoryResponseDto, AdminGoodsCategoryResponseDto } from "../goods-category/dto/goods-category.dto";
+import { GoodsCategoryService } from "../goods-category/goods-category.service";
 import { GoodsCombinationResponseDto, AdminGoodsCombinationResponseDto } from "../goods-combination/dto/goods-combination.dto";
+import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
 
 @Controller(`/booth/:${BOOTH_ID_QUERY}`)
 export class BoothIndividualController {
@@ -36,7 +36,7 @@ export class BoothIndividualController {
   @Get("goods")
   async findAllGoods(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                      @UserType() userType: UserTypes,
-                     @AuthData() authData?: IAuthData) : Promise<GoodsResponseDto[]> {
+                     @AuthData() authData?: IAuthData): Promise<GoodsResponseDto[]> {
     // Booth admin
     if(UserTypeUtil.havePermission(userType, UserTypes.BOOTH_ADMIN) && authData) {
       return (await this.goods.findAll(boothId, true, authData.id))

@@ -1,19 +1,20 @@
+import type { IGoodsOrderItem, ISuccessResponse } from "@myboothmanager/common";
+import { SUCCESS_RESPONSE, GoodsOrderStatus } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { GoodsService } from "../goods/goods.service";
-import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
-import BoothOrder from "@/db/models/goods-order";
 import Booth from "@/db/models/booth";
-import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { BoothService } from "../booth/booth.service";
-import { BoothOrderCreateGoodsCombinationNotFoundException, BoothOrderCreateGoodsNotFoundException, BoothOrderCreateInvalidGoodsAmountException, BoothOrderCreateInvalidGoodsCombinationException, BoothOrderCreateOrderEmptyException, BoothOrderParentBoothNotFoundException, BoothOrderStatusUpdateFailedException, BoothOrderStatusUpdateProhibitedException } from "./booth-order.exception";
-import { CreateBoothOrderRequestDto } from "./dto/create.dto";
-import { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
 import Goods from "@/db/models/goods";
 import GoodsCombination from "@/db/models/goods-combination";
+import BoothOrder from "@/db/models/goods-order";
 import MBMSequelize from "@/db/sequelize";
-import { IGoodsOrderItem, ISuccessResponse, SUCCESS_RESPONSE, GoodsOrderStatus } from "@myboothmanager/common";
+import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { findOneByPk, create as dbCreate, findAll as dbFindAll } from "@/lib/utils/db";
+import { BoothService } from "../booth/booth.service";
+import { GoodsService } from "../goods/goods.service";
+import { GoodsCombinationService } from "../goods-combination/goods-combination.service";
+import { BoothOrderCreateGoodsCombinationNotFoundException, BoothOrderCreateGoodsNotFoundException, BoothOrderCreateInvalidGoodsAmountException, BoothOrderCreateInvalidGoodsCombinationException, BoothOrderCreateOrderEmptyException, BoothOrderParentBoothNotFoundException, BoothOrderStatusUpdateFailedException, BoothOrderStatusUpdateProhibitedException } from "./booth-order.exception";
+import type { CreateBoothOrderRequestDto } from "./dto/create.dto";
+import type { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
 
 @Injectable()
 export class BoothOrderService {
@@ -37,7 +38,7 @@ export class BoothOrderService {
    * @throws `NoAccessException` if the booth order does not belong to the booth or the booth does not belong to the account
    * @throws `EntityNotFoundException` if the booth order with the ID does not exist
    */
-  private async getOrderAndParentBooth(orderId: number, boothId: number, accountId: number): Promise<{ order: BoothOrder, booth?: Booth }> {
+  private async getOrderAndParentBooth(orderId: number, boothId: number, accountId: number): Promise<{ order: BoothOrder; booth?: Booth }> {
     if(!await this.orderBoothCache.testValue(orderId, boothId)) {
       throw new NoAccessException();
     }
@@ -68,18 +69,18 @@ export class BoothOrderService {
     }
 
     // Check goods availability & build goods order entry
-    if(!createDto.order || createDto.order.length <= 0) throw new BoothOrderCreateOrderEmptyException();
+    if(!createDto.order || createDto.order.length <= 0) { throw new BoothOrderCreateOrderEmptyException(); }
 
     // Goods stock count process function
     const goodsProcessFn = async (goods: Goods, order: IGoodsOrderItem) => {
       // Validate goods stock
-      if(goods.stockRemaining < order.quantity) throw new BoothOrderCreateInvalidGoodsAmountException();
+      if(goods.stockRemaining < order.quantity) { throw new BoothOrderCreateInvalidGoodsAmountException(); }
 
       // Set price if not provided
-      if(typeof order.price !== "number" && !order.price) order.price = goods.price;
+      if(typeof order.price !== "number" && !order.price) { order.price = goods.price; }
 
       // Set goods name if not provided
-      if(typeof order.name !== "string" && !order.name) order.name = goods.name;
+      if(typeof order.name !== "string" && !order.name) { order.name = goods.name; }
 
       // If all good, update remaining stock count of the goods
       await goods.update({ stockRemaining: goods.stockRemaining - order.quantity }, { transaction });
@@ -96,8 +97,8 @@ export class BoothOrderService {
           // const goods = await this.goodsService.findGoodsBelongsToBooth(order.gId, createBoothOrderDto.boothId, callerAccountId);
 
           const goods = await findOneByPk(Goods, order.gId, { transaction });
-          if(!goods) throw new BoothOrderCreateGoodsNotFoundException();
-          if(goods.boothId !== createDto.boothId) throw new NoAccessException();
+          if(!goods) { throw new BoothOrderCreateGoodsNotFoundException(); }
+          if(goods.boothId !== createDto.boothId) { throw new NoAccessException(); }
 
           // Do process for single goods
           await goodsProcessFn(goods, order);
@@ -108,23 +109,23 @@ export class BoothOrderService {
           // const combination = await this.goodsCombinationService.findGoodsCombinationBelongsToBooth(order.cId, createBoothOrderDto.boothId, callerAccountId);
 
           const combination = await findOneByPk(GoodsCombination, order.cId, { transaction });
-          if(!combination) throw new BoothOrderCreateGoodsCombinationNotFoundException();
-          if(combination.boothId !== createDto.boothId) throw new NoAccessException();
+          if(!combination) { throw new BoothOrderCreateGoodsCombinationNotFoundException(); }
+          if(combination.boothId !== createDto.boothId) { throw new NoAccessException(); }
 
           // Validate goods combination
-          if(!combination.combinedGoods || combination.combinedGoods.length < 2) throw new BoothOrderCreateInvalidGoodsCombinationException();
+          if(!combination.combinedGoods || combination.combinedGoods.length < 2) { throw new BoothOrderCreateInvalidGoodsCombinationException(); }
 
           // Set price if not provided
-          if(typeof order.price !== "number" && !order.price) order.price = combination.price;
+          if(typeof order.price !== "number" && !order.price) { order.price = combination.price; }
 
           // Set goods name if not provided
-          if(typeof order.name !== "string" && !order.name) order.name = combination.name;
+          if(typeof order.name !== "string" && !order.name) { order.name = combination.name; }
 
           // Do process for each goods in combination
           for(const goods of combination.combinedGoods) {
             await goodsProcessFn(goods, order);
 
-            if(!order.combinedGoods) order.combinedGoods = [];
+            if(!order.combinedGoods) { order.combinedGoods = []; }
             order.combinedGoods.push({ gId: goods.id, name: goods.name });
           }
         }
@@ -213,7 +214,7 @@ class OrderBoothCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const order = await findOneByPk(BoothOrder, key);
 
-    if(typeof order.boothId !== "number") throw new NoAccessException();
+    if(typeof order.boothId !== "number") { throw new NoAccessException(); }
 
     return order.boothId;
   }

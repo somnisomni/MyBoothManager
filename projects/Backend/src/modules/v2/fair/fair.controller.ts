@@ -1,9 +1,9 @@
+import type { CreateFairRequestDto } from "./dto/create.dto";
+import type { FairService } from "./fair.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
 import { Body, Controller, Delete, Get, NotAcceptableException, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
-import { ISuccessResponse } from "@myboothmanager/common";
 import { AllowedFor, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
-import { FairService } from "./fair.service";
 import { FairResponseDto, SuperAdminFairResponseDto } from "./dto/fair.dto";
-import { CreateFairRequestDto } from "./dto/create.dto";
 
 @Controller("/fair")
 export class FairController {
@@ -26,7 +26,7 @@ export class FairController {
     }
 
     return (await this.fair.findAll())
-      .map((fair) => new FairResponseDto(fair));
+      .map(fair => new FairResponseDto(fair));
   }
 
   /**
@@ -44,7 +44,6 @@ export class FairController {
 
     return new FairResponseDto(await this.fair.findOne(id));
   }
-
 
   /* === Super admin routes === */
   /**

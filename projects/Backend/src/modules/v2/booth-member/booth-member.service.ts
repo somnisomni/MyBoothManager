@@ -1,16 +1,17 @@
+import type { CreateBoothMemberRequestDto } from "./dto/create.dto";
+import type { UpdateBoothMemberRequestDto } from "./dto/update.dto";
 import type Booth from "@/db/models/booth";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import BoothMember from "@/db/models/booth-member";
 import Goods from "@/db/models/goods";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { SUCCESS_RESPONSE, type ISuccessResponse } from "@myboothmanager/common";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { BoothService } from "../booth/booth.service";
-import { BoothMemberParentBoothNotFoundException } from "./booth-member.exception";
-import type { CreateBoothMemberRequestDto } from "./dto/create.dto";
-import { BoothMemberImageService } from "./booth-member.image.service";
-import type { UpdateBoothMemberRequestDto } from "./dto/update.dto";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { create as dbCreate, findAll as dbFindAll, findOneByPk, jsonContains, removeInstance } from "@/lib/utils/db";
+import { BoothService } from "../booth/booth.service";
+import { BoothMemberParentBoothNotFoundException } from "./booth-member.exception";
+import { BoothMemberImageService } from "./booth-member.image.service";
 
 @Injectable()
 export class BoothMemberService {
@@ -32,7 +33,7 @@ export class BoothMemberService {
    * @throws `NoAccessException` if the booth member does not belong to the booth or the booth does not belong to the account
    * @throws `EntityNotFoundException` if the booth member with the ID does not exist
    */
-  async getBoothMemberAndParentBooth(memberId: number, boothId: number, accountId?: number): Promise<{ member: BoothMember, booth?: Booth }> {
+  async getBoothMemberAndParentBooth(memberId: number, boothId: number, accountId?: number): Promise<{ member: BoothMember; booth?: Booth }> {
     if(!await this.memberBoothCache.testValue(memberId, boothId)) {
       throw new NoAccessException();
     }
@@ -157,7 +158,7 @@ class MemberBoothCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const member = await findOneByPk(BoothMember, key);
 
-    if(typeof member.boothId !== "number") throw new NoAccessException();
+    if(typeof member.boothId !== "number") { throw new NoAccessException(); }
 
     return member.boothId;
   }
