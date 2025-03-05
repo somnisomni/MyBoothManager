@@ -1,5 +1,6 @@
 /* === Common === */
-interface IFairCommon {
+/** @note This interface is used to be a base of fair interfaces. This should not be used directly in the frontend unless it's necessary. */
+export interface IFairCommon {
   id: number;
   name: string;
   description?: string | null;
@@ -9,7 +10,7 @@ interface IFairCommon {
 }
 
 /* === Frontend === */
-export interface IFair extends IFairCommon { }
+export type IFair = IFairCommon;
 
 /* === Model for Backend (DB) === */
 export interface IFairModel extends Omit<IFairCommon, "openingDates"> {
@@ -17,11 +18,11 @@ export interface IFairModel extends Omit<IFairCommon, "openingDates"> {
 }
 
 /* === Requests === */
-export interface IFairCreateRequest extends Omit<IFairCommon, "id"> { }
-export interface IFairUpdateRequest extends Partial<IFairCreateRequest> { }
+export type IFairCreateRequest = Omit<IFairCommon, "id">;
+export type IFairUpdateRequest = Partial<IFairCreateRequest>;
 
 /* === Responses === */
-export interface IFairResponse extends IFair { }
+export type IFairResponse = IFair;
 export interface ISuperAdminFairResponse extends IFairResponse {
   isPassed?: boolean;
   createdAt?: Date | null;

@@ -24,7 +24,7 @@ export function deleteSequelizeInternalKeys<T>(dataModelObj: T & Partial<ISequel
 
   for(const key of SEQUELIZE_INTERNAL_KEYS) {
     newObj[key] = undefined;
-    delete newObj[key];
+    delete newObj[key];  // eslint-disable-line @typescript-eslint/no-dynamic-delete
   }
 
   return newObj as T;

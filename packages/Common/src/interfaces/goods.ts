@@ -36,7 +36,7 @@ export enum GoodsStockVisibility {
 }
 
 /* === Frontend === */
-export interface IGoods extends IGoodsFrontendCommon { }
+export type IGoods = IGoodsFrontendCommon;
 
 export interface IGoodsAdmin extends IGoods {
   stock: Required<IGoodsStock>;
@@ -59,5 +59,5 @@ export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinatio
 export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCreateRequest, "boothId">>, Pick<IGoodsCreateRequest, "boothId"> { }
 
 /* === Responses === */
-export interface IGoodsResponse extends IGoods { }
-export interface IGoodsAdminResponse extends IGoodsAdmin { }
+export type IGoodsResponse = IGoods;
+export type IGoodsAdminResponse = IGoodsAdmin;

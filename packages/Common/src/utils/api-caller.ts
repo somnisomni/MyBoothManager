@@ -1,8 +1,7 @@
-import type { IErrorResponse, IBoothMemberResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, ISingleValueResponse, IFairResponse, IFeedbackRequest, ISuccessResponse } from "..";
-import {
-  HTTP_HEALTH_CHECK_STATUS_CODE,
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-} from "..";
+import type { IErrorResponse, IBoothMemberResponse, IBoothResponse, IGoodsCategoryResponse, IGoodsCombinationResponse, IGoodsResponse, ISingleValueResponse, IFairResponse, IFeedbackRequest, ISuccessResponse } from "..";
+import { HTTP_HEALTH_CHECK_STATUS_CODE } from "..";
 
 type HTTPMethodString = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -88,9 +87,9 @@ export default class APICaller {
     try {
       const response = await fetch(`${this.normalizedOptions.host}/${this.normalizedOptions.healthCheckPath}`, APICaller.FETCH_COMMON_OPTIONS);
 
-      if(response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE) { return true; } else { return false; }
+      return response && response.status === HTTP_HEALTH_CHECK_STATUS_CODE;
     } catch(error) {
-      console.debug("Can't connect to API server! ;(");
+      console.debug("Can't connect to API server! ;(", error);
       return false;
     }
   }

@@ -74,8 +74,8 @@ export type IBoothNoticeUpdateRequest = Pick<IBoothCommon, "noticeContent">;
 export type IBoothStatusUpdateRequest = Partial<IBoothStatus>;
 
 /* === Responses === */
-export interface IBoothResponse extends Omit<IBooth, "fairId"> { }
-export interface IBoothAdminResponse extends IBoothAdmin { }
+export type IBoothResponse = Omit<IBooth, "fairId">;
+export type IBoothAdminResponse = IBoothAdmin;
 export interface IBoothSuperAdminResponse extends IBoothAdminResponse {
   owner: IAccountResponse;
   createdAt?: Date | null;

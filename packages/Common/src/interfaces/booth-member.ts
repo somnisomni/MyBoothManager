@@ -22,8 +22,8 @@ export interface IBoothMemberModel extends IBoothMemberCommon {
 }
 
 /* === Requests === */
-export interface IBoothMemberCreateRequest extends Omit<IBoothMemberCommon, "id"> { }
-export interface IBoothMemberUpdateRequest extends Partial<Omit<IBoothMemberCommon, "id" | "boothId">>, Pick<IBoothMemberCommon, "boothId"> { }
+export type IBoothMemberCreateRequest = Omit<IBoothMemberCommon, "id">;
+export type IBoothMemberUpdateRequest = Partial<Omit<IBoothMemberCommon, "id" | "boothId">> & Pick<IBoothMemberCommon, "boothId">;
 
 /* === Responses === */
-export interface IBoothMemberResponse extends IBoothMember { }
+export type IBoothMemberResponse = IBoothMember;

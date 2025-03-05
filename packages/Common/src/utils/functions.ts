@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-dynamic-delete */
+
 /**
  * Delete keyed members from an object in-place
  * @param obj Target object

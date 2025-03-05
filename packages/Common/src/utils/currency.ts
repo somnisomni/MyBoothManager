@@ -37,16 +37,16 @@ export type SupportedCurrencyCodes = "KRW" | "USD" | "JPY" | "CNY" | "EUR" | "GB
  * Mapping from currency code to currency symbol.
  */
 export const CURRENCY_CODE_TO_SYMBOL_MAP = Object.freeze<Record<SupportedCurrencyCodes, string>>({
-  KRW: getSymbolFromCurrency("KRW")!,
-  USD: getSymbolFromCurrency("USD")!,
-  JPY: getSymbolFromCurrency("JPY")!,
-  CNY: `CN${getSymbolFromCurrency("CNY")!}`,
-  EUR: getSymbolFromCurrency("EUR")!,
-  GBP: getSymbolFromCurrency("GBP")!,
-  AUD: `AU${getSymbolFromCurrency("AUD")!}`,
-  CAD: `CA${getSymbolFromCurrency("CAD")!}`,
-  HKD: `HK${getSymbolFromCurrency("HKD")!}`,
-  NZD: `NZ${getSymbolFromCurrency("NZD")!}`,
+  KRW: getSymbolFromCurrency("KRW") ?? "KRW",
+  USD: getSymbolFromCurrency("USD") ?? "USD",
+  JPY: getSymbolFromCurrency("JPY") ?? "JPY",
+  CNY: `CN${getSymbolFromCurrency("CNY") ?? "Y"}`,
+  EUR: getSymbolFromCurrency("EUR") ?? "EUR",
+  GBP: getSymbolFromCurrency("GBP") ?? "GBP",
+  AUD: `AU${getSymbolFromCurrency("AUD") ?? "D"}`,
+  CAD: `CA${getSymbolFromCurrency("CAD") ?? "D"}`,
+  HKD: `HK${getSymbolFromCurrency("HKD") ?? "D"}`,
+  NZD: `NZ${getSymbolFromCurrency("NZD") ?? "D"}`,
 });
 
 /**

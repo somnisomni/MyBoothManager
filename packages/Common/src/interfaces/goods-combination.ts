@@ -1,10 +1,10 @@
 import type { GoodsStockVisibility, IGoodsCommon, IGoodsFrontendCommon, IGoodsStock } from "./goods";
 
 /* === Common === */
-interface IGoodsCombinationCommon extends Omit<IGoodsCommon, "combinationId"> { }
+type IGoodsCombinationCommon = Omit<IGoodsCommon, "combinationId">;
 
 /* === Frontend === */
-export interface IGoodsCombination extends Omit<IGoodsFrontendCommon, "combinationId" | "type"> { }
+export type IGoodsCombination = Omit<IGoodsFrontendCommon, "combinationId" | "type">;
 
 export interface IGoodsCombinationAdmin extends IGoodsCombination {
   stock: Required<IGoodsStock>;
@@ -29,5 +29,5 @@ export interface IGoodsCombinationUpdateRequest extends Partial<Omit<IGoodsCombi
 }
 
 /* === Responses === */
-export interface IGoodsCombinationResponse extends IGoodsCombination { }
-export interface IGoodsCombinationAdminResponse extends IGoodsCombinationAdmin { }
+export type IGoodsCombinationResponse = IGoodsCombination;
+export type IGoodsCombinationAdminResponse = IGoodsCombinationAdmin;
