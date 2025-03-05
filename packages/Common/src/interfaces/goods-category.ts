@@ -1,19 +1,20 @@
 /* === Common === */
-interface IGoodsCategoryCommon {
+/** @note This interface is used to be a base of goods category interfaces. This should not be used directly in the frontend unless it's necessary. */
+export interface IGoodsCategoryCommon {
   id: number;
   boothId: number;
   name: string;
 }
 
 /* === Frontend === */
-export interface IGoodsCategory extends IGoodsCategoryCommon { }
+export type IGoodsCategory = IGoodsCategoryCommon;
 
 /* === Model for Backend (DB) === */
-export interface IGoodsCategoryModel extends IGoodsCategoryCommon { }
+export type IGoodsCategoryModel = IGoodsCategoryCommon;
 
 /* === Requests === */
-export interface IGoodsCategoryCreateRequest extends Omit<IGoodsCategoryCommon, "id"> { }
+export type IGoodsCategoryCreateRequest = Omit<IGoodsCategoryCommon, "id">;
 export interface IGoodsCategoryUpdateRequest extends Partial<Omit<IGoodsCategoryCommon, "id" | "boothId">>, Pick<IGoodsCategoryCommon, "boothId"> { }
 
 /* === Responses === */
-export interface IGoodsCategoryResponse extends IGoodsCategory { }
+export type IGoodsCategoryResponse = IGoodsCategory;

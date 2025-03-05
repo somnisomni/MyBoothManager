@@ -20,7 +20,7 @@
     "./dist"
   ],
   "devDependencies": {
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.5",

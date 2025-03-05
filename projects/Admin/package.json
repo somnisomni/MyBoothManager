@@ -38,7 +38,7 @@
     "vuetify": "^3.7.6"
   },
   "devDependencies": {
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@tsconfig/node20": "^20.1.4",
     "@types/clone-deep": "^4.0.4",
     "@types/node": "^22.10.5",

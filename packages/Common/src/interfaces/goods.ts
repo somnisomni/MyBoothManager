@@ -1,6 +1,7 @@
-import { IImageUploadInfo } from "./base";
+import type { IImageUploadInfo } from "./base";
 
 /* === Common === */
+// eslint-disable-next-line import-x/exports-last
 export interface IGoodsCommon {
   id: number;
   boothId: number;
@@ -9,7 +10,7 @@ export interface IGoodsCommon {
   description?: string | null;
   price: number;
   stock: IGoodsStock;
-  ownerMemberIds?: Array<number> | null;
+  ownerMemberIds?: number[] | null;
 }
 
 interface IGoodsBase extends IGoodsCommon {
@@ -35,7 +36,7 @@ export enum GoodsStockVisibility {
 }
 
 /* === Frontend === */
-export interface IGoods extends IGoodsFrontendCommon { }
+export type IGoods = IGoodsFrontendCommon;
 
 export interface IGoodsAdmin extends IGoods {
   stock: Required<IGoodsStock>;
@@ -58,5 +59,5 @@ export interface IGoodsCreateRequest extends Omit<IGoodsBase, "id" | "combinatio
 export interface IGoodsUpdateRequest extends Partial<Omit<IGoodsCreateRequest, "boothId">>, Pick<IGoodsCreateRequest, "boothId"> { }
 
 /* === Responses === */
-export interface IGoodsResponse extends IGoods { }
-export interface IGoodsAdminResponse extends IGoodsAdmin { }
+export type IGoodsResponse = IGoods;
+export type IGoodsAdminResponse = IGoodsAdmin;

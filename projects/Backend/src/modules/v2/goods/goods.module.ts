@@ -1,10 +1,10 @@
-import { UtilModule } from "@/modules/common/util/util.module";
 import { forwardRef, Module } from "@nestjs/common";
-import { GoodsService } from "./goods.service";
-import { GoodsController } from "./goods.controller";
-import { GoodsImageService } from "./goods.image.service";
-import { GoodsImageController } from "./goods.image.controller";
+import { UtilModule } from "@/modules/common/util/util.module";
 import BoothModule from "../booth/booth.module";
+import { GoodsController } from "./goods.controller";
+import { GoodsImageController } from "./goods.image.controller";
+import { GoodsImageService } from "./goods.image.service";
+import { GoodsService } from "./goods.service";
 
 @Module({
   imports: [

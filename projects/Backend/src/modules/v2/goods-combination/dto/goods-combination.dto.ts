@@ -1,7 +1,8 @@
-import { GoodsStockVisibility, IGoodsCombinationResponse, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
+import type GoodsCombination from "@/db/models/goods-combination";
+import type { IGoodsCombinationResponse, IGoodsStock, IImageUploadInfo } from "@myboothmanager/common";
+import { GoodsStockVisibility } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 import deepClone from "clone-deep";
-import GoodsCombination from "@/db/models/goods-combination";
 
 @Exclude()
 export class GoodsCombinationResponseDto implements IGoodsCombinationResponse {

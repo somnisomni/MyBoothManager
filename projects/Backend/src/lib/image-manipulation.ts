@@ -1,5 +1,6 @@
+import type { ImageSizeConstraintKey } from "@myboothmanager/common";
+import { IMAGE_SIZE_CONSTRAINTS } from "@myboothmanager/common";
 import { default as Sharp } from "sharp";
-import { IMAGE_SIZE_CONSTRAINTS, ImageSizeConstraintKey } from "@myboothmanager/common";
 import { ImageManipulationException, InvalidImageException } from "./image-manipulation.exception";
 
 export default class ImageManipulator {
@@ -28,15 +29,18 @@ export default class ImageManipulator {
    * @returns {{ width: number, height: number }} Resized width and height
    * @throws {ImageManipulationException} When the image manipulation failed
    */
-  private async _resizeAndCrop(constraint: NonNullable<ReturnType<(typeof IMAGE_SIZE_CONSTRAINTS)["get"]>>): Promise<{ width: number, height: number }> {
+  private async _resizeAndCrop(constraint: NonNullable<ReturnType<(typeof IMAGE_SIZE_CONSTRAINTS)["get"]>>): Promise<{ width: number; height: number }> {
     let width: number, height: number;
 
     try {
       const metadata = await this.imageInstance.metadata();
-      if(!metadata || !metadata.width || !metadata.height) throw new InvalidImageException();
 
-      width = metadata.width!;
-      height = metadata.height!;
+      if(!metadata || !metadata.width || !metadata.height) {
+        throw new InvalidImageException();
+      }
+
+      width = metadata.width;
+      height = metadata.height;
     } catch(e) {
       console.error(e);
       throw new InvalidImageException();
@@ -54,10 +58,14 @@ export default class ImageManipulator {
           kernel: "lanczos3",
         }).toBuffer());
 
-      return new Promise((resolve) => {
-        this.imageInstance.metadata().then((metadata) => {
-          resolve({ width: metadata.width!, height: metadata.height! });
-        });
+      return new Promise(async (resolve) => {
+        const metadata = await this.imageInstance.metadata();
+
+        if(!metadata || !metadata.width || !metadata.height) {
+          throw new ImageManipulationException();
+        }
+
+        resolve({ width: metadata.width, height: metadata.height });
       });
     } catch(e) {
       console.error(e);
@@ -65,35 +73,42 @@ export default class ImageManipulator {
     }
   }
 
-  async resizeAndCrop(constraintKey: ImageSizeConstraintKey): Promise<{ width: number, height: number }> {
+  async resizeAndCrop(constraintKey: ImageSizeConstraintKey): Promise<{ width: number; height: number }> {
     const constraint = IMAGE_SIZE_CONSTRAINTS.get(constraintKey);
-    if(!constraint) throw new ImageManipulationException();
+
+    if(!constraint) {
+      throw new ImageManipulationException();
+    }
 
     return await this._resizeAndCrop(constraint);
   }
 
   async toWebP(): Promise<Blob> {
     try {
-      return new Blob([await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 }}).webp({
+      return new Blob([ await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 } }).webp({
         quality: 95,
         nearLossless: true,
         smartSubsample: true,
-      }).withExif({}).toBuffer()]);
-    } catch(e) {
+      }).withExif({}).toBuffer() ]);
+    } catch(error) {
+      console.debug("Error while converting to WebP", error);
+
       throw new ImageManipulationException();
     }
   }
 
   async toJPG(): Promise<Blob> {
     try {
-      return new Blob([await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 }}).jpeg({
+      return new Blob([ await this.imageInstance.clone().flatten({ background: { r: 255, g: 255, b: 255 } }).jpeg({
         quality: 95,
         progressive: true,
         optimizeCoding: true,
         optimizeScans: true,
         mozjpeg: true,
-      }).withExif({}).toBuffer()]);
+      }).withExif({}).toBuffer() ]);
     } catch(e) {
+      console.debug("Error while converting to JPG", e);
+
       throw new ImageManipulationException();
     }
   }
@@ -103,21 +118,23 @@ export default class ImageManipulator {
    */
   async toThumbnailBase64(width: number = 32, height: number = 32): Promise<string> {
     try {
-      return await new Promise((resolve) => {
-        this.imageInstance.clone().resize(width, height, {
+      return await new Promise(async (resolve) => {
+        const processedBuffer = await this.imageInstance.clone().resize(width, height, {
           fit: "inside",
           position: "center",
           kernel: "lanczos3",
-        }).flatten({ background: { r: 255, g: 255, b: 255 }}).png().toBuffer().then((buffer) => {
-          resolve("data:image/png;base64," + buffer.toString("base64"));
-        });
+        }).flatten({ background: { r: 255, g: 255, b: 255 } }).png().toBuffer();
+
+        resolve(`data:image/png;base64,${processedBuffer.toString("base64")}`);
       });
-    } catch(e) {
+    } catch(error) {
+      console.debug("Error while generating thumbnail of image", error);
+
       throw new ImageManipulationException();
     }
   }
 
-  close() {
+  close(): void {
     this.imageInstance.destroy();
   }
 }

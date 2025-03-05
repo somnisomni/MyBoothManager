@@ -1,18 +1,20 @@
-import { IBoothMemberCreateRequest, IBoothMemberModel } from "@myboothmanager/common";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, DefaultScope, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import type { IBoothMemberCreateRequest, IBoothMemberModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import UploadStorage from "./uploadstorage";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, DefaultScope, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";  // eslint-disable-line import-x/no-deprecated
 import Booth from "./booth";
+import UploadStorage from "./uploadstorage";
 
 @Table
-@DefaultScope(() => ({
-  include: [
-    {
-      as: "avatarImage",
-      model: UploadStorage,
-    },
-  ],
-}))
+@DefaultScope(() => {
+  return {
+    include: [
+      {
+        as: "avatarImage",
+        model: UploadStorage,
+      },
+    ],
+  };
+})
 export default class BoothMember extends Model<IBoothMemberModel, IBoothMemberCreateRequest> implements IBoothMemberModel {
   @PrimaryKey
   @Unique
@@ -55,7 +57,6 @@ export default class BoothMember extends Model<IBoothMemberModel, IBoothMemberCr
   @ForeignKey(() => UploadStorage)
   @Column(DataTypes.INTEGER.UNSIGNED)
   declare avatarImageId?: number | null;
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)

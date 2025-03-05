@@ -1,8 +1,9 @@
-import { UtilService } from "@/modules/common/util/util.service";
+import type { UtilService } from "@/modules/common/util/util.service";
+import type { MultipartFile } from "@fastify/multipart";
+import type { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
+import { ImageSizeConstraintKey, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { GoodsCombinationService } from "./goods-combination.service";
-import { MultipartFile } from "@fastify/multipart";
-import { IImageUploadInfo, ImageSizeConstraintKey, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 
 @Injectable()
 export class GoodsCombinationImageService {
@@ -37,7 +38,7 @@ export class GoodsCombinationImageService {
       await this.deletePrimaryImage(id, boothId, accountId),
     ];
 
-    if(results.every((result) => result.success)) {
+    if(results.every(result => result.success)) {
       return SUCCESS_RESPONSE;
     } else {
       throw new InternalServerErrorException("Failed to delete all images");

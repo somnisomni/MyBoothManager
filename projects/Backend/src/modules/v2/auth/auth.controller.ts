@@ -1,11 +1,13 @@
+import type { AuthService, IAccountLoginResponseWithRefreshToken } from "./auth.service";
+import type { LoginRequestDto } from "./dto/login.dto";
+import type { LogoutRequestDto } from "./dto/logout.dto";
+import type { RefreshRequestDto } from "./dto/refresh.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import type { FastifyReply, FastifyRequest } from "fastify";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from "@nestjs/common";
-import { AuthService, IAccountLoginResponseWithRefreshToken } from "./auth.service";
-import { FastifyReply, FastifyRequest } from "fastify";
-import { LoginRequestDto, LoginResponseDto } from "./dto/login.dto";
-import { RefreshRequestDto } from "./dto/refresh.dto";
 import { AllowedFor, BypassAuth, UserTypes } from "./auth.guard";
-import { LogoutRequestDto } from "./dto/logout.dto";
-import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
+import { LoginResponseDto } from "./dto/login.dto";
 
 @Controller("/auth")
 export class AuthController {
@@ -28,7 +30,7 @@ export class AuthController {
     let data: IAccountLoginResponseWithRefreshToken;
 
     if(loginDto.loginId === process.env.SUPERADMIN_ID
-       && loginDto.loginPass === process.env.SUPERADMIN_PASS) {
+      && loginDto.loginPass === process.env.SUPERADMIN_PASS) {
       // Super Admin
       data = await this.auth.loginSA();
     } else {

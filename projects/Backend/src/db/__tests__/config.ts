@@ -1,5 +1,6 @@
-import { Sequelize, SequelizeOptions } from "sequelize-typescript";
+import type { SequelizeOptions } from "sequelize-typescript";
 import { expectTypeOf } from "expect-type";
+import { Sequelize } from "sequelize-typescript";
 import generateConfig from "../config";
 
 const testEnvVars = {

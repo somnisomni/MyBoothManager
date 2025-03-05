@@ -1,10 +1,11 @@
+import type { CreateFairRequestDto } from "./dto/create.dto";
+import type { UpdateFairRequestDto } from "./dto/update.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { Injectable } from "@nestjs/common";
-import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import Fair from "@/db/models/fair";
-import { CreateFairRequestDto } from "./dto/create.dto";
-import { FairInfoUpdateFailedException, FairPassedException } from "./fair.exception";
-import { UpdateFairRequestDto } from "./dto/update.dto";
 import { findOneByPk, findAll as dbFindAll, create as dbCreate, removeByPk } from "@/lib/utils/db";
+import { FairInfoUpdateFailedException, FairPassedException } from "./fair.exception";
 
 @Injectable()
 export class FairService {

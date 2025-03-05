@@ -1,4 +1,5 @@
-import { siArtstation, siBehance, siBluesky, siDeviantart, siDiscord, siFacebook, siFlickr, siGithub, siInstagram, siKakaotalk, siKickstarter, siKofi, siLine, siMastodon, siMedium, siMisskey, siNiconico, siPatreon, siPinterest, siPixiv, siReddit, siSinaweibo, siSteam, siTelegram, siThreads, siTiktok, siTistory, siTumblr, siTwitch, siVimeo, siX, siYoutube, type SimpleIcon } from "simple-icons";
+import type { SimpleIcon } from "simple-icons";
+import { siArtstation, siBehance, siBluesky, siDeviantart, siDiscord, siFacebook, siFlickr, siGithub, siInstagram, siKakaotalk, siKickstarter, siKofi, siLine, siMastodon, siMedium, siMisskey, siNiconico, siPatreon, siPinterest, siPixiv, siReddit, siSinaweibo, siSteam, siTelegram, siThreads, siTiktok, siTistory, siTumblr, siTwitch, siVimeo, siX, siYoutube } from "simple-icons";
 
 const hostIconMap: { [key: string]: SimpleIcon } = {
   // Twitter / X
@@ -94,8 +95,12 @@ export function getSimpleIconByUrl(href: string | URL): "mail" | SimpleIcon | nu
   }
 
   const host = url.hostname.replace(/^www(\d+)?\./, "");
-  if(host in hostIconMap || Object.keys(hostIconMap).some((key) => host.endsWith(key))) {
-    return hostIconMap[host] ?? hostIconMap[Object.keys(hostIconMap).find((key) => host.endsWith(key))!];
+  const iconEndsWithMatchKey = Object.keys(hostIconMap).find(key => host.endsWith(key));
+
+  if(host in hostIconMap) {
+    return hostIconMap[host];
+  } else if(iconEndsWithMatchKey) {
+    return hostIconMap[iconEndsWithMatchKey];
   }
 
   return null;

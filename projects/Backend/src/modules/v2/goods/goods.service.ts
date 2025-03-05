@@ -1,15 +1,16 @@
+import type { CreateGoodsRequestDto } from "./dto/create.dto";
+import type { UpdateGoodsRequestDto } from "./dto/update.dto";
+import type Booth from "@/db/models/booth";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { GoodsImageService } from "./goods.image.service";
 import Goods from "@/db/models/goods";
 import { EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import { BoothService } from "../booth/booth.service";
-import Booth from "@/db/models/booth";
-import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
-import { CreateGoodsRequestDto } from "./dto/create.dto";
-import { UpdateGoodsRequestDto } from "./dto/update.dto";
-import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { findOneByPk, removeInstance, findAll as dbFindAll, create as dbCreate } from "@/lib/utils/db";
+import { BoothService } from "../booth/booth.service";
+import { GoodsInfoUpdateFailedException, GoodsParentBoothNotFoundException } from "./goods.exception";
+import { GoodsImageService } from "./goods.image.service";
 
 @Injectable()
 export class GoodsService {
@@ -31,7 +32,7 @@ export class GoodsService {
    * @throws `NoAccessException` if the goods does not belong to the booth or the booth does not belong to the account
    * @throws `EntityNotFoundException` if the goods with the ID does not exist
    */
-  private async getGoodsAndParentBooth(goodsId: number, boothId: number, accountId?: number): Promise<{ goods: Goods, booth?: Booth }> {
+  private async getGoodsAndParentBooth(goodsId: number, boothId: number, accountId?: number): Promise<{ goods: Goods; booth?: Booth }> {
     if(!await this.goodsBoothCache.testValue(goodsId, boothId)) {
       throw new NoAccessException();
     }
@@ -175,7 +176,7 @@ class GoodsBoothCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const goods = await findOneByPk(Goods, key);
 
-    if(typeof goods.boothId !== "number") throw new NoAccessException();
+    if(typeof goods.boothId !== "number") { throw new NoAccessException(); }
 
     return goods.boothId;
   }

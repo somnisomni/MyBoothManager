@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import type { Model, ModelDefined, FindOptions, CreateOptions, InstanceDestroyOptions } from "sequelize";
+import type { Fn, Where } from "sequelize/types/utils";
 import { SEQUELIZE_INTERNAL_KEYS } from "@myboothmanager/common";
 import { InternalServerErrorException, BadRequestException } from "@nestjs/common";
-import { type Model, fn, col, where, type ModelDefined, BaseError, type FindOptions, type CreateOptions, type InstanceDestroyOptions } from "sequelize";
-import type { Fn, Where } from "sequelize/types/utils";
+import { fn, col, where, BaseError } from "sequelize";
 import { EntityNotFoundException } from "../exceptions";
 
 type FindOptionsAsParam<TAttr> = Partial<FindOptions<TAttr>> & { includeSequelizeInternalKeys?: boolean } & { attributes?: { exclude?: string[] } };
@@ -41,7 +42,7 @@ export function stringCompareCaseSensitive<TModel extends Model>(column: keyof T
  * This is for convenient error handling and to reduce code duplication. This should not be exported and used directly.
  */
 async function actionWrapper<TResult extends (Model | Model[])>(action: () => Promise<TResult | null>): Promise<TResult> {
-  let target: TResult | null = null;
+  let target: TResult | null;
 
   try {
     target = await action();
@@ -57,7 +58,10 @@ async function actionWrapper<TResult extends (Model | Model[])>(action: () => Pr
     }
   }
 
-  if(!target) throw new EntityNotFoundException();
+  if(!target) {
+    throw new EntityNotFoundException();
+  }
+
   return target;
 }
 
@@ -126,7 +130,7 @@ export async function create<TModel extends Model>(
   options: CreateOptionsAsParam<TModel> = { includeSequelizeInternalKeys: false }): Promise<TModel> {
   return await actionWrapper(async () => await (model as unknown as ModelDefined<any, any>).create({
     ...Object.fromEntries(
-      Object.entries(values).filter(([key]) => {
+      Object.entries(values).filter(([ key ]) => {
         if(!options.includeSequelizeInternalKeys) {
           return !SEQUELIZE_INTERNAL_KEYS.some(internalKey => internalKey === key);
         }

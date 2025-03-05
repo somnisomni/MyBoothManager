@@ -12,8 +12,8 @@ declare module "fastify" {
     cspNonce: {
       script: string;
       style: string;
-    },
-    helmet: (opts?: HelmetOptions) => typeof helmet
+    };
+    helmet(opts?: HelmetOptions): typeof helmet;
   }
 
   export interface RouteOptions extends fastifyHelmet.FastifyHelmetRouteOptions { }
@@ -30,7 +30,7 @@ declare namespace fastifyHelmet {
   }
 
   export type FastifyHelmetOptions = {
-    enableCSPNonces?: boolean,
+    enableCSPNonces?: boolean;
     global?: boolean;
   } & NonNullable<HelmetOptions>;
 

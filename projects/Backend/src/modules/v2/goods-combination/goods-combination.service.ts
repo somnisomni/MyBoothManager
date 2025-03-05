@@ -1,16 +1,17 @@
+import type { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
+import type { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import { GoodsStockVisibility, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { BoothService } from "../booth/booth.service";
-import { GoodsCombinationImageService } from "./goods-combination.image.service";
-import GoodsCombination from "@/db/models/goods-combination";
-import Booth from "@/db/models/booth";
+import type Booth from "@/db/models/booth";
 import Goods from "@/db/models/goods";
-import { findOneByPk, removeInstance, findAll as dbFindAll, create as dbCreate } from "@/lib/utils/db";
+import GoodsCombination from "@/db/models/goods-combination";
 import { NoAccessException, EntityNotFoundException } from "@/lib/exceptions";
 import { CacheMap } from "@/lib/utils/cache-map";
-import { GoodsStockVisibility, ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { CreateGoodsCombinationRequestDto } from "./dto/create.dto";
-import { UpdateGoodsCombinationRequestDto } from "./dto/update.dto";
+import { findOneByPk, removeInstance, findAll as dbFindAll, create as dbCreate } from "@/lib/utils/db";
+import { BoothService } from "../booth/booth.service";
 import { GoodsCombinationParentBoothNotFoundException, GoodsCombinationInfoUpdateFailedException } from "./goods-combination.exception";
+import { GoodsCombinationImageService } from "./goods-combination.image.service";
 
 @Injectable()
 export class GoodsCombinationService {
@@ -32,7 +33,7 @@ export class GoodsCombinationService {
    * @throws `NoAccessException` if the goods combination does not belong to the booth or the booth does not belong to the account
    * @throws `EntityNotFoundException` if the goods combination with the ID does not exist
    */
-  private async getCombinationAndParentBooth(combinationId: number, boothId: number, accountId?: number): Promise<{ combination: GoodsCombination, booth?: Booth }> {
+  private async getCombinationAndParentBooth(combinationId: number, boothId: number, accountId?: number): Promise<{ combination: GoodsCombination; booth?: Booth }> {
     if(!await this.combinationBoothCache.testValue(combinationId, boothId)) {
       throw new NoAccessException();
     }
@@ -261,7 +262,7 @@ class CombinationBoothCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const goods = await findOneByPk(GoodsCombination, key);
 
-    if(typeof goods.boothId !== "number") throw new NoAccessException();
+    if(typeof goods.boothId !== "number") { throw new NoAccessException(); }
 
     return goods.boothId;
   }

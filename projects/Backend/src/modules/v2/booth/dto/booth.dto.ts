@@ -1,5 +1,5 @@
 import type Booth from "@/db/models/booth";
-import { IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes, type IAccountResponse, type IBoothSuperAdminResponse } from "@myboothmanager/common";
+import type { IBoothAdminResponse, IBoothExpense, IBoothRelatedLink, IBoothResponse, IBoothStatus, IFairInfo, IImageUploadInfo, SupportedCurrencyCodes, IAccountResponse, IBoothSuperAdminResponse } from "@myboothmanager/common";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
@@ -14,8 +14,8 @@ export class BoothResponseDto implements IBoothResponse {
   @Expose() declare status: IBoothStatus;
   @Expose() declare dateOpen?: Date | null;
   @Expose() declare dateClose?: Date | null;
-  @Expose() declare datesOpenInFair?: Array<Date> | null;
-  @Expose() declare relatedLinks: Array<IBoothRelatedLink>;
+  @Expose() declare datesOpenInFair?: Date[] | null;
+  @Expose() declare relatedLinks: IBoothRelatedLink[];
   @Expose() declare fair?: IFairInfo;
   @Expose() declare infoImage?: IImageUploadInfo;
   @Expose() declare bannerImage?: IImageUploadInfo;
@@ -43,7 +43,7 @@ export class BoothResponseDto implements IBoothResponse {
     if(values.fairId) {
       this.fair = model.associatedFair?.toFairInfo();
       this.location = model.associatedFair?.location;
-      this.datesOpenInFair = values.datesOpenInFair as Array<Date> | null;
+      this.datesOpenInFair = values.datesOpenInFair as Date[] | null;
     } else {
       this.location = values.location;
       this.dateOpen = values.dateOpen;
@@ -54,7 +54,7 @@ export class BoothResponseDto implements IBoothResponse {
 
 @Exclude()
 export class AdminBoothResponseDto extends BoothResponseDto implements IBoothAdminResponse {
-  @Expose() declare expenses: Array<IBoothExpense>;
+  @Expose() declare expenses: IBoothExpense[];
 
   constructor(model: Booth) {
     super(model);

@@ -1,4 +1,4 @@
-import { IBoothCreateRequest, SupportedCurrencyCodes } from "@myboothmanager/common";
+import type { IBoothCreateRequest, SupportedCurrencyCodes } from "@myboothmanager/common";
 
 export class CreateBoothRequestDto implements IBoothCreateRequest /* , IBoothCreateWithFairRequest */ {
   declare fairId?: number;
@@ -9,5 +9,5 @@ export class CreateBoothRequestDto implements IBoothCreateRequest /* , IBoothCre
   declare currencyCode: SupportedCurrencyCodes;
   declare dateOpen?: Date | null;
   declare dateClose?: Date | null;
-  declare datesOpenInFair?: Array<string> | null;
+  declare datesOpenInFair?: string[] | null;
 }

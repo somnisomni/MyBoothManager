@@ -1,12 +1,12 @@
+import type { BoothOrderService } from "./booth-order.service";
+import type { CreateBoothOrderRequestDto } from "./dto/create.dto";
+import type { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
-import { BoothOrderService } from "./booth-order.service";
-import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
-import { CreateBoothOrderRequestDto } from "./dto/create.dto";
-import { IAuthData } from "../auth/jwt-util.service";
-import { BoothOrderResponseDto } from "./dto/booth-order.dto";
-import { UpdateBoothOrderStatusRequestDto } from "./dto/update-status.dto";
-import { ISuccessResponse } from "@myboothmanager/common";
 import { BOOTH_ID_QUERY } from "@/lib/const";
+import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
+import { BoothOrderResponseDto } from "./dto/booth-order.dto";
 
 @Controller(`/booth/:${BOOTH_ID_QUERY}/order`)
 @AllowedFor(UserTypes.BOOTH_ADMIN)
@@ -20,7 +20,7 @@ export class BoothOrderController {
   async findAll(@Param(BOOTH_ID_QUERY, ParseIntPipe) boothId: number,
                 @AuthData() authData: IAuthData): Promise<BoothOrderResponseDto[]> {
     return (await this.order.findAll(boothId, authData.id))
-      .map((order) => new BoothOrderResponseDto(order));
+      .map(order => new BoothOrderResponseDto(order));
   }
 
   @Get(":oId")

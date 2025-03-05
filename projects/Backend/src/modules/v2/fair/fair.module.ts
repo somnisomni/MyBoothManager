@@ -3,8 +3,8 @@ import { FairController } from "./fair.controller";
 import { FairService } from "./fair.service";
 
 @Module({
-  providers: [FairService],
-  controllers: [FairController],
-  exports: [FairService],
+  providers: [ FairService ],
+  controllers: [ FairController ],
+  exports: [ FairService ],
 })
 export default class FairModule { }

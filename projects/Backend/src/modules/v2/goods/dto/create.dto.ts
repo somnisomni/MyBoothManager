@@ -1,4 +1,4 @@
-import { GoodsStockVisibility, IGoodsCreateRequest } from "@myboothmanager/common";
+import type { GoodsStockVisibility, IGoodsCreateRequest } from "@myboothmanager/common";
 
 export class CreateGoodsRequestDto implements IGoodsCreateRequest {
   declare boothId: number;

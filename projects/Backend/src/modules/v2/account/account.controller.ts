@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
-import AccountService from "./account.service";
-import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
-import { AccountResponseDto, SuperAdminAccountResponseDto } from "./dto/account.dto";
-import type { UpdateAccountRequestDto } from "./dto/update.dto";
+import type AccountService from "./account.service";
 import type { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
+import type { UpdateAccountRequestDto } from "./dto/update.dto";
+import type { IAuthData } from "../auth/jwt-util.service";
 import type { CreateAccountRequestDto } from "@/modules/v2/account/dto/create.dto";
 import type { ISuccessResponse } from "@myboothmanager/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { AllowedFor, AuthData, UserTypes } from "../auth/auth.guard";
+import { AccountResponseDto, SuperAdminAccountResponseDto } from "./dto/account.dto";
 
 @Controller("/account")
 export default class AccountController {

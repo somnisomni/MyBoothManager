@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
-import { BoothService } from "./booth.service";
-import { AdminBoothResponseDto, BoothResponseDto, SuperAdminBoothResponseDto } from "./dto/booth.dto";
-import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
-import { CreateBoothRequestDto } from "./dto/create.dto";
-import { UpdateBoothRequestDto } from "./dto/update.dto";
-import { ISuccessResponse, type IBoothStatus, type ISingleValueResponse } from "@myboothmanager/common";
-import { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
+import type { BoothService } from "./booth.service";
+import type { CreateBoothRequestDto } from "./dto/create.dto";
+import type { UpdateBoothStatusRequestDto } from "./dto/update-status.dto";
+import type { UpdateBoothRequestDto } from "./dto/update.dto";
+import type { IAuthData } from "../auth/jwt-util.service";
 import type { UpdateBoothNoticeRequestDto } from "@/modules/v2/booth/dto/update-notice.dto";
+import type { ISuccessResponse,IBoothStatus, ISingleValueResponse } from "@myboothmanager/common";
+import { Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
+import { AllowedFor, AuthData, UserType, UserTypes, UserTypeUtil } from "../auth/auth.guard";
+import { AdminBoothResponseDto, BoothResponseDto, SuperAdminBoothResponseDto } from "./dto/booth.dto";
 
 @Controller("/booth")
 export class BoothController {
@@ -58,7 +58,6 @@ export class BoothController {
     return new BoothResponseDto(await this.booth.findOne(id, true));
   }
 
-
   /* === Public routes === */
   /**
    * Checks if a booth is publicly accessible
@@ -67,7 +66,6 @@ export class BoothController {
   async checkPublicAccess(@Param("id", ParseIntPipe) id: number): Promise<ISingleValueResponse<boolean>> {
     return { value: await this.booth.isBoothAvailable(id) };
   }
-
 
   /* === Booth admin routes === */
   /**
@@ -112,7 +110,6 @@ export class BoothController {
                      @AuthData() authData: IAuthData): Promise<ISingleValueResponse<string>> {
     return await this.booth.updateNotice(id, notice, authData.id);
   }
-
 
   /* === Super admin routes === */
   /**

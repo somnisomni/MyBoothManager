@@ -1,12 +1,12 @@
 // NOTE: Admin-only interfaces (goods order is admin-only feature)
 
-import { MutualExclusive } from "..";
+import type { MutualExclusive } from "..";
 
 /* === Common === */
 interface IGoodsOrderCommon {
   id: number;
   boothId: number;
-  order: Array<IGoodsOrderItem>;
+  order: IGoodsOrderItem[];
   status: GoodsOrderStatus;
   totalRevenue: number;
   paymentMethod?: GoodsOrderPaymentMethod;
@@ -39,14 +39,14 @@ export enum GoodsOrderPaymentMethod {
 }
 
 /* === Frontend === */
-export interface IGoodsOrder extends IGoodsOrderCommon { }
+export type IGoodsOrder = IGoodsOrderCommon;
 
 /* === Model for Backend (DB) === */
-export interface IGoodsOrderModel extends IGoodsOrderCommon { }
+export type IGoodsOrderModel = IGoodsOrderCommon;
 
 /* === Requests === */
-export interface IGoodsOrderCreateRequest extends Omit<IGoodsOrderCommon, "id" | "status" | "createdAt"> { }
-export interface IGoodsOrderStatusUpdateRequest extends Pick<IGoodsOrderCommon, "status"> { }
+export type IGoodsOrderCreateRequest = Omit<IGoodsOrderCommon, "id" | "status" | "createdAt">;
+export type IGoodsOrderStatusUpdateRequest = Pick<IGoodsOrderCommon, "status">;
 
 /* === Responses === */
-export interface IGoodsOrderResponse extends IGoodsOrderCommon { }
+export type IGoodsOrderResponse = IGoodsOrderCommon;

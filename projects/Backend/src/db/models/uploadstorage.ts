@@ -1,13 +1,13 @@
 import type { IUploadStorage, InternalKeysWithId } from "@/lib/types";
+import type { IImageUploadInfo } from "@myboothmanager/common";
 import path from "path";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, ForeignKey, PrimaryKey, Table, Unique, AllowNull, Default, HasOne } from "sequelize-typescript";
-import { IImageUploadInfo } from "@myboothmanager/common";
 import Account from "./account";
 import Booth from "./booth";
+import BoothMember from "./booth-member";
 import Goods from "./goods";
 import GoodsCombination from "./goods-combination";
-import BoothMember from "./booth-member";
 
 export type UploadStorageCreationAttributes = Omit<IUploadStorage, InternalKeysWithId>;
 
@@ -37,7 +37,7 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
   @AllowNull(true)
   @Default([])
   @Column(DataTypes.JSON)
-  declare extensions?: Array<string>;
+  declare extensions?: string[];
 
   @AllowNull(true)
   @Column(DataTypes.TEXT)
@@ -45,9 +45,8 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
 
   @Column(DataTypes.VIRTUAL)
   get filePath(): string {
-    return path.normalize(path.join(this.savePath!, this.fileName));
+    return path.normalize(path.join(this.savePath ?? "/", this.fileName));
   }
-
 
   /* === Relations === */
   @BelongsTo(() => Account)
@@ -67,7 +66,6 @@ export default class UploadStorage extends Model<IUploadStorage, UploadStorageCr
 
   @HasOne(() => GoodsCombination, "goodsImageId")
   declare goodsCombinationImageParent?: GoodsCombination;
-
 
   /* === Functions === */
   toImageUploadInfo(): IImageUploadInfo {

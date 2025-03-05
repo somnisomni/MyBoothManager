@@ -1,11 +1,11 @@
+import type { IAuthData } from "../auth/jwt-util.service";
+import type { UtilService } from "@/modules/common/util/util.service";
+import type { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
+import type { FastifyRequest } from "fastify";
 import { Controller, Delete, forwardRef, Inject, Param, ParseIntPipe, Post, Req } from "@nestjs/common";
-import { BoothMemberImageService } from "./booth-member.image.service";
-import { UtilService } from "@/modules/common/util/util.service";
 import { BOOTH_ID_QUERY } from "@/lib/const";
-import { IImageUploadInfo, ISuccessResponse } from "@myboothmanager/common";
-import { FastifyRequest } from "fastify";
 import { AllowedFor, UserTypes, AuthData } from "../auth/auth.guard";
-import { IAuthData } from "../auth/jwt-util.service";
+import { BoothMemberImageService } from "./booth-member.image.service";
 
 @Controller(`/booth/:${BOOTH_ID_QUERY}/member/:mId/image`)
 export class BoothMemberImageController {

@@ -1,11 +1,14 @@
-import { CanActivate, createParamDecorator, ExecutionContext, Injectable, SetMetadata } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { JwtService, TokenExpiredError } from "@nestjs/jwt";
-import { FastifyRequest } from "fastify";
-import { IAuthData, JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt-util.service";
+import type { IAuthData } from "./jwt-util.service";
+import type { CanActivate, ExecutionContext } from "@nestjs/common";
+import type { Reflector } from "@nestjs/core";
+import type { JwtService } from "@nestjs/jwt";
+import type { FastifyRequest } from "fastify";
+import { createParamDecorator, Injectable, SetMetadata } from "@nestjs/common";
+import { TokenExpiredError } from "@nestjs/jwt";
+import { NoAccessException } from "@/lib/exceptions";
 import { AuthTokenNeedRefreshException, InvalidAuthTokenException } from "./auth.exception";
 import { AuthStorage, SUPER_ADMIN_AUTH_DATA } from "./auth.service";
-import { NoAccessException } from "@/lib/exceptions";
+import { JWT_ALGORITHM, JWT_ISSUER, JWT_SECRET, JWT_SUBJECT } from "./jwt-util.service";
 
 /**
  * Request user type
@@ -131,7 +134,7 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if(bypassAuth) return true;
+    if(bypassAuth) { return true; }
 
     if(token) {
       // If authorization token is provided, process admin determination
@@ -139,7 +142,7 @@ export class AuthGuard implements CanActivate {
         // Verify JWT token
         const payload = await this.jwt.verifyAsync<IAuthData>(token, {
           secret: JWT_SECRET,
-          algorithms: [JWT_ALGORITHM],
+          algorithms: [ JWT_ALGORITHM ],
           issuer: JWT_ISSUER,
           subject: JWT_SUBJECT,
         });
@@ -199,7 +202,7 @@ export class AuthGuard implements CanActivate {
 
   private extractAccessTokenFromHeader(request: FastifyRequest): string | null {
     // Authorization: Bearer <access_token>
-    if(!request.headers.authorization) return null;
+    if(!request.headers.authorization) { return null; }
 
     const [ type, accessToken ] = request.headers.authorization.split(" ");
     return type === "Bearer" && accessToken && accessToken !== "undefined" ? accessToken : null;

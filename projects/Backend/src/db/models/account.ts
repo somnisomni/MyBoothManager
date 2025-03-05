@@ -49,7 +49,6 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   @Column(DataTypes.DATE)
   declare updatedAt?: Date | null;
 
-
   /* === Relations === */
   @HasMany(() => Booth)
   declare booths: Booth[];
@@ -57,10 +56,9 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
   @HasMany(() => UploadStorage)
   declare uploads: UploadStorage[];
 
-
   /* === Hooks === */
   @AfterFind
-  static async setDefaultLastSelectedBoothId(instance: Account) {
+  static async setDefaultLastSelectedBoothId(instance: Account): Promise<void> {
     if(instance && instance.id && !instance.lastSelectedBoothId) {
       const firstBooth = await Booth.findOne({ where: { ownerId: instance.id }, attributes: [ "id" ] });
       if(firstBooth) {

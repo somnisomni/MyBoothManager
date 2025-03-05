@@ -1,19 +1,24 @@
+import type { FastifyCookieOptions } from "@fastify/cookie";
+import type { FastifyHelmetOptions } from "@fastify/helmet";
+import type { FastifyMultipartOptions } from "@fastify/multipart";
+import type { FastifyStaticOptions } from "@fastify/static";
+import type { NestFastifyApplication } from "@nestjs/platform-fastify";
 import type { FastifyPluginCallback } from "fastify";
+import { default as fastifyCookie } from "@fastify/cookie";
+import { default as fastifyHelmet } from "@fastify/helmet";
+import { default as fastifyMultipart } from "@fastify/multipart";
+import { default as fastifyStatic } from "@fastify/static";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
-import { NestFactory, Reflector } from "@nestjs/core";
 import { ClassSerializerInterceptor } from "@nestjs/common";
-import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
-import { default as fastifyMultipart, type FastifyMultipartOptions } from "@fastify/multipart";
-import { default as fastifyHelmet, type FastifyHelmetOptions } from "@fastify/helmet";
-import { default as fastifyStatic, type FastifyStaticOptions } from "@fastify/static";
-import { default as fastifyCookie, type FastifyCookieOptions } from "@fastify/cookie";
+import { NestFactory, Reflector } from "@nestjs/core";
+import { FastifyAdapter } from "@nestjs/platform-fastify";
 import MBMSequelize from "./db/sequelize";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import { LoggingInterceptor } from "./logging.interceptor";
-import { RootModule } from "./modules/root.module";
 import { UtilService } from "./modules/common/util/util.service";
+import { RootModule } from "./modules/root.module";
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   /* *** dotenv configuration *** */
   (await import("dotenv")).config();
 

@@ -1,6 +1,7 @@
 import type { Config, WindowLike } from "dompurify";
-import DOMPurify from "dompurify";
-import { marked, Renderer, type MarkedOptions } from "marked";
+import type { MarkedOptions } from "marked";
+import { default as DOMPurify } from "dompurify";
+import { marked, Renderer } from "marked";
 
 /* `marked` and `dompurify` package needs to be declared in `dependencies` in `package.json` of dependents */
 
@@ -67,19 +68,21 @@ export function resolveDOMPurify(root?: WindowLike): typeof DOMPurify | null {
 }
 
 export function renderAndSanitizeMarkdown(markdown: string, options: {
-  domRoot?: WindowLike,
-  dompurify?: typeof DOMPurify,
-  markedRenderer?: Renderer,
+  domRoot?: WindowLike;
+  dompurify?: typeof DOMPurify;
+  markedRenderer?: Renderer;
 }): string {
   const renderer = options.markedRenderer ?? createMarkedRenderer();
   const dompurify = options.dompurify ?? resolveDOMPurify(options.domRoot);
 
-  if(!dompurify) return markdown;
+  if(!dompurify) {
+    return markdown;
+  }
 
   return dompurify.sanitize(
     marked.parse(markdown, {
       ...MARKED_OPTIONS,
       async: false,
-      renderer: renderer,
+      renderer,
     }), DOMPURIFY_OPTIONS);
 }

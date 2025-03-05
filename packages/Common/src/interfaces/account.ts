@@ -25,8 +25,8 @@ export interface IAccountCreateRequest {
   loginPass: string;
 }
 
-export interface IAccountUpdateRequest extends Partial<Omit<IAccountCreateRequest, "loginId" | "loginPass">> { }
-export interface IAccountUpdatePasswordRequest extends Pick<IAccountCreateRequest, "loginPass"> { }
+export type IAccountUpdateRequest = Partial<Omit<IAccountCreateRequest, "loginId" | "loginPass">>;
+export type IAccountUpdatePasswordRequest = Pick<IAccountCreateRequest, "loginPass">;
 
 export interface IAccountLoginRequest {
   loginId: string;
@@ -39,7 +39,7 @@ export interface IAccountAuthRefreshRequest {
 }
 
 /* === Responses === */
-export interface IAccountResponse extends IAccount { }
+export type IAccountResponse = IAccount;
 export interface ISuperAdminAccountResponse extends Omit<IAccountResponse, "superAdmin">, Pick<IAccountModel, "loginCount" | "lastLoginAt"> {
   createdAt?: Date | null;
   updatedAt?: Date | null;

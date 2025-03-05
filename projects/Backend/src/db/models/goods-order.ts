@@ -1,4 +1,5 @@
-import { type IGoodsOrder, type IGoodsOrderItem, GoodsOrderPaymentMethod, GoodsOrderStatus, IGoodsOrderCreateRequest, IGoodsOrderModel } from "@myboothmanager/common";
+import type { IGoodsOrderCreateRequest, IGoodsOrderModel, IGoodsOrder, IGoodsOrderItem } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";
@@ -25,8 +26,9 @@ export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequ
 
   @AllowNull(false)
   @Column(DataTypes.JSON)
-  get order(): Array<IGoodsOrderItem> { return this.getDataValue("order").map(orderSanitizerCallback); }
-  set order(value: Array<IGoodsOrderItem>) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
+  get order(): IGoodsOrderItem[] { return this.getDataValue("order").map(orderSanitizerCallback); }
+
+  set order(value: IGoodsOrderItem[]) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
 
   @AllowNull(false)
   @Default(GoodsOrderStatus.RECORDED)
@@ -36,13 +38,13 @@ export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequ
   @AllowNull(false)
   @Column(DataTypes.FLOAT.UNSIGNED)
   get totalRevenue(): number { return parseFloat(this.getDataValue("totalRevenue").toFixed(3)); }
+
   set totalRevenue(value: number) { this.setDataValue("totalRevenue", parseFloat(Number(value).toFixed(3))); }
 
   @AllowNull
   @Default(GoodsOrderPaymentMethod.CASH)
   @Column(DataTypes.ENUM(...Object.values(GoodsOrderPaymentMethod)))
   declare paymentMethod?: GoodsOrderPaymentMethod;
-
 
   /* === Relations === */
   @BelongsTo(() => Booth)

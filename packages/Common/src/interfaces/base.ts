@@ -1,5 +1,5 @@
-import { ErrorCodes } from "../enums/errors";
-import { IFair } from "./fair";
+import type { IFair } from "./fair";
+import type { ErrorCodes } from "../enums/errors";
 
 /* === Common Response Interfaces === */
 export interface IErrorResponse {
@@ -14,7 +14,7 @@ export interface ISuccessResponse {
 }
 export const SUCCESS_RESPONSE: Readonly<ISuccessResponse> = Object.freeze({ success: true } as const);
 
-export interface ISingleValueResponse<T>  {
+export interface ISingleValueResponse<T> {
   value: T;
 }
 
@@ -24,4 +24,4 @@ export interface IImageUploadInfo {
   thumbnailData?: string | null;  // BASE64-encoded string
 }
 
-export interface IFairInfo extends Omit<IFair, "openingDates"> { }
+export type IFairInfo = Omit<IFair, "openingDates">;

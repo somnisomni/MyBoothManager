@@ -1,16 +1,17 @@
+import type { CreateGoodsCategoryRequestDto } from "./dto/create.dto";
+import type Booth from "@/db/models/booth";
+import { SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { BoothService } from "../booth/booth.service";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import Goods from "@/db/models/goods";
+import GoodsCategory from "@/db/models/goods-category";
+import GoodsCombination from "@/db/models/goods-combination";
+import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
 import { CacheMap } from "@/lib/utils/cache-map";
 import { findOneByPk, findAll as dbFindAll, create as dbCreate, removeInstance } from "@/lib/utils/db";
-import GoodsCategory from "@/db/models/goods-category";
-import { DuplicatedEntityException, EntityNotFoundException, NoAccessException } from "@/lib/exceptions";
-import Booth from "@/db/models/booth";
+import { BoothService } from "../booth/booth.service";
+import type { UpdateGoodsCategoryRequestDto } from "./dto/update.dto";
 import { GoodsCategoryInfoUpdateFailedException, GoodsCategoryParentBoothNotFoundException } from "./goods-category.exception";
-import { CreateGoodsCategoryRequestDto } from "./dto/create.dto";
-import { UpdateGoodsCategoryRequestDto } from "./dto/update.dto";
-import { ISuccessResponse, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import Goods from "@/db/models/goods";
-import GoodsCombination from "@/db/models/goods-combination";
 
 @Injectable()
 export class GoodsCategoryService {
@@ -30,7 +31,7 @@ export class GoodsCategoryService {
    * @throws `NoAccessException` if the goods category does not belong to the booth or the booth does not belong to the account
    * @throws `EntityNotFoundException` if the goods category with the ID does not exist
    */
-  private async getCategoryAndParentBooth(categoryId: number, boothId: number, accountId?: number): Promise<{ category: GoodsCategory, booth?: Booth }> {
+  private async getCategoryAndParentBooth(categoryId: number, boothId: number, accountId?: number): Promise<{ category: GoodsCategory; booth?: Booth }> {
     if(!await this.categoryBoothCache.testValue(categoryId, boothId)) {
       throw new NoAccessException();
     }
@@ -168,7 +169,7 @@ class GoodsCategoryBoothCache extends CacheMap<number, number> {
   protected override async fetch(key: number): Promise<number> {
     const category = await findOneByPk(GoodsCategory, key);
 
-    if(typeof category.boothId !== "number") throw new NoAccessException();
+    if(typeof category.boothId !== "number") { throw new NoAccessException(); }
 
     return category.boothId;
   }

@@ -3,19 +3,21 @@ import { Sequelize } from "sequelize-typescript";
 import generateConfig from "./config";
 import Account from "./models/account";
 import Booth from "./models/booth";
-import Goods from "./models/goods";
-import GoodsCategory from "./models/goods-category";
-import GoodsOrder from "./models/goods-order";
-import UploadStorage from "./models/uploadstorage";
-import GoodsCombination from "./models/goods-combination";
 import BoothMember from "./models/booth-member";
 import Fair from "./models/fair";
+import Goods from "./models/goods";
+import GoodsCategory from "./models/goods-category";
+import GoodsCombination from "./models/goods-combination";
+import GoodsOrder from "./models/goods-order";
+import UploadStorage from "./models/uploadstorage";
 
 export default class MBMSequelize {
   private static _instance: Sequelize | null = null;
 
   static get instance(): Sequelize {
-    if(!MBMSequelize._instance) throw new Error("Sequelize instance is not initialized! You need to set-up the instance using setup() function first.");
+    if(!MBMSequelize._instance) {
+      throw new Error("Sequelize instance is not initialized! You need to set-up the instance using setup() function first.");
+    }
 
     return MBMSequelize._instance;
   }
@@ -75,7 +77,9 @@ export default class MBMSequelize {
     transaction.afterCommit(async () => {
       console.info("Transaction committed");
 
-      if(afterCommit) await afterCommit(transaction);
+      if(afterCommit) {
+        await afterCommit(transaction);
+      }
     });
 
     return transaction;

@@ -1,15 +1,16 @@
+import type { CreateAccountRequestDto } from "./dto/create.dto";
+import type { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
+import type { UpdateAccountRequestDto } from "./dto/update.dto";
+import type { ISuccessResponse } from "@myboothmanager/common";
+import type { WhereOptions } from "sequelize";
+import { SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
 import { Injectable } from "@nestjs/common";
 import * as argon2 from "argon2";
 import Account from "@/db/models/account";
 import { EntityNotFoundException, InvalidRequestBodyException } from "@/lib/exceptions";
-import { ISuccessResponse, SEQUELIZE_INTERNAL_KEYS, SUCCESS_RESPONSE } from "@myboothmanager/common";
-import { CreateAccountRequestDto } from "./dto/create.dto";
-import { UpdateAccountRequestDto } from "./dto/update.dto";
-import { AccountInfoUpdateFailedException, AccountPasswordUpdateFailedException } from "./account.exception";
-import { UpdateAccountPasswordRequestDto } from "./dto/update-password.dto";
-import { WhereOptions } from "sequelize";
-import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
 import { create as dbCreate, removeByPk, stringCompareCaseSensitive } from "@/lib/utils/db";
+import { SUPER_ADMIN_AUTH_DATA } from "../auth/auth.service";
+import { AccountInfoUpdateFailedException, AccountPasswordUpdateFailedException } from "./account.exception";
 
 @Injectable()
 export default class AccountService {
@@ -30,7 +31,7 @@ export default class AccountService {
       },
     });
 
-    if(!result || result.length <= 0) throw new EntityNotFoundException();
+    if(!result || result.length <= 0) { throw new EntityNotFoundException(); }
 
     return result;
   }
@@ -53,12 +54,12 @@ export default class AccountService {
       attributes: {
         exclude: [
           ...SEQUELIZE_INTERNAL_KEYS,
-          ...(excludePassHash ? ["loginPassHash"] : []),
+          ...(excludePassHash ? [ "loginPassHash" ] : []),
         ],
       },
     });
 
-    if(!result) throw new EntityNotFoundException();
+    if(!result) { throw new EntityNotFoundException(); }
 
     return result;
   }
@@ -86,7 +87,7 @@ export default class AccountService {
    */
   async update(id: number, updateDto: UpdateAccountRequestDto): Promise<Account> {
     // Updating account information of super admin is prohibited
-    if(id === SUPER_ADMIN_AUTH_DATA.id) throw new InvalidRequestBodyException();
+    if(id === SUPER_ADMIN_AUTH_DATA.id) { throw new InvalidRequestBodyException(); }
 
     try {
       const account = await this.findOne(id);
@@ -106,7 +107,7 @@ export default class AccountService {
    */
   async updatePassword(id: number, updatePasswordDto: UpdateAccountPasswordRequestDto): Promise<ISuccessResponse> {
     // Updating account information of super admin is prohibited
-    if(id === SUPER_ADMIN_AUTH_DATA.id) throw new InvalidRequestBodyException();
+    if(id === SUPER_ADMIN_AUTH_DATA.id) { throw new InvalidRequestBodyException(); }
 
     try {
       const account = await this.findOne(id);

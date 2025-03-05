@@ -1,13 +1,13 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { UtilModule } from "@/modules/common/util/util.module";
-import { BoothController } from "./booth.controller";
-import { BoothService } from "./booth.service";
-import { BoothImageService } from "./booth.image.service";
-import { BoothImageController } from "./booth.image.controller";
 import GoodsModule from "../goods/goods.module";
 import GoodsCategoryModule from "../goods-category/goods-category.module";
 import GoodsCombinationModule from "../goods-combination/goods-combination.module";
+import { BoothController } from "./booth.controller";
+import { BoothImageController } from "./booth.image.controller";
+import { BoothImageService } from "./booth.image.service";
 import { BoothIndividualController } from "./booth.individual.controller";
+import { BoothService } from "./booth.service";
 
 @Module({
   imports: [
