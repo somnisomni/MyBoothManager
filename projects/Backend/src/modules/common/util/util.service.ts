@@ -16,8 +16,6 @@ import { generateRandomDigestFileName } from "@/lib/utils/security";
 
 @Injectable()
 export class UtilService {
-  constructor() { }
-
   // NOTE: App root path resolves monorepo root, not the project root
   /**
    * Use `UtilService.safeResolveUploadFolder()` or `UtilService.getFileUploadPath()` instead for normal usage
@@ -25,7 +23,9 @@ export class UtilService {
   public static RESOLVED_UPLOAD_PATH: string = path.resolve(AppRootPath.path, process.env.FILE_UPLOAD_FOLDER || "uploads");
 
   private validateFileSize(file: MultipartFile, maxSize: number = MAX_UPLOAD_FILE_BYTES): boolean {
-    if(file.file.readableLength > maxSize) { throw new RequestMaxSizeExceededException(); }
+    if(file.file.readableLength > maxSize) {
+      throw new RequestMaxSizeExceededException();
+    }
 
     return true;
   }
@@ -47,11 +47,11 @@ export class UtilService {
     return resolvedPath;
   }
 
-  async getFileUploadPath(fileName: string, subpath?: string) {
+  async getFileUploadPath(fileName: string, subpath?: string): Promise<string> {
     return path.resolve(await this.safeResolveUploadFolder(subpath), fileName);
   }
 
-  async getFileFromRequest(req: FastifyRequest, validate: boolean = true) {
+  async getFileFromRequest(req: FastifyRequest, validate: boolean = true): Promise<string> {
     let file: MultipartFile | undefined | null = null;
 
     try {
@@ -60,20 +60,24 @@ export class UtilService {
       throw new InvalidRequestBodyException();
     }
 
-    if(!file) { throw new InvalidRequestBodyException(); }
+    if(!file) {
+      throw new InvalidRequestBodyException();
+    }
 
     if(validate) {
       const validations = [
         this.validateFileSize(file),
       ];
 
-      if(validations.some(validation => !validation)) { throw new InvalidRequestBodyException(); }
+      if(validations.some(validation => !validation)) {
+        throw new InvalidRequestBodyException();
+      }
     }
 
     return file;
   }
 
-  async getFilesFromRequest(req: FastifyRequest, validate: boolean = true) {
+  async getFilesFromRequest(req: FastifyRequest, validate: boolean = true): Promise<MultipartFile[]> {
     const files: MultipartFile[] = [];
 
     try {
@@ -84,7 +88,9 @@ export class UtilService {
       throw new InvalidRequestBodyException();
     }
 
-    if(files.length <= 0) { throw new InvalidRequestBodyException(); }
+    if(files.length <= 0) {
+      throw new InvalidRequestBodyException();
+    }
 
     if(validate) {
       for(const file of files) {
@@ -92,7 +98,9 @@ export class UtilService {
           this.validateFileSize(file),
         ];
 
-        if(validations.some(validation => !validation)) { throw new InvalidRequestBodyException(); }
+        if(validations.some(validation => !validation)) {
+          throw new InvalidRequestBodyException();
+        }
       }
     }
 

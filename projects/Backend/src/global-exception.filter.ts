@@ -1,8 +1,8 @@
 import type { IErrorResponse } from "@myboothmanager/common";
-import type { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
+import type { ArgumentsHost, ExceptionFilter, NotFoundException } from "@nestjs/common";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorCodes } from "@myboothmanager/common";
-import { Catch, NotFoundException as Nest__NotFoundException } from "@nestjs/common";
+import { Catch, NotFoundException as NestNotFoundException } from "@nestjs/common";
 import BaseHttpException, { ApplicationUncaughtedException } from "./lib/exceptions";
 
 const SCREAM = [
@@ -21,7 +21,7 @@ const SCREAM = [
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
     const context = host.switchToHttp();
     const response = context.getResponse<FastifyReply>();
     const request = context.getRequest<FastifyRequest>();
@@ -56,9 +56,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 //   }
 // }
 
-@Catch(Nest__NotFoundException)
+@Catch(NestNotFoundException)
 export class RouteNotFoundExceptionFilter implements ExceptionFilter {
-  catch(exception: Nest__NotFoundException, host: ArgumentsHost) {
+  catch(exception: NotFoundException, host: ArgumentsHost): void {
     const context = host.switchToHttp();
     const response = context.getResponse<FastifyReply>();
     const request = context.getRequest<FastifyRequest>();

@@ -18,7 +18,7 @@ import { LoggingInterceptor } from "./logging.interceptor";
 import { UtilService } from "./modules/common/util/util.service";
 import { RootModule } from "./modules/root.module";
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   /* *** dotenv configuration *** */
   (await import("dotenv")).config();
 

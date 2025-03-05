@@ -20,7 +20,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const ip = contextHttp.ips ? contextHttp.ips[contextHttp.ips.length - 1] : contextHttp.ip;
 
     // Log header message generator function
-    function generateLogHeader(symbol: string, message: string) {
+    function generateLogHeader(symbol: string, message: string): string {
       const handleEndTimestamp = performance.now();
       const elapsed = handleEndTimestamp - handleStartTimestamp;
 

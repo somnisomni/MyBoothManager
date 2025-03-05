@@ -39,8 +39,8 @@ export default class ImageManipulator {
         throw new InvalidImageException();
       }
 
-      width = metadata.width!;
-      height = metadata.height!;
+      width = metadata.width;
+      height = metadata.height;
     } catch(e) {
       console.error(e);
       throw new InvalidImageException();
@@ -58,10 +58,14 @@ export default class ImageManipulator {
           kernel: "lanczos3",
         }).toBuffer());
 
-      return new Promise((resolve) => {
-        this.imageInstance.metadata().then((metadata) => {
-          resolve({ width: metadata.width!, height: metadata.height! });
-        });
+      return new Promise(async (resolve) => {
+        const metadata = await this.imageInstance.metadata();
+
+        if(!metadata || !metadata.width || !metadata.height) {
+          throw new ImageManipulationException();
+        }
+
+        resolve({ width: metadata.width, height: metadata.height });
       });
     } catch(e) {
       console.error(e);
@@ -86,7 +90,9 @@ export default class ImageManipulator {
         nearLossless: true,
         smartSubsample: true,
       }).withExif({}).toBuffer() ]);
-    } catch(e) {
+    } catch(error) {
+      console.debug("Error while converting to WebP", error);
+
       throw new ImageManipulationException();
     }
   }
@@ -101,6 +107,8 @@ export default class ImageManipulator {
         mozjpeg: true,
       }).withExif({}).toBuffer() ]);
     } catch(e) {
+      console.debug("Error while converting to JPG", e);
+
       throw new ImageManipulationException();
     }
   }
@@ -110,16 +118,18 @@ export default class ImageManipulator {
    */
   async toThumbnailBase64(width: number = 32, height: number = 32): Promise<string> {
     try {
-      return await new Promise((resolve) => {
-        this.imageInstance.clone().resize(width, height, {
+      return await new Promise(async (resolve) => {
+        const processedBuffer = await this.imageInstance.clone().resize(width, height, {
           fit: "inside",
           position: "center",
           kernel: "lanczos3",
-        }).flatten({ background: { r: 255, g: 255, b: 255 } }).png().toBuffer().then((buffer) => {
-          resolve(`data:image/png;base64,${buffer.toString("base64")}`);
-        });
+        }).flatten({ background: { r: 255, g: 255, b: 255 } }).png().toBuffer();
+
+        resolve(`data:image/png;base64,${processedBuffer.toString("base64")}`);
       });
-    } catch(e) {
+    } catch(error) {
+      console.debug("Error while generating thumbnail of image", error);
+
       throw new ImageManipulationException();
     }
   }

@@ -34,7 +34,7 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
   }
 
   set openingDates(value: string[] | Date[]) {
-    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate()!).sort();
+    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate() ?? "(invalid date)").sort();
     this.setDataValue("openingDates", dateonlyArray);
   }
 
@@ -48,9 +48,9 @@ export default class Fair extends Model<IFairModel, IFairCreateRequest> implemen
     const parsedDates: Date[] = this.openingDates.map(date => new Date(date));
     parsedDates.sort((a, b) => a.getTime() - b.getTime());
 
-    const toDateonly = (date: string | Date) => DateTime.fromFormat(DateTime.fromJSDate(new Date(date)).toISODate()!, "yyyy-MM-dd");
-    const lastDate: DateTime = toDateonly(parsedDates[parsedDates.length - 1]);
-    const now: DateTime = toDateonly(new Date());
+    const toDateonly = (date: string | Date): DateTime => DateTime.fromFormat(DateTime.fromJSDate(new Date(date)).toISODate() ?? "(invalid date)", "yyyy-MM-dd");
+    const lastDate = toDateonly(parsedDates[parsedDates.length - 1]);
+    const now = toDateonly(new Date());
 
     return now > lastDate;
   }

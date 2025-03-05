@@ -7,7 +7,7 @@ import { createHash, randomBytes } from "crypto";
  *
  * @returns `fileName` is the bas64url-encoded generated file name, `withExt` is a function that appends an extension to the file name.
  */
-export function generateRandomDigestFileName() {
+export function generateRandomDigestFileName(): { fileName: string; withExt(ext: string): string } {
   const digest = `${createHash("shake256", { outputLength: 32 }).update(randomBytes(32)).digest("base64url")}`;
 
   return {

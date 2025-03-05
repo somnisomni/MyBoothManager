@@ -1,7 +1,7 @@
 import type { IGoodsCreateRequest, IGoodsModel } from "@myboothmanager/common";
 import { GoodsStockVisibility } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";  // eslint-disable-line import-x/no-deprecated
 import Booth from "./booth";
 import GoodsCategory from "./goods-category";
 import GoodsCombination from "./goods-combination";

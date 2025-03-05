@@ -1,19 +1,19 @@
 import type { IBoothMemberCreateRequest, IBoothMemberModel } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, DefaultScope, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, DefaultScope, ForeignKey, PrimaryKey, Table, Unique } from "sequelize-typescript";  // eslint-disable-line import-x/no-deprecated
 import Booth from "./booth";
 import UploadStorage from "./uploadstorage";
 
 @Table
 @DefaultScope(() => {
-  return ({
+  return {
     include: [
       {
         as: "avatarImage",
         model: UploadStorage,
       },
     ],
-  });
+  };
 })
 export default class BoothMember extends Model<IBoothMemberModel, IBoothMemberCreateRequest> implements IBoothMemberModel {
   @PrimaryKey

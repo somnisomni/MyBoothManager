@@ -1,4 +1,5 @@
-import type { IGoodsOrderCreateRequest, IGoodsOrderModel, type IGoodsOrder, type IGoodsOrderItem, GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
+import type { IGoodsOrderCreateRequest, IGoodsOrderModel, IGoodsOrder, IGoodsOrderItem } from "@myboothmanager/common";
+import { GoodsOrderPaymentMethod, GoodsOrderStatus } from "@myboothmanager/common";
 import { DataTypes } from "sequelize";
 import { Model, AutoIncrement, BelongsTo, Column, Default, ForeignKey, PrimaryKey, Table, Unique, AllowNull } from "sequelize-typescript";
 import Booth from "./booth";

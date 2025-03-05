@@ -58,7 +58,7 @@ export default class Account extends Model<IAccountModel, IAccountCreateRequest>
 
   /* === Hooks === */
   @AfterFind
-  static async setDefaultLastSelectedBoothId(instance: Account) {
+  static async setDefaultLastSelectedBoothId(instance: Account): Promise<void> {
     if(instance && instance.id && !instance.lastSelectedBoothId) {
       const firstBooth = await Booth.findOne({ where: { ownerId: instance.id }, attributes: [ "id" ] });
       if(firstBooth) {

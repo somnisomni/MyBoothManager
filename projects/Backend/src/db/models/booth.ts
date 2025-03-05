@@ -1,7 +1,8 @@
-import type { IBoothExpense, IBoothCreateRequest, SupportedCurrencyCodes, IBoothRelatedLink, BoothStatus, type IBoothModel } from "@myboothmanager/common";
+import type { IBoothExpense, IBoothCreateRequest, SupportedCurrencyCodes, IBoothRelatedLink, IBoothModel } from "@myboothmanager/common";
+import { BoothStatus } from "@myboothmanager/common";
 import { DateTime } from "luxon";
 import { DataTypes } from "sequelize";
-import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";
+import { Model, AllowNull, AutoIncrement, BelongsTo, Column, Default, ForeignKey, HasMany, PrimaryKey, Table, Unique, DefaultScope } from "sequelize-typescript";  // eslint-disable-line import-x/no-deprecated
 import Account from "./account";
 import BoothMember from "./booth-member";
 import Fair from "./fair";
@@ -94,7 +95,7 @@ export default class Booth extends Model<IBoothModel, IBoothCreateRequest> imple
   }
 
   set datesOpenInFair(value: string[] | Date[]) {
-    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate()!);
+    const dateonlyArray = value.map(date => DateTime.fromISO(new Date(date).toISOString()).toISODate() ?? "(invalid date)");
     this.setDataValue("datesOpenInFair", Array.from(new Set(dateonlyArray)));
   }
 
