@@ -13,10 +13,6 @@
       "path": "packages/CommonUI"
     },
     {
-      "name": "[packages] Dev Shared",
-      "path": "packages/DevShared"
-    },
-    {
       "name": "[packages] I18n",
       "path": "packages/I18n"
     },

@@ -34,7 +34,7 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@myboothmanager/dev-shared": "workspace:^",
+    "@somni/eslint-config": "https://gitpkg.vercel.app/somnisomni/webdev-common/packages/eslint-config?main",
     "@nuxt/eslint": "^0.7.5",
     "@types/uuid": "^10.0.0",
     "eslint": "^9.18.0",
