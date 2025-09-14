@@ -61,7 +61,7 @@ export class BoothService {
 
     return this.isBoothPublished(boothInstance)
             && (boothInstance.status !== BoothStatus.CLOSE || (boothInstance.status === BoothStatus.CLOSE && boothInstance.statusContentPublished))
-            && (!boothInstance.fairId || !boothInstance.associatedFair?.isPassed);
+            && (boothInstance.statusContentPublished || (!boothInstance.fairId || !boothInstance.associatedFair?.isPassed));
   }
 
   /**
