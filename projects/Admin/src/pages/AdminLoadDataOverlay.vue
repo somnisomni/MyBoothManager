@@ -32,14 +32,14 @@
 
 <script lang="ts">
 import type { ErrorCodes } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({
   emits: ["completed"],
 })
-export default class AdminLoadDataOverlay extends Vue {
+class AdminLoadDataOverlay extends Vue {
   loadingTargetName = "";
   loadingTargetLength = -1;
   loadingTargetCurrentProgress = -1;
@@ -117,4 +117,6 @@ export default class AdminLoadDataOverlay extends Vue {
     this.$emit("completed");
   }
 }
+
+export default toNative(AdminLoadDataOverlay);
 </script>

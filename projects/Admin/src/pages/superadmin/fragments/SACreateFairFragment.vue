@@ -20,7 +20,7 @@
 import type { IFairCreateRequest } from "@myboothmanager/common";
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { reactive } from "vue";
-import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
+import { Component, Ref, Setup, Vue , toNative } from "vue-facing-decorator";
 import { CommonForm, FormFieldType, type FormFieldOptions } from "@/components/common/CommonForm.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { SuperAdminAPI } from "../SuperAdminPage.lib";
@@ -28,7 +28,7 @@ import { SuperAdminAPI } from "../SuperAdminPage.lib";
 @Component({
   emits: ["created"],
 })
-export default class SACreateFairFragment extends Vue {
+class SACreateFairFragment extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
@@ -123,4 +123,6 @@ export default class SACreateFairFragment extends Vue {
     this.createInProgress = false;
   }
 }
+
+export default toNative(SACreateFairFragment);
 </script>

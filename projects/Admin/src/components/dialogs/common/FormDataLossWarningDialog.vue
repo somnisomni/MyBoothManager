@@ -9,10 +9,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from "vue-facing-decorator";
+import { Component, Model, Vue , toNative } from "vue-facing-decorator";
 
 @Component({})
-export default class FormDataLossWarningDialog extends Vue {
+class FormDataLossWarningDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 }
+
+export default toNative(FormDataLossWarningDialog);
 </script>

@@ -12,7 +12,7 @@ import { manualChunksPlugin } from "vite-plugin-webpackchunkname";
 import { APP_NAME } from "@myboothmanager/common";
 
 /* === Defines === */
-const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim(); } catch(e) { return null; } })();
+const commitHash = process.env.GIT_HASH ?? (() => { try { return execSync("git rev-parse --short HEAD").toString().trim().slice(0, 7); } catch(e) { return null; } })();
 const packageJson = require("./package.json");
 
 const defines: Record<string, string> = Object.fromEntries(Object.entries({

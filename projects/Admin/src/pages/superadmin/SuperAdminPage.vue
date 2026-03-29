@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue } from "vue-facing-decorator";
+import { Component, Ref, Vue , toNative } from "vue-facing-decorator";
 import SACreateAccountFragment from "./fragments/SACreateAccountFragment.vue";
-import SAListAccountFragment from "./fragments/SAListAccountFragment.vue";
+import SAListAccountFragment, { type SAListAccountFragment as SAListAccountFragmentType } from "./fragments/SAListAccountFragment.vue";
 import SACreateFairFragment from "./fragments/SACreateFairFragment.vue";
-import SAListFairFragment from "./fragments/SAListFairFragment.vue";
+import SAListFairFragment, { type SAListFairFragment as SAListFairFragmentType } from "./fragments/SAListFairFragment.vue";
 import SAListBoothFragment from "./fragments/SAListBoothFragment.vue";
 
 @Component({
@@ -46,13 +46,15 @@ import SAListBoothFragment from "./fragments/SAListBoothFragment.vue";
     SAListBoothFragment,
   },
 })
-export default class SuperAdminPage extends Vue {
+class SuperAdminPage extends Vue {
   currentTab: "fair" | "account" = "fair";
 
   @Ref("fairListFragment")
-  declare readonly fairListFragment: SAListFairFragment;
+  declare readonly fairListFragment: SAListFairFragmentType;
 
   @Ref("accountListFragment")
-  declare readonly accountListFragment: SAListAccountFragment;
+  declare readonly accountListFragment: SAListAccountFragmentType;
 }
+
+export default toNative(SuperAdminPage);
 </script>

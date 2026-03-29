@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import type { Goods } from "@myboothmanager/common-ui";
-import { Component, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import { Component, Model, Prop, Vue, Watch , toNative } from "vue-facing-decorator";
 import GoodsItemSelectable from "./GoodsItemSelectable.vue";
 
 @Component({
@@ -21,7 +21,7 @@ import GoodsItemSelectable from "./GoodsItemSelectable.vue";
     GoodsItemSelectable,
   },
 })
-export default class SelectableGoodsListView extends Vue {
+class SelectableGoodsListView extends Vue {
   @Model({ type: Array, default: [] }) declare selectedGoodsIds: number[];
   @Prop({ type: Array, required: true }) declare readonly goodsList: Goods[];
   @Prop({ type: Array,  default: [] }) declare readonly goodsDisabledIdList: number[];
@@ -45,4 +45,6 @@ export default class SelectableGoodsListView extends Vue {
     this.selectedGoodsIds.splice(0, this.selectedGoodsIds.length, ...temp);
   }
 }
+
+export default toNative(SelectableGoodsListView);
 </script>

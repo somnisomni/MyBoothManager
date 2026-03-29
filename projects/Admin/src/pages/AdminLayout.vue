@@ -144,7 +144,7 @@
 
 <script lang="ts">
 import { APP_NAME, BoothStatus, type IAccount, type IBooth } from "@myboothmanager/common";
-import { Vue, Component, Setup, Watch } from "vue-facing-decorator";
+import { Vue, Component, Setup, Watch , toNative } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { useAdminStore } from "@/plugins/stores/admin";
 import BoothSelectionArea from "@/components/navbar/BoothSelectionArea.vue";
@@ -158,7 +158,7 @@ import FeedbackDialog from "@/components/dialogs/FeedbackDialog.vue";
     FeedbackDialog,
   },
 })
-export default class AdminLayout extends Vue {
+class AdminLayout extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly APP_NAME = APP_NAME;
   readonly APP_VERSION = Const.APP_VERSION;
@@ -219,6 +219,8 @@ export default class AdminLayout extends Vue {
     return window.location.hostname.includes("staging");
   }
 }
+
+export default toNative(AdminLayout);
 </script>
 
 <style lang="scss" scoped>

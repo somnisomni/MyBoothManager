@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue, toNative } from "vue-facing-decorator";
 import BoothInfoPanel from "@/components/info/BoothInfoPanel.vue";
 import BoothMembersPanel from "@/components/info/BoothMembersPanel.vue";
 import BoothNoticePanel from "@/components/info/BoothNoticePanel.vue";
@@ -39,7 +39,7 @@ import { useAdminAPIStore } from "@/plugins/stores/api";
     BoothNoticePanel,
   },
 })
-export default class InfoPage extends Vue {
+class InfoPage extends Vue {
   get boothBannerImagePath(): string | null {
     return useAdminStore().currentBooth.booth!.bannerImage?.path ?? null;
   }
@@ -64,4 +64,6 @@ export default class InfoPage extends Vue {
     return await useAdminAPIStore().deleteBoothInfoImage();
   }
 }
+
+export default toNative(InfoPage);
 </script>

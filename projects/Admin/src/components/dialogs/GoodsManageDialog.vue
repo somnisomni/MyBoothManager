@@ -52,7 +52,7 @@
 <script lang="ts">
 import type { GoodsAdmin } from "@/lib/classes";
 import { ErrorCodes, GoodsStockVisibility, type IGoodsCreateRequest, type IGoodsUpdateRequest } from "@myboothmanager/common";
-import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
+import { Vue, Component, Model, Prop, Watch, Ref , toNative } from "vue-facing-decorator";
 import { reactive , readonly, type DeepReadonly } from "vue";
 import deepClone from "clone-deep";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -71,7 +71,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
   },
   emits: ["created", "updated", "deleted", "error"],
 })
-export default class GoodsManageDialog extends Vue {
+class GoodsManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Number,  default: null  }) readonly goodsId?: number | null;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;
@@ -327,4 +327,6 @@ export default class GoodsManageDialog extends Vue {
     }
   }
 }
+
+export default toNative(GoodsManageDialog);
 </script>

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
 
 @Component({
@@ -20,7 +20,9 @@ import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
     BoothManageDialog,
   },
 })
-export default class NoBoothAvailableOverlay extends Vue {
+class NoBoothAvailableOverlay extends Vue {
   boothAddDialogOpened = false;
 }
+
+export default toNative(NoBoothAvailableOverlay);
 </script>

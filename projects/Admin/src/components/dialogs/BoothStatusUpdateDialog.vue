@@ -45,13 +45,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Prop, Vue, Watch } from "vue-facing-decorator";
+import { Component, Emit, Model, Prop, Vue, Watch , toNative } from "vue-facing-decorator";
 import { BoothStatus, type IBooth } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 
 @Component({})
-export default class BoothStatusUpdateDialog extends Vue {
+class BoothStatusUpdateDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ required: true }) targetStatus!: BoothStatus;
 
@@ -112,4 +112,6 @@ export default class BoothStatusUpdateDialog extends Vue {
     this.open = false;
   }
 }
+
+export default toNative(BoothStatusUpdateDialog);
 </script>

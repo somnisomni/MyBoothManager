@@ -19,7 +19,7 @@
 <script lang="ts">
 import type { IAccountCreateRequest } from "@myboothmanager/common";
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
-import { Component, Ref, Setup, Vue } from "vue-facing-decorator";
+import { Component, Ref, Setup, Vue , toNative } from "vue-facing-decorator";
 import { reactive } from "vue";
 import { CommonForm, type FormFieldOptions, FormFieldType } from "@/components/common/CommonForm.vue";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -28,7 +28,7 @@ import { SuperAdminAPI } from "../SuperAdminPage.lib";
 @Component({
   emits: ["created"],
 })
-export default class SACreateAccountFragment extends Vue {
+class SACreateAccountFragment extends Vue {
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
 
@@ -99,4 +99,6 @@ export default class SACreateAccountFragment extends Vue {
     this.createInProgress = false;
   }
 }
+
+export default toNative(SACreateAccountFragment);
 </script>

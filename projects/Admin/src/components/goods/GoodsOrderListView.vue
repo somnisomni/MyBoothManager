@@ -15,7 +15,7 @@
 <script lang="ts">
 import type { VListItem } from "vuetify/components";
 import { GoodsOrderStatus, type GoodsOrderPaymentMethod, type IGoodsOrder } from "@myboothmanager/common";
-import { Component, Prop, Ref, Vue, Watch } from "vue-facing-decorator";
+import { Component, Prop, Ref, Vue, Watch , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import GoodsOrderListItem from "./GoodsOrderListItem.vue";
@@ -39,7 +39,7 @@ export interface IGoodsOrderFilterResult {
     GoodsOrderListItem,
   },
 })
-export default class GoodsOrderListView extends Vue {
+export class GoodsOrderListView extends Vue {
   @Prop({ type: Object, default: {} }) declare readonly filter: IGoodsOrderFilterSetting;
 
   @Ref("orderListDOMItems") declare readonly orderListItemsRefs: VListItem[];
@@ -95,4 +95,6 @@ export default class GoodsOrderListView extends Vue {
     }, 0);
   }
 }
+
+export default toNative(GoodsOrderListView);
 </script>

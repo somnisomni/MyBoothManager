@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import type { IBoothMember } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
 import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";
@@ -36,7 +36,7 @@ import BoothMemberManageDialog from "../dialogs/BoothMemberManageDialog.vue";
     BoothMemberManageDialog,
   },
 })
-export default class BoothMembersPanel extends Vue {
+class BoothMembersPanel extends Vue {
   memberManageDialogShown = false;
   memberManageDialogEditMode = false;
   memberManageDialogMemberId: number | null = null;
@@ -57,4 +57,6 @@ export default class BoothMembersPanel extends Vue {
     this.memberManageDialogMemberId = id;
   }
 }
+
+export default toNative(BoothMembersPanel);
 </script>

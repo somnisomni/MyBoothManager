@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model, Watch } from "vue-facing-decorator";
+import { Vue, Component, Model, Watch , toNative } from "vue-facing-decorator";
 import { type IBooth } from "@myboothmanager/common";
 // import { type CommonDialogButtonParams } from "@myboothmanager/common-ui";
 import { ref, type Ref as VueRef } from "vue";
@@ -56,7 +56,7 @@ import BoothManageDialog from "./BoothManageDialog.vue";
     BoothManageDialog,
   },
 })
-export default class BoothSelectionDialog extends Vue {
+class BoothSelectionDialog extends Vue {
   readonly getBoothStatusString = getBoothStatusString;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -109,6 +109,8 @@ export default class BoothSelectionDialog extends Vue {
     this.open = false;
   }
 }
+
+export default toNative(BoothSelectionDialog);
 </script>
 
 <style lang="scss" scoped>

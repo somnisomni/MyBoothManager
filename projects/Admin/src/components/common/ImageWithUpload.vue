@@ -43,7 +43,7 @@ import { FileInputAccepts } from "./FileInputButton.vue";
 @Component({
   emits: ["updated", "error"],
 })
-export class ImageWithUpload extends Vue {
+class ImageWithUpload extends Vue {
   readonly FileInputAccepts = FileInputAccepts;
 
   @Prop({ type: String, required: true, default: null }) existingSrc!: string | null;

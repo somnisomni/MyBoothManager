@@ -1,3 +1,12 @@
 packages:
   - "packages/**"
   - "projects/**"
+
+allowBuilds:
+  '@nestjs/core': true
+  argon2: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+
+injectWorkspacePackages: true

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import BoothSelectionDialog from "@/components/dialogs/BoothSelectionDialog.vue";
 
@@ -23,11 +23,13 @@ import BoothSelectionDialog from "@/components/dialogs/BoothSelectionDialog.vue"
     BoothSelectionDialog,
   },
 })
-export default class BoothSelectionArea extends Vue {
+class BoothSelectionArea extends Vue {
   boothSelectionDialogOpen = false;
 
   get boothName() {
     return useAdminStore().currentBooth.booth!.name;
   }
 }
+
+export default toNative(BoothSelectionArea);
 </script>

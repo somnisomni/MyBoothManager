@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import type { IBooth } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import BoothManageDialog from "@/components/dialogs/BoothManageDialog.vue";
 import DashboardPanel from "../dashboard/DashboardPanel.vue";
@@ -37,11 +37,13 @@ import DashboardPanel from "../dashboard/DashboardPanel.vue";
     BoothManageDialog,
   },
 })
-export default class BoothInfoPanel extends Vue {
+class BoothInfoPanel extends Vue {
   boothEditDialogShown: boolean = false;
 
   get boothData(): IBooth {
     return useAdminStore().currentBooth.booth!;
   }
 }
+
+export default toNative(BoothInfoPanel);
 </script>

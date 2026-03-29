@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import type { IBooth } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import MarkdownHelpDialog from "@/components/dialogs/MarkdownHelpDialog.vue";
@@ -64,7 +64,7 @@ import DashboardPanel from "../dashboard/DashboardPanel.vue";
     MarkdownHelpDialog,
   },
 })
-export default class BoothInfoPanel extends Vue {
+class BoothInfoPanel extends Vue {
   noticeContent = "";
   isUpdating = false;
   isMarkdownHelpDialogOpened = false;
@@ -93,4 +93,6 @@ export default class BoothInfoPanel extends Vue {
     this.noticeContent = this.boothData.noticeContent || "";
   }
 }
+
+export default toNative(BoothInfoPanel);
 </script>

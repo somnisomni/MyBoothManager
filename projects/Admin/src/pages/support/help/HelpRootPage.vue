@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-facing-decorator";
+import { Vue, Component, Watch , toNative } from "vue-facing-decorator";
 import { useRoute } from "vue-router";
 
 @Component({})
-export default class HelpPage extends Vue {
+class HelpPage extends Vue {
   helpPageSource: string = "";
 
   get helpPageName() {
@@ -21,4 +21,6 @@ export default class HelpPage extends Vue {
     this.helpPageSource = (await import(`./markdown/${this.helpPageName}.md?raw`) as { default: string }).default;
   }
 }
+
+export default toNative(HelpPage);
 </script>

@@ -78,7 +78,7 @@
 
 <script lang="ts">
 import { BoothStatus, type IBoothSuperAdminResponse } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { SuperAdminAPI, momentFormat } from "../SuperAdminPage.lib";
 
 type ISuperAdminBoothResponseInternal = IBoothSuperAdminResponse & {
@@ -87,7 +87,7 @@ type ISuperAdminBoothResponseInternal = IBoothSuperAdminResponse & {
 };
 
 @Component({})
-export default class SAListBoothFragment extends Vue {
+export class SAListBoothFragment extends Vue {
   readonly BoothStatus = BoothStatus;
 
   isLoading = true;
@@ -162,4 +162,6 @@ export default class SAListBoothFragment extends Vue {
     this.isLoading = false;
   }
 }
+
+export default toNative(SAListBoothFragment);
 </script>

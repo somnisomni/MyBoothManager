@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { FeedbackSenderType, FeedbackType, type IFeedbackRequest } from "@myboothmanager/common";
-import { Component, Model, Ref, Vue, Watch } from "vue-facing-decorator";
+import { Component, Model, Ref, Vue, Watch , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -41,7 +41,7 @@ import FormDataLossWarningDialog from "./common/FormDataLossWarningDialog.vue";
     FormDataLossWarningDialog,
   },
 })
-export default class FeedbackDialog extends Vue {
+class FeedbackDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
 
   @Ref("form")
@@ -123,4 +123,6 @@ export default class FeedbackDialog extends Vue {
     }
   }
 }
+
+export default toNative(FeedbackDialog);
 </script>

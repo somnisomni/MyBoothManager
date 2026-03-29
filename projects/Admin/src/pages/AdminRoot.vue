@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-facing-decorator";
+import { Component, Vue, Watch , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import router from "@/plugins/router";
 import AdminLoadDataOverlay from "./AdminLoadDataOverlay.vue";
@@ -33,7 +33,7 @@ import NoBoothAvailableOverlay from "./NoBoothAvailableOverlay.vue";
     NoBoothAvailableOverlay,
   },
 })
-export default class AdminRoot extends Vue {
+class AdminRoot extends Vue {
   get loaded(): boolean {
     return useAdminStore().isAllDataLoaded;
   }
@@ -58,4 +58,6 @@ export default class AdminRoot extends Vue {
     }
   }
 }
+
+export default toNative(AdminRoot);
 </script>

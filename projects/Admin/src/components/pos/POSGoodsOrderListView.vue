@@ -35,14 +35,14 @@
 
 <script lang="ts">
 import type { POSOrderList, IGoodsOrderInternal } from "@/pages/subpages/POSPage.lib";
-import { Component, Emit, Prop, Vue } from "vue-facing-decorator";
+import { Component, Emit, Prop, Vue , toNative } from "vue-facing-decorator";
 import POSGoodsOrderListItem from "./POSGoodsOrderListItem.vue";
 
 @Component({
   components: { POSGoodsOrderListItem },
   emits: ["click:item", "request:itemQuantityUpdate"],
 })
-export default class POSGoodsOrderListView extends Vue {
+class POSGoodsOrderListView extends Vue {
   @Prop({ type: Object, required: true }) declare readonly orderList: POSOrderList;
   @Prop({ type: Boolean, default: false }) declare readonly singleLine: boolean;
 
@@ -52,4 +52,6 @@ export default class POSGoodsOrderListView extends Vue {
   @Emit("request:itemQuantityUpdate")
   onGoodsOrderQuantityUpdateRequest(eventData: { id: number, delta: number, isCombination?: true }) { return eventData; }
 }
+
+export default toNative(POSGoodsOrderListView);
 </script>

@@ -92,7 +92,7 @@ import GoodsSelectionDialog from "./GoodsSelectionDialog.vue";
   },
   emits: [ "updated", "deleted", "error" ],
 })
-class GoodsCombinationManageDialog extends Vue {
+export class GoodsCombinationManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Number,  default: null  }) readonly combinationId?: number | string | null;
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean;

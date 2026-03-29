@@ -80,7 +80,7 @@ import { ref } from "vue";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { useAdminOrderStore } from "@/plugins/stores/order-utils";
-import GoodsOrderListView, { type IGoodsOrderFilterResult, type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
+import GoodsOrderListView, { type GoodsOrderListView as GoodsOrderListViewType, type IGoodsOrderFilterResult, type IGoodsOrderFilterSetting } from "@/components/goods/GoodsOrderListView.vue";
 import OrderFilterSettingDialog from "@/components/dialogs/OrderFilterSettingDialog.vue";
 
 @Component({
@@ -106,7 +106,7 @@ class GoodsOrdersListPage extends Vue {
   declare readonly totalMergedRevenue: number;
 
   @Ref("goodsOrderListView")
-  readonly goodsOrderListView!: GoodsOrderListView;
+  readonly goodsOrderListView!: GoodsOrderListViewType;
 
   dataLoading: boolean = true;
 

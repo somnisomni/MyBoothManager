@@ -42,7 +42,7 @@
 <script lang="ts">
 import { ErrorCodes, type IGoodsCategoryCreateRequest, type IGoodsCategoryUpdateRequest } from "@myboothmanager/common";
 import { reactive } from "vue";
-import { Vue, Component, Model, Prop, Watch, Ref } from "vue-facing-decorator";
+import { Vue, Component, Model, Prop, Watch, Ref , toNative } from "vue-facing-decorator";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
 import { CommonForm, FormFieldType, type FormFieldOptions } from "../common/CommonForm.vue";
@@ -56,7 +56,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
   },
   emits: ["error", "updated", "deleted"],
 })
-export default class GoodsCategoryManageDialog extends Vue {
+class GoodsCategoryManageDialog extends Vue {
   readonly ErrorCodes = ErrorCodes;
 
   @Model({ type: Boolean, default: false }) open!: boolean;
@@ -187,4 +187,6 @@ export default class GoodsCategoryManageDialog extends Vue {
     this.updateInProgress = false;
   }
 }
+
+export default toNative(GoodsCategoryManageDialog);
 </script>

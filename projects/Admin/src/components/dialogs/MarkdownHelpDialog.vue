@@ -35,7 +35,7 @@ interface MarkdownHelpContent {
 }
 
 @Component({})
-export class MarkdownHelpDialog extends Vue {
+class MarkdownHelpDialog extends Vue {
   @Model({ type: Boolean, default: false }) declare open: boolean;
 
   readonly contents: MarkdownHelpContent[] = [

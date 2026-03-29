@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-facing-decorator";
+import { Component, Prop, Vue , toNative } from "vue-facing-decorator";
 
 @Component({})
-export default class DashboardPanel extends Vue {
+class DashboardPanel extends Vue {
   @Prop({ default: "auto", required: false }) minWidth!: string | number;
   @Prop({ default: 4, required: false }) elevation!: number;
   @Prop({ default: null }) title!: string | null;
@@ -29,6 +29,8 @@ export default class DashboardPanel extends Vue {
     else return this.elevation;
   }
 }
+
+export default toNative(DashboardPanel);
 </script>
 
 <style lang="scss" scoped>

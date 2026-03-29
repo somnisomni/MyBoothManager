@@ -6,7 +6,7 @@ import packageJson from "./package.json";
 let commitHash = process.env.GIT_HASH;
 if(!commitHash) {
   try {
-    commitHash = execSync("git rev-parse --short HEAD").toString().trim();
+    commitHash = execSync("git rev-parse --short HEAD").toString().trim().slice(0, 7);
   } catch(e) {
     console.error(`Failed to get commit hash from git: ${e}`);
     commitHash = "unknown";

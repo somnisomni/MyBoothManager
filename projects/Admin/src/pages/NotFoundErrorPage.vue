@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-facing-decorator";
+import { Vue, Component, toNative } from "vue-facing-decorator";
 import router from "@/plugins/router";
 
 @Component({})
-export default class NotFoundErrorPage extends Vue {
+class NotFoundErrorPage extends Vue {
   get rootRouteUrl(): string {
     return router.resolve({ name: "admin" }).href ?? (import.meta.env.BASE_URL ?? "/");
   }
@@ -41,6 +41,8 @@ export default class NotFoundErrorPage extends Vue {
     return false;
   }
 }
+
+export default toNative(NotFoundErrorPage);
 </script>
 
 <style lang="scss" scoped>

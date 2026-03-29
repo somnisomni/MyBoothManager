@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
 import AdminAPI from "@/lib/api-admin";
 
 @Component({})
-export default class LogoutPage extends Vue {
+class LogoutPage extends Vue {
   async mounted() {
     await AdminAPI.logout({ id: useAuthStore().id ?? -1 });
     useAuthStore().invalidateLoginData();
@@ -22,4 +22,6 @@ export default class LogoutPage extends Vue {
     }});
   }
 }
+
+export default toNative(LogoutPage);
 </script>

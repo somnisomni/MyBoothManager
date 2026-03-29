@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import type { ISuperAdminFairResponse } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { SuperAdminAPI, momentFormat } from "../SuperAdminPage.lib";
 
 type ISuperAdminFairResponseInternal = ISuperAdminFairResponse & {
@@ -69,7 +69,7 @@ type ISuperAdminFairResponseInternal = ISuperAdminFairResponse & {
 };
 
 @Component({})
-export default class SAListFairFragment extends Vue {
+export class SAListFairFragment extends Vue {
   isLoading = true;
   showPassed = false;
   private fairs: ISuperAdminFairResponseInternal[] = [];
@@ -123,4 +123,6 @@ export default class SAListFairFragment extends Vue {
     return new Date(date).toLocaleDateString() === new Date().toLocaleDateString();
   }
 }
+
+export default toNative(SAListFairFragment);
 </script>

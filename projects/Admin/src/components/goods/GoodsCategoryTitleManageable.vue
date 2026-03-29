@@ -20,12 +20,12 @@
 
 <script lang="ts">
 import type { IGoodsCategory } from "@myboothmanager/common";  // eslint-disable-line @typescript-eslint/no-unused-vars
-import { Component, Emit, Vue } from "vue-facing-decorator";
+import { Component, Emit, Vue , toNative } from "vue-facing-decorator";
 
 @Component({
   emits: ["click"],
 })
-export default class GoodsCategoryTitleManageable extends Vue {
+class GoodsCategoryTitleManageable extends Vue {
   isHovering: boolean = false;
 
   isNonEditable(categoryId: number) {
@@ -37,4 +37,6 @@ export default class GoodsCategoryTitleManageable extends Vue {
     return categoryId;
   }
 }
+
+export default toNative(GoodsCategoryTitleManageable);
 </script>

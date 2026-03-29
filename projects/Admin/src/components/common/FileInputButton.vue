@@ -40,7 +40,7 @@ const ACCEPTS_MIMES: Record<FileInputAccepts, Array<string>> = {
 @Component({
   emits: ["change"],
 })
-export class FileInputButton extends Vue {
+class FileInputButton extends Vue {
   @Model({ type: File, default: null }) value!: File | null;
   @Prop({ type: String, default: "파일 선택" }) label!: string;
   @Prop({ type: Boolean, default: false }) disabled!: boolean;

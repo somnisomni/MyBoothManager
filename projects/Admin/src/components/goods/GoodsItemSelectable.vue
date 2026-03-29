@@ -16,10 +16,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from "vue-facing-decorator";
+import { Component, Model, Vue , toNative } from "vue-facing-decorator";
 
 @Component({})
-export default class GoodsItemSelectable extends Vue {
+class GoodsItemSelectable extends Vue {
   @Model({ type: Boolean, default: false }) declare selected: boolean;
 }
+
+export default toNative(GoodsItemSelectable);
 </script>

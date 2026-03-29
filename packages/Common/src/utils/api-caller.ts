@@ -62,6 +62,7 @@ export default class APICaller {
       headers: {
         ...additionalInitOptions?.headers ?? { },
         ...containAuthCredential && this.normalizedOptions.getAuthorizationToken ? { Authorization: `Bearer ${this.normalizedOptions.getAuthorizationToken()}` } : { },
+        "Content-Type": payload ? "application/json" : "application/x-www-form-urlencoded",
       },
       ...containAuthCookie ? { credentials: "include" } : { credentials: "omit" },
     });
@@ -73,7 +74,8 @@ export default class APICaller {
     return this.callAPIInternal<T>(
       method,
       path,
-      payload ? JSON.stringify(payload) : undefined, APICaller.FETCH_COMMON_OPTIONS,
+      payload ? JSON.stringify(payload) : undefined,
+      APICaller.FETCH_COMMON_OPTIONS,
       containAuthCookie,
       containAuthCredential,
     );

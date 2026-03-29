@@ -33,7 +33,7 @@
 <script lang="ts">
 import type { GoodsItem, GoodsItemProps } from "@myboothmanager/common-ui";
 import { GoodsStockVisibility } from "@myboothmanager/common";
-import { Component, Emit, Ref, Vue } from "vue-facing-decorator";
+import { Component, Emit, Ref, Vue , toNative } from "vue-facing-decorator";
 import { markRaw } from "vue";
 
 export interface IGoodsItemMenuOption {
@@ -46,7 +46,7 @@ export interface IGoodsItemMenuOption {
 @Component({
   emits: ["menu:edit", "menu:duplicate", "menu:delete"],
 })
-export default class GoodsItemManageable extends Vue {
+class GoodsItemManageable extends Vue {
   readonly forceStockVisibility = GoodsStockVisibility.SHOW_ALL;
 
   readonly menuOptions: IGoodsItemMenuOption[] = markRaw([
@@ -95,6 +95,8 @@ export default class GoodsItemManageable extends Vue {
   }
 
 }
+
+export default toNative(GoodsItemManageable);
 </script>
 
 <style lang="scss">

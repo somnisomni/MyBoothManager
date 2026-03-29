@@ -16,11 +16,11 @@
 
 <script lang="ts">
 import { unref } from "vue";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, toNative, Vue } from "vue-facing-decorator";
 import router from "@/plugins/router";
 
 @Component({})
-export default class PlaceholderPage extends Vue {
+class PlaceholderPage extends Vue {
   readonly $router = router;
   readonly $route = unref(router.currentRoute);
 
@@ -28,4 +28,6 @@ export default class PlaceholderPage extends Vue {
     return this.$router.getRoutes();
   }
 }
+
+export default toNative(PlaceholderPage);
 </script>

@@ -9,13 +9,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Setup } from "vue-facing-decorator";
+import { Vue, Component, Setup, toNative } from "vue-facing-decorator";
 import { APP_PRIMARY_COLOR, SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import AdminAPI from "@/lib/api-admin";
 import { useAdminStore } from "./plugins/stores/admin";
 
 @Component({})
-export default class App extends Vue {
+class App extends Vue {
   isServerAvailable: boolean = false;
   showServerNotRespondErrorDialog: boolean = false;
 
@@ -34,4 +34,6 @@ export default class App extends Vue {
     }
   }
 }
+
+export default toNative(App);
 </script>

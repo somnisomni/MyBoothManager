@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { BoothStatus, type IBoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { getBoothStatusString } from "@/lib/enum-to-string";
@@ -71,7 +71,7 @@ import DashboardPanel from "./DashboardPanel.vue";
     BoothStatusUpdateDialog,
   },
 })
-export default class BoothStatusPanel extends Vue {
+class BoothStatusPanel extends Vue {
   readonly BoothStatus = BoothStatus;
   readonly getBoothStatusString = getBoothStatusString;
 
@@ -122,6 +122,8 @@ export default class BoothStatusPanel extends Vue {
     this.contentPublishStatusUpdateProgress = false;
   }
 }
+
+export default toNative(BoothStatusPanel);
 </script>
 
 <style lang="scss" scoped>

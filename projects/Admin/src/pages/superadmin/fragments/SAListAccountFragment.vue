@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import type { ISuperAdminAccountResponse } from "@myboothmanager/common";
-import { Component, Vue } from "vue-facing-decorator";
+import { Component, Vue , toNative } from "vue-facing-decorator";
 import { SuperAdminAPI, momentFormat } from "../SuperAdminPage.lib";
 
 type ISuperAdminAccountResponseInternal = ISuperAdminAccountResponse & {
@@ -32,7 +32,7 @@ type ISuperAdminAccountResponseInternal = ISuperAdminAccountResponse & {
 };
 
 @Component({})
-export default class SAListAccountFragment extends Vue {
+export class SAListAccountFragment extends Vue {
   isLoading = true;
   accounts: Array<ISuperAdminAccountResponseInternal> = [];
 
@@ -67,4 +67,6 @@ export default class SAListAccountFragment extends Vue {
     this.isLoading = false;
   }
 }
+
+export default toNative(SAListAccountFragment);
 </script>

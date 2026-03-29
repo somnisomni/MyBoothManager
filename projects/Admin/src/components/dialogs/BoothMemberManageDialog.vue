@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { reactive, readonly } from "vue";
-import { Vue, Component, Model, Watch, Prop, Ref } from "vue-facing-decorator";
+import { Vue, Component, Model, Watch, Prop, Ref , toNative } from "vue-facing-decorator";
 import { ErrorCodes, type IBoothMember, type IBoothMemberCreateRequest, type IBoothMemberUpdateRequest } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
 import { useAdminAPIStore } from "@/plugins/stores/api";
@@ -63,7 +63,7 @@ import ItemDeleteWarningDialog from "./common/ItemDeleteWarningDialog.vue";
   },
   emits: ["updated", "deleted", "error"],
 })
-export default class BoothMemberManageDialog extends Vue {
+class BoothMemberManageDialog extends Vue {
   @Model({ type: Boolean, default: false }) open!: boolean;
   @Prop({ type: Boolean, default: false }) editMode!: boolean;
   @Prop({ type: Number, default: null }) boothMemberId!: number | null;
@@ -232,4 +232,6 @@ export default class BoothMemberManageDialog extends Vue {
     return await useAdminAPIStore().deleteBoothMemberImage(this.boothMemberId!);
   }
 }
+
+export default toNative(BoothMemberManageDialog);
 </script>

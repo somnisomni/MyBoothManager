@@ -9,6 +9,14 @@ const orderSanitizerCallback = (order: IGoodsOrderItem): IGoodsOrderItem => {
   return order;
 };
 
+const normalizeArray = <T>(arr: string | Array<T>): Array<T> => {
+  if(typeof arr === "string") {
+    return JSON.parse(arr) as Array<T>;
+  }
+
+  return arr;
+};
+
 @Table
 export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequest> implements IGoodsOrderModel {
   @PrimaryKey
@@ -25,7 +33,7 @@ export default class GoodsOrder extends Model<IGoodsOrder, IGoodsOrderCreateRequ
 
   @AllowNull(false)
   @Column(DataTypes.JSON)
-  get order(): Array<IGoodsOrderItem> { return this.getDataValue("order").map(orderSanitizerCallback); }
+  get order(): Array<IGoodsOrderItem> { return normalizeArray(this.getDataValue("order")).map(orderSanitizerCallback); }
   set order(value: Array<IGoodsOrderItem>) { this.setDataValue("order", value.map(orderSanitizerCallback)); }
 
   @AllowNull(false)

@@ -78,7 +78,7 @@
 <script lang="ts">
 import type { SnackbarContextWrapper } from "@myboothmanager/common-ui";
 import { APP_NAME, ErrorCodes, type IAccountLoginRequest } from "@myboothmanager/common";
-import { Component, Hook, Setup, Vue, Watch } from "vue-facing-decorator";
+import { Component, Hook, Setup, Vue, Watch , toNative } from "vue-facing-decorator";
 import { Const } from "@/lib/const";
 import router from "@/plugins/router";
 import { useAuthStore } from "@/plugins/stores/auth";
@@ -86,7 +86,7 @@ import { useAdminStore } from "@/plugins/stores/admin";
 import { useLocalStore } from "@/plugins/stores/local";
 
 @Component({})
-export default class LoginPage extends Vue {
+class LoginPage extends Vue {
   readonly APP_NAME = APP_NAME;
   readonly APP_VERSION = Const.APP_VERSION;
   readonly APP_GIT_HASH = Const.APP_GIT_HASH;
@@ -197,4 +197,6 @@ export default class LoginPage extends Vue {
     this.globalSnackbarContexts.removeImmediate(this.logoutStateSnackbarId);
   }
 }
+
+export default toNative(LoginPage);
 </script>

@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Setup } from "vue-facing-decorator";
+import { Vue, Component, Setup , toNative } from "vue-facing-decorator";
 import { useDisplay } from "vuetify";
 import { BoothStatus } from "@myboothmanager/common";
 import { useAdminStore } from "@/plugins/stores/admin";
@@ -63,7 +63,7 @@ import GoodsCombinationManageDialog from "../dialogs/GoodsCombinationManageDialo
     GoodsCombinationManageDialog,
   },
 })
-export default class GoodsManagePanel extends Vue {
+class GoodsManagePanel extends Vue {
   goodsAddDialogOpen = false;
   combinationAddDialogOpen = false;
 
@@ -92,4 +92,6 @@ export default class GoodsManagePanel extends Vue {
     alert("준비 중인 기능입니다.");
   }
 }
+
+export default toNative(GoodsManagePanel);
 </script>

@@ -24,10 +24,10 @@
                  :prependIcon="fields.prependIcon"
                  :appendIcon="fields.appendIcon"
                  :min="
-                   ((isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined)?.toString())
+                   ((isNumericField(field.type) ? ((field as IFormFieldNumericOptions).min ?? (field as IFormFieldNumericOptions).allowNegative ? undefined : 0) : undefined))
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).min : undefined)"
                  :max="
-                   ((isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined)?.toString())
+                   ((isNumericField(field.type) ? (field as IFormFieldNumericOptions).max : undefined))
                    || (field.type === FormFieldType.DATE ? (field as IFormFieldDateOptions).max : undefined)"
                  :step="isNumericField(field.type) ? (field as IFormFieldNumericOptions).step : undefined"
                  :control-variant="isNumericField(field.type) ? 'stacked' : undefined"
@@ -85,8 +85,7 @@
 
 import { markRaw, toRaw, readonly, type Component as VueComponent } from "vue";
 import { Component, Emit, Model, Prop, Ref, toNative, Vue, Watch } from "vue-facing-decorator";
-import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField } from "vuetify/components";
-import { VNumberInput } from "vuetify/labs/VNumberInput";
+import { VBtn, VCheckbox, VForm, VSelect, VTextarea, VTextField, VNumberInput } from "vuetify/components";
 import deepEqual from "fast-deep-equal";
 import deepClone from "clone-deep";
 import { diff } from "deep-object-diff";

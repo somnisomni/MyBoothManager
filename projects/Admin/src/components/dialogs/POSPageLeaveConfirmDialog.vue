@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Model, Vue } from "vue-facing-decorator";
+import { Component, Emit, Model, Vue , toNative } from "vue-facing-decorator";
 
 @Component({
   emits: ["confirm"],
 })
-export default class POSPageLeaveConfirmDialog extends Vue {
+class POSPageLeaveConfirmDialog extends Vue {
   @Model({ type: Boolean }) open!: boolean;
 
   @Emit("confirm")
@@ -22,4 +22,6 @@ export default class POSPageLeaveConfirmDialog extends Vue {
     this.open = false;
   }
 }
+
+export default toNative(POSPageLeaveConfirmDialog);
 </script>

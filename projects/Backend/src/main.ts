@@ -1,12 +1,11 @@
-import type { FastifyPluginCallback } from "fastify";
 import { MAX_UPLOAD_FILE_BYTES } from "@myboothmanager/common";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { ClassSerializerInterceptor } from "@nestjs/common";
 import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fastify";
 import { default as fastifyMultipart, type FastifyMultipartOptions } from "@fastify/multipart";
-import { default as fastifyHelmet, type FastifyHelmetOptions } from "@fastify/helmet";
+import { default as fastifyHelmet } from "@fastify/helmet";
 import { default as fastifyStatic, type FastifyStaticOptions } from "@fastify/static";
-import { default as fastifyCookie, type FastifyCookieOptions } from "@fastify/cookie";
+import { default as fastifyCookie } from "@fastify/cookie";
 import MBMSequelize from "./db/sequelize";
 import { AllExceptionsFilter, RouteNotFoundExceptionFilter } from "./global-exception.filter";
 import { LoggingInterceptor } from "./logging.interceptor";
@@ -35,7 +34,7 @@ async function bootstrap() {
 
   /* *** Fastify plugins *** */
   // Cookie
-  await app.register(fastifyCookie as unknown as FastifyPluginCallback<FastifyCookieOptions>, {
+  await app.register(fastifyCookie, {
     secret: `${(process.env.COOKIE_SECRET || "myboothmanager")}${new Date().getTime() + performance.now()}`,
     algorithm: "sha384",
     parseOptions: {
@@ -47,7 +46,7 @@ async function bootstrap() {
   });
 
   // Helmet
-  await app.register(fastifyHelmet as unknown as FastifyPluginCallback<FastifyHelmetOptions>, {
+  await app.register(fastifyHelmet, {
     global: true,
     crossOriginResourcePolicy: { policy: "cross-origin" },
     crossOriginEmbedderPolicy: { policy: "require-corp" },
@@ -97,6 +96,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [ process.env.FRONTEND_ADMIN_URL ?? "", process.env.FRONTEND_PUBLIC_URL ?? "" ],
     credentials: true,
+    methods: [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS" ],
   });
 
   /* *** Start the backend server *** */
