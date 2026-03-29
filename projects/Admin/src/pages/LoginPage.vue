@@ -5,6 +5,18 @@
       <VCardText>
         <div class="text-h4 my-6">부스 관리자 로그인</div>
 
+        <VAlert icon="mdi-information"
+                title="서비스 개발 및 유지보수 종료"
+                variant="tonal"
+                color="info"
+                class="my-4 text-left"
+                style="width: 400px; font-size: 0.9em; line-height: 1.8;">
+          <p><span>{{ APP_NAME }}</span>는 더 이상 개발 및 유지보수되지 않습니다.</p>
+          <p>서비스는 서버가 종료되지 않는 한 계속 사용할 수는 있지만, 기술 지원은 제공되지 않습니다. 서버는 예고 없이 종료될 수 있습니다.</p>
+          <p>요청이 있을 경우 부스 운영 데이터를 백업해드리오니, <a :href="'mailto:' + email">{{ email }}</a>으로 연락해주시기 바랍니다.</p>
+          <p>지금까지 {{ APP_NAME }}을 사용해주셔서 감사합니다.</p>
+        </VAlert>
+
         <VForm v-model="formValid" style="width: 400px; max-width: 100%;">
           <VTextField v-model="loginData.loginId"
                       class="my-2"
@@ -93,6 +105,9 @@ class LoginPage extends Vue {
 
   @Setup(() => useAdminStore().globalSnackbarContexts)
   declare readonly globalSnackbarContexts: SnackbarContextWrapper;
+
+  @Setup(() => atob("bWVAc29tbmkub25l"))
+  declare readonly email: string;
 
   formValid = false;
   loginProgress = false;

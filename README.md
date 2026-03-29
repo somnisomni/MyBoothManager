@@ -1,7 +1,16 @@
-# Codename Sora (MyBoothManager)
-이 프로젝트는 **부스 및 굿즈 관리**, 행사 현장에서 사용 가능한 **POS 페이지를 통한 굿즈 판매 기록**, 일반 사용자를 위한 **부스/굿즈 정보 공개 페이지** 등 행사에서 부스를 운영하는 창작자들을 위해 개발 중인 웹 서비스 프로젝트입니다.
+## 개발 종료
+MyBoothManager는 개발이 종료된 프로젝트입니다. 더 이상 새로운 기능이 추가되거나 버그가 수정되지 않습니다.
 
-This is an in-development project for **managing booths and goods**, recording order histories with the **field-ready point-of-sale (POS) page**, and **providing public pages for visitors/users** to browse the information about booths and goods.
+이 프로젝트는 서브컬처 동인 행사에서 부스 운영을 직간접적으로 체험해보며 느낀 불편함과 아이디어를 바탕으로, 동인 행사에 최적화된 부스 관리 및 POS 기능을 만들자는 취지 아래 개발을 진행해 왔습니다.  
+
+비록 정식적인 홍보도, 많은 사용자를 확보하지도 못한 채로 끝을 맞이하지만, 소수의 사용자분들이 실제로 서비스를 이용하며 들려주신 피드백과 응원은 이 프로젝트의 개발 진행뿐만 아니라 제 개인적으로도 큰 힘이 되었습니다. 감사합니다.
+
+---
+
+# MyBoothManager
+이 프로젝트는 **부스 및 굿즈 관리**, 행사 현장에서 사용 가능한 **POS 페이지를 통한 굿즈 판매 기록**, 일반 사용자를 위한 **부스/굿즈 정보 공개 페이지** 등 행사에서의 창작자들의 부스 운영과 관리를 돕고 일반 사용자에게 부스와 관련된 정보를 쉽게 제공할 수 있도록 해주는 웹 서비스입니다.
+
+This is a project for **managing booths and goods**, recording order histories with the **field-ready point-of-sale (POS) page**, and **providing public pages for visitors/users** to browse the information about booths and goods.
 
 ## Screenshots
 <table>
