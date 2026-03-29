@@ -55,7 +55,7 @@ export function createMarkedRenderer(): Renderer {
 }
 
 export function resolveDOMPurify(root?: WindowLike): typeof DOMPurify | null {
-  const rootWindow = root ?? (typeof window !== "undefined" ? window : null);
+  const rootWindow = root ?? (typeof window !== "undefined" ? window : undefined);
   if(!rootWindow) {
     // console.warn("Either `root` parameter or global `window` is not valid. Seems like this is a server-side environment. "
     //   + "To use DOMPurify on server-side, you need to provide a valid `root` parameter (this can be done by using virtual DOM providers like `jsdom`).");
@@ -63,7 +63,7 @@ export function resolveDOMPurify(root?: WindowLike): typeof DOMPurify | null {
     return null;
   }
 
-  return DOMPurify(rootWindow);
+  return DOMPurify(rootWindow as WindowLike | undefined);
 }
 
 export function renderAndSanitizeMarkdown(markdown: string, options: {

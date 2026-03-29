@@ -61,12 +61,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        compact: true,
         sourcemap: process.env.NODE_ENV !== "production",
-        generatedCode: "es2015",
+        generatedCode: { preset: "es2015" },
         banner: "/*! Admin */\n"
-              + "/*! Copyright (c) 2023- somni */\n\n",
-        footer: `/*! ${APP_NAME} (initially MyBoothManager) v${packageJson.version} */`,
+              + "/*! Copyright (c) 2023-2026 somni */\n\n",
+        footer: `/*! ${APP_NAME} v${packageJson.version} */`,
 
         manualChunks: (id) => {
           for(const [chunkName, includes] of Object.entries(chunkFileNameIncludeMap)) {

@@ -25,6 +25,10 @@ RUN pnpm common:build && pnpm public build
 # Deploy
 RUN pnpm deploy --filter @myboothmanager/public --prod /prod/public
 
+# Workaround server error
+WORKDIR /prod/public/.output/server
+RUN npm install
+
 
 ### PRODUCTION STAGE ###
 FROM base as production

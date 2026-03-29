@@ -2,7 +2,7 @@
   "name": "myboothmanager",
   "author": "somni <me@somni.one>",
   "private": true,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@9.15.9",
   "license": "PolyForm-Strict-1.0.0",
   "scripts": {
     "preinstall": "pnpm dlx only-allow pnpm",
